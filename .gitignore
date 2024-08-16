@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependency directories
 node_modules/
 
@@ -26,3 +27,6 @@ yarn-error.log*
 
 # Windows
 Thumbs.db
+=======
+node_modules
+>>>>>>> 69a438ca2be9f1b5d1dda4864f861f3b866bfa0b
