@@ -1,7 +1,7 @@
 'use client';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { PackageOpen } from 'lucide-react';
+import { PackageOpen, Eye, Trash2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -13,10 +13,14 @@ import {
 } from '@/components/ui/table';
 import { axiosInstance } from '@/lib/axiosinstance';
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Button } from "@/components/ui/button"
 import AddFaq from './addFaq';
 import { Switch } from "@/components/ui/switch"
@@ -125,11 +129,19 @@ const FaqTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell>
-                        <Popover>
-                          <PopoverTrigger>
-                            <Button variant="outline">View</Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="p-4">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="p-4">
+                            <DialogHeader>
+                              <DialogTitle>User Details</DialogTitle>
+                              <DialogDescription>
+                                Detailed information about the user.
+                              </DialogDescription>
+                            </DialogHeader>
                             <div>
                               <p><strong>Type:</strong> {user.type}</p>
                               <p><strong>Status:</strong> {user.status}</p>
@@ -159,13 +171,15 @@ const FaqTable: React.FC = () => {
                                 )}
                               </ul>
                             </div>
-                          </PopoverContent>
-                        </Popover>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
+
                       <TableCell>
-                        <Button variant="outline" onClick={() => handleDelete(user._id)}>
-                          Delete
-                        </Button>
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(user._id)}
+                        />
                       </TableCell>
                     </TableRow>
                   ))

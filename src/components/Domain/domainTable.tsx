@@ -11,6 +11,11 @@ import {
   TableHead,
   TableCell,
 } from '@/components/ui/table';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { axiosInstance } from '@/lib/axiosinstance';
 import { Button } from "@/components/ui/button"
 import AddDomain from './addDomain';
@@ -74,6 +79,7 @@ const DomainTable: React.FC = () => {
                 <TableRow>
                   <TableHead>Domain Name</TableHead>
                   <TableHead>Description</TableHead>
+                  <TableHead>Details</TableHead>
                   <TableHead>Delete</TableHead>
                 </TableRow>
               </TableHeader>
@@ -90,6 +96,19 @@ const DomainTable: React.FC = () => {
                       <TableCell>{domain.domainName}</TableCell>
                       <TableCell>{truncateText(domain.description, 50)}</TableCell>
                       <TableCell>
+                        <Popover>
+                          <PopoverTrigger>
+                            <Button variant="outline">View</Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="p-4">
+                            <div>
+                              <p><strong>Name:</strong> {domain.domainName}</p>
+                              <p><strong>Description:</strong> {domain.description}</p>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
+                      </TableCell>
+                      <TableCell>
                         <Button variant="outline" onClick={() => handleDelete(domain._id)}>
                           Delete
                         </Button>
@@ -98,7 +117,7 @@ const DomainTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={3} className="text-center">
+                    <TableCell colSpan={4} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen className="mx-auto text-gray-500" size="100" />
                         <p className="text-gray-500">

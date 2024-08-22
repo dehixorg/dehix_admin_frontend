@@ -121,7 +121,7 @@ const AddDomain: React.FC = () => {
                                 <Textarea
                                     placeholder="Description"
                                     {...field}
-                                    className="border p-2 rounded mt-2 w-full h-[120px]"
+                                    className="border p-2 rounded mt-2 w-full h-[130px]"
                                 />
                             )}
                         />
