@@ -66,10 +66,6 @@ export default function Dashboard() {
     fetchData();
   }, [project_id]);
 
-  if (!project) {
-    return <div>Loading...</div>;
-  }
-  console.log(project);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -104,41 +100,8 @@ export default function Dashboard() {
 
           <DropdownProfile />
         </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-          <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-            <div>
-              <ProjectDetailCard
-                projectName={project.projectName}
-                description={project.description}
-                email={project.email}
-                status={project.status}
-                startDate={project.createdAt}
-                endDate={project.end}
-                domains={[]}
-                skills={project.skillsRequired}
-              />
-            </div>
-            {/* <Separator className="my-1" />
-            <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-              Profiles
-            </h2>
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-4 sm:overflow-x-scroll sm:no-scrollbar pb-8">
-              <ProjectProfileDetailCard className="w-full min-w-full p-4 shadow-md rounded-lg" />
-            </div> */}
-          </div>
-
-          <div className="space-y-6">
-            <CardTitle className="group flex items-center gap-2 text-2xl">
-              Profiles
-            </CardTitle>
-            {project?.profiles?.map((profile: any, index: number) => (
-              <ProjectProfileDetailCard
-                key={index}
-                className="w-full min-w-full p-4 shadow-md rounded-lg"
-                {...profile}
-              />
-            ))}
-          </div>
+        <main className="ml-5">
+         
         </main>
       </div>
     </div>
