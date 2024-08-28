@@ -7,10 +7,9 @@ import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
 import {
   menuItemsBottom,
   menuItemsTop,
-} from '@/config/menuItems/business/dashboardMenuItems';
+} from '@/config/menuItems/admin/dashboardMenuItems';
 import Breadcrumb from '@/components/shared/breadcrumbList';
 import DropdownProfile from '@/components/shared/DropdownProfile';
-import FaqTable from '@/components/Faq/faqTable';
 import DomainTable from '@/components/Domain/domainTable';
 
 export default function Talent() {
@@ -19,19 +18,19 @@ export default function Talent() {
       <SidebarMenu
           menuItemsTop={menuItemsTop}
           menuItemsBottom={menuItemsBottom}
-          active="Market"
+          active="Domain"
         />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
         <CollapsibleSidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Market"
+        active="Domain"
       />
            <Breadcrumb
               items={[
-                { label: 'Dashboard', link: '/dashboard/Faq' },
-                { label: 'Faq', link: '#' },
+                { label: 'Dashboard', link: '/dashboard/' },
+                { label: 'Domain', link: '#' },
               ]}
             />
           <div className="relative ml-auto flex-1 md:grow-0">
