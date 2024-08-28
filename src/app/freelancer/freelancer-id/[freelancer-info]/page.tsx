@@ -16,6 +16,7 @@ import {
   menuItemsBottom,
 } from '@/config/menuItems/freelancer/dashboardMenuItems';
 import { axiosInstance } from '@/lib/axiosinstance';
+import FreelancerTabs from '@/components/freelancer/freelancer-info/tabs/freelancerTabs';
 
 interface Project {
   _id: string;
@@ -101,7 +102,7 @@ export default function Dashboard() {
           <DropdownProfile />
         </header>
         <main className="ml-5">
-         
+         <FreelancerTabs/>
         </main>
       </div>
     </div>
