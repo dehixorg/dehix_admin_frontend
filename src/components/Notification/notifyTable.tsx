@@ -22,7 +22,7 @@ import {
     DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from "@/components/ui/button"
-import AddNotifi from './addNotifi';
+import AddNotify from './addNotify';
 import { Switch } from "@/components/ui/switch"
 
 interface ImportantUrl {
@@ -43,7 +43,7 @@ const truncateText = (text: string, maxLength: number) => {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 };
 
-const NotifiTable: React.FC = () => {
+const NotifyTable: React.FC = () => {
     const [userData, setUserData] = useState<UserData[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -92,7 +92,7 @@ const NotifiTable: React.FC = () => {
             <div className="mb-8 mt-4">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex space-x-4">
-                        <AddNotifi />
+                        <AddNotify />
                     </div>
                 </div>
                 <Card>
@@ -217,4 +217,4 @@ const NotifiTable: React.FC = () => {
     );
 };
 
-export default NotifiTable;
+export default NotifyTable;

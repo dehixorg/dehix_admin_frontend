@@ -50,7 +50,7 @@ const faqSchema = z.object({
         ),
 });
 
-const AddNotifi: React.FC = () => {
+const AddNotify: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(null);
     const { control, handleSubmit, formState: { errors }, reset } = useForm<FAQData>({
@@ -282,4 +282,4 @@ const AddNotifi: React.FC = () => {
     );
 };
 
-export default AddNotifi;
+export default AddNotify;

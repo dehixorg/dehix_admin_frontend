@@ -10,7 +10,7 @@ import {
 } from '@/config/menuItems/business/dashboardMenuItems';
 import Breadcrumb from '@/components/shared/breadcrumbList';
 import DropdownProfile from '@/components/shared/DropdownProfile';
-import NotifiTable from '@/components/Notification/notifiTable';
+import NotifyTable from '@/components/Notification/notifyTable';
 
 export default function Talent() {
   return (
@@ -44,7 +44,7 @@ export default function Talent() {
           <DropdownProfile />
         </header>
         <main className="ml-5">
-          <NotifiTable/>
+          <NotifyTable/>
         </main>
       </div>
     </div>
