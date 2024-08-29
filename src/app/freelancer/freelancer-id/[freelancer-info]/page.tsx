@@ -101,7 +101,7 @@ export default function Dashboard() {
 
           <DropdownProfile />
         </header>
-        <main className="ml-5">
+        <main className="ml-5 mr-5">
          <FreelancerTabs/>
         </main>
       </div>
