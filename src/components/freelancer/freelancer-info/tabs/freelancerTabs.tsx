@@ -57,7 +57,7 @@ function FreelancerTabs() {
       <PersonalInfo/>
       </TabsContent>
       <TabsContent value="Educational-Info">
-        <PersonalInfo/>
+        <PersonalInfo/> 
       </TabsContent>
     </Tabs>
     </div>
