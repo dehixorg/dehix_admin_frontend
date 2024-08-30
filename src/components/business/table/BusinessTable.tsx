@@ -28,7 +28,7 @@ const BusinessTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('/business/All');
+        const response = await axiosInstance.get('/business/all');
         console.log('API Response:', response.data);
         setUserData(response.data.data);
       } catch (error) {
