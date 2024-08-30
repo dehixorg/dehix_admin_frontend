@@ -21,15 +21,12 @@ function FreelancerTabs() {
   return (
     <div className="">
     <Tabs defaultValue="Personal-Info" >
-      <TabsList className="grid w-full grid-cols-9">
+      <TabsList className="grid w-full grid-cols-6">
         <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
         <TabsTrigger value="Professional-Info">Professional-Info</TabsTrigger>
-        <TabsTrigger value="Pending-Project">Pending-Project</TabsTrigger>
-        <TabsTrigger value="Rejected-Project">Rejected-Project</TabsTrigger>
-        <TabsTrigger value="Accepted-Project">Accepted-Project</TabsTrigger>
+        <TabsTrigger value="Project">Project</TabsTrigger>
         <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
-        <TabsTrigger value="Skill">Skill</TabsTrigger>
-        <TabsTrigger value="Domain">Domain</TabsTrigger>
+        <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
         <TabsTrigger value="Educational-Info">Educational-Info</TabsTrigger>
       </TabsList>
       <TabsContent value="Personal-Info">
@@ -38,23 +35,14 @@ function FreelancerTabs() {
       <TabsContent value="Professional-Info">
       <PersonalInfo/>
       </TabsContent>
-      <TabsContent value="Pending-Project">
-        <PersonalInfo/>
-      </TabsContent>
-      <TabsContent value="Rejected-Project">
-      <PersonalInfo/>
-      </TabsContent>
-      <TabsContent value="Accepted-Project">
+      <TabsContent value="Project">
         <PersonalInfo/>
       </TabsContent>
       <TabsContent value="Oracle-Project">
       <PersonalInfo/>
       </TabsContent>
-      <TabsContent value="Skill">
+      <TabsContent value="Skill-Domain">
         <PersonalInfo/>
-      </TabsContent>
-      <TabsContent value="Domain">
-      <PersonalInfo/>
       </TabsContent>
       <TabsContent value="Educational-Info">
         <PersonalInfo/> 
