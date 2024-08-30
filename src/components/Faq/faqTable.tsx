@@ -99,13 +99,13 @@ const FaqTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Question</TableHead>
-                  <TableHead>URL Count</TableHead>
-                  <TableHead>Switch</TableHead>
-                  <TableHead>Details</TableHead>
-                  <TableHead>Delete</TableHead>
+                  <TableHead className='w-[180px]'>Type</TableHead>
+                  <TableHead className='w-[180px]'>Status</TableHead>
+                  <TableHead className='w-[180px]'>Question</TableHead>
+                  <TableHead className='w-[180px]'>URL Count</TableHead>
+                  <TableHead className='w-[180px]'>Switch</TableHead>
+                  <TableHead className='w-[180px]'>Details</TableHead>
+                  <TableHead className='w-[180px]'>Delete</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
