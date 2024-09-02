@@ -9,7 +9,7 @@ import DropdownProfile from '@/components/shared/DropdownProfile';
 import {
   menuItemsBottom,
   menuItemsTop,
-} from '@/config/menuItems/freelancer/dashboardMenuItems';
+} from '@/config/menuItems/admin/dashboardMenuItems';
 import FreelancerTable from '@/components/freelancer/table/FreelancerTable';
 
 export default function Talent() {
@@ -18,19 +18,19 @@ export default function Talent() {
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Talent"
+        active="Freelancer"
       />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Projects"
+            active="Freelancer"
           />
           <Breadcrumb
             items={[
-              { label: 'Freelancer', link: '/dashboard/freelancer' },
-              { label: 'Dehix Talent', link: '#' },
+              { label: 'Dashboard', link: '/dashboard' },
+              { label: 'Freelancer', link: '#' },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
