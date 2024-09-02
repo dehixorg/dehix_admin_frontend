@@ -14,7 +14,7 @@ import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
 import {
   menuItemsTop,
   menuItemsBottom,
-} from '@/config/menuItems/freelancer/dashboardMenuItems';
+} from '@/config/menuItems/admin/dashboardMenuItems';
 import { axiosInstance } from '@/lib/axiosinstance';
 import FreelancerTabs from '@/components/freelancer/freelancer-info/tabs/freelancerTabs';
 
@@ -72,20 +72,19 @@ export default function Dashboard() {
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Market"
+        active="Freelancer"
       />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Market"
+            active="Freelancer"
           />
 
           <Breadcrumb
             items={[
-              { label: 'Freelancer', link: '/dashboard/freelancer' },
-              { label: 'Project', link: '/freelancer/market' },
+              { label: 'Freelancer', link: '/freelancer/table' },
               { label: project_id, link: '#' },
             ]}
           />

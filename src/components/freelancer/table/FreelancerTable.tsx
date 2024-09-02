@@ -18,7 +18,7 @@ interface UserData {
   email: string;
   phone: string;
   skills: string[];
-  domains: string[];
+  domain: string[];
 }
 
 const FreelancerTable: React.FC = () => {
@@ -70,7 +70,7 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domains?.length || 0}</TableCell>
+                      <TableCell>{user.domain?.length || 0}</TableCell>
                     </TableRow>
                   ))
                 ) : (

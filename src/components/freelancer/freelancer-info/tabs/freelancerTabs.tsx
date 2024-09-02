@@ -16,36 +16,32 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import PersonalInfo from "./personalInfo/personalInfo";
+import EducationalInfo from "./educationalInfo/educationalInfo";
+import SkillDomain from "./skillDomain/skillDomain";
+import Project from "./project/project";
+import OracleProject from "./oracleProject/oracleProject";
 
 function FreelancerTabs() {
   return (
     <div className="">
     <Tabs defaultValue="Personal-Info" >
-      <TabsList className="grid w-full grid-cols-6">
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
-        <TabsTrigger value="Professional-Info">Professional-Info</TabsTrigger>
-        <TabsTrigger value="Project">Project</TabsTrigger>
+        <TabsTrigger value="Project">Projects</TabsTrigger>
         <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
         <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
-        <TabsTrigger value="Educational-Info">Educational-Info</TabsTrigger>
       </TabsList>
       <TabsContent value="Personal-Info">
         <PersonalInfo/>
       </TabsContent>
-      <TabsContent value="Professional-Info">
-      <PersonalInfo/>
-      </TabsContent>
       <TabsContent value="Project">
-        <PersonalInfo/>
+        <Project/>
       </TabsContent>
       <TabsContent value="Oracle-Project">
-      <PersonalInfo/>
+      <OracleProject/>
       </TabsContent>
       <TabsContent value="Skill-Domain">
-        <PersonalInfo/>
-      </TabsContent>
-      <TabsContent value="Educational-Info">
-        <PersonalInfo/> 
+        <SkillDomain/>
       </TabsContent>
     </Tabs>
     </div>
