@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
+import { useSelector } from "react-redux";
 
-import { toast } from '../ui/use-toast';
+import { toast } from "../ui/use-toast";
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,7 +17,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from "@/components/ui/form";
 import {
   Dialog,
   DialogTrigger,
@@ -26,9 +26,9 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { RootState } from '@/lib/store';
+} from "@/components/ui/dialog";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { RootState } from "@/lib/store";
 
 const FormSchema = z
   .object({
@@ -49,8 +49,8 @@ const FormSchema = z
       return true;
     },
     {
-      message: 'Start Date must be before End Date',
-      path: ['endDate'], // Show error on endDate field
+      message: "Start Date must be before End Date",
+      path: ["endDate"], // Show error on endDate field
     },
   );
 
@@ -63,12 +63,12 @@ export const AddEducation: React.FC<AddEducationProps> = ({ onFormSubmit }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      degree: '',
-      universityName: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      grade: '',
+      degree: "",
+      universityName: "",
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: "",
+      grade: "",
     },
   });
 
@@ -77,12 +77,12 @@ export const AddEducation: React.FC<AddEducationProps> = ({ onFormSubmit }) => {
   useEffect(() => {
     if (isDialogOpen) {
       form.reset({
-        degree: '',
-        universityName: '',
-        fieldOfStudy: '',
-        startDate: '',
-        endDate: '',
-        grade: '',
+        degree: "",
+        universityName: "",
+        fieldOfStudy: "",
+        startDate: "",
+        endDate: "",
+        grade: "",
       });
     }
   }, [isDialogOpen, form]);
@@ -95,28 +95,28 @@ export const AddEducation: React.FC<AddEducationProps> = ({ onFormSubmit }) => {
           ? new Date(data.startDate).toISOString()
           : null,
         endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
-        oracleAssigned: data.oracleAssigned || '',
-        verificationStatus: data.verificationStatus || 'added',
+        oracleAssigned: data.oracleAssigned || "",
+        verificationStatus: data.verificationStatus || "added",
         verificationUpdateTime: data.verificationUpdateTime || new Date(),
-        comments: '',
+        comments: "",
       };
       const response = await axiosInstance.post(
         `/freelancer/${user.uid}/education`,
         formattedData,
       );
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({
-        title: 'Education Added',
-        description: 'The education has been successfully added.',
+        title: "Education Added",
+        description: "The education has been successfully added.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to add education. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add education. Please try again later.",
       });
     }
   }

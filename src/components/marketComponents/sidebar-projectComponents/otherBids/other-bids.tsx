@@ -1,11 +1,11 @@
 // src/components/OtherBits.tsx
 
-import * as React from 'react';
-import { CircleUserRound } from 'lucide-react';
+import * as React from "react";
+import { CircleUserRound } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface OtherBitsProps {
   usernames: { username: string; bitAmount: number }[];

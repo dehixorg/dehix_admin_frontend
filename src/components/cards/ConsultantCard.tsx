@@ -1,5 +1,5 @@
-import React from 'react';
-import { ExternalLink } from 'lucide-react';
+import React from "react";
+import { ExternalLink } from "lucide-react";
 
 import {
   Card,
@@ -8,8 +8,8 @@ import {
   CardFooter,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface ConsultantCardProps {
   name: string;
@@ -28,8 +28,8 @@ const ConsultantCard: React.FC<ConsultantCardProps> = ({
   urls,
   perHourRate,
 }) => {
-  const skillList = skills.split(',').map((skill) => skill.trim());
-  const domainList = domains.split(',').map((domain) => domain.trim());
+  const skillList = skills.split(",").map((skill) => skill.trim());
+  const domainList = domains.split(",").map((domain) => domain.trim());
 
   return (
     <Card className="mb-4 bg-black text-white">

@@ -1,7 +1,7 @@
-import Link from 'next/link';
+import Link from "next/link";
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,8 +9,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 interface ProjectType {
   _id: string;
@@ -50,22 +50,22 @@ export function ProjectCard({
   ...props
 }: ProjectCardProps) {
   return (
-    <Card className={cn('flex flex-col', className)} {...props}>
+    <Card className={cn("flex flex-col", className)} {...props}>
       <CardHeader>
         <CardTitle>{project.projectName}</CardTitle>
         <CardDescription className="text-gray-600">
           <p className="my-auto">
             {project.createdAt
               ? new Date(project.createdAt).toLocaleDateString()
-              : 'N/A'}
+              : "N/A"}
           </p>
 
           <br />
           <Badge
             className="text-xs"
-            variant={project.verified ? 'secondary' : 'outline'}
+            variant={project.verified ? "secondary" : "outline"}
           >
-            {project.verified ? 'Verified' : 'Not Verified'}
+            {project.verified ? "Verified" : "Not Verified"}
           </Badge>
         </CardDescription>
       </CardHeader>
@@ -100,7 +100,7 @@ export function ProjectCard({
       <CardFooter>
         <Link href={`/business/project/${project._id}`} className="w-full">
           <Button
-            className={`w-full ${project.status === 'Completed' && 'bg-green-900 hover:bg-green-700'}`}
+            className={`w-full ${project.status === "Completed" && "bg-green-900 hover:bg-green-700"}`}
           >
             View full details
           </Button>

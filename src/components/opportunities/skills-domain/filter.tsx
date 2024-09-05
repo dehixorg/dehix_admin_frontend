@@ -1,7 +1,7 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from "@/components/ui/card";
 
 interface FilterProps {
   label: string;
@@ -19,7 +19,7 @@ const Filter: React.FC<FilterProps> = ({
   setSelectedValues,
 }) => {
   const [showMore, setShowMore] = React.useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = React.useState<string>('');
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
 
   const handleCheckboxChange = (label: string) => {
     if (selectedValues.includes(label)) {
@@ -77,7 +77,7 @@ const Filter: React.FC<FilterProps> = ({
                 className="text-sm text-blue-500 cursor-pointer"
                 onClick={() => setShowMore(!showMore)}
               >
-                {showMore ? 'Less Options' : 'More Options'}
+                {showMore ? "Less Options" : "More Options"}
               </button>
             </div>
           )}

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Plus, X } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Plus, X } from "lucide-react";
+import { useSelector } from "react-redux";
 
 import {
   Dialog,
@@ -13,8 +13,8 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,31 +23,31 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { RootState } from '@/lib/store';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { RootState } from "@/lib/store";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 // Schema for form validation using zod
 const projectFormSchema = z
   .object({
-    projectName: z.string().min(1, { message: 'Project name is required.' }),
-    description: z.string().min(1, { message: 'Description is required.' }),
-    githubLink: z.string().url({ message: 'Invalid URL.' }).optional(),
-    start: z.string().min(1, { message: 'Start date is required.' }),
-    end: z.string().min(1, { message: 'End date is required.' }),
-    refer: z.string().min(1, { message: 'Reference is required.' }),
-    techUsed: z.string().min(1, { message: 'Technologies used are required.' }),
-    role: z.string().min(1, { message: 'Role is required.' }),
+    projectName: z.string().min(1, { message: "Project name is required." }),
+    description: z.string().min(1, { message: "Description is required." }),
+    githubLink: z.string().url({ message: "Invalid URL." }).optional(),
+    start: z.string().min(1, { message: "Start date is required." }),
+    end: z.string().min(1, { message: "End date is required." }),
+    refer: z.string().min(1, { message: "Reference is required." }),
+    techUsed: z.string().min(1, { message: "Technologies used are required." }),
+    role: z.string().min(1, { message: "Role is required." }),
     projectType: z.string().optional(),
     verificationStatus: z.string().optional(),
     comments: z.string().optional(),
@@ -62,8 +62,8 @@ const projectFormSchema = z
       return true;
     },
     {
-      message: 'Start Date must be before End Date',
-      path: ['end'],
+      message: "Start Date must be before End Date",
+      path: ["end"],
     },
   );
 
@@ -83,12 +83,12 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
   const user = useSelector((state: RootState) => state.user);
   const [skills, setSkills] = useState<any>([]);
   const [currSkills, setCurrSkills] = useState<any>([]);
-  const [tmpSkill, setTmpSkill] = useState<any>('');
+  const [tmpSkill, setTmpSkill] = useState<any>("");
 
   const handleAddSkill = () => {
     if (tmpSkill && !currSkills.some((skill: any) => skill === tmpSkill)) {
       setCurrSkills([...currSkills, tmpSkill]);
-      setTmpSkill('');
+      setTmpSkill("");
     }
   };
 
@@ -99,8 +99,8 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const skillsResponse = await axiosInstance.get('/skills/all');
-        console.log('Skills API Response get:', skillsResponse.data.data);
+        const skillsResponse = await axiosInstance.get("/skills/all");
+        console.log("Skills API Response get:", skillsResponse.data.data);
         const transformedSkills = skillsResponse.data.data.map(
           (skill: Skill) => ({
             value: skill.label, // Set the value to label
@@ -109,7 +109,7 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
         );
         setSkills(transformedSkills);
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
       }
     };
     fetchData();
@@ -119,19 +119,19 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
-      projectName: '',
-      description: '',
-      githubLink: '',
-      start: '',
-      end: '',
-      refer: '',
-      techUsed: '',
-      role: '',
-      projectType: '',
-      verificationStatus: 'added',
-      comments: '',
+      projectName: "",
+      description: "",
+      githubLink: "",
+      start: "",
+      end: "",
+      refer: "",
+      techUsed: "",
+      role: "",
+      projectType: "",
+      verificationStatus: "added",
+      comments: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -139,17 +139,17 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
   useEffect(() => {
     if (isDialogOpen) {
       form.reset({
-        projectName: '',
-        description: '',
-        githubLink: '',
-        start: '',
-        end: '',
-        refer: '',
-        techUsed: '',
-        role: '',
-        projectType: '',
-        verificationStatus: 'added',
-        comments: '',
+        projectName: "",
+        description: "",
+        githubLink: "",
+        start: "",
+        end: "",
+        refer: "",
+        techUsed: "",
+        role: "",
+        projectType: "",
+        verificationStatus: "added",
+        comments: "",
       });
     }
   }, [isDialogOpen, form]);
@@ -165,9 +165,9 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
       //   projectType: '',
       // });
       const techUsedArray = data.techUsed
-        .split(',')
+        .split(",")
         .map((tech) => tech.trim())
-        .filter((tech) => tech !== '');
+        .filter((tech) => tech !== "");
 
       const response = await axiosInstance.post(
         `/freelancer/${user.uid}/project`,
@@ -175,25 +175,25 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
           ...data,
           techUsed: techUsedArray,
           verified: false,
-          oracleAssigned: '',
+          oracleAssigned: "",
           start: data.start ? new Date(data.start).toISOString() : null,
           end: data.end ? new Date(data.end).toISOString() : null,
           verificationUpdateTime: new Date().toISOString(),
         },
       );
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({
-        title: 'Project Added',
-        description: 'The project has been successfully added.',
+        title: "Project Added",
+        description: "The project has been successfully added.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to add project. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add project. Please try again later.",
       });
     }
   }

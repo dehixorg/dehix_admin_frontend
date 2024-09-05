@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import React, { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Card } from '../ui/card';
-import { toast } from '../ui/use-toast';
+import { Card } from "../ui/card";
+import { toast } from "../ui/use-toast";
 
-import { Label } from '@/components/ui/label';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { Button } from '@/components/ui/button';
+import { Label } from "@/components/ui/label";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,21 +16,21 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
-    message: 'First Name must be at least 2 characters.',
+    message: "First Name must be at least 2 characters.",
   }),
   lastName: z.string().min(2, {
-    message: 'Last Name must be at least 2 characters.',
+    message: "Last Name must be at least 2 characters.",
   }),
   email: z.string().email({
-    message: 'Email must be a valid email address.',
+    message: "Email must be a valid email address.",
   }),
   phone: z.string().min(10, {
-    message: 'Phone number must be at least 10 digits.',
+    message: "Phone number must be at least 10 digits.",
   }),
   companyName: z.string().optional(),
   companySize: z.string().optional(),
@@ -46,27 +46,27 @@ export function BusinessForm({ user_id }: { user_id: string }) {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      companyName: '',
-      companySize: '',
-      position: '',
-      linkedIn: '',
-      website: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      companyName: "",
+      companySize: "",
+      position: "",
+      linkedIn: "",
+      website: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/business/${user_id}`);
-        console.log('API Response get:', response.data);
+        console.log("API Response get:", response.data);
         setUser(response.data);
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
       }
     };
 
@@ -75,15 +75,15 @@ export function BusinessForm({ user_id }: { user_id: string }) {
 
   useEffect(() => {
     form.reset({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      companyName: user?.companyName || '',
-      companySize: user?.companySize || '',
-      position: user?.position || '',
-      linkedIn: user?.linkedin || '',
-      website: user?.personalWebsite || '',
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      companyName: user?.companyName || "",
+      companySize: user?.companySize || "",
+      position: user?.position || "",
+      linkedIn: user?.linkedin || "",
+      website: user?.personalWebsite || "",
     });
   }, [user, form]);
 
@@ -93,7 +93,7 @@ export function BusinessForm({ user_id }: { user_id: string }) {
       const response = await axiosInstance.put(`/business/${user_id}`, {
         ...data,
       });
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
 
       setUser({
         ...user,
@@ -110,15 +110,15 @@ export function BusinessForm({ user_id }: { user_id: string }) {
 
       // You can update other fields here as needed
       toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been successfully updated.',
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to update profile. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update profile. Please try again later.",
       });
     }
   }

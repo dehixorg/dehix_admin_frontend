@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+"use client";
+import * as React from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import {
   Card,
@@ -8,9 +8,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface SkillDomProps {
   label: string;
@@ -28,21 +28,21 @@ const SkillDom: React.FC<SkillDomProps> = ({
   setSelectedValues,
 }) => {
   const [showMore, setShowMore] = React.useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = React.useState<string>('');
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
 
   const handleCheckboxChange = (label: string) => {
-    if (label === 'All') {
-      if (selectedValues.includes('All')) {
+    if (label === "All") {
+      if (selectedValues.includes("All")) {
         setSelectedValues([]);
       } else {
-        setSelectedValues(['All']);
+        setSelectedValues(["All"]);
       }
     } else {
       if (selectedValues.includes(label)) {
         setSelectedValues(selectedValues.filter((item) => item !== label));
       } else {
         const newSelectedValues = [
-          ...selectedValues.filter((item) => item !== 'All'),
+          ...selectedValues.filter((item) => item !== "All"),
           label,
         ];
         setSelectedValues(newSelectedValues);
@@ -103,7 +103,7 @@ const SkillDom: React.FC<SkillDomProps> = ({
             className="flex items-center text-sm cursor-pointer ml-auto"
             onClick={() => setShowMore(!showMore)}
           >
-            {showMore ? 'Less' : 'More'}
+            {showMore ? "Less" : "More"}
             {showMore ? (
               <ChevronUp className="ml-1 h-4 w-4" />
             ) : (
@@ -113,7 +113,7 @@ const SkillDom: React.FC<SkillDomProps> = ({
         )}
         {filteredSkills.length === 0 && (
           <p className="text-sm text-gray-500 mt-2">
-            {label === 'Skills' ? 'No skills found.' : 'No domain found.'}
+            {label === "Skills" ? "No skills found." : "No domain found."}
           </p>
         )}
       </CardFooter>
