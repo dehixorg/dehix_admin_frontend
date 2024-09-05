@@ -7,6 +7,7 @@ import {
   BriefcaseBusiness,
   BellRing,
   MessageSquareMore,
+  FolderLock,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -46,6 +47,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/faq",
     icon: <MessageSquareMore className="h-5 w-5" />,
     label: "Faq",
+  },
+  {
+    href: "/project",
+    icon: <FolderLock className="h-5 w-5" />,
+    label: "Project",
   },
 ];
 
