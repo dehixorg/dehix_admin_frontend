@@ -12,8 +12,11 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { axiosInstance } from '@/lib/axiosinstance';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 interface UserData {
+  _id:string;
   firstName: string;
   email: string;
   phone: string;
@@ -24,6 +27,7 @@ interface UserData {
 const FreelancerTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -40,6 +44,9 @@ const FreelancerTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleRedirect = (id: string) => {
+    router.push(`/freelancer/${id}`); 
+  };
 
   return (
     <div className="px-4">
@@ -54,12 +61,13 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Phone-No.</TableHead>
                   <TableHead>Skill Count</TableHead>
                   <TableHead>Domain Count</TableHead>
+                  <TableHead>More</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -71,11 +79,12 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.skills?.length || 0}</TableCell>
                       <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell><Button  onClick={() => handleRedirect(user._id)}>click</Button></TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen className="mx-auto text-gray-500" size="100" />
                         <p className="text-gray-500">

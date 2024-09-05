@@ -18,55 +18,22 @@ import {
 import { axiosInstance } from '@/lib/axiosinstance';
 import FreelancerTabs from '@/components/freelancer/freelancer-info/tabs/freelancerTabs';
 
-interface Project {
-  _id: string;
-  projectName: string;
-  description: string;
-  companyId: string;
-  email: string;
-  url?: { value: string }[];
-  verified?: any;
-  isVerified?: string;
-  companyName: string;
-  start?: Date;
-  end?: Date | null;
-  skillsRequired: string[];
-  experience?: string;
-  role?: string;
-  projectType?: string;
-  profiles?: {
-    domain?: string;
-    freelancersRequired?: string;
-    skills?: string[];
-    experience?: number;
-    minConnect?: number;
-    rate?: number;
-    description?: string;
-  }[];
-  status?: 'Active' | 'Pending' | 'Completed' | 'Rejected';
-  team?: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
 
-export default function Dashboard() {
-  const { project_id } = useParams<{ project_id: string }>();
-  const [project, setProject] = useState<Project | null>(null);
-
+const FreelancerPage = () => {
+  const { user_id } = useParams<{ user_id: string }>();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(
-          `/business/${project_id}/project`,
+          `/freelancer/freelancer-id/${user_id}`,
         );
-        setProject(response.data.data);
+        
       } catch (error) {
         console.error('API Error:', error);
       }
     };
     fetchData();
-  }, [project_id]);
-
+  }, [user_id]);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -84,8 +51,10 @@ export default function Dashboard() {
 
           <Breadcrumb
             items={[
+              { label: 'Dashboard', link: '' },
               { label: 'Freelancer', link: '/freelancer/table' },
-              { label: project_id, link: '#' },
+              { label: user_id, link: '#' },
+              
             ]}
           />
 
@@ -107,3 +76,4 @@ export default function Dashboard() {
     </div>
   );
 }
+export default FreelancerPage;
