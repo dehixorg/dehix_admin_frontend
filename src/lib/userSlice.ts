@@ -1,5 +1,5 @@
 // lib/userSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface UserState {
   [key: string]: any; // You can define specific fields here as per your requirements
@@ -8,7 +8,7 @@ interface UserState {
 const initialState: UserState = {};
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     setUser: (state, action: PayloadAction<UserState>) => {

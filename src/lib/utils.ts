@@ -1,15 +1,15 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   UserCredential,
-} from 'firebase/auth';
-import Cookies from 'js-cookie';
+} from "firebase/auth";
+import Cookies from "js-cookie";
 
-import { initializeAxiosWithToken } from './axiosinstance';
+import { initializeAxiosWithToken } from "./axiosinstance";
 
-import { auth, googleProvider } from '@/config/firebaseConfig';
+import { auth, googleProvider } from "@/config/firebaseConfig";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -81,8 +81,8 @@ export const getUserData = async (
     };
     const userType = claims.type as string;
     // Storing user type and token in cookies
-    Cookies.set('userType', userType, { expires: 1, path: '/' });
-    Cookies.set('token', accessToken, { expires: 1, path: '/' });
+    Cookies.set("userType", userType, { expires: 1, path: "/" });
+    Cookies.set("token", accessToken, { expires: 1, path: "/" });
 
     // Return the user data and claims as JSON
     return {
@@ -90,7 +90,7 @@ export const getUserData = async (
       claims,
     };
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error("Error fetching user data:", error);
     throw error;
   }
 };

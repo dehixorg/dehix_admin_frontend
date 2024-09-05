@@ -1,38 +1,38 @@
-'use client';
-import { Search } from 'lucide-react';
+"use client";
+import { Search } from "lucide-react";
 
-import { Input } from '@/components/ui/input';
-import SidebarMenu from '@/components/menu/sidebarMenu';
-import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
+import { Input } from "@/components/ui/input";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
   menuItemsBottom,
   menuItemsTop,
-} from '@/config/menuItems/business/dashboardMenuItems';
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import DropdownProfile from '@/components/shared/DropdownProfile';
-import NotifyTable from '@/components/Notification/notifyTable';
+} from "@/config/menuItems/business/dashboardMenuItems";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import NotifyTable from "@/components/Notification/notifyTable";
 
 export default function Talent() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
-          menuItemsTop={menuItemsTop}
-          menuItemsBottom={menuItemsBottom}
-          active="Market"
-        />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <CollapsibleSidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
         active="Market"
       />
-           <Breadcrumb
-              items={[
-                { label: 'Dashboard', link: '/dashboard/Faq' },
-                { label: 'Faq', link: '#' },
-              ]}
-            />
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <CollapsibleSidebarMenu
+            menuItemsTop={menuItemsTop}
+            menuItemsBottom={menuItemsBottom}
+            active="Market"
+          />
+          <Breadcrumb
+            items={[
+              { label: "Dashboard", link: "/dashboard/Faq" },
+              { label: "Faq", link: "#" },
+            ]}
+          />
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -44,7 +44,7 @@ export default function Talent() {
           <DropdownProfile />
         </header>
         <main className="ml-5">
-          <NotifyTable/>
+          <NotifyTable />
         </main>
       </div>
     </div>

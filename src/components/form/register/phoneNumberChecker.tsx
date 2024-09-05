@@ -1,7 +1,7 @@
-import React from 'react';
-import { Control, FieldValues } from 'react-hook-form';
+import React from "react";
+import { Control, FieldValues } from "react-hook-form";
 
-import countries from '../../../country-codes.json';
+import countries from "../../../country-codes.json";
 
 import {
   Select,
@@ -9,14 +9,14 @@ import {
   SelectGroup,
   SelectItem,
   SelectTrigger,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface PhoneNumberFormProps<T extends FieldValues> {
   code: string;

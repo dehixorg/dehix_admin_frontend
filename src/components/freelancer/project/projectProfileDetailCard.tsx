@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 interface ProjectProfileDetailCardProps {
   domain: string;
   freelancersRequired: string;
@@ -42,15 +42,15 @@ export function ProjectProfileDetailCard({
   ...props
 }: CardProps) {
   return (
-    <Card className={cn('w-[350px]', className)} {...props}>
+    <Card className={cn("w-[350px]", className)} {...props}>
       <CardHeader>
         <CardTitle>
           {domain}
           {`(${freelancersRequired})`}
         </CardTitle>
         <CardDescription className="text-gray-600">
-          Requirement is of {freelancersRequired} freelancer(s) for{' '}
-          {domain.toLowerCase() + ' '}
+          Requirement is of {freelancersRequired} freelancer(s) for{" "}
+          {domain.toLowerCase() + " "}
           profile.
           <br />
           {description}
@@ -74,7 +74,7 @@ export function ProjectProfileDetailCard({
             {startDate && (
               <li className="min-w-[45%]">
                 <span className="text-gray-700 font-semibold">
-                  Start Date -{' '}
+                  Start Date -{" "}
                 </span>
                 {startDate}
               </li>
@@ -91,7 +91,7 @@ export function ProjectProfileDetailCard({
             </li>
             <li className="min-w-[45%]">
               <span className="text-gray-400 font-semibold">
-                Min Connect -{' '}
+                Min Connect -{" "}
               </span>
               {minConnect}
             </li>

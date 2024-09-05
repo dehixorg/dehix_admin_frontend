@@ -1,7 +1,7 @@
 // src/ProjectCard.tsx
-import React from 'react';
-import { PackageOpen } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import { PackageOpen } from "lucide-react";
+import Link from "next/link";
 
 import {
   Card,
@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -17,9 +17,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface Project {
   _id: string;
@@ -80,15 +80,15 @@ const ProjectTableCard: React.FC<ProjectCardProps> = ({ projects }) => {
                   <TableCell>
                     <Badge
                       className="text-xs"
-                      variant={project.verified ? 'secondary' : 'outline'}
+                      variant={project.verified ? "secondary" : "outline"}
                     >
-                      {project.verified ? 'Verified' : 'Not Verified'}
+                      {project.verified ? "Verified" : "Not Verified"}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     {project.start
                       ? new Date(project.start).toLocaleDateString()
-                      : 'N/A'}
+                      : "N/A"}
                   </TableCell>
                   <TableCell className="text-right">
                     <Link href={`/project/${project._id}`}>

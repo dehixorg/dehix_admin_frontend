@@ -1,5 +1,5 @@
-import React from 'react';
-import { Mail } from 'lucide-react';
+import React from "react";
+import { Mail } from "lucide-react";
 
 import {
   Card,
@@ -7,8 +7,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export interface ProjectDetailCardProps {
   projectName: string;
@@ -23,16 +23,16 @@ export interface ProjectDetailCardProps {
 
 const getStatusBadge = (status: string | undefined) => {
   switch (status?.toLowerCase()) {
-    case 'active':
-      return { text: 'ACTIVE', className: 'bg-blue-500 hover:bg-blue-600' };
-    case 'pending':
-      return { text: 'PENDING', className: 'bg-warning hover:bg-warning' };
-    case 'completed':
-      return { text: 'COMPLETED', className: 'bg-success hover:bg-success' };
-    case 'rejected':
-      return { text: 'REJECTED', className: 'bg-red-500 hover:bg-red-600' };
+    case "active":
+      return { text: "ACTIVE", className: "bg-blue-500 hover:bg-blue-600" };
+    case "pending":
+      return { text: "PENDING", className: "bg-warning hover:bg-warning" };
+    case "completed":
+      return { text: "COMPLETED", className: "bg-success hover:bg-success" };
+    case "rejected":
+      return { text: "REJECTED", className: "bg-red-500 hover:bg-red-600" };
     default:
-      return { text: 'UNKNOWN', className: 'bg-gray-500 hover:bg-gray-600' };
+      return { text: "UNKNOWN", className: "bg-gray-500 hover:bg-gray-600" };
   }
 };
 function ProjectDetailCard({
@@ -92,11 +92,11 @@ function ProjectDetailCard({
       </CardContent>
       <CardFooter className="flex">
         <p className="text-sm font-semibold text-black bg-white px-3 py-1 rounded">
-          {startDate ? new Date(startDate).toLocaleDateString() : 'N/A'}
+          {startDate ? new Date(startDate).toLocaleDateString() : "N/A"}
         </p>
         <p>-</p>
         <p className="text-sm font-semibold text-black bg-white px-3 py-1 uppercase rounded">
-          {endDate ? new Date(endDate).toLocaleDateString() : 'Current'}
+          {endDate ? new Date(endDate).toLocaleDateString() : "Current"}
         </p>
       </CardFooter>
     </Card>

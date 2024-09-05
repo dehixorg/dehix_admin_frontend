@@ -1,8 +1,9 @@
-'use client';
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { PackageOpen } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+"use client";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { PackageOpen } from "lucide-react";
+
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -10,8 +11,8 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
-import { axiosInstance } from '@/lib/axiosinstance';
+} from "@/components/ui/table";
+import { axiosInstance } from "@/lib/axiosinstance";
 
 interface UserData {
   firstName: string;
@@ -28,11 +29,11 @@ const BusinessTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('/business/all');
-        console.log('API Response:', response.data);
+        const response = await axiosInstance.get("/business/all");
+        console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -77,7 +78,10 @@ const BusinessTable: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={5} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.

@@ -1,5 +1,5 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 
 interface MobileSkillDomProps {
   label: string;
@@ -17,7 +17,7 @@ const MobileSkillDom: React.FC<MobileSkillDomProps> = ({
   setSelectedValues,
 }) => {
   const [showMore, setShowMore] = React.useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = React.useState<string>('');
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
 
   const handleCheckboxChange = (label: string) => {
     if (selectedValues.includes(label)) {
@@ -74,7 +74,7 @@ const MobileSkillDom: React.FC<MobileSkillDomProps> = ({
               className="text-sm text-blue-500 cursor-pointer"
               onClick={() => setShowMore(!showMore)}
             >
-              {showMore ? 'Less Options' : 'More Options'}
+              {showMore ? "Less Options" : "More Options"}
             </button>
           </div>
         )}

@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { LoaderCircle, Rocket, Eye, EyeOff } from 'lucide-react';
-import { ToastAction } from '@radix-ui/react-toast';
-import { z } from 'zod';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState } from "react";
+import { LoaderCircle, Rocket, Eye, EyeOff } from "lucide-react";
+import { ToastAction } from "@radix-ui/react-toast";
+import { z } from "zod";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import countries from '../../../country-codes.json';
+import countries from "../../../country-codes.json";
 
-import PhoneNumberForm from './phoneNumberChecker';
+import PhoneNumberForm from "./phoneNumberChecker";
 
 import {
   Form,
@@ -18,9 +18,9 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import TextInput from '@/components/shared/input'; // Adjust the import path as needed
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/form";
+import TextInput from "@/components/shared/input"; // Adjust the import path as needed
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -29,24 +29,24 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { toast } from '@/components/ui/use-toast';
-import { Label } from '@/components/ui/label';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { Input } from '@/components/ui/input';
-import OtpLogin from '@/components/shared/otpDialog';
+} from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Input } from "@/components/ui/input";
+import OtpLogin from "@/components/shared/otpDialog";
 
 const businessRegisterSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  companyName: z.string().min(1, 'Company name is required'),
-  companySize: z.string().min(1, 'Company size is required'),
-  position: z.string().min(1, 'Position is required'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().min(1, 'Phone number is required'),
-  linkedin: z.string().url('Invalid URL').optional(),
-  personalWebsite: z.string().url('Invalid URL').optional(),
-  password: z.string().min(8, 'Password must be at least 8 characters long'),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  companyName: z.string().min(1, "Company name is required"),
+  companySize: z.string().min(1, "Company size is required"),
+  position: z.string().min(1, "Position is required"),
+  email: z.string().email("Invalid email address"),
+  phone: z.string().min(1, "Phone number is required"),
+  linkedin: z.string().url("Invalid URL").optional(),
+  personalWebsite: z.string().url("Invalid URL").optional(),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
 });
 
 type BusinessRegisterFormValues = z.infer<typeof businessRegisterSchema>;
@@ -54,8 +54,8 @@ type BusinessRegisterFormValues = z.infer<typeof businessRegisterSchema>;
 export default function BusinessRegisterForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [code, setCode] = useState<string>('IN');
-  const [phone, setPhone] = useState<string>('');
+  const [code, setCode] = useState<string>("IN");
+  const [phone, setPhone] = useState<string>("");
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const togglePasswordVisibility = () => {
@@ -65,18 +65,18 @@ export default function BusinessRegisterForm() {
   const form = useForm<BusinessRegisterFormValues>({
     resolver: zodResolver(businessRegisterSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      companyName: '',
-      companySize: '',
-      position: '',
-      email: '',
-      phone: '',
-      linkedin: '',
-      personalWebsite: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      companyName: "",
+      companySize: "",
+      position: "",
+      email: "",
+      phone: "",
+      linkedin: "",
+      personalWebsite: "",
+      password: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   const onSubmit = async (data: BusinessRegisterFormValues) => {
@@ -89,31 +89,31 @@ export default function BusinessRegisterForm() {
       phone: `${countries.find((c) => c.code === code)?.dialCode}${data.phone}`,
       isBusiness: true,
       connects: 0,
-      otp: '123456',
-      otpverified: 'No',
+      otp: "123456",
+      otpverified: "No",
       ProjectList: [],
       Appliedcandidates: [],
       hirefreelancer: [],
-      refer: '',
-      verified: '',
+      refer: "",
+      verified: "",
       isVerified: false,
     };
     try {
-      await axiosInstance.post('/register/business', formData);
+      await axiosInstance.post("/register/business", formData);
 
-      console.log('TESTF:', formData);
+      console.log("TESTF:", formData);
       toast({
-        title: 'Account created successfully!',
-        description: 'Your business account has been created.',
+        title: "Account created successfully!",
+        description: "Your business account has been created.",
       });
       setIsModalOpen(true);
       // handleLogin(data.email, data.password);
     } catch (error: any) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: `Error: ${error.response?.data || 'Something went wrong!'}`,
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `Error: ${error.response?.data || "Something went wrong!"}`,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     } finally {
@@ -230,7 +230,7 @@ export default function BusinessRegisterForm() {
                       <div className="relative">
                         <Input
                           placeholder="Enter your password"
-                          type={showPassword ? 'text' : 'password'}
+                          type={showPassword ? "text" : "password"}
                           {...field}
                         />
                         <button
@@ -260,7 +260,7 @@ export default function BusinessRegisterForm() {
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <Rocket className="mr-2 h-4 w-4" />
-            )}{' '}
+            )}{" "}
             Create an account
           </Button>
           <OtpLogin

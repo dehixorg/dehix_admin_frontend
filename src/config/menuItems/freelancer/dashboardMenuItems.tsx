@@ -8,57 +8,57 @@ import {
   Store,
   TabletSmartphone,
   ShieldCheck,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { MenuItem } from '@/components/menu/sidebarMenu';
+import { MenuItem } from "@/components/menu/sidebarMenu";
 
 export const menuItemsTop: MenuItem[] = [
   {
-    href: '#',
+    href: "#",
     icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
-    label: 'Dehix',
+    label: "Dehix",
   },
   {
-    href: '/dashboard/freelancer',
+    href: "/dashboard/freelancer",
     icon: <Home className="h-5 w-5" />,
-    label: 'Dashboard',
+    label: "Dashboard",
   },
   {
-    href: '/freelancer/market',
+    href: "/freelancer/market",
     icon: <Store className="h-5 w-5" />,
-    label: 'Market',
+    label: "Market",
   },
   {
-    href: '/freelancer/project/current',
+    href: "/freelancer/project/current",
     icon: <BriefcaseBusiness className="h-5 w-5" />,
-    label: 'Projects',
+    label: "Projects",
   },
   {
-    href: '#',
+    href: "#",
     icon: <LineChart className="h-5 w-5 cursor-not-allowed" />,
-    label: 'Analytics',
+    label: "Analytics",
   },
   {
-    href: '/freelancer/interview/profile',
+    href: "/freelancer/interview/profile",
     icon: <TabletSmartphone className="h-5 w-5" />,
-    label: 'Interviews',
+    label: "Interviews",
   },
   {
-    href: '/freelancer/oracleDashboard/businessVerification',
+    href: "/freelancer/oracleDashboard/businessVerification",
     icon: <ShieldCheck className="h-5 w-5" />,
-    label: 'Oracle',
+    label: "Oracle",
   },
   {
-    href: '/freelancer/talent',
+    href: "/freelancer/talent",
     icon: <Sparkles className="h-5 w-5" />,
-    label: 'Talent',
+    label: "Talent",
   },
 ];
 
 export const menuItemsBottom: MenuItem[] = [
   {
-    href: '/settings/personal-info',
+    href: "/settings/personal-info",
     icon: <Settings className="h-5 w-5" />,
-    label: 'Settings',
+    label: "Settings",
   },
 ];

@@ -1,8 +1,11 @@
-'use client';
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { PackageOpen, Eye, Trash2 } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+"use client";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { PackageOpen, Eye, Trash2 } from "lucide-react";
+
+import AddDomain from "./addDomain";
+
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -10,7 +13,7 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogTrigger,
@@ -18,10 +21,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { Button } from "@/components/ui/button"
-import AddDomain from './addDomain';
+} from "@/components/ui/dialog";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Button } from "@/components/ui/button";
 
 interface DomainData {
   _id: string;
@@ -30,7 +32,7 @@ interface DomainData {
 }
 
 const truncateText = (text: string, maxLength: number) => {
-  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 };
 
 const DomainTable: React.FC = () => {
@@ -40,11 +42,11 @@ const DomainTable: React.FC = () => {
   useEffect(() => {
     const fetchDomainData = async () => {
       try {
-        const response = await axiosInstance.get('/domains/all');
-        console.log('API Response:', response.data);
+        const response = await axiosInstance.get("/domains/all");
+        console.log("API Response:", response.data);
         setDomainData(response.data.data);
       } catch (error) {
-        console.error('Error fetching domain data:', error);
+        console.error("Error fetching domain data:", error);
       } finally {
         setLoading(false);
       }
@@ -54,16 +56,21 @@ const DomainTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (domainId: string) => {
-    console.log('Domain ID received in handleDelete:', domainId); // Debugging line
+    console.log("Domain ID received in handleDelete:", domainId); // Debugging line
     if (!domainId) {
       console.error("Domain ID is undefined.");
       return;
     }
     try {
       await axiosInstance.delete(`/domains/${domainId}`);
-      setDomainData(prevData => prevData.filter(domain => domain._id !== domainId));
+      setDomainData((prevData) =>
+        prevData.filter((domain) => domain._id !== domainId),
+      );
     } catch (error: any) {
-      console.error('Error deleting domain:', error.response?.data || error.message);
+      console.error(
+        "Error deleting domain:",
+        error.response?.data || error.message,
+      );
     }
   };
 
@@ -97,12 +104,15 @@ const DomainTable: React.FC = () => {
                   domainData.map((domain) => (
                     <TableRow key={domain._id}>
                       <TableCell>{domain.domainName}</TableCell>
-                      <TableCell>{truncateText(domain.description, 50)}</TableCell>
+                      <TableCell>
+                        {truncateText(domain.description, 50)}
+                      </TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button variant="outline">
-                              <Eye className="w-4 h-4" /> {/* Icon for the button */}
+                              <Eye className="w-4 h-4" />{" "}
+                              {/* Icon for the button */}
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="p-4">
@@ -110,8 +120,13 @@ const DomainTable: React.FC = () => {
                               <DialogTitle>Domain Details</DialogTitle>
                             </DialogHeader>
                             <div>
-                              <p><strong>Name:</strong> {domain.domainName}</p>
-                              <p><strong>Description:</strong> {domain.description}</p>
+                              <p>
+                                <strong>Name:</strong> {domain.domainName}
+                              </p>
+                              <p>
+                                <strong>Description:</strong>{" "}
+                                {domain.description}
+                              </p>
                             </div>
                           </DialogContent>
                         </Dialog>
@@ -128,7 +143,10 @@ const DomainTable: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={4} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.

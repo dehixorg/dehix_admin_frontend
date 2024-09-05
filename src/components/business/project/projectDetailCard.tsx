@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import dummyData from '@/dummydata.json';
+import dummyData from "@/dummydata.json";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 function ProjectDetailCard() {
   return (
     <div>
@@ -22,26 +22,26 @@ function ProjectDetailCard() {
                   <ul className="flex flex-wrap gap-4">
                     <li className="min-w-[45%] ">
                       <span className="text-gray-700 font-semibold ">
-                        Email-{' '}
-                      </span>{' '}
+                        Email-{" "}
+                      </span>{" "}
                       {dummyData.businessProjectDetailCard.email}
                     </li>
                     <li className="min-w-[45%] ">
                       <span className="text-gray-700 font-semibold ">
-                        Staus-{' '}
-                      </span>{' '}
+                        Staus-{" "}
+                      </span>{" "}
                       {dummyData.businessProjectDetailCard.status}
                     </li>
                     <li className="min-w-[45%] ">
                       <span className="text-gray-700 font-semibold ">
-                        Start Date-{' '}
-                      </span>{' '}
+                        Start Date-{" "}
+                      </span>{" "}
                       {dummyData.businessProjectDetailCard.startDate}
                     </li>
                     <li className="min-w-[45%] ">
                       <span className="text-gray-700 font-semibold ">
-                        End date-{' '}
-                      </span>{' '}
+                        End date-{" "}
+                      </span>{" "}
                       {dummyData.businessProjectDetailCard.endDate}
                     </li>
                   </ul>

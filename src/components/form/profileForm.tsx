@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Plus, X } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Plus, X } from "lucide-react";
 
-import { Card } from '../ui/card';
+import { Card } from "../ui/card";
 
-import { axiosInstance } from '@/lib/axiosinstance';
-import { Button } from '@/components/ui/button';
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -16,37 +16,37 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectTrigger,
   SelectItem,
   SelectValue,
   SelectContent,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, {
-    message: 'First Name must be at least 2 characters.',
+    message: "First Name must be at least 2 characters.",
   }),
   lastName: z.string().min(2, {
-    message: 'Last Name must be at least 2 characters.',
+    message: "Last Name must be at least 2 characters.",
   }),
   username: z
     .string()
     .min(2, {
-      message: 'Username must be at least 2 characters.',
+      message: "Username must be at least 2 characters.",
     })
     .max(30, {
-      message: 'Username must not be longer than 30 characters.',
+      message: "Username must not be longer than 30 characters.",
     }),
   email: z.string().email(),
   phone: z.string().min(10, {
-    message: 'Phone number must be at least 10 digits.',
+    message: "Phone number must be at least 10 digits.",
   }),
   role: z.string(),
 });
@@ -57,22 +57,22 @@ export function ProfileForm({ user_id }: { user_id: string }) {
   const [user, setUser] = useState<any>({});
   const [skills, setSkills] = useState<any>([]);
   const [currSkills, setCurrSkills] = useState<any>([]);
-  const [tmpSkill, setTmpSkill] = useState<any>('');
+  const [tmpSkill, setTmpSkill] = useState<any>("");
   const [domains, setDomains] = useState<any>([]);
   const [currDomains, setCurrDomains] = useState<any>([]);
-  const [tmpDomain, setTmpDomain] = useState<any>('');
+  const [tmpDomain, setTmpDomain] = useState<any>("");
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      username: '',
-      email: '',
-      phone: '',
-      role: '',
+      firstName: "",
+      lastName: "",
+      username: "",
+      email: "",
+      phone: "",
+      role: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   const handleAddSkill = () => {
@@ -81,14 +81,14 @@ export function ProfileForm({ user_id }: { user_id: string }) {
         ...currSkills,
         {
           name: tmpSkill,
-          level: '',
-          experience: '',
-          interviewStatus: 'pending',
-          interviewInfo: '',
+          level: "",
+          experience: "",
+          interviewStatus: "pending",
+          interviewInfo: "",
           interviewerRating: 0,
         },
       ]);
-      setTmpSkill('');
+      setTmpSkill("");
     }
   };
 
@@ -101,19 +101,19 @@ export function ProfileForm({ user_id }: { user_id: string }) {
         ...currDomains,
         {
           name: tmpDomain,
-          level: '',
-          experience: '',
-          interviewStatus: 'pending',
-          interviewInfo: '',
+          level: "",
+          experience: "",
+          interviewStatus: "pending",
+          interviewInfo: "",
           interviewerRating: 0,
         },
       ]);
-      setTmpDomain('');
+      setTmpDomain("");
     }
   };
 
   useEffect(() => {
-    console.log('domain selected', currDomains);
+    console.log("domain selected", currDomains);
   }, [currDomains]);
 
   const handleDeleteSkill = (skillToDelete: string) => {
@@ -132,20 +132,20 @@ export function ProfileForm({ user_id }: { user_id: string }) {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/freelancer/${user_id}`);
-        console.log('API Response get:', response.data);
+        console.log("API Response get:", response.data);
         setUser(response.data);
         setCurrSkills(response.data.skills);
         setCurrDomains(response.data.domain);
 
-        const skillsResponse = await axiosInstance.get('/skills/all');
-        console.log('API Response get:', skillsResponse.data.data);
+        const skillsResponse = await axiosInstance.get("/skills/all");
+        console.log("API Response get:", skillsResponse.data.data);
         setSkills(skillsResponse.data.data);
 
-        const domainsResponse = await axiosInstance.get('/domain/all');
-        console.log('API Response get:', domainsResponse.data.data);
+        const domainsResponse = await axiosInstance.get("/domain/all");
+        console.log("API Response get:", domainsResponse.data.data);
         setDomains(domainsResponse.data.data);
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
       }
     };
 
@@ -154,18 +154,18 @@ export function ProfileForm({ user_id }: { user_id: string }) {
 
   useEffect(() => {
     form.reset({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      username: user?.userName || '',
-      email: user?.email || '',
-      phone: user?.phone || '',
-      role: user?.role || '',
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      username: user?.userName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      role: user?.role || "",
     });
   }, [user, form]);
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      console.log('API body', {
+      console.log("API body", {
         ...data,
         skills: currSkills,
         domain: currDomains,
@@ -175,7 +175,7 @@ export function ProfileForm({ user_id }: { user_id: string }) {
         skills: currSkills,
         domain: currDomains,
       });
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
 
       setUser({
         ...user,
@@ -190,15 +190,15 @@ export function ProfileForm({ user_id }: { user_id: string }) {
       });
 
       toast({
-        title: 'Profile Updated',
-        description: 'Your profile has been successfully updated.',
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to update profile. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update profile. Please try again later.",
       });
     }
   }
