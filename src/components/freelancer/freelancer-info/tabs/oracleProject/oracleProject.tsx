@@ -13,30 +13,32 @@ import {
 } from '@/components/ui/table';
 import { axiosInstance } from '@/lib/axiosinstance';
 
+interface OracleProjectProps {
+    id: string; // Added id prop
+}
+
 interface OracleProject {
     _id: string;
-  verifier_id: string;
-  verifier_username: string; // Added verifier_username field
-  requester_id: string;
-  document_id: string;
-  doc_type: string; // Added doc_type field
-  verification_status: "Pending" | "Approved" | "Denied";
+    verifier_id: string;
+    verifier_username: string; // Added verifier_username field
+    requester_id: string;
+    document_id: string;
+    doc_type: string; // Added doc_type field
+    verification_status: "Pending" | "Approved" | "Denied";
 }
 
 interface UserData {
     oracleProject: OracleProject[];
-  
 }
 
-const OracleProject: React.FC = () => {
+const OracleProject: React.FC<OracleProjectProps> = ({ id }) => { // Use id prop
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const freelancer_id = 'gCtAoAMpAHNUkJdyj0zmTFwbmL22';
-                const response = await axiosInstance.get(`/freelancer/${freelancer_id}`);
+                const response = await axiosInstance.get(`/freelancer/${id}`); // Use the id prop
                 const { oracleProject } = response.data;
                 console.log('Pending-Project:', oracleProject);
                 setUserData({ oracleProject });
@@ -47,8 +49,10 @@ const OracleProject: React.FC = () => {
             }
         };
 
-        fetchUserData();
-    }, []);
+        if (id) {
+            fetchUserData();
+        }
+    }, [id]); // Depend on id
 
     return (
         <div className="">
@@ -78,7 +82,6 @@ const OracleProject: React.FC = () => {
                                     <>
                                         {userData.oracleProject.map((oracle) => (
                                             <TableRow key={oracle._id}>
-                                                <TableCell>Skill</TableCell>
                                                 <TableCell>{oracle._id}</TableCell>
                                                 <TableCell>{oracle.verifier_id}</TableCell>
                                                 <TableCell>{oracle.verifier_username}</TableCell>
@@ -88,7 +91,6 @@ const OracleProject: React.FC = () => {
                                                 <TableCell>{oracle.verification_status}</TableCell>
                                             </TableRow>
                                         ))}
-                                        
                                     </>
                                 ) : (
                                     <TableRow>

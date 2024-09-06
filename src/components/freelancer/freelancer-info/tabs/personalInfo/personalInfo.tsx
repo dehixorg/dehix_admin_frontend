@@ -8,10 +8,9 @@ import { Separator } from '@/components/ui/separator';
 import { educationCard as EducationCard } from '../educationalInfo/educationalInfo'; 
 import { projectsCard as ProjectsCard } from '../professionalProjects/professionalProjects';
 
-const fetchUserProfile = async (uid: string) => {
+const fetchUserProfile = async (id: string) => {
   try {
-    const freelancer_id = 'gCtAoAMpAHNUkJdyj0zmTFwbmL22';
-    const response = await axiosInstance.get(`/freelancer/${freelancer_id}`);
+    const response = await axiosInstance.get(`/freelancer/${id}`);
     const educationData = Object.values(response.data.education || {});
     const projectsData = Object.values(response.data.projects || {}); // Convert to array
     console.log('Education:', educationData);
@@ -24,22 +23,26 @@ const fetchUserProfile = async (uid: string) => {
   }
 };
 
-export default function PersonalInfo() {
-  const user = useSelector((state: RootState) => state.user);
+interface PersonalInfoProps {
+  id: string; // Add id prop
+}
+
+const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
   const [educationData, setEducationData] = useState<any[]>([]);
   const [projectsData, setProjectsData] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const userProfileData = await fetchUserProfile(user.uid);
+      const userProfileData = await fetchUserProfile(id); // Use id prop
       setEducationData(userProfileData.educationData);
       setProjectsData(userProfileData.projectsData);
     };
 
-    fetchData();
-  }, [user.uid]);
+    if (id) {
+      fetchData();
+    }
+  }, [id]);
 
-  
   return (
     <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
       <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
@@ -88,3 +91,5 @@ export default function PersonalInfo() {
     </div>
   );
 }
+
+export default PersonalInfo;

@@ -4,11 +4,8 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import Breadcrumb from '@/components/shared/breadcrumbList';
-import { CardTitle } from '@/components/ui/card';
 import DropdownProfile from '@/components/shared/DropdownProfile';
 import { Input } from '@/components/ui/input';
-import ProjectDetailCard from '@/components/freelancer/project/projectDetailCard';
-import { ProjectProfileDetailCard } from '@/components/freelancer/project/projectProfileDetailCard';
 import SidebarMenu from '@/components/menu/sidebarMenu';
 import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
 import {
@@ -16,24 +13,23 @@ import {
   menuItemsBottom,
 } from '@/config/menuItems/admin/dashboardMenuItems';
 import { axiosInstance } from '@/lib/axiosinstance';
-import FreelancerTabs from '@/components/freelancer/freelancer-info/tabs/freelancerTabs';
+import { useSearchParams } from "next/navigation";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
+import SkillDomain from "@/components/freelancer/freelancer-info/tabs/skillDomain/skillDomain";
+import Project from "@/components/freelancer/freelancer-info/tabs/project/project";
+import OracleProject from "@/components/freelancer/freelancer-info/tabs/oracleProject/oracleProject";
 
 
 const FreelancerPage = () => {
-  const { user_id } = useParams<{ user_id: string }>();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axiosInstance.get(
-          `/freelancer/freelancer-id/${user_id}`,
-        );
-        
-      } catch (error) {
-        console.error('API Error:', error);
-      }
-    };
-    fetchData();
-  }, [user_id]);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  console.log("Retrieved ID:", id);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -53,8 +49,8 @@ const FreelancerPage = () => {
             items={[
               { label: 'Dashboard', link: '' },
               { label: 'Freelancer', link: '/freelancer/table' },
-              { label: user_id, link: '#' },
-              
+              { label: "id", link: '#' },
+
             ]}
           />
 
@@ -70,7 +66,26 @@ const FreelancerPage = () => {
           <DropdownProfile />
         </header>
         <main className="ml-5 mr-5">
-         <FreelancerTabs/>
+          <Tabs defaultValue="Personal-Info" >
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
+              <TabsTrigger value="Project">Projects</TabsTrigger>
+              <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
+              <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
+            </TabsList>
+            <TabsContent value="Personal-Info">
+              <PersonalInfo id={id || ""} />
+            </TabsContent>
+            <TabsContent value="Project">
+              <Project id={id || ""}  />
+            </TabsContent>
+            <TabsContent value="Oracle-Project">
+              <OracleProject id={id || ""} />
+            </TabsContent>
+            <TabsContent value="Skill-Domain">
+              <SkillDomain id={id || ""} />
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </div>

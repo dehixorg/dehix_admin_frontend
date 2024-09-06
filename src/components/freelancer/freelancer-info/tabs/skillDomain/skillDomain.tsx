@@ -38,15 +38,18 @@ interface UserData {
     domain: Domain[];
 }
 
-const SkillDomain: React.FC = () => {
+interface SkillDomainProps {
+    id: string;
+}
+const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        console.log("id",id);
         const fetchUserData = async () => {
             try {
-                const freelancer_id = 'gCtAoAMpAHNUkJdyj0zmTFwbmL22';
-                const response = await axiosInstance.get(`/freelancer/${freelancer_id}`);
+                const response = await axiosInstance.get(`/freelancer/${id}`);
                 const { skills, domain } = response.data;
                 console.log('Skills:', skills);
                 console.log('Domain:', domain);
@@ -58,8 +61,10 @@ const SkillDomain: React.FC = () => {
             }
         };
 
-        fetchUserData();
-    }, []);
+        if (id) {
+            fetchUserData();
+        }
+    }, [id]);
 
     return (
         <div className="">

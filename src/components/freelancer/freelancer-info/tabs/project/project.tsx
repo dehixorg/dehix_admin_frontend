@@ -15,36 +15,39 @@ import { axiosInstance } from '@/lib/axiosinstance';
 
 interface RejectedProject {
     _id: string;
-
 }
+
 interface AcceptedProject {
     _id: string;
-
 }
+
 interface PendingProject {
     _id: string;
 }
 
 interface UserData {
     pendingProject: PendingProject[];
-  rejectedProject: RejectedProject[];
-  acceptedProject: AcceptedProject[];
+    rejectedProject: RejectedProject[];
+    acceptedProject: AcceptedProject[];
 }
 
-const Project: React.FC = () => {
+interface ProjectProps {
+    id: string; // Added id prop
+}
+
+const Project: React.FC<ProjectProps> = ({ id }) => { // Use id prop
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const freelancer_id = 'gCtAoAMpAHNUkJdyj0zmTFwbmL22';
-                const response = await axiosInstance.get(`/freelancer/${freelancer_id}`);
-                const { pendingProject, rejectedProject,acceptedProject } = response.data;
+                const response = await axiosInstance.get(`/freelancer/${id}`); // Use the id prop
+                const { pendingProject, rejectedProject, acceptedProject } = response.data;
                 console.log('Pending-Project:', pendingProject);
-                console.log('Rejected-Project', rejectedProject);
-                console.log('Accepted-Project', acceptedProject);
-                setUserData({ pendingProject, rejectedProject,acceptedProject });
+                console.log('Rejected-Project:', rejectedProject);
+                console.log('Accepted-Project:', acceptedProject);
+                setUserData({ pendingProject, rejectedProject, acceptedProject });
             } catch (error) {
                 console.error('Error fetching user data:', error);
             } finally {
@@ -52,8 +55,10 @@ const Project: React.FC = () => {
             }
         };
 
-        fetchUserData();
-    }, []);
+        if (id) {
+            fetchUserData();
+        }
+    }, [id]); // Depend on id
 
     return (
         <div className="px-">

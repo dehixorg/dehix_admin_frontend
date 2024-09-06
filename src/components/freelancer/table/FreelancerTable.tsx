@@ -45,7 +45,7 @@ const FreelancerTable: React.FC = () => {
     fetchUserData();
   }, []);
   const handleRedirect = (id: string) => {
-    router.push(`/freelancer/${id}`); 
+    router.push(`/freelancer/tabs?id=${id}`); 
   };
 
   return (
