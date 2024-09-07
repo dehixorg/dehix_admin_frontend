@@ -49,7 +49,7 @@ const FreelancerPage = () => {
             items={[
               { label: 'Dashboard', link: '' },
               { label: 'Freelancer', link: '/freelancer/table' },
-              { label: "id", link: '#' },
+              { label: id as string , link: '#' },
 
             ]}
           />

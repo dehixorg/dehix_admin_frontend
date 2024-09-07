@@ -7,16 +7,18 @@ import { axiosInstance } from '@/lib/axiosinstance';
 import { Separator } from '@/components/ui/separator';
 import { educationCard as EducationCard } from '../educationalInfo/educationalInfo'; 
 import { projectsCard as ProjectsCard } from '../professionalProjects/professionalProjects';
+import { UserProfilePage } from '../personalinfoCards/personalinfoCards';
 
 const fetchUserProfile = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/freelancer/${id}`);
     const educationData = Object.values(response.data.education || {});
-    const projectsData = Object.values(response.data.projects || {}); // Convert to array
+    const projectsData = Object.values(response.data.projects || {});
+    const profileData = response.data;
     console.log('Education:', educationData);
     console.log('Projects:', projectsData);
   
-    return { educationData, projectsData };
+    return { educationData, projectsData,profileData  };
   } catch (error) {
     console.error('Failed to fetch user profile:', error);
     return { educationData: [], projectsData: [] };
@@ -30,12 +32,14 @@ interface PersonalInfoProps {
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
   const [educationData, setEducationData] = useState<any[]>([]);
   const [projectsData, setProjectsData] = useState<any[]>([]);
+  const [profileData, setProfileData] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const userProfileData = await fetchUserProfile(id); // Use id prop
       setEducationData(userProfileData.educationData);
       setProjectsData(userProfileData.projectsData);
+      setProfileData(userProfileData.profileData);
     };
 
     if (id) {
@@ -48,6 +52,19 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
       <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
         Personal Information
       </h2>
+      <div className="flex gap-4 overflow-x-scroll no-scrollbar pb-8">
+        {profileData ? (
+          <UserProfilePage
+            className="min-w-[35%]"
+            profile={profileData} // Pass profile data
+          />
+        ) : (
+          <div className="text-center py-10 w-[100%]">
+            <PackageOpen className="mx-auto text-gray-500" size="100" />
+            <p className="text-gray-500">No data available.</p>
+          </div>
+        )}
+      </div>
       <Separator className="my-1" />
       <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
         Education-Info
