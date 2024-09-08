@@ -8,20 +8,23 @@ import { Separator } from '@/components/ui/separator';
 import { educationCard as EducationCard } from '../educationalInfo/educationalInfo'; 
 import { projectsCard as ProjectsCard } from '../professionalProjects/professionalProjects';
 import { UserProfilePage } from '../personalinfoCards/personalinfoCards';
+import { ProfessionalCard } from '../professionalInfo/professionalinfoCard';
 
 const fetchUserProfile = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/freelancer/${id}`);
     const educationData = Object.values(response.data.education || {});
     const projectsData = Object.values(response.data.projects || {});
+    const professionalData  = Object.values(response.data.professionalInfo || {});
     const profileData = response.data;
     console.log('Education:', educationData);
     console.log('Projects:', projectsData);
+    console.log('Professional:', professionalData );
   
-    return { educationData, projectsData,profileData  };
+    return { educationData, projectsData,profileData ,professionalData  };
   } catch (error) {
     console.error('Failed to fetch user profile:', error);
-    return { educationData: [], projectsData: [] };
+    return { educationData: [], projectsData: [],professionalData: [] };
   }
 };
 
@@ -32,6 +35,7 @@ interface PersonalInfoProps {
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
   const [educationData, setEducationData] = useState<any[]>([]);
   const [projectsData, setProjectsData] = useState<any[]>([]);
+  const [info, setInfo] = useState<any[]>([]);
   const [profileData, setProfileData] = useState<any>(null);
 
   useEffect(() => {
@@ -40,6 +44,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
       setEducationData(userProfileData.educationData);
       setProjectsData(userProfileData.projectsData);
       setProfileData(userProfileData.profileData);
+      setInfo(userProfileData.professionalData);
     };
 
     if (id) {
@@ -96,6 +101,26 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
               key={index}
               className="min-w-[35%]"
               projects={project}
+            />
+          ))
+        ) : (
+          <div className="text-center py-10 w-[100%]">
+            <PackageOpen className="mx-auto text-gray-500" size="100" />
+            <p className="text-gray-500">No data available.</p>
+          </div>
+        )}
+      </div>
+      <Separator className="my-1" />
+      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+        Professional-Info
+      </h2>
+      <div className="flex gap-4 overflow-x-scroll no-scrollbar pb-8">
+        {info.length > 0 ? (
+          info.map((project: any, index: number) => (
+            <ProfessionalCard
+              key={index}
+              className="min-w-[35%]"
+              info={project}
             />
           ))
         ) : (
