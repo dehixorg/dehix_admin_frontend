@@ -1,7 +1,7 @@
-'use client';
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+"use client";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -10,22 +10,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
-  degree: z.string().nonempty('Degree is required'),
-  universityName: z.string().nonempty('University name is required'),
-  fieldOfStudy: z.string().nonempty('Field of study is required'),
-  startDate: z.string().nonempty('Start date is required'),
-  endDate: z.string().nonempty('End date is required'),
-  grade: z.string().nonempty('Grade is required'),
-  oracleAssigned: z.string().nonempty('Oracle assigned is required'),
-  verificationStatus: z.string().nonempty('Verification status is required'),
+  degree: z.string().nonempty("Degree is required"),
+  universityName: z.string().nonempty("University name is required"),
+  fieldOfStudy: z.string().nonempty("Field of study is required"),
+  startDate: z.string().nonempty("Start date is required"),
+  endDate: z.string().nonempty("End date is required"),
+  grade: z.string().nonempty("Grade is required"),
+  oracleAssigned: z.string().nonempty("Oracle assigned is required"),
+  verificationStatus: z.string().nonempty("Verification status is required"),
   verificationUpdateTime: z
     .string()
-    .nonempty('Verification update time is required'),
+    .nonempty("Verification update time is required"),
   comments: z.string().optional(),
 });
 
@@ -35,16 +35,16 @@ export default function EducationForm() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      degree: '',
-      universityName: '',
-      fieldOfStudy: '',
-      startDate: '',
-      endDate: '',
-      grade: '',
-      oracleAssigned: '',
-      verificationStatus: '',
-      verificationUpdateTime: '',
-      comments: '',
+      degree: "",
+      universityName: "",
+      fieldOfStudy: "",
+      startDate: "",
+      endDate: "",
+      grade: "",
+      oracleAssigned: "",
+      verificationStatus: "",
+      verificationUpdateTime: "",
+      comments: "",
     },
   });
 
@@ -58,7 +58,7 @@ export default function EducationForm() {
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
           className="max-w-md w-full grid gap-4"
-          style={{ gridTemplateColumns: '1fr 1fr' }}
+          style={{ gridTemplateColumns: "1fr 1fr" }}
         >
           <FormField
             control={form.control}

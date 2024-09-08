@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Menu } from 'lucide-react';
+import React, { useState } from "react";
+import { Menu } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export function ProjectSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -20,7 +20,7 @@ export function ProjectSidebar() {
 
       <div
         className={`fixed inset-y-0 left-0 z-40
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:fixed md:translate-x-0`}
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:fixed md:translate-x-0`}
       >
         <ScrollArea className="min-h-screen w-60 rounded-md border top-0 left-0">
           <div className="p-4">

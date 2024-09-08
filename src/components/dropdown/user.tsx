@@ -1,6 +1,6 @@
-import React from 'react';
-import { User as UserIcon } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import { User as UserIcon } from "lucide-react";
+import Link from "next/link";
 
 import {
   DropdownMenu,
@@ -9,9 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface UserDropdownMenuProps {
   email: string;
@@ -40,7 +40,7 @@ const UserDropdownMenu: React.FC<UserDropdownMenuProps> = ({ email, type }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Link
-            href={`/settings/${type === 'freelancer' ? 'personal-info' : 'business-info'}`}
+            href={`/settings/${type === "freelancer" ? "personal-info" : "business-info"}`}
           >
             Settings
           </Link>

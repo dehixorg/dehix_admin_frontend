@@ -1,8 +1,9 @@
-'use client';
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { PackageOpen } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+"use client";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { PackageOpen } from "lucide-react";
+
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -10,10 +11,15 @@ import {
   TableRow,
   TableHead,
   TableCell,
+<<<<<<< HEAD
 } from '@/components/ui/table';
 import { axiosInstance } from '@/lib/axiosinstance';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+=======
+} from "@/components/ui/table";
+import { axiosInstance } from "@/lib/axiosinstance";
+>>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
 
 interface UserData {
   _id:string;
@@ -32,11 +38,11 @@ const FreelancerTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('/freelancer/allfreelancer');
-        console.log('API Response:', response.data);
+        const response = await axiosInstance.get("/freelancer/allfreelancer");
+        console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -86,7 +92,10 @@ const FreelancerTable: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.

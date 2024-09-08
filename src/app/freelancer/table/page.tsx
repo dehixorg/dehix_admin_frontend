@@ -1,16 +1,16 @@
-'use client';
-import { Search } from 'lucide-react';
+"use client";
+import { Search } from "lucide-react";
 
-import { Input } from '@/components/ui/input';
-import SidebarMenu from '@/components/menu/sidebarMenu';
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
-import DropdownProfile from '@/components/shared/DropdownProfile';
+import { Input } from "@/components/ui/input";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 import {
   menuItemsBottom,
   menuItemsTop,
-} from '@/config/menuItems/admin/dashboardMenuItems';
-import FreelancerTable from '@/components/freelancer/table/FreelancerTable';
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import FreelancerTable from "@/components/freelancer/table/FreelancerTable";
 
 export default function Talent() {
   return (
@@ -29,8 +29,13 @@ export default function Talent() {
           />
           <Breadcrumb
             items={[
+<<<<<<< HEAD
               { label: 'Dashboard', link: '#' },
               { label: 'Freelancer', link: '#' },
+=======
+              { label: "Dashboard", link: "/dashboard" },
+              { label: "Freelancer", link: "#" },
+>>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
@@ -44,7 +49,7 @@ export default function Talent() {
           <DropdownProfile />
         </header>
         <main className="ml-5">
-          <FreelancerTable/>
+          <FreelancerTable />
         </main>
       </div>
     </div>

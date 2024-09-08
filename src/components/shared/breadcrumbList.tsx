@@ -1,7 +1,7 @@
 // components/Breadcrumb.tsx
 
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 import {
   Breadcrumb as UiBreadcrumb,
@@ -9,7 +9,7 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from "@/components/ui/breadcrumb";
 
 interface BreadcrumbProps {
   items: { link: string; label: string }[];

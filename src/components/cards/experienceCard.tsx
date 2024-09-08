@@ -1,7 +1,7 @@
-import React from 'react';
-import { Github, MessageSquareIcon } from 'lucide-react';
+import React from "react";
+import { Github, MessageSquareIcon } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -9,14 +9,14 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 interface ExperienceProps {
   company: string;
   jobTitle: string;
   workDescription: string;
   workFrom: string;
-  workTo: string | 'current';
+  workTo: string | "current";
   referencePersonName: string;
   referencePersonContact: string;
   githubRepoLink: string;
@@ -54,9 +54,9 @@ const ExperienceCard: React.FC<ExperienceProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {verificationStatus === 'pending' ? (
+        {verificationStatus === "pending" ? (
           <Badge className="bg-warning hover:bg-warning">PENDING</Badge>
-        ) : verificationStatus === 'verified' ? (
+        ) : verificationStatus === "verified" ? (
           <Badge className="bg-success hover:bg-success">VERIFIED</Badge>
         ) : (
           <Badge className="bg-blue-500 hover:bg-blue-600">ADDED</Badge>
@@ -83,9 +83,9 @@ const ExperienceCard: React.FC<ExperienceProps> = ({
         </p>
         <p>-</p>
         <p className="text-sm font-semibold text-black bg-white px-3 py-1 uppercase rounded">
-          {workTo !== 'current'
+          {workTo !== "current"
             ? new Date(workTo).toLocaleDateString()
-            : 'Current'}
+            : "Current"}
         </p>
       </CardFooter>
     </Card>

@@ -1,6 +1,6 @@
-import * as z from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
   Form,
@@ -9,9 +9,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const formatDateTime = (dateString: string) => {
   const date = new Date(dateString);
@@ -19,23 +19,23 @@ const formatDateTime = (dateString: string) => {
 };
 
 const formSchema = z.object({
-  id: z.string().nonempty('ID is required'),
-  projectName: z.string().nonempty('Project Name is required'),
-  description: z.string().nonempty('Description is required'),
-  verified: z.string().nonempty('Verified is required'),
-  githubLink: z.string().url('Invalid URL'),
-  startDate: z.string().nonempty('Start Date is required'),
-  endDate: z.string().nonempty('End Date is required'),
-  refer: z.string().nonempty('Refer is required'),
-  techUsed: z.array(z.string()).nonempty('Tech Used is required'),
-  role: z.string().nonempty('Role is required'),
-  projectType: z.string().nonempty('Project Type is required'),
-  oracleAssigned: z.string().nonempty('Oracle Assigned is required'),
-  verificationStatus: z.string().nonempty('Verification Status is required'),
+  id: z.string().nonempty("ID is required"),
+  projectName: z.string().nonempty("Project Name is required"),
+  description: z.string().nonempty("Description is required"),
+  verified: z.string().nonempty("Verified is required"),
+  githubLink: z.string().url("Invalid URL"),
+  startDate: z.string().nonempty("Start Date is required"),
+  endDate: z.string().nonempty("End Date is required"),
+  refer: z.string().nonempty("Refer is required"),
+  techUsed: z.array(z.string()).nonempty("Tech Used is required"),
+  role: z.string().nonempty("Role is required"),
+  projectType: z.string().nonempty("Project Type is required"),
+  oracleAssigned: z.string().nonempty("Oracle Assigned is required"),
+  verificationStatus: z.string().nonempty("Verification Status is required"),
   verificationUpdateTime: z
     .string()
-    .nonempty('Verification Update Time is required'),
-  comments: z.string().nonempty('Comments are required'),
+    .nonempty("Verification Update Time is required"),
+  comments: z.string().nonempty("Comments are required"),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -44,21 +44,21 @@ export default function ProjectForm() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id: '',
-      projectName: '',
-      description: '',
-      verified: '',
-      githubLink: '',
-      startDate: '',
-      endDate: '',
-      refer: '',
-      techUsed: [''],
-      role: '',
-      projectType: '',
-      oracleAssigned: '',
-      verificationStatus: '',
-      verificationUpdateTime: formatDateTime('2024-07-07T12:47:02.578+00:00'),
-      comments: '',
+      id: "",
+      projectName: "",
+      description: "",
+      verified: "",
+      githubLink: "",
+      startDate: "",
+      endDate: "",
+      refer: "",
+      techUsed: [""],
+      role: "",
+      projectType: "",
+      oracleAssigned: "",
+      verificationStatus: "",
+      verificationUpdateTime: formatDateTime("2024-07-07T12:47:02.578+00:00"),
+      comments: "",
     },
   });
 

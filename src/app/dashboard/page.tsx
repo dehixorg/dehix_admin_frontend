@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   ChevronLeft,
   ChevronRight,
@@ -19,14 +19,14 @@ import {
   FolderKanban,
   Sparkles,
   Boxes,
-} from 'lucide-react';
-import { useSelector } from 'react-redux';
+} from "lucide-react";
+import { useSelector } from "react-redux";
 
-import CustomCard from '@/components/newcomp-test/act-proj/active-card';
-import CardWithForm from '@/components/newcomp-test/pen-proj/pending-card';
-import { Badge } from '@/components/ui/badge';
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import { Button } from '@/components/ui/button';
+import CustomCard from "@/components/newcomp-test/act-proj/active-card";
+import CardWithForm from "@/components/newcomp-test/pen-proj/pending-card";
+import { Badge } from "@/components/ui/badge";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -34,7 +34,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -43,14 +43,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-} from '@/components/ui/pagination';
-import { Separator } from '@/components/ui/separator';
+} from "@/components/ui/pagination";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -58,54 +58,54 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RootState } from '@/lib/store';
-import SidebarMenu, { MenuItem } from '@/components/menu/sidebarMenu';
-import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
-import DropdownProfile from '@/components/shared/DropdownProfile';
-import dummyData from '@/dummydata.json';
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RootState } from "@/lib/store";
+import SidebarMenu, { MenuItem } from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import dummyData from "@/dummydata.json";
 
 export default function Dashboard() {
   const user = useSelector((state: RootState) => state.user);
   const menuItemsTop: MenuItem[] = [
     {
-      href: '#',
+      href: "#",
       icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
-      label: 'Dehix',
+      label: "Dehix",
     },
     {
-      href: '#',
+      href: "#",
       icon: <Home className="h-5 w-5" />,
-      label: 'Dashboard',
+      label: "Dashboard",
     },
     {
-      href: '#',
+      href: "#",
       icon: <Package className="h-5 w-5" />,
-      label: 'Projects',
+      label: "Projects",
     },
     {
-      href: '#',
+      href: "#",
       icon: <Users2 className="h-5 w-5" />,
-      label: 'Customers',
+      label: "Customers",
     },
     {
-      href: '#',
+      href: "#",
       icon: <LineChart className="h-5 w-5" />,
-      label: 'Analytics',
+      label: "Analytics",
     },
     {
-      href: '/dashboard/talent',
+      href: "/dashboard/talent",
       icon: <Sparkles className="h-5 w-5" />,
-      label: 'Talent',
+      label: "Talent",
     },
   ];
 
   const menuItemsBottom: MenuItem[] = [
     {
-      href: '/settings/personal-info',
+      href: "/settings/personal-info",
       icon: <Settings className="h-5 w-5" />,
-      label: 'Settings',
+      label: "Settings",
     },
   ];
   console.log(user);
@@ -126,9 +126,9 @@ export default function Dashboard() {
 
           <Breadcrumb
             items={[
-              { label: 'Dashboard', link: '/dashboard/freelancer' },
-              { label: 'Orders', link: '/dashboard/freelancer' },
-              { label: 'Recent Orders', link: '#' },
+              { label: "Dashboard", link: "/dashboard/freelancer" },
+              { label: "Orders", link: "/dashboard/freelancer" },
+              { label: "Recent Orders", link: "#" },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
@@ -586,7 +586,7 @@ export default function Dashboard() {
               </CardContent>
               <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                 <div className="text-xs text-muted-foreground">
-                  Updated{' '}
+                  Updated{" "}
                   <time dateTime="2023-11-23">
                     {dummyData.dashboardorderUpdateDate}
                   </time>

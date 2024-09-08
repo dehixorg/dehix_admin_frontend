@@ -1,9 +1,9 @@
 // src/components/ProjectComponent.tsx
 
-import React from 'react';
-import { MapPinned } from 'lucide-react';
+import React from "react";
+import { MapPinned } from "lucide-react";
 
-import { Separator } from '@/components/ui/separator';
+import { Separator } from "@/components/ui/separator";
 
 interface ProjectProps {
   project_name: string;
@@ -87,7 +87,7 @@ const ProjectComponent: React.FC<ProjectProps> = ({
         </div>
         <div className="mb-2">
           <p className="text-sm font-bold">
-            <strong>Skills Required:</strong> {skills_required.join(', ')}
+            <strong>Skills Required:</strong> {skills_required.join(", ")}
           </p>
         </div>
         <div className="mb-2">

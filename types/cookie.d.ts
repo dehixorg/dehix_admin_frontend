@@ -1,4 +1,4 @@
-declare module 'cookie' {
+declare module "cookie" {
   export function parse(str: string, options?: any): { [key: string]: string };
   export function serialize(
     name: string,
@@ -10,7 +10,7 @@ declare module 'cookie' {
       expires?: Date;
       httpOnly?: boolean;
       secure?: boolean;
-      sameSite?: boolean | 'lax' | 'strict' | 'none';
+      sameSite?: boolean | "lax" | "strict" | "none";
     },
   ): string;
 }

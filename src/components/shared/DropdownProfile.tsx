@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { UserIcon, LogOut } from 'lucide-react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState } from "react";
+import { UserIcon, LogOut } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Cookies from "js-cookie";
 
 import {
   DropdownMenu,
@@ -12,11 +12,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { RootState } from '@/lib/store';
-import { clearUser } from '@/lib/userSlice';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { RootState } from "@/lib/store";
+import { clearUser } from "@/lib/userSlice";
 
 export default function DropdownProfile() {
   const user = useSelector((state: RootState) => state.user);
@@ -31,16 +31,16 @@ export default function DropdownProfile() {
       setUserType(user.type);
     } else {
       // If not, get it from cookies
-      const storedUserType = Cookies.get('userType');
+      const storedUserType = Cookies.get("userType");
       setUserType(storedUserType || null);
     }
   }, [user]);
 
   const handleLogout = () => {
     dispatch(clearUser());
-    Cookies.remove('userType');
-    Cookies.remove('token');
-    router.replace('/auth/login');
+    Cookies.remove("userType");
+    Cookies.remove("token");
+    router.replace("/auth/login");
   };
 
   return (
@@ -63,11 +63,11 @@ export default function DropdownProfile() {
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div>
-          {userType === 'freelancer' ? (
+          {userType === "freelancer" ? (
             <Link href="/freelancer/settings/personal-info">
               <DropdownMenuItem>Settings</DropdownMenuItem>
             </Link>
-          ) : userType === 'business' ? (
+          ) : userType === "business" ? (
             <Link href="/business/settings/business-info">
               <DropdownMenuItem>Settings</DropdownMenuItem>
             </Link>

@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { z } from 'zod';
-import { LoaderCircle, Rocket, Eye, EyeOff } from 'lucide-react';
-import { ToastAction } from '@radix-ui/react-toast';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useState, useRef } from "react";
+import { z } from "zod";
+import { LoaderCircle, Rocket, Eye, EyeOff } from "lucide-react";
+import { ToastAction } from "@radix-ui/react-toast";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import countries from '../../../country-codes.json';
+import countries from "../../../country-codes.json";
 
-import PhoneNumberForm from './phoneNumberChecker';
+import PhoneNumberForm from "./phoneNumberChecker";
 
-import TextInput from '@/components/shared/input'; // Import the reusable TextInput component
-import { Button } from '@/components/ui/button';
-import { DatePicker } from '@/components/shared/datePicker';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { toast } from '@/components/ui/use-toast';
-import { Label } from '@/components/ui/label';
+import TextInput from "@/components/shared/input"; // Import the reusable TextInput component
+import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/shared/datePicker";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { toast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
 import {
   Form,
   FormControl,
@@ -27,43 +27,43 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import OtpLogin from '@/components/shared/otpDialog';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import OtpLogin from "@/components/shared/otpDialog";
 
 const profileFormSchema = z.object({
   firstName: z
     .string()
-    .min(2, { message: 'First Name must be at least 2 characters.' }),
+    .min(2, { message: "First Name must be at least 2 characters." }),
   lastName: z
     .string()
-    .min(2, { message: 'Last Name must be at least 2 characters.' }),
-  email: z.string().email({ message: 'Email must be a valid email address.' }),
+    .min(2, { message: "Last Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Email must be a valid email address." }),
   userName: z
     .string()
-    .min(3, { message: 'Username must be at least 3 characters long' })
-    .max(20, { message: 'Username must be less than 20 characters long' })
+    .min(3, { message: "Username must be at least 3 characters long" })
+    .max(20, { message: "Username must be less than 20 characters long" })
     .regex(/^[a-zA-Z0-9_]+$/, {
-      message: 'Username can only contain letters, numbers, and underscores',
+      message: "Username can only contain letters, numbers, and underscores",
     }), // Adjust regex as needed
   phone: z
     .string()
-    .min(10, { message: 'Phone number must be at least 10 digits.' })
-    .regex(/^\d+$/, { message: 'Phone number can only contain digits.' }),
+    .min(10, { message: "Phone number must be at least 10 digits." })
+    .regex(/^\d+$/, { message: "Phone number can only contain digits." }),
   githubLink: z.string().url().optional(),
   resume: z.string().url().optional(),
   linkedin: z.string().url().optional(),
-  personalWebsite: z.string().url().or(z.literal('')).optional(), // Allow empty string or valid URL
+  personalWebsite: z.string().url().or(z.literal("")).optional(), // Allow empty string or valid URL
   password: z
     .string()
-    .min(6, { message: 'Password must be at least 6 characters.' }),
+    .min(6, { message: "Password must be at least 6 characters." }),
   perHourPrice: z.number().refine((value) => value >= 0, {
-    message: 'Price must be a non-negative number.',
+    message: "Price must be a non-negative number.",
   }),
   workExperience: z
     .number()
-    .min(0, 'Work experience must be at least 0 years')
-    .max(60, 'Work experience must not exceed 60 years'),
+    .min(0, "Work experience must be at least 0 years")
+    .max(60, "Work experience must not exceed 60 years"),
   dob: z.string().optional(),
 });
 
@@ -72,8 +72,8 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 export default function FreelancerRegisterForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [code, setCode] = useState<string>('IN');
-  const [phone, setPhone] = useState<string>('');
+  const [code, setCode] = useState<string>("IN");
+  const [phone, setPhone] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -81,21 +81,21 @@ export default function FreelancerRegisterForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      userName: '',
-      phone: '',
-      githubLink: '',
-      resume: '',
-      linkedin: '',
-      personalWebsite: '',
-      password: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      userName: "",
+      phone: "",
+      githubLink: "",
+      resume: "",
+      linkedin: "",
+      personalWebsite: "",
+      password: "",
       perHourPrice: 0,
       workExperience: 0,
-      dob: '',
+      dob: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   const togglePasswordVisibility = () => {
@@ -111,7 +111,7 @@ export default function FreelancerRegisterForm() {
     const formData = {
       ...data,
       phone: `${countries.find((c) => c.code === code)?.dialCode}${data.phone}`,
-      role: 'freelancer',
+      role: "freelancer",
       connects: 0,
       professionalInfo: {},
       skills: [],
@@ -119,26 +119,26 @@ export default function FreelancerRegisterForm() {
       education: {},
       projects: {},
       isFreelancer: true,
-      refer: { name: 'string', contact: 'string' },
+      refer: { name: "string", contact: "string" },
       pendingProject: [],
       rejectedProject: [],
       acceptedProject: [],
       oracleProject: [],
       userDataForVerification: [],
       interviewsAligned: [],
-      oracleStatus: 'notApplied',
+      oracleStatus: "notApplied",
       dob: data.dob ? new Date(data.dob).toISOString() : null,
     };
     try {
-      await axiosInstance.post('/register/freelancer', formData);
-      toast({ title: 'Account created successfully!' });
+      await axiosInstance.post("/register/freelancer", formData);
+      toast({ title: "Account created successfully!" });
       setIsModalOpen(true);
     } catch (error: any) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Uh oh! Something went wrong.',
-        description: `${'Invalid Credentials ' || 'Something went wrong!'}`,
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `${"Invalid Credentials " || "Something went wrong!"}`,
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     } finally {
@@ -232,7 +232,7 @@ export default function FreelancerRegisterForm() {
                       <div className="relative">
                         <Input
                           placeholder="Enter your password"
-                          type={showPassword ? 'text' : 'password'}
+                          type={showPassword ? "text" : "password"}
                           {...field}
                         />
                         <button
@@ -288,7 +288,7 @@ export default function FreelancerRegisterForm() {
               <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <Rocket className="mr-2 h-4 w-4" />
-            )}{' '}
+            )}{" "}
             Create an account
           </Button>
           <OtpLogin
