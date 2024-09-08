@@ -11,15 +11,12 @@ import {
   TableRow,
   TableHead,
   TableCell,
-<<<<<<< HEAD
 } from '@/components/ui/table';
 import { axiosInstance } from '@/lib/axiosinstance';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-=======
-} from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
->>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
+
+
 
 interface UserData {
   _id:string;
