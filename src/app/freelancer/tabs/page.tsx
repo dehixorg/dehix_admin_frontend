@@ -1,30 +1,23 @@
-'use client';
-import { Search } from 'lucide-react';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+"use client";
+import { Search } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import DropdownProfile from '@/components/shared/DropdownProfile';
-import { Input } from '@/components/ui/input';
-import SidebarMenu from '@/components/menu/sidebarMenu';
-import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import { Input } from "@/components/ui/input";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
   menuItemsTop,
   menuItemsBottom,
-} from '@/config/menuItems/admin/dashboardMenuItems';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { useSearchParams } from "next/navigation";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
 import SkillDomain from "@/components/freelancer/freelancer-info/tabs/skillDomain/skillDomain";
 import Project from "@/components/freelancer/freelancer-info/tabs/project/project";
 import OracleProject from "@/components/freelancer/freelancer-info/tabs/oracleProject/oracleProject";
-
 
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
@@ -47,10 +40,9 @@ const FreelancerPage = () => {
 
           <Breadcrumb
             items={[
-              { label: 'Dashboard', link: '' },
-              { label: 'Freelancer', link: '/freelancer/table' },
-              { label: id as string , link: '#' },
-
+              { label: "Dashboard", link: "" },
+              { label: "Freelancer", link: "/freelancer/table" },
+              { label: id as string, link: "#" },
             ]}
           />
 
@@ -66,7 +58,7 @@ const FreelancerPage = () => {
           <DropdownProfile />
         </header>
         <main className="ml-5 mr-5">
-          <Tabs defaultValue="Personal-Info" >
+          <Tabs defaultValue="Personal-Info">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
               <TabsTrigger value="Project">Projects</TabsTrigger>
@@ -77,7 +69,7 @@ const FreelancerPage = () => {
               <PersonalInfo id={id || ""} />
             </TabsContent>
             <TabsContent value="Project">
-              <Project id={id || ""}  />
+              <Project id={id || ""} />
             </TabsContent>
             <TabsContent value="Oracle-Project">
               <OracleProject id={id || ""} />
@@ -90,5 +82,5 @@ const FreelancerPage = () => {
       </div>
     </div>
   );
-}
+};
 export default FreelancerPage;

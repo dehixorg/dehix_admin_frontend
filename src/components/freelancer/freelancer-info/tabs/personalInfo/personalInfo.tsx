@@ -1,30 +1,34 @@
-'use client';
-import { useSelector } from 'react-redux';
-import { PackageOpen } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { RootState } from '@/lib/store';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { Separator } from '@/components/ui/separator';
-import { educationCard as EducationCard } from '../educationalInfo/educationalInfo'; 
-import { projectsCard as ProjectsCard } from '../professionalProjects/professionalProjects';
-import { UserProfilePage } from '../personalinfoCards/personalinfoCards';
-import { ProfessionalCard } from '../professionalInfo/professionalinfoCard';
+"use client";
+import { useSelector } from "react-redux";
+import { PackageOpen } from "lucide-react";
+import React, { useEffect, useState } from "react";
+
+import { educationCard as EducationCard } from "../educationalInfo/educationalInfo";
+import { projectsCard as ProjectsCard } from "../professionalProjects/professionalProjects";
+import { UserProfilePage } from "../personalinfoCards/personalinfoCards";
+import { ProfessionalCard } from "../professionalInfo/professionalinfoCard";
+
+import { Separator } from "@/components/ui/separator";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { RootState } from "@/lib/store";
 
 const fetchUserProfile = async (id: string) => {
   try {
     const response = await axiosInstance.get(`/freelancer/${id}`);
     const educationData = Object.values(response.data.education || {});
     const projectsData = Object.values(response.data.projects || {});
-    const professionalData  = Object.values(response.data.professionalInfo || {});
+    const professionalData = Object.values(
+      response.data.professionalInfo || {},
+    );
     const profileData = response.data;
     // console.log('Education:', educationData);
     // console.log('Projects:', projectsData);
     // console.log('Professional:', professionalData );
-  
-    return { educationData, projectsData,profileData ,professionalData  };
+
+    return { educationData, projectsData, profileData, professionalData };
   } catch (error) {
-    console.error('Failed to fetch user profile:', error);
-    return { educationData: [], projectsData: [],professionalData: [] };
+    console.error("Failed to fetch user profile:", error);
+    return { educationData: [], projectsData: [], professionalData: [] };
   }
 };
 
@@ -32,7 +36,8 @@ interface PersonalInfoProps {
   id: string; // Add id prop
 }
 
-const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
+const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
+  // Use id prop
   const [educationData, setEducationData] = useState<any[]>([]);
   const [projectsData, setProjectsData] = useState<any[]>([]);
   const [info, setInfo] = useState<any[]>([]);
@@ -132,6 +137,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => { // Use id prop
       </div>
     </div>
   );
-}
+};
 
 export default PersonalInfo;

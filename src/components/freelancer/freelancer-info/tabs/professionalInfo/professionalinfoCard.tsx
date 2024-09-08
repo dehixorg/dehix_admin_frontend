@@ -1,45 +1,49 @@
-import { Github } from 'lucide-react';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"  
+import { Github } from "lucide-react";
 import React from "react";
-import { cn } from '@/lib/utils';
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface ProfessionalInfo {
-    id: string;
-    company: string;
-    jobTitle: string;
-    workDescription: string;
-    workFrom: string;
-    workTo: string;
-    referencePersonName: string;
-    referencePersonContact: string;
-    githubRepoLink: string;
-    oracleAssigned: string;
-    verificationStatus: string;
-    verificationUpdateTime: string;
-    comments: string;
+  id: string;
+  company: string;
+  jobTitle: string;
+  workDescription: string;
+  workFrom: string;
+  workTo: string;
+  referencePersonName: string;
+  referencePersonContact: string;
+  githubRepoLink: string;
+  oracleAssigned: string;
+  verificationStatus: string;
+  verificationUpdateTime: string;
+  comments: string;
 }
 type ProfessionalCardProps = React.ComponentProps<typeof Card> & {
-    info: ProfessionalInfo;
-  };
+  info: ProfessionalInfo;
+};
 
-export  function ProfessionalCard({   className,
-    info,
-    ...props
-  }: ProfessionalCardProps) {
-    return (
-        <Card className={cn('flex flex-col', className)} {...props}>
+export function ProfessionalCard({
+  className,
+  info,
+  ...props
+}: ProfessionalCardProps) {
+  return (
+    <Card className={cn("flex flex-col", className)} {...props}>
       <CardHeader>
         <CardTitle className="text-xl font-bold mb-2">{info.company}</CardTitle>
-        <CardDescription className="text-lg font-semibold mb-2">{info.jobTitle}</CardDescription>
+        <CardDescription className="text-lg font-semibold mb-2">
+          {info.jobTitle}
+        </CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <div className="mb-4 border-b pb-4">
           <p>
@@ -48,11 +52,15 @@ export  function ProfessionalCard({   className,
           </p>
           <p>
             <strong>Work From:</strong>{" "}
-            <span className="text-gray-300">{new Date(info.workFrom).toLocaleDateString()}</span>
+            <span className="text-gray-300">
+              {new Date(info.workFrom).toLocaleDateString()}
+            </span>
           </p>
           <p>
             <strong>Work To:</strong>{" "}
-            <span className="text-gray-300">{new Date(info.workTo).toLocaleDateString()}</span>
+            <span className="text-gray-300">
+              {new Date(info.workTo).toLocaleDateString()}
+            </span>
           </p>
         </div>
 
@@ -93,7 +101,9 @@ export  function ProfessionalCard({   className,
           </p>
           <p>
             <strong>Verification Update Time:</strong>{" "}
-            <span className="text-gray-300">{new Date(info.verificationUpdateTime).toLocaleDateString()}</span>
+            <span className="text-gray-300">
+              {new Date(info.verificationUpdateTime).toLocaleDateString()}
+            </span>
           </p>
         </div>
 
@@ -105,5 +115,5 @@ export  function ProfessionalCard({   className,
         </div>
       </CardContent>
     </Card>
-    );
+  );
 }
