@@ -30,13 +30,9 @@ type ProfessionalCardProps = React.ComponentProps<typeof Card> & {
   info: ProfessionalInfo;
 };
 
-export function ProfessionalCard({
-  className,
-  info,
-  ...props
-}: ProfessionalCardProps) {
+export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
   return (
-    <Card className={cn("flex flex-col", className)} {...props}>
+    <Card className={cn("flex flex-col")} {...props}>
       <CardHeader>
         <CardTitle className="text-xl font-bold mb-2">{info.company}</CardTitle>
         <CardDescription className="text-lg font-semibold mb-2">

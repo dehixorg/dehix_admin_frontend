@@ -122,11 +122,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
       <div className="flex gap-4 overflow-x-scroll no-scrollbar pb-8">
         {info.length > 0 ? (
           info.map((project: any, index: number) => (
-            <ProfessionalCard
-              key={index}
-              className="min-w-[35%]"
-              info={project}
-            />
+            <ProfessionalCard key={index} info={project} />
           ))
         ) : (
           <div className="text-center py-10 w-[100%]">

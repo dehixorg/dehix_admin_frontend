@@ -43,13 +43,8 @@ export default function Talent() {
           </div>
           <DropdownProfile />
         </header>
-<<<<<<< HEAD
         <main className="ml-5 mr-3">
-          <FaqTable/>
-=======
-        <main className="ml-5">
           <FaqTable />
->>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
         </main>
       </div>
     </div>

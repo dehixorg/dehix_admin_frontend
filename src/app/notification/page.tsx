@@ -7,32 +7,15 @@ import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
   menuItemsBottom,
   menuItemsTop,
-<<<<<<< HEAD
-} from '@/config/menuItems/admin/dashboardMenuItems';
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import DropdownProfile from '@/components/shared/DropdownProfile';
-import NotifyTable from '@/components/Notification/notifyTable';
-=======
-} from "@/config/menuItems/business/dashboardMenuItems";
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import NotifyTable from "@/components/Notification/notifyTable";
->>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
 
 export default function Talent() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
-<<<<<<< HEAD
-          menuItemsTop={menuItemsTop}
-          menuItemsBottom={menuItemsBottom}
-          active="Notification"
-        />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <CollapsibleSidebarMenu
-=======
->>>>>>> 12265016d77c98f18a5d93a6195975a701be9913
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
         active="Notification"
@@ -42,7 +25,7 @@ export default function Talent() {
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Market"
+            active="Notification"
           />
           <Breadcrumb
             items={[

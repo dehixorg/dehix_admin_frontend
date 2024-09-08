@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -11,15 +12,12 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-
-
+} from "@/components/ui/table";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { Button } from "@/components/ui/button";
 
 interface UserData {
-  _id:string;
+  _id: string;
   firstName: string;
   email: string;
   phone: string;
@@ -48,7 +46,7 @@ const FreelancerTable: React.FC = () => {
     fetchUserData();
   }, []);
   const handleRedirect = (id: string) => {
-    router.push(`/freelancer/tabs?id=${id}`); 
+    router.push(`/freelancer/tabs?id=${id}`);
   };
 
   return (
@@ -82,7 +80,11 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.skills?.length || 0}</TableCell>
                       <TableCell>{user.domain?.length || 0}</TableCell>
-                      <TableCell><Button  onClick={() => handleRedirect(user._id)}>click</Button></TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleRedirect(user._id)}>
+                          click
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
