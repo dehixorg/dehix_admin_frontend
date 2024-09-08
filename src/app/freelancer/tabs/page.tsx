@@ -29,7 +29,7 @@ import OracleProject from "@/components/freelancer/freelancer-info/tabs/oraclePr
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  console.log("Retrieved ID:", id);
+  // console.log("Retrieved ID:", id);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu

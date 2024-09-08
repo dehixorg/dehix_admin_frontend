@@ -17,9 +17,9 @@ const fetchUserProfile = async (id: string) => {
     const projectsData = Object.values(response.data.projects || {});
     const professionalData  = Object.values(response.data.professionalInfo || {});
     const profileData = response.data;
-    console.log('Education:', educationData);
-    console.log('Projects:', projectsData);
-    console.log('Professional:', professionalData );
+    // console.log('Education:', educationData);
+    // console.log('Projects:', projectsData);
+    // console.log('Professional:', professionalData );
   
     return { educationData, projectsData,profileData ,professionalData  };
   } catch (error) {
