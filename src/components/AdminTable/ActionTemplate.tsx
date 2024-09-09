@@ -1,15 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { default as Div } from "@components/Div";
+import { default as Div } from "@/components/ui";
 import styled from "styled-components";
 import { PrimaryButton, ButtonRaisedIcon } from "@components/Button";
 import Icon from "@components/Icon";
-import SearchBar from "./components/SearchBar";
 import Calendar from "@components/Calendar";
 import Checkbox from "@components/Checkbox";
 import Label from "@components/Label";
 import MultiSelect from "@components/MultiSelect";
 import { useIntl } from "react-intl";
+
+import SearchBar from "./components/SearchBar";
 
 const Button = styled(ButtonRaisedIcon)`
   background-color: inherit !important;

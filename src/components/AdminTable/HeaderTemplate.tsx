@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import ProgressSpinner from "@components/ProgressSpinner";
 import { default as Div } from "@components/Div";
-import ActionTemplate from "./ActionTemplate";
 import { onFilterSelectedData } from "@utils/utils";
+
+import ActionTemplate from "./ActionTemplate";
 import FilterTemplate from "./FilterTemplate";
 import FilterCapsule from "./FilterCapsule";
 
@@ -21,7 +22,7 @@ export const HeaderFilterTemplate = (props) => {
   } = props;
   const { messages } = useIntl();
   const [showFilterPopup, setShowFilterPopup] = useState(false);
-  let [options, setOptions] = useState(filters);
+  const [options, setOptions] = useState(filters);
 
   useEffect(() => {
     setOptions(filters);

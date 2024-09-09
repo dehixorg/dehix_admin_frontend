@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { compose, space, layout, flexbox, position } from "styled-system";
 import { H2 } from "@components/Heading";
-import ActionTemplate from "./ActionTemplate";
 import { useIntl } from "react-intl";
 import { default as PRSidebar } from "@components/Sidebar";
+
+import ActionTemplate from "./ActionTemplate";
 import CustomAccordion from "./components/CustomAccordion";
 
 const Sidebar = styled(PRSidebar)`
@@ -99,7 +100,7 @@ const FilterTemplate = (props) => {
   ];
 
   const values = options?.map((value) => {
-    let obj = value;
+    const obj = value;
     obj.options = obj?.options?.map((val) => ({
       ...val,
       onClick: handleOnClick,

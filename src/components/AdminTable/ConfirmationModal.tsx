@@ -2,10 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 import { useIntl } from "react-intl";
 import Dialog from "@components/Dialog";
-import Div from "../Div";
 import { Text } from "@components/Text";
 import { PrimaryButton } from "@components/Button";
 import { H3 } from "@components/Heading";
+
+import Div from "../Div";
 
 const ConfirmationModal = ({ onClose, context, title }) => {
   const { messages } = useIntl();

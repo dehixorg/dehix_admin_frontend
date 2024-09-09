@@ -3,6 +3,7 @@ import Proptypes from "prop-types";
 import Div from "@components/Div";
 import Icon from "@components/Icon";
 import { TextUpperCase } from "@components/Text";
+
 import ActionTemplate from "../ActionTemplate";
 
 const CustomAccordion = ({ value }) => {

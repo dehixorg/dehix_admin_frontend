@@ -6,6 +6,7 @@ import Div from "@components/Div";
 import CloseIcon from "@assets/close-icon.svg";
 import Link from "@components/Link";
 import { Text, TextMediumWeight } from "@components/Text";
+
 import Logo from "../Logo";
 
 const StyledLink = styled(Link)`
@@ -95,7 +96,7 @@ export const FilterCapsule = ({
     return values?.map((value) => {
       let {
         label = "",
-        id = "",
+         id = "",
         options: multiselectOptions = [],
       } = options.find((opt) => opt.value === value) || {};
       let datelabel = "",

@@ -3,8 +3,9 @@ import styled from "styled-components";
 import Link from "@components/Link";
 import Icon from "@components/Icon";
 import { H5 } from "@components/Heading";
-import Div from "../Div";
 import { SVLANG } from "@utils/constant";
+
+import Div from "../Div";
 
 const StyledDiv = styled(Div)`
   i {

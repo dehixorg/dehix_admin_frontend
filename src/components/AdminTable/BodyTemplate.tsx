@@ -1,9 +1,7 @@
 import React, { memo } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link as RouterLink } from "react-router-dom";
-
 import styled from "styled-components";
-
 import Calendar from "@components/Calendar";
 import Dropdown from "@components/Dropdown";
 import {
@@ -15,7 +13,6 @@ import { TextMediumWeight } from "@components/Text";
 import Tooltip from "@components/ToolTip";
 import Span from "@components/Span";
 import InputText from "@components/StyledInputText";
-
 import { formatDateAndTime, getFormattedNumber } from "@utils/utils";
 
 import MenuButton from "../Table/Utils/MenuButton";

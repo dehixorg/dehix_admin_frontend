@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 import { useLocation, useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
-
 import { saveAs } from "file-saver";
 import Papa from "papaparse";
 import { FilterMatchMode } from "primereact/api";
@@ -11,7 +10,6 @@ import { DataTable as PRDataTable } from "primereact/datatable";
 import { Skeleton } from "primereact/skeleton";
 import styled from "styled-components";
 import { space, layout, flexbox, position } from "styled-system";
-
 import Div from "@components/Div";
 import Dropdown from "@components/Dropdown";
 import Icon from "@components/Icon";
@@ -21,7 +19,6 @@ import ConfirmationModal from "./ConfirmationModal";
 import { HeaderFilterTemplate } from "./HeaderTemplate";
 import getData from "./getData";
 import { paginatorTemplate } from "./PaginatorTemplate";
-
 import { parseFilters } from "./utils";
 
 const StyledDataTable = styled(PRDataTable)(space, layout, flexbox, position);
@@ -130,7 +127,7 @@ const DataTable = ({ config, resetData, dataTableRef }) => {
       return obj;
     });
     onFiltersApply(selectedFilters);
-    let _lazyParams = {
+    const _lazyParams = {
       ...params,
       ...event,
       filters: filterData,
