@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Eye } from "lucide-react";
+import { PackageOpen, ChevronRight  } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -107,156 +107,9 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{user.profiles[0].rate}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
                             <Button variant="outline">
-                              <Eye className="w-4 h-4" />
+                              <ChevronRight  className="w-4 h-4" />
                             </Button>
-                          </DialogTrigger>
-                          <DialogContent className="p-4">
-                            <DialogHeader>
-                              <DialogTitle>Project Details</DialogTitle>
-                              <DialogDescription>
-                                Detailed information about the Project.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <div>
-                              <p>
-                                <strong>Project Name:</strong>{" "}
-                                {user.projectName}
-                              </p>
-                              <p>
-                                <strong>Description:</strong> {user.description}
-                              </p>
-                              <p>
-                                <strong>Company Name:</strong>{" "}
-                                {user.companyName}
-                              </p>
-                              <p>
-                                <strong>Email:</strong> {user.email}
-                              </p>
-                              <p>
-                                <strong>Role:</strong> {user.role}
-                              </p>
-                              <p>
-                                <strong>Project Type:</strong>{" "}
-                                {user.projectType}
-                              </p>
-                              <p>
-                                <strong>Status:</strong> {user.status}
-                              </p>
-                              <p>
-                                <strong>End Date:</strong>{" "}
-                                {user.end ? user.end : "Ongoing"}
-                              </p>
-                              <p>
-                                <strong>Created At:</strong> {user.createdAt}
-                              </p>
-                              <p>
-                                <strong>Updated At:</strong> {user.updatedAt}
-                              </p>
-
-                              <p>
-                                <strong>Skills Required:</strong>{" "}
-                                {user.skillsRequired.length > 0 ? (
-                                  <ul className="list-disc list-inside">
-                                    {user.skillsRequired.map(
-                                      (skill, skillIndex) => (
-                                        <li key={skillIndex}>{skill}</li>
-                                      ),
-                                    )}
-                                  </ul>
-                                ) : (
-                                  <span className="text-gray-500">
-                                    No skills required
-                                  </span>
-                                )}
-                              </p>
-
-                              <p>
-                                <strong>Profiles:</strong>
-                              </p>
-                              {user.profiles.length > 0 ? (
-                                <ul className="list-disc list-inside">
-                                  {user.profiles.map(
-                                    (profile, profileIndex) => (
-                                      <li key={profileIndex}>
-                                        <p>
-                                          <strong>Domain:</strong>{" "}
-                                          {profile.domain}
-                                        </p>
-                                        <p>
-                                          <strong>Freelancers Required:</strong>{" "}
-                                          {profile.freelancersRequired}
-                                        </p>
-                                        <p>
-                                          <strong>Skills:</strong>{" "}
-                                          {profile.skills.length > 0 ? (
-                                            <ul className="list-disc list-inside">
-                                              {profile.skills.map(
-                                                (skill, index) => (
-                                                  <li key={index}>{skill}</li>
-                                                ),
-                                              )}
-                                            </ul>
-                                          ) : (
-                                            <span className="text-gray-500">
-                                              No skills
-                                            </span>
-                                          )}
-                                        </p>
-                                        <p>
-                                          <strong>Experience:</strong>{" "}
-                                          {profile.experience} years
-                                        </p>
-                                        <p>
-                                          <strong>Minimum Connections:</strong>{" "}
-                                          {profile.minConnect}
-                                        </p>
-                                        <p>
-                                          <strong>Rate:</strong> {profile.rate}{" "}
-                                          per hour
-                                        </p>
-                                        <p>
-                                          <strong>Description:</strong>{" "}
-                                          {profile.description}
-                                        </p>
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
-                              ) : (
-                                <p className="text-gray-500">
-                                  No profiles available
-                                </p>
-                              )}
-
-                              <p>
-                                <strong>URL Count:</strong> {user.url.length}
-                              </p>
-                              <ul className="list-disc list-inside">
-                                {user.url.length > 0 ? (
-                                  user.url.map((url, urlIndex) => (
-                                    <li key={urlIndex}>
-                                      <a
-                                        href={url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-500 underline"
-                                      >
-                                        {url}
-                                      </a>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <li className="text-gray-500">
-                                    No URLs available
-                                  </li>
-                                )}
-                              </ul>
-                            </div>
-                          </DialogContent>
-                        </Dialog>
                       </TableCell>
                     </TableRow>
                   ))
