@@ -3,6 +3,7 @@ import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { Plus } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import Image from "next/image";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -223,7 +224,7 @@ const AddNotify: React.FC = () => {
                 >
                   <label className="cursor-pointer">
                     {imagePreview ? (
-                      <img
+                      <Image
                         src={imagePreview as string}
                         alt="Preview"
                         className="w-full h-auto"
