@@ -7,6 +7,8 @@ import { educationCard as EducationCard } from "../educationalInfo/educationalIn
 import { projectsCard as ProjectsCard } from "../professionalProjects/professionalProjects";
 import { UserProfilePage } from "../personalinfoCards/personalinfoCards";
 import { ProfessionalCard } from "../professionalInfo/professionalinfoCard";
+import { Talentcard } from "../talent/talentCards";
+import { ConsultantCards } from "../consultant/ConsultantCards";
 
 import { Separator } from "@/components/ui/separator";
 import { axiosInstance } from "@/lib/axiosinstance";
@@ -20,15 +22,32 @@ const fetchUserProfile = async (id: string) => {
     const professionalData = Object.values(
       response.data.professionalInfo || {},
     );
+    const talent = Object.values(response.data.dehixTalent || {});
+    const consultant = Object.values(response.data.consultant || {});
     const profileData = response.data;
     // console.log('Education:', educationData);
     // console.log('Projects:', projectsData);
     // console.log('Professional:', professionalData );
+    console.log("talent:", talent);
+    console.log("consultant:", consultant);
 
-    return { educationData, projectsData, profileData, professionalData };
+    return {
+      educationData,
+      projectsData,
+      profileData,
+      professionalData,
+      talent,
+      consultant,
+    };
   } catch (error) {
     console.error("Failed to fetch user profile:", error);
-    return { educationData: [], projectsData: [], professionalData: [] };
+    return {
+      educationData: [],
+      projectsData: [],
+      professionalData: [],
+      talent: [],
+      consultant: [],
+    };
   }
 };
 
@@ -42,6 +61,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
   const [projectsData, setProjectsData] = useState<any[]>([]);
   const [info, setInfo] = useState<any[]>([]);
   const [profileData, setProfileData] = useState<any>(null);
+  const [talent, settalent] = useState<any[]>([]);
+  const [consultant, setconsultant] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,6 +70,9 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
       setEducationData(userProfileData.educationData);
       setProjectsData(userProfileData.projectsData);
       setProfileData(userProfileData.profileData);
+      settalent(userProfileData.talent);
+      setconsultant(userProfileData.consultant);
+
       setInfo(userProfileData.professionalData);
     };
 
@@ -123,6 +147,38 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
         {info.length > 0 ? (
           info.map((project: any, index: number) => (
             <ProfessionalCard key={index} info={project} />
+          ))
+        ) : (
+          <div className="text-center py-10 w-[100%]">
+            <PackageOpen className="mx-auto text-gray-500" size="100" />
+            <p className="text-gray-500">No data available.</p>
+          </div>
+        )}
+      </div>
+      <Separator className="my-1" />
+      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+        Dehix-Talent
+      </h2>
+      <div className="flex gap-4 overflow-x-scroll no-scrollbar pb-8">
+        {talent.length > 0 ? (
+          talent.map((talent: any, index: number) => (
+            <Talentcard key={index} info={talent} />
+          ))
+        ) : (
+          <div className="text-center py-10 w-[100%]">
+            <PackageOpen className="mx-auto text-gray-500" size="100" />
+            <p className="text-gray-500">No data available.</p>
+          </div>
+        )}
+      </div>
+      <Separator className="my-1" />
+      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+        Consultant
+      </h2>
+      <div className="flex gap-4 overflow-x-scroll no-scrollbar pb-8">
+        {consultant.length > 0 ? (
+          consultant.map((talent: any, index: number) => (
+            <ConsultantCards key={index} info={talent} />
           ))
         ) : (
           <div className="text-center py-10 w-[100%]">
