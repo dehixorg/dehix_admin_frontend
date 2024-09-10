@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axiosinstance";
+import { useRouter } from "next/navigation";
 
 interface Project {
   _id: string;
@@ -51,11 +52,12 @@ interface Profile {
   rate: number;
   description: string;
   _id: string;
-}
+} 
 
 const ProjectTable: React.FC = () => {
   const [userData, setUserData] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -72,6 +74,9 @@ const ProjectTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleRedirect = (id: string) => {
+    router.push(`/project/tabs?id=${id}`);
+  };
 
   return (
     <div className="px-4">
@@ -107,7 +112,7 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{user.profiles[0].rate}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
-                            <Button variant="outline">
+                            <Button variant="outline" onClick={() => handleRedirect(user._id)}>
                               <ChevronRight  className="w-4 h-4" />
                             </Button>
                       </TableCell>
