@@ -109,7 +109,7 @@ export function CreateProjectBusinessForm() {
   const [tmpSkill, setTmpSkill] = useState<any>("");
 
   const [domains, setDomains] = useState<any>([]);
-  const currDomains = [];
+  const currDomains: string[] = [];
 
   const handleAddSkill = () => {
     if (tmpSkill && !currSkills.some((skill: any) => skill === tmpSkill)) {
