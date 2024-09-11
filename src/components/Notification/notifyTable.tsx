@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen, Eye, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 import AddNotify from "./addNotify";
 
@@ -20,7 +21,6 @@ import {
   DialogTrigger,
   DialogContent,
   DialogHeader,
-  DialogFooter,
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -165,7 +165,7 @@ const NotifyTable: React.FC = () => {
                               </p>
                               {user.image.length > 0 && (
                                 <div className="mt-4">
-                                  <img
+                                  <Image
                                     src={URL.createObjectURL(user.image[0])} // Convert file to URL
                                     alt="Notification"
                                     className="w-full h-auto"
