@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -13,18 +14,21 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { axiosInstance } from "@/lib/axiosinstance";
+import { Button } from "@/components/ui/button";
 
 interface UserData {
+  _id: string;
   firstName: string;
   email: string;
   phone: string;
   skills: string[];
-  domains: string[];
+  domain: string[];
 }
 
 const FreelancerTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -41,6 +45,9 @@ const FreelancerTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleRedirect = (id: string) => {
+    router.push(`/freelancer/tabs?id=${id}`);
+  };
 
   return (
     <div className="px-4">
@@ -55,12 +62,13 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Phone-No.</TableHead>
                   <TableHead>Skill Count</TableHead>
                   <TableHead>Domain Count</TableHead>
+                  <TableHead>More</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -71,12 +79,17 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domains?.length || 0}</TableCell>
+                      <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleRedirect(user._id)}>
+                          click
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen
                           className="mx-auto text-gray-500"
