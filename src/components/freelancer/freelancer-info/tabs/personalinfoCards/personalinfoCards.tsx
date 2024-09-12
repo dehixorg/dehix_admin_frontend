@@ -1,7 +1,6 @@
 "use client";
 import { Linkedin, Github, Globe } from "lucide-react";
 
-import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 
 interface UserProfile {

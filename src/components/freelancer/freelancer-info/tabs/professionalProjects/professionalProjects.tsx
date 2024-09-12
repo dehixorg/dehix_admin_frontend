@@ -26,9 +26,6 @@ interface PersonalProjects {
   verificationUpdateTime: string; // ISO date string
   comments: string;
 }
-interface Projects {
-  [key: string]: PersonalProjects;
-}
 
 type projectsCardProps = React.ComponentProps<typeof Card> & {
   projects: PersonalProjects;

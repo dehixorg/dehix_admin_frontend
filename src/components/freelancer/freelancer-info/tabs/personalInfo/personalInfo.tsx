@@ -1,5 +1,4 @@
 "use client";
-import { useSelector } from "react-redux";
 import { PackageOpen } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
@@ -12,7 +11,6 @@ import { ConsultantCards } from "../consultant/ConsultantCards";
 
 import { Separator } from "@/components/ui/separator";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { RootState } from "@/lib/store";
 
 const fetchUserProfile = async (id: string) => {
   try {

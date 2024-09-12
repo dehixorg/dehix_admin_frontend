@@ -1,7 +1,6 @@
 "use client";
 import { Search } from "lucide-react";
-import { useParams, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
@@ -12,7 +11,6 @@ import {
   menuItemsTop,
   menuItemsBottom,
 } from "@/config/menuItems/admin/dashboardMenuItems";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
 import SkillDomain from "@/components/freelancer/freelancer-info/tabs/skillDomain/skillDomain";

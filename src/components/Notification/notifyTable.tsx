@@ -2,7 +2,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen, Eye, Trash2 } from "lucide-react";
-import Image from "next/image";
 
 import AddNotify from "./addNotify";
 
@@ -31,14 +30,16 @@ interface ImportantUrl {
   urlName: string;
   url: string;
 }
+
 interface UserData {
   _id: string;
   heading: string;
   description: string;
   type: string;
   status: string;
+  background_img: string;
   importantUrl: ImportantUrl[];
-  image: FileList;
+  // AWS image URL
 }
 
 const truncateText = (text: string, maxLength: number) => {
@@ -52,11 +53,12 @@ const NotifyTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(""); //get api
-        console.log("API Response:", response.data);
+        const response = await axiosInstance.get(
+          `/notification/all_notification`,
+        );
         setUserData(response.data.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.log("this is an error");
       } finally {
         setLoading(false);
       }
@@ -66,19 +68,14 @@ const NotifyTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (faqId: string) => {
-    console.log("FAQ ID received in handleDelete:", faqId); // Debugging line
     if (!faqId) {
-      console.error("FAQ ID is undefined.");
       return;
     }
     try {
-      await axiosInstance.delete(``); //delete api
+      await axiosInstance.delete(``); // Update delete API endpoint
       setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
-    } catch (error: any) {
-      console.error(
-        "Error deleting FAQ:",
-        error.response?.data || error.message,
-      );
+    } catch (error) {
+      console.log("error");
     }
   };
 
@@ -163,10 +160,10 @@ const NotifyTable: React.FC = () => {
                               <p>
                                 <strong>Description:</strong> {user.description}
                               </p>
-                              {user.image.length > 0 && (
+                              {user.background_img && (
                                 <div className="mt-4">
-                                  <Image
-                                    src={URL.createObjectURL(user.image[0])} // Convert file to URL
+                                  <img
+                                    src={user.background_img} // AWS image URL
                                     alt="Notification"
                                     className="w-full h-auto"
                                   />
@@ -206,7 +203,6 @@ const NotifyTable: React.FC = () => {
                           </DialogContent>
                         </Dialog>
                       </TableCell>
-
                       <TableCell>
                         <Trash2
                           className="cursor-pointer text-gray-500 hover:text-red-500"

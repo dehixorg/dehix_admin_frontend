@@ -8,10 +8,8 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 
 // TypeScript interface for DehixTalentInfo
 interface ConsultantInfo {
