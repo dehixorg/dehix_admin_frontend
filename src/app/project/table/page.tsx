@@ -10,7 +10,7 @@ import {
   menuItemsBottom,
   menuItemsTop,
 } from "@/config/menuItems/admin/dashboardMenuItems";
-import ProjectTable from "@/components/projectTable/projectTable";
+import ProjectTable from "@/components/project/projectTable/projectTable";
 
 export default function Talent() {
   return (

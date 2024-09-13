@@ -1,7 +1,8 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, ChevronRight  } from "lucide-react";
+import { PackageOpen, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -12,17 +13,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { useRouter } from "next/navigation";
 
 interface Project {
   _id: string;
@@ -47,12 +39,10 @@ interface Profile {
   domain: string;
   freelancersRequired: string;
   skills: string[];
-  experience: number;
   minConnect: number;
-  rate: number;
   description: string;
   _id: string;
-} 
+}
 
 const ProjectTable: React.FC = () => {
   const [userData, setUserData] = useState<Project[]>([]);
@@ -62,7 +52,7 @@ const ProjectTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/business/all_project");
+        const response = await axiosInstance.get("/business/all_projects");
         console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
@@ -89,8 +79,6 @@ const ProjectTable: React.FC = () => {
                   <TableHead>Project</TableHead>
                   <TableHead>Company</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Experience</TableHead>
-                  <TableHead>Rate</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>More</TableHead>
                 </TableRow>
@@ -108,13 +96,14 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{user.projectName}</TableCell>
                       <TableCell>{user.companyName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.profiles[0].experience}</TableCell>
-                      <TableCell>{user.profiles[0].rate}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
-                            <Button variant="outline" onClick={() => handleRedirect(user._id)}>
-                              <ChevronRight  className="w-4 h-4" />
-                            </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => handleRedirect(user._id)}
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   ))

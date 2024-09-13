@@ -14,6 +14,8 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProjectTabs from "@/components/project/projectTabs/projectTabs";
+import { ProjectCard } from "@/components/project/projectCard/projectCard";
 
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
@@ -24,20 +26,20 @@ const FreelancerPage = () => {
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Freelancer"
+        active="Project"
       />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Freelancer"
+            active="Project"
           />
 
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "" },
-              { label: "Freelancer", link: "/freelancer/table" },
+              { label: "Project", link: "/project/table" },
               { label: id as string, link: "#" },
             ]}
           />
@@ -54,26 +56,12 @@ const FreelancerPage = () => {
           <DropdownProfile />
         </header>
         <main className="ml-5 mr-5">
-          <Tabs defaultValue="Personal-Info">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
-              <TabsTrigger value="Project">Projects</TabsTrigger>
-              <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
-              <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
-            </TabsList>
-            {/* <TabsContent value="Personal-Info">
-              <PersonalInfo id={id || ""} />
-            </TabsContent>
-            <TabsContent value="Project">
-              <Project id={id || ""} />
-            </TabsContent>
-            <TabsContent value="Oracle-Project">
-              <OracleProject id={id || ""} />
-            </TabsContent>
-            <TabsContent value="Skill-Domain">
-              <SkillDomain id={id || ""} />
-            </TabsContent> */}
-          </Tabs>
+          <div>
+            <div className="mb-2">{id && <ProjectCard id={id} />}</div>
+            <div>
+              <ProjectTabs id={id || ""} />
+            </div>
+          </div>
         </main>
       </div>
     </div>
