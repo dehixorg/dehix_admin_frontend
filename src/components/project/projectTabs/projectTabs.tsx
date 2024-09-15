@@ -49,7 +49,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
       try {
         const response = await axiosInstance.get(`/business/${id}/project`);
         console.log("API Response:", response.data);
-        setUserData(response.data.data);
+        setUserData(response.data.data.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {

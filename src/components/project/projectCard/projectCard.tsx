@@ -54,7 +54,7 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
       try {
         const response = await axiosInstance.get(`/business/${id}/project`);
         console.log("API Response:", response.data);
-        setProjectInfo(response.data.data);
+        setProjectInfo(response.data.data.data);
       } catch (error) {
         console.error("Error fetching project data:", error);
       } finally {
