@@ -44,7 +44,7 @@ export default function Talent() {
           <DropdownProfile />
         </header>
         <main className="ml-5 mr-3">
-          <AdminTable/>
+          <AdminTable />
         </main>
       </div>
     </div>

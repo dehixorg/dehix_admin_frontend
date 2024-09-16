@@ -16,7 +16,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectTrigger, SelectItem, SelectValue, SelectContent } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectItem,
+  SelectValue,
+  SelectContent,
+} from "@/components/ui/select";
 
 interface AdminData {
   firstName: string;
@@ -25,9 +31,23 @@ interface AdminData {
   email: string;
   phone: string;
   type: "Admin" | "Super_Admin";
-   status: "Pending"; // status is fixed to "Pending"
+  status: "Pending"; // status is fixed to "Pending"
 }
-
+interface UserData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  email: string;
+  phone: string;
+  type: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+interface AddAdminProps {
+  onAddDomain: (newDomain: UserData) => void;
+}
 const adminSchema = z.object({
   firstName: z.string().nonempty("Please enter the first name"),
   lastName: z.string().nonempty("Please enter the last name"),
@@ -38,7 +58,7 @@ const adminSchema = z.object({
   status: z.literal("Pending"), // status is always "Pending"
 });
 
-const AddAdmin: React.FC = () => {
+const AddAdmin: React.FC<AddAdminProps> = ({ onAddDomain }) => {
   const [open, setOpen] = useState(false);
   const {
     control,
@@ -53,7 +73,7 @@ const AddAdmin: React.FC = () => {
       userName: "",
       email: "",
       phone: "",
-      status:"Pending",
+      status: "Pending",
       type: "Admin", // default type
     },
   });
@@ -61,7 +81,9 @@ const AddAdmin: React.FC = () => {
   const onSubmit = async (data: AdminData) => {
     try {
       console.log("Submitting data:", data);
-      await axiosInstance.post(`/admin/create`, data);
+      const response = await axiosInstance.post(`/admin/create`, data);
+      const newDomain = response.data.data;
+      onAddDomain(newDomain);
       reset();
       setOpen(false);
     } catch (error) {
