@@ -48,8 +48,14 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
     const fetchUserData = async () => {
       try {
         const response = await axiosInstance.get(`/business/${id}/project`);
-        console.log("API Response:", response.data);
-        setUserData(response.data.data.data);
+        //console.log("API Response:", response.data);
+        // setUserData(response.data.data.data);
+        if (response?.data?.data?.data) {
+          setUserData(response.data.data.data);
+        } else {
+          console.error("User data is missing or null");
+          setUserData(null); // or handle with a default value
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       } finally {

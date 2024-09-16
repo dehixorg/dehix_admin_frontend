@@ -53,7 +53,7 @@ const ProjectTable: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await axiosInstance.get("/business/all_projects");
-        console.log("API Response:", response.data);
+        // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
         console.error("Error fetching user data:", error);

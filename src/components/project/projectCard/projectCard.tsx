@@ -53,8 +53,14 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
     const fetchProjectData = async () => {
       try {
         const response = await axiosInstance.get(`/business/${id}/project`);
-        console.log("API Response:", response.data);
-        setProjectInfo(response.data.data.data);
+        //console.log("API Response:", response.data);
+        if (response?.data?.data?.data) {
+          setProjectInfo(response.data.data.data);
+        } else {
+          console.error("Project info data is missing or null");
+          // You can also set a fallback value if needed
+          setProjectInfo(null); // or any default value
+        }
       } catch (error) {
         console.error("Error fetching project data:", error);
       } finally {
