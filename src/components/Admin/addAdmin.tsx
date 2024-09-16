@@ -24,8 +24,8 @@ interface AdminData {
   userName: string;
   email: string;
   phone: string;
-  type: "admin" | "super-admin";
-  status: "Pending"; // status is fixed to "Pending"
+  type: "Admin" | "Super_Admin";
+   status: "Pending"; // status is fixed to "Pending"
 }
 
 const adminSchema = z.object({
@@ -34,7 +34,7 @@ const adminSchema = z.object({
   userName: z.string().nonempty("Please enter the username"),
   email: z.string().email("Please enter a valid email"),
   phone: z.string().nonempty("Please enter the phone number"),
-  type: z.enum(["admin", "super-admin"]).default("admin"),
+  type: z.enum(["Admin", "Super_Admin"]).default("Admin"),
   status: z.literal("Pending"), // status is always "Pending"
 });
 
@@ -53,8 +53,8 @@ const AddAdmin: React.FC = () => {
       userName: "",
       email: "",
       phone: "",
-      type: "admin", // default type
-      status: "Pending", // status is fixed
+      status:"Pending",
+      type: "Admin", // default type
     },
   });
 
@@ -178,8 +178,8 @@ const AddAdmin: React.FC = () => {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="super-admin">Super Admin</SelectItem>
+                    <SelectItem value="Admin">Admin</SelectItem>
+                    <SelectItem value="Super_Admin">Super Admin</SelectItem>
                   </SelectContent>
                 </Select>
               )}
