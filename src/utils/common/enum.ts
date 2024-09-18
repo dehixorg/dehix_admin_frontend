@@ -1,8 +1,10 @@
 export const Admin_Schema_Prompt_Messages = {
   FIRST_NAME_REQUIRED: "Please enter the first name",
-  SECOND_NAME_REQUIRED: "Please enter the second name",
+  LAST_NAME_REQUIRED: "Please enter the second name",
   EMAIL_REQUIRED: "Email field can not be empty",
   VALID_MAIL: "Invalid mail",
+  USERNAME_REQUIRED: "Please enter the username",
+  PHONE_REQUIRED: "Please enter the phone number",
 };
 
 // we are going to use snake case with all capitals

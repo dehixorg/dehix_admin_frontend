@@ -129,9 +129,7 @@ const AdminTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <Eye className="cursor-pointer text-gray-500 hover:text-blue-500" />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

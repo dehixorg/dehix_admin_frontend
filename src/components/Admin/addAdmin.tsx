@@ -23,6 +23,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
+import { Admin_Schema_Prompt_Messages } from "@/utils/common/enum";
 
 interface AdminData {
   firstName: string;
@@ -49,11 +50,18 @@ interface AddAdminProps {
   onAddDomain: (newDomain: UserData) => void;
 }
 const adminSchema = z.object({
-  firstName: z.string().nonempty("Please enter the first name"),
-  lastName: z.string().nonempty("Please enter the last name"),
-  userName: z.string().nonempty("Please enter the username"),
-  email: z.string().email("Please enter a valid email"),
-  phone: z.string().nonempty("Please enter the phone number"),
+  firstName: z
+    .string()
+    .nonempty(Admin_Schema_Prompt_Messages.FIRST_NAME_REQUIRED),
+  lastName: z
+    .string()
+    .nonempty(Admin_Schema_Prompt_Messages.LAST_NAME_REQUIRED),
+  userName: z.string().nonempty(Admin_Schema_Prompt_Messages.USERNAME_REQUIRED),
+  email: z
+    .string()
+    .email(Admin_Schema_Prompt_Messages.VALID_MAIL)
+    .nonempty(Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
+  phone: z.string().nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
   type: z.enum(["Admin", "Super_Admin"]).default("Admin"),
   status: z.literal("Pending"), // status is always "Pending"
 });
