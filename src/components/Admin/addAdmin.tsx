@@ -4,6 +4,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { toast } from "../ui/use-toast";
+
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
@@ -23,7 +25,11 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { Admin_Schema_Prompt_Messages } from "@/utils/common/enum";
+import { ToastAction } from "@/components/ui/toast";
+import {
+  Admin_Schema_Prompt_Messages,
+  Admin_Schema_Selecter,
+} from "@/utils/common/enum";
 
 interface AdminData {
   firstName: string;
@@ -47,7 +53,7 @@ interface UserData {
   updatedAt: string;
 }
 interface AddAdminProps {
-  onAddDomain: (newDomain: UserData) => void;
+  onAddAdmin: (newAdmin: UserData) => void;
 }
 const adminSchema = z.object({
   firstName: z
@@ -66,7 +72,7 @@ const adminSchema = z.object({
   status: z.literal("Pending"), // status is always "Pending"
 });
 
-const AddAdmin: React.FC<AddAdminProps> = ({ onAddDomain }) => {
+const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
   const [open, setOpen] = useState(false);
   const {
     control,
@@ -88,14 +94,25 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddDomain }) => {
 
   const onSubmit = async (data: AdminData) => {
     try {
-      console.log("Submitting data:", data);
+      // console.log("Submitting data:", data);
       const response = await axiosInstance.post(`/admin/create`, data);
-      const newDomain = response.data.data;
-      onAddDomain(newDomain);
+      const newAdmin = response.data.data ? response.data.data.data : null;
+      onAddAdmin(newAdmin);
       reset();
       setOpen(false);
+      toast({
+        title: "Admin Added",
+        description: "The Admin has been successfully added.",
+      });
     } catch (error) {
       console.error("Error submitting admin:", error);
+      toast({
+        variant: "destructive",
+        title: "Submission Error ",
+        description:
+          "There was an error submitting the admin details. Please try with different username/email again.",
+        action: <ToastAction altText="Try again">Retry</ToastAction>,
+      });
     }
   };
 
@@ -208,8 +225,11 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddDomain }) => {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Admin">Admin</SelectItem>
-                    <SelectItem value="Super_Admin">Super Admin</SelectItem>
+                    {Admin_Schema_Selecter.map((role) => (
+                      <SelectItem key={role.value} value={role.value}>
+                        {role.label}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}

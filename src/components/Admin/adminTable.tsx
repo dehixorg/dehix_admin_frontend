@@ -23,7 +23,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { ToastProvider } from "@/components/ui/toast";
 
 interface UserData {
   _id: string;
@@ -46,7 +46,7 @@ const AdminTable: React.FC = () => {
     setLoading(true);
     try {
       const response = await axiosInstance.get("/admin/all");
-      console.log("API Response:", response.data);
+      //console.log("API Response:", response.data);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -59,7 +59,7 @@ const AdminTable: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleAddDomain = async (newDomain: UserData) => {
+  const handleAddAdmin = async (newDomain: UserData) => {
     try {
       // Assuming an API call is made in the AddAdmin component
       await fetchUserData(); // Fetch updated data after adding the admin
@@ -92,7 +92,7 @@ const AdminTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddAdmin onAddDomain={handleAddDomain} />
+            <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
