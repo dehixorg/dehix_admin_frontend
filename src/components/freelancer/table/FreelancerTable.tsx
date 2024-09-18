@@ -13,8 +13,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
+import { apiHelperService } from "@/services/example";
 
 interface UserData {
   _id: string;
@@ -33,8 +33,10 @@ const FreelancerTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/freelancer/allfreelancer");
-        console.log("API Response:", response.data);
+        //GET API service example usage
+        //TODO: replace this with actual freelance api service function after creation
+        const response = await apiHelperService.getAllFreelancers();
+        // const response = await axiosInstance.get("/freelancer/allfreelancer");
         setUserData(response.data.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
