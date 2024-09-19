@@ -4,6 +4,7 @@ import {
   Settings,
   FileBadge,
   Earth,
+  EarthLock,
   BriefcaseBusiness,
   BellRing,
   MessageSquareMore,
@@ -52,6 +53,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/project/table",
     icon: <FolderLock className="h-5 w-5" />,
     label: "Project",
+  },
+  {
+    href: "/admin",
+    icon: <EarthLock className="h-5 w-5" />,
+    label: "Admin",
   },
 ];
 

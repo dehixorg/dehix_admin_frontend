@@ -72,7 +72,7 @@ const NotifyTable: React.FC = () => {
       return;
     }
     try {
-      await axiosInstance.delete(``); // Update delete API endpoint
+      await axiosInstance.delete(`/notification/${faqId}`); // Update delete API endpoint
       setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
     } catch (error) {
       console.log("error");
