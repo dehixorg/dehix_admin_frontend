@@ -6,6 +6,10 @@ export const Admin_Schema_Prompt_Messages = {
   USERNAME_REQUIRED: "Please enter the username",
   PHONE_REQUIRED: "Please enter the phone number",
 };
+export enum AdminType {
+  ADMIN = "Admin",
+  SUPER_ADMIN = "Super_Admin",
+}
 export const Admin_Schema_Selecter = [
   { value: "Admin", label: "Admin" },
   { value: "Super_Admin", label: "Super Admin" },

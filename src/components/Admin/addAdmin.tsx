@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { AxiosError } from "axios";
 
 import { toast } from "../ui/use-toast";
 
@@ -29,6 +30,7 @@ import { ToastAction } from "@/components/ui/toast";
 import {
   Admin_Schema_Prompt_Messages,
   Admin_Schema_Selecter,
+  AdminType,
 } from "@/utils/common/enum";
 
 interface AdminData {
@@ -68,7 +70,7 @@ const adminSchema = z.object({
     .email(Admin_Schema_Prompt_Messages.VALID_MAIL)
     .nonempty(Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
   phone: z.string().nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
-  type: z.enum(["Admin", "Super_Admin"]).default("Admin"),
+  type: z.nativeEnum(AdminType).default(AdminType.ADMIN),
   status: z.literal("Pending"), // status is always "Pending"
 });
 
@@ -104,14 +106,25 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
         title: "Admin Added",
         description: "The Admin has been successfully added.",
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error submitting admin:", error);
+
+      // Use a type guard to check if the error is an AxiosError
+      let errorMessage =
+        "There was an error submitting the admin details. Please try again.";
+      if (error instanceof AxiosError && error.response) {
+        errorMessage = error.response.data?.message || errorMessage;
+      }
+
       toast({
         variant: "destructive",
-        title: "Submission Error ",
-        description:
-          "There was an error submitting the admin details. Please try with different username/email again.",
-        action: <ToastAction altText="Try again">Retry</ToastAction>,
+        title: "Submission Error",
+        description: errorMessage,
+        action: (
+          <ToastAction altText="Try again" onClick={() => reset()}>
+            Retry
+          </ToastAction>
+        ),
       });
     }
   };
