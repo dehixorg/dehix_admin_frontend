@@ -4,7 +4,6 @@ import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -24,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { apiHelperService } from "@/services/example";
 
 interface ImportantUrl {
   urlName: string;
@@ -78,8 +78,9 @@ const AddFaq: React.FC = () => {
 
   const onSubmit = async (data: FAQData) => {
     try {
-      console.log("Submitting data:", data);
-      await axiosInstance.post(`/faq/createfaq`, data);
+      //TODO: replace this with actual faq api service after creation
+      await apiHelperService.createFaq(data);
+      // await axiosInstance.post(`/faq/createfaq`, data);
       reset();
       setOpen(false);
     } catch (error) {
