@@ -87,7 +87,7 @@ const DomainTable: React.FC = () => {
     );
   };
   // Callback to re-fetch domain data after adding a new domain
-  const handleAddDomain = async (newDomain: DomainData) => {
+  const handleAddDomain = async () => {
     try {
       // Optionally post newDomain if needed
       await fetchDomainData(); // Fetch updated data after adding the domain

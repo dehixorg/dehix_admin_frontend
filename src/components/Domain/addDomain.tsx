@@ -1,3 +1,6 @@
+'use client'
+import { useSelector } from 'react-redux';
+import { RootState } from '@/lib/store';
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
@@ -56,7 +59,8 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
-
+  const currentUserId = "user-id-123";
+  //const currentUserId = useSelector((state: RootState) => state.user);
   const {
     control,
     handleSubmit,
@@ -98,9 +102,9 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     }
 
     try {
+      const domainDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new domain to the backend
-      console.log(data);
-      const response = await axiosInstance.post(`/domain/createdomain`, data);
+      const response = await axiosInstance.post(`/domain/createdomain`, domainDataWithUser);
       const newDomain = response.data.data;
 
       // Pass the new domain to the parent component
