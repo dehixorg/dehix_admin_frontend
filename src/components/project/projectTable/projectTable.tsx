@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
@@ -14,29 +14,46 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { apiHelperService } from "@/services/example";
+import { axiosInstance } from "@/lib/axiosinstance";
 
-interface UserData {
+interface Project {
   _id: string;
-  firstName: string;
+  projectName: string;
+  description: string;
+  companyId: string;
   email: string;
-  phone: string;
-  skills: string[];
-  domain: string[];
+  companyName: string;
+  end: string | null;
+  skillsRequired: string[];
+  role: string;
+  projectType: string;
+  profiles: Profile[];
+  status: string;
+  team: string[];
+  url: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
-const FreelancerTable: React.FC = () => {
-  const [userData, setUserData] = useState<UserData[]>([]);
+interface Profile {
+  domain: string;
+  freelancersRequired: string;
+  skills: string[];
+  minConnect: number;
+  description: string;
+  _id: string;
+}
+
+const ProjectTable: React.FC = () => {
+  const [userData, setUserData] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        //GET API service example usage
-        //TODO: replace this with actual freelance api service function after creation
-        const response = await apiHelperService.getAllFreelancers();
-        // const response = await axiosInstance.get("/freelancer/allfreelancer");
+        const response = await axiosInstance.get("/business/all_projects");
+        // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -48,7 +65,7 @@ const FreelancerTable: React.FC = () => {
     fetchUserData();
   }, []);
   const handleRedirect = (id: string) => {
-    router.push(`/freelancer/tabs?id=${id}`);
+    router.push(`/project/tabs?id=${id}`);
   };
 
   return (
@@ -59,39 +76,40 @@ const FreelancerTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email-Id</TableHead>
-                  <TableHead>Phone-No.</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>Domain Count</TableHead>
+                  <TableHead>Project</TableHead>
+                  <TableHead>Company</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>More</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center">
+                    <TableCell colSpan={7} className="text-center">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : userData.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
-                      <TableCell>{user.firstName}</TableCell>
+                      <TableCell>{user.projectName}</TableCell>
+                      <TableCell>{user.companyName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell>{user.status}</TableCell>
                       <TableCell>
-                        <Button onClick={() => handleRedirect(user._id)}>
-                          click
+                        <Button
+                          variant="outline"
+                          onClick={() => handleRedirect(user._id)}
+                        >
+                          <ChevronRight className="w-4 h-4" />
                         </Button>
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center">
+                    <TableCell colSpan={7} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen
                           className="mx-auto text-gray-500"
@@ -116,4 +134,4 @@ const FreelancerTable: React.FC = () => {
   );
 };
 
-export default FreelancerTable;
+export default ProjectTable;
