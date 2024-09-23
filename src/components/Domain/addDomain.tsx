@@ -1,12 +1,13 @@
-'use client'
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/store';
+"use client";
+import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { RootState } from "@/lib/store";
+import { useToast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
@@ -51,7 +52,7 @@ interface AddDomainProps {
 const domainSchema = z.object({
   label: z.string().nonempty("Please enter a domain name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum(["active"]).default("active"),
+  status: z.enum(["Active"]).default("Active"),
 });
 
 const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
@@ -61,6 +62,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
   const currentUserId = "user-id-123";
   //const currentUserId = useSelector((state: RootState) => state.user);
+  const { toast } = useToast();
   const {
     control,
     handleSubmit,
@@ -71,7 +73,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     defaultValues: {
       label: "",
       description: "",
-      status: "active",
+      status: "Active",
     },
   });
 
@@ -82,7 +84,11 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
         const response = await axiosInstance.get("/domain/all");
         setDomains(response.data.data);
       } catch (error) {
-        console.error("Error fetching domains:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch domain data . Please try again.",
+          variant: "destructive", // Red error message
+        });
       }
     }
 
@@ -104,7 +110,10 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     try {
       const domainDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new domain to the backend
-      const response = await axiosInstance.post(`/domain/createdomain`, domainDataWithUser);
+      const response = await axiosInstance.post(
+        `/domain/createdomain`,
+        domainDataWithUser,
+      );
       const newDomain = response.data.data;
 
       // Pass the new domain to the parent component
@@ -121,7 +130,11 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
         setSuccessMessage(null);
       }, 500);
     } catch (error) {
-      console.error("Error submitting domain:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add domain . Please try again.",
+        variant: "destructive", // Red error message
+      });
       setErrorMessage("Failed to add the domain. Please try again.");
     }
   };
@@ -183,8 +196,8 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">InActive</SelectItem>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">InActive</SelectItem>
                   </SelectContent>
                 </Select>
               )}
