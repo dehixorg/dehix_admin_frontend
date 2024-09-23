@@ -51,7 +51,7 @@ interface AddSkillProps {
 const SkillSchema = z.object({
   label: z.string().nonempty("Please enter a Skill name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum(["active"]).default("active"),
+  status: z.enum(["Active"]).default("Active"),
 });
 
 const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
@@ -72,7 +72,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
     defaultValues: {
       label: "",
       description: "",
-      status: "active",
+      status: "Active",
     },
   });
 
@@ -184,8 +184,8 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">InActive</SelectItem>
+                    <SelectItem value="Active">Active</SelectItem>
+                    <SelectItem value="Inactive">InActive</SelectItem>
                   </SelectContent>
                 </Select>
               )}

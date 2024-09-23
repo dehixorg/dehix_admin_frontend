@@ -77,14 +77,31 @@ const SkillTable: React.FC = () => {
     }
   };
 
-  const handleSwitchChange = (labelId: string, checked: boolean) => {
+  const handleSwitchChange = async(labelId: string, checked: boolean) => {
     setSkillData((prevData) =>
       prevData.map((user) =>
         user._id === labelId
-          ? { ...user, status: checked ? "active" : "inactive" }
+          ? { ...user, status: checked ? "Active" : "Inactive" }
           : user,
       ),
     );
+    try {
+      await axiosInstance.patch(`/skills/${labelId}/status`, {
+        status: checked ? "Active" : "Inactive",
+      });
+      console.log("Skill status updated successfully");
+    } catch (error) {
+      console.error("Error updating skill status:", error);
+      // Revert the status change if the API call fails
+      setSkillData((prevData) =>
+        prevData.map((skill) =>
+          skill._id === labelId
+            ? { ...skill, status: checked ? "Inactive" : "Active" } // revert back to original status
+            : skill
+        )
+      );
+    }
+    
   };
   // Callback to re-fetch Skill data after adding a new Skill
   const handleAddSkill = async () => {
@@ -113,7 +130,7 @@ const SkillTable: React.FC = () => {
                   <TableHead className="w-[180px]">Skill Name</TableHead>
                   <TableHead className="w-[180px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
-                  <TableHead className="w-[180px]">Switch</TableHead>
+                  <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Details</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
                 </TableRow>
@@ -152,7 +169,7 @@ const SkillTable: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={Skill.status === "active"}
+                          checked={Skill.status === "Active"}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(Skill._id, checked)
                           }
