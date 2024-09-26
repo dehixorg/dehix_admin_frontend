@@ -37,7 +37,7 @@ export default function Login() {
           type: claims.type,
         }),
       );
-      router.replace(`/business/table`);
+      router.replace(`/business`);
     } catch (error: any) {
       setError("Invalid Email or Password ");
       console.error(error.message);
@@ -56,7 +56,7 @@ export default function Login() {
       const { user, claims } = await getUserData(userCredential);
 
       dispatch(setUser({ ...user, type: claims.type }));
-      router.replace(`/business/table`);
+      router.replace(`/business`);
     } catch (error: any) {
       setError(error.message);
       console.error(error.message);
