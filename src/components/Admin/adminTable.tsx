@@ -23,8 +23,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ToastProvider } from "@/components/ui/toast";
-
 interface UserData {
   _id: string;
   firstName: string;
