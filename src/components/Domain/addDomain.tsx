@@ -28,7 +28,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-
+import { statusType } from "@/utils/common/enum";
 interface DomainData {
   _id: string;
   label: string;
@@ -52,7 +52,7 @@ interface AddDomainProps {
 const domainSchema = z.object({
   label: z.string().nonempty("Please enter a domain name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum(["Active"]).default("Active"),
+  status: z.enum([statusType.active]).default(statusType.active),
 });
 
 const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
@@ -60,8 +60,8 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
-  const currentUserId = "user-id-123";
-  //const currentUserId = useSelector((state: RootState) => state.user);
+  const currentUser = useSelector((state: RootState) => state.user);
+  const currentUserId= currentUser.uid;
   const { toast } = useToast();
   const {
     control,
@@ -73,7 +73,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     defaultValues: {
       label: "",
       description: "",
-      status: "Active",
+      status: statusType.active,
     },
   });
 
@@ -82,7 +82,15 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     async function fetchDomains() {
       try {
         const response = await axiosInstance.get("/domain/all");
-        setDomains(response.data.data);
+        if (!response.data.data) {
+          toast({
+            title: "Error",
+            description: "Failed to fetch domain data . Please try again.",
+            variant: "destructive", // Red error message
+          });
+        } else {
+          setDomains(response.data.data);
+        }
       } catch (error) {
         toast({
           title: "Error",
@@ -115,11 +123,10 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
         domainDataWithUser,
       );
       const newDomain = response.data.data;
-
+      if(newDomain)
+      {
       // Pass the new domain to the parent component
       onAddDomain(newDomain);
-
-      // Reset the form and show success message
       setSuccessMessage("Domain added successfully!");
       reset();
       setErrorMessage(null); // Clear any previous error message
@@ -129,13 +136,22 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
         setOpen(false);
         setSuccessMessage(null);
       }, 500);
+      }
+      else
+      {
+        toast({
+          title: "Error",
+          description: "Failed to add domain . Please try again.",
+          variant: "destructive", // Red error message
+        });
+      }
+      
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to add domain . Please try again.",
         variant: "destructive", // Red error message
       });
-      setErrorMessage("Failed to add the domain. Please try again.");
     }
   };
 
@@ -165,9 +181,6 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
                 />
               )}
             />
-            {errors.label && (
-              <p className="text-red-600">{errors.label.message}</p>
-            )}
           </div>
           <div className="mb-3">
             <Controller
@@ -182,9 +195,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
               )}
             />
 
-            {errors.description && (
-              <p className="text-red-600">{errors.description.message}</p>
-            )}
+           
           </div>
           <div className="mb-3">
             <Controller
@@ -196,8 +207,8 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">InActive</SelectItem>
+                    <SelectItem value={statusType.active}>Active</SelectItem>
+                    <SelectItem value={statusType.inactive}>InActive</SelectItem>
                   </SelectContent>
                 </Select>
               )}

@@ -22,6 +22,7 @@ import {
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { statusType } from "@/utils/common/enum";
 
 interface DomainData {
   _id: string;
@@ -43,7 +44,7 @@ const DomainTable: React.FC = () => {
     setNoData(false); // Reset noData state before fetching
     try {
       const response = await axiosInstance.get("/domain/all");
-      if (response.data.data.length === 0) {
+      if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
         setDomainData(response.data.data);
@@ -93,17 +94,17 @@ const DomainTable: React.FC = () => {
     setDomainData((prevData) =>
       prevData.map((user) =>
         user._id === labelId
-          ? { ...user, status: checked ? "Active" : "Inactive" }
+          ? { ...user, status: checked ? statusType.active : statusType.inactive }
           : user,
       ),
     );
     try {
-      await axiosInstance.put(`/domain/${labelId}/status`, {
-        status: checked ? "Active" : "Inactive",
+      await axiosInstance.put(`/domain/${labelId}`, {
+        status: checked ? statusType.active : statusType.inactive,
       });
       toast({
         title: "Success",
-        description: `Domain status updated to ${checked ? "Active" : "Inactive"}`,
+        description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,
         variant: "default",
       });
     } catch (error) {
@@ -111,7 +112,7 @@ const DomainTable: React.FC = () => {
       setDomainData((prevData) =>
         prevData.map((domain) =>
           domain._id === labelId
-            ? { ...domain, status: checked ? "Inactive" : "Active" } // revert back to original status
+            ? { ...domain, status: checked ?statusType.inactive : statusType.active } // revert back to original status
             : domain,
         ),
       );
@@ -192,7 +193,7 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={domain.status === "Active"}
+                          checked={domain.status === statusType.active}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(domain._id, checked)
                           }
