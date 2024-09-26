@@ -23,7 +23,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 
 interface ImportantUrl {
@@ -137,9 +136,7 @@ const FaqTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <Eye className="cursor-pointer text-gray-500 active:scale-150 hover:text-blue-500" />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

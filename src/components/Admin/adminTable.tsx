@@ -23,7 +23,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ToastProvider } from "@/components/ui/toast";
 
 interface UserData {
   _id: string;
@@ -129,7 +128,7 @@ const AdminTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Eye className="cursor-pointer text-gray-500 hover:text-blue-500" />
+                            <Eye className="cursor-pointer text-gray-500 active:scale-150 hover:text-blue-500" />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

@@ -14,10 +14,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { Button } from "@/components/ui/button";
 
 interface UserData {
-  _id: string; // Assuming your API returns this field for each business
+  _id: string;
   firstName: string;
   email: string;
   phone: string;
@@ -46,9 +45,8 @@ const BusinessTable: React.FC = () => {
     fetchUserData();
   }, []);
 
-  // Handle button click to navigate to tabs page with the business ID
   const handleViewBusiness = (id: string) => {
-    router.push(`/business/tabs?id=${id}`); // Pass the ID as a query parameter
+    router.push(`/business/tabs?id=${id}`);
   };
 
   return (
@@ -83,9 +81,10 @@ const BusinessTable: React.FC = () => {
                       <TableCell>{user.skills?.length || 0}</TableCell>
                       <TableCell>{user.domains?.length || 0}</TableCell>
                       <TableCell>
-                        <Button onClick={() => handleViewBusiness(user._id)}>
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <Eye
+                          className="cursor-pointer text-gray-500 active:scale-150 hover:text-blue-500"
+                          onClick={() => handleViewBusiness(user._id)}
+                        />
                       </TableCell>
                     </TableRow>
                   ))
