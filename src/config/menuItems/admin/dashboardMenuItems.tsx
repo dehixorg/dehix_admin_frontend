@@ -20,7 +20,7 @@ export const menuItemsTop: MenuItem[] = [
     label: "Dehix",
   },
   {
-    href: "/business/table",
+    href: "/business",
     icon: <BriefcaseBusiness className="h-5 w-5" />,
     label: "Business",
   },

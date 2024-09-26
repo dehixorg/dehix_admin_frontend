@@ -1,9 +1,13 @@
+"use client";
+import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { RootState } from "@/lib/store";
+import { useToast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
@@ -15,6 +19,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectTrigger,
@@ -22,24 +28,41 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-
+import { statusType } from "@/utils/common/enum";
 interface DomainData {
-  domain: string;
+  _id: string;
+  label: string;
+  description: string;
+  createdAt?: string; // Optional fields
+  createdBy?: string;
+  status?: string;
+}
+
+interface Domain {
+  _id: string;
+  label: string;
   description: string;
 }
-interface Domain {
-  label: string;
+
+interface AddDomainProps {
+  onAddDomain: (newDomain: DomainData) => void; // Prop to pass the new domain
 }
 
+// Zod schema for form validation
 const domainSchema = z.object({
-  domain: z.string().nonempty("Please select a domain"),
+  label: z.string().nonempty("Please enter a domain name"),
   description: z.string().nonempty("Please enter a description"),
+  status: z.enum([statusType.active]).default(statusType.active),
 });
 
-const AddDomain: React.FC = () => {
+const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   const [open, setOpen] = useState(false);
-  const [domains, setDomains] = useState<Domain[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
+  const currentUser = useSelector((state: RootState) => state.user);
+  const currentUserId= currentUser.uid;
+  const { toast } = useToast();
   const {
     control,
     handleSubmit,
@@ -48,31 +71,87 @@ const AddDomain: React.FC = () => {
   } = useForm<DomainData>({
     resolver: zodResolver(domainSchema),
     defaultValues: {
-      domain: "",
+      label: "",
       description: "",
+      status: statusType.active,
     },
   });
+
+  // Fetch the list of domains from the backend
   useEffect(() => {
     async function fetchDomains() {
       try {
         const response = await axiosInstance.get("/domain/all");
-        setDomains(response.data.data);
+        if (!response.data.data) {
+          toast({
+            title: "Error",
+            description: "Failed to fetch domain data . Please try again.",
+            variant: "destructive", // Red error message
+          });
+        } else {
+          setDomains(response.data.data);
+        }
       } catch (error) {
-        console.error("Error fetching domains:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch domain data . Please try again.",
+          variant: "destructive", // Red error message
+        });
       }
     }
 
     fetchDomains();
   }, []);
 
+  // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
+    // Check if domain already exists
+    const isDomainExist = domains.some(
+      (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
+    );
+
+    if (isDomainExist) {
+      setErrorMessage(`The domain "${data.label}" already exists.`);
+      return;
+    }
+
     try {
-      console.log("Submitting data:", data);
-      await axiosInstance.post(`/domain/create`, data);
+      const domainDataWithUser = { ...data, createdBy: currentUserId };
+      // Post the new domain to the backend
+      const response = await axiosInstance.post(
+        `/domain/createdomain`,
+        domainDataWithUser,
+      );
+      const newDomain = response.data.data;
+      if(newDomain)
+      {
+      // Pass the new domain to the parent component
+      onAddDomain(newDomain);
+      setSuccessMessage("Domain added successfully!");
       reset();
-      setOpen(false);
+      setErrorMessage(null); // Clear any previous error message
+
+      // Close the dialog after a short delay
+      setTimeout(() => {
+        setOpen(false);
+        setSuccessMessage(null);
+      }, 500);
+      }
+      else
+      {
+        toast({
+          title: "Error",
+          description: "Failed to add domain . Please try again.",
+          variant: "destructive", // Red error message
+        });
+      }
+      
     } catch (error) {
-      console.error("Error submitting domain:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add domain . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
@@ -93,28 +172,15 @@ const AddDomain: React.FC = () => {
           <div className="mb-3">
             <Controller
               control={control}
-              name="domain"
+              name="label"
               render={({ field }) => (
-                <Select
+                <Input
+                  placeholder="Enter domain name"
                   {...field}
-                  onValueChange={(value) => field.onChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a domain" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {domains.map((domain) => (
-                      <SelectItem key={domain.label} value={domain.label}>
-                        {domain.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  className="border p-2 rounded w-full"
+                />
               )}
             />
-            {errors.domain && (
-              <p className="text-red-600">{errors.domain.message}</p>
-            )}
           </div>
           <div className="mb-3">
             <Controller
@@ -128,14 +194,34 @@ const AddDomain: React.FC = () => {
                 />
               )}
             />
-            {errors.description && (
-              <p className="text-red-600">{errors.description.message}</p>
-            )}
+
+           
           </div>
-          <DialogFooter className="mt-3">
-            <Button className="w-full" type="submit">
-              Submit
-            </Button>
+          <div className="mb-3">
+            <Controller
+              control={control}
+              name="status"
+              render={({ field }) => (
+                <Select {...field} onValueChange={field.onChange}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value={statusType.active}>Active</SelectItem>
+                    <SelectItem value={statusType.inactive}>InActive</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+          {errorMessage && (
+            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
+          )}
+          {successMessage && (
+            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
+          )}
+          <DialogFooter>
+            <Button type="submit">Save</Button>
           </DialogFooter>
         </form>
       </DialogContent>

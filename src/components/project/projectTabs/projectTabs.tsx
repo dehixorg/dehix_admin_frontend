@@ -17,7 +17,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -48,8 +47,6 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
     const fetchUserData = async () => {
       try {
         const response = await axiosInstance.get(`/business/${id}/project`);
-        //console.log("API Response:", response.data);
-        // setUserData(response.data.data.data);
         if (response?.data?.data?.data) {
           setUserData(response.data.data.data);
         } else {
