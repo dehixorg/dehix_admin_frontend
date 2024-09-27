@@ -21,7 +21,7 @@ export const Admin_Schema_Selecter = [
   { value: "Admin", label: "Admin" },
   { value: "Super_Admin", label: "Super Admin" },
 ];
-export enum statusType{
+export enum statusType {
   active = "Active",
   inactive = "Inactive",
 }

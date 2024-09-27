@@ -61,7 +61,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
   const currentUser = useSelector((state: RootState) => state.user);
-  const currentUserId= currentUser.uid;
+  const currentUserId = currentUser.uid;
   const { toast } = useToast();
   const {
     control,
@@ -123,29 +123,25 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
         domainDataWithUser,
       );
       const newDomain = response.data.data;
-      if(newDomain)
-      {
-      // Pass the new domain to the parent component
-      onAddDomain(newDomain);
-      setSuccessMessage("Domain added successfully!");
-      reset();
-      setErrorMessage(null); // Clear any previous error message
+      if (newDomain) {
+        // Pass the new domain to the parent component
+        onAddDomain(newDomain);
+        setSuccessMessage("Domain added successfully!");
+        reset();
+        setErrorMessage(null); // Clear any previous error message
 
-      // Close the dialog after a short delay
-      setTimeout(() => {
-        setOpen(false);
-        setSuccessMessage(null);
-      }, 500);
-      }
-      else
-      {
+        // Close the dialog after a short delay
+        setTimeout(() => {
+          setOpen(false);
+          setSuccessMessage(null);
+        }, 500);
+      } else {
         toast({
           title: "Error",
           description: "Failed to add domain . Please try again.",
           variant: "destructive", // Red error message
         });
       }
-      
     } catch (error) {
       toast({
         title: "Error",
@@ -194,8 +190,6 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
                 />
               )}
             />
-
-           
           </div>
           <div className="mb-3">
             <Controller
@@ -208,7 +202,9 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={statusType.active}>Active</SelectItem>
-                    <SelectItem value={statusType.inactive}>InActive</SelectItem>
+                    <SelectItem value={statusType.inactive}>
+                      InActive
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}

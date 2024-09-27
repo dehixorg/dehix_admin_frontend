@@ -19,6 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -94,7 +99,10 @@ const DomainTable: React.FC = () => {
     setDomainData((prevData) =>
       prevData.map((user) =>
         user._id === labelId
-          ? { ...user, status: checked ? statusType.active : statusType.inactive }
+          ? {
+              ...user,
+              status: checked ? statusType.active : statusType.inactive,
+            }
           : user,
       ),
     );
@@ -112,7 +120,10 @@ const DomainTable: React.FC = () => {
       setDomainData((prevData) =>
         prevData.map((domain) =>
           domain._id === labelId
-            ? { ...domain, status: checked ?statusType.inactive : statusType.active } // revert back to original status
+            ? {
+                ...domain,
+                status: checked ? statusType.inactive : statusType.active,
+              } // revert back to original status
             : domain,
         ),
       );
@@ -122,6 +133,10 @@ const DomainTable: React.FC = () => {
         variant: "destructive", // Red error message
       });
     }
+  };
+  const formatID = (id: string) => {
+    if (id.length <= 7) return id;
+    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
   // Callback to re-fetch domain data after adding a new domain
   const handleAddDomain = async () => {
@@ -151,8 +166,9 @@ const DomainTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[180px]">Domain Id</TableHead>
                   <TableHead className="w-[180px]">Domain Name</TableHead>
-                  <TableHead className="w-[180px]">Created At</TableHead>
+                  <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Details</TableHead>
@@ -184,12 +200,37 @@ const DomainTable: React.FC = () => {
                 ) : domainData.length > 0 ? (
                   domainData.map((domain) => (
                     <TableRow key={domain._id}>
+                      <TableCell>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(domain._id || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {domain._id ? domain._id : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
                         {domain.createdAt || "No Data Available"}
                       </TableCell>
                       <TableCell>
-                        {domain.createdBy || "No Data Available"}
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(domain.createdBy || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {domain.createdBy
+                              ? domain.createdBy
+                              : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
                       <TableCell>
                         <Switch
