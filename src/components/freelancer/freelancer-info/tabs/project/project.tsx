@@ -12,7 +12,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/example";
 
 interface RejectedProject {
   _id: string;
@@ -44,7 +44,8 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/freelancer/${id}`); // Use the id prop
+        const response =
+          await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { pendingProject, rejectedProject, acceptedProject } =
           response.data;
         console.log("Pending-Project:", pendingProject);

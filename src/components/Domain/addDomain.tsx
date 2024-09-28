@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { RootState } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -29,6 +28,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { statusType } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/example";
 interface DomainData {
   _id: string;
   label: string;
@@ -81,7 +81,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   useEffect(() => {
     async function fetchDomains() {
       try {
-        const response = await axiosInstance.get("/domain/all");
+        const response = await apiHelperService.getDomainList();
         if (!response.data.data) {
           toast({
             title: "Error",
@@ -118,10 +118,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     try {
       const domainDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new domain to the backend
-      const response = await axiosInstance.post(
-        `/domain/createdomain`,
-        domainDataWithUser,
-      );
+      const response = await apiHelperService.createDomain(data);
       const newDomain = response.data.data;
       if (newDomain) {
         // Pass the new domain to the parent component

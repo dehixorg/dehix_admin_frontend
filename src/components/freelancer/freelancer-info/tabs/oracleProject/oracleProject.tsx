@@ -12,7 +12,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/example";
 
 interface OracleProjectProps {
   id: string; // Added id prop
@@ -40,7 +40,8 @@ const OracleProject: React.FC<OracleProjectProps> = ({ id }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/freelancer/${id}`); // Use the id prop
+        const response =
+          await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { oracleProject } = response.data;
         console.log("Pending-Project:", oracleProject);
         setUserData({ oracleProject });

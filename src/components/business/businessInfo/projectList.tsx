@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Table,
   TableHeader,
@@ -11,6 +10,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { apiHelperService } from "@/services/example";
 
 interface Project {
   name: string;
@@ -27,7 +27,7 @@ function ProjectList({ id }: { id: string }) {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data; // Ensure the data format is correct
         setProjects(data.ProjectList || []); // Adjust based on your API response structure
       } catch (error) {
@@ -46,9 +46,8 @@ function ProjectList({ id }: { id: string }) {
       try {
         const projectdata: Project[] = [];
         for (const projectId of projectid) {
-          const response = await axiosInstance.get(
-            `/business/${projectId}/project`,
-          );
+          const response =
+            await apiHelperService.getAllBusinessProject(projectId);
           console.log(response.data);
           const data = response.data.data;
           const info: Project = {

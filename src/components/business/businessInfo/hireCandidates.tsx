@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Table,
   TableHeader,
@@ -11,6 +10,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { apiHelperService } from "@/services/example";
 
 interface HireFreelancer {
   freelancer: string;
@@ -27,7 +27,7 @@ function Hirefreelancer({ id }: { id: string }) {
   useEffect(() => {
     const fetchHireFreelancers = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data;
         setHireFreelancers(data.hirefreelancer || []);
       } catch (error) {

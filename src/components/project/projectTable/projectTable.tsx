@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/example";
 
 interface Project {
   _id: string;
@@ -52,7 +52,7 @@ const ProjectTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/business/all_projects");
+        const response = await apiHelperService.getAllProject();
         // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {

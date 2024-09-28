@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/example";
 
 interface Business {
   // Combined first and last name
@@ -24,7 +24,7 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data; // Ensure data is accessed correctly
 
         // Extract and format the personal information needed

@@ -14,7 +14,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { apiHelperService } from "@/services/example";
 
 interface ImportantUrl {
   urlName: string;
@@ -53,9 +53,7 @@ const NotifyTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/notification/all_notification`,
-        );
+        const response = await apiHelperService.getAllNotification();
         setUserData(response.data.data);
       } catch (error) {
         console.log("this is an error");
@@ -72,7 +70,7 @@ const NotifyTable: React.FC = () => {
       return;
     }
     try {
-      await axiosInstance.delete(`/notification/${faqId}`); // Update delete API endpoint
+      await apiHelperService.deleteNotification(faqId);
       setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
     } catch (error) {
       console.log("error");
