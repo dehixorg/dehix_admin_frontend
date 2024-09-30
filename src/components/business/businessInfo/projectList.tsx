@@ -10,7 +10,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService as businessApiHelperService } from "@/services/business";
+import { apiHelperService as projectApiHelperService } from "@/services/project";
 
 interface Project {
   name: string;
@@ -27,7 +28,8 @@ function ProjectList({ id }: { id: string }) {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
+        const response =
+          await businessApiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data; // Ensure the data format is correct
         setProjects(data.ProjectList || []); // Adjust based on your API response structure
       } catch (error) {
@@ -47,7 +49,7 @@ function ProjectList({ id }: { id: string }) {
         const projectdata: Project[] = [];
         for (const projectId of projectid) {
           const response =
-            await apiHelperService.getAllBusinessProject(projectId);
+            await projectApiHelperService.getAllBusinessProject(projectId);
           console.log(response.data);
           const data = response.data.data;
           const info: Project = {

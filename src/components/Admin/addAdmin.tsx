@@ -31,7 +31,7 @@ import {
   Admin_Schema_Selecter,
   AdminType,
 } from "@/utils/common/enum";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/admin";
 
 interface AdminData {
   firstName: string;

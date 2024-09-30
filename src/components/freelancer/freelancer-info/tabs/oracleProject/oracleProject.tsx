@@ -12,7 +12,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/freelancer";
 
 interface OracleProjectProps {
   id: string; // Added id prop

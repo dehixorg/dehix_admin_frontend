@@ -10,7 +10,7 @@ import { Talentcard } from "../talent/talentCards";
 import { ConsultantCards } from "../consultant/ConsultantCards";
 
 import { Separator } from "@/components/ui/separator";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/freelancer";
 
 const fetchUserProfile = async (id: string) => {
   try {

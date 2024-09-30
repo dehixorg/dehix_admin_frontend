@@ -10,7 +10,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/business";
 
 function Appliedcandidates({ id }: { id: string }) {
   const [appliedCandidates, setAppliedCandidates] = useState<string[]>([]);

@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/business";
 
 interface UserData {
   _id: string; // Assuming your API returns this field for each business

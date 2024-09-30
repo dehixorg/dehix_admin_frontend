@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/bid";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business

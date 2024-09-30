@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/notification";
 
 interface ImportantUrl {
   urlName: string;

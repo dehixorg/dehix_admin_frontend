@@ -28,7 +28,7 @@ import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { statusType } from "@/utils/common/enum";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/domain";
 
 interface DomainData {
   _id: string;

@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/admin";
 interface UserData {
   _id: string;
   firstName: string;

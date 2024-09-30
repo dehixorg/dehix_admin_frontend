@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/faq";
 
 interface ImportantUrl {
   urlName: string;

@@ -28,7 +28,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { statusType } from "@/utils/common/enum";
-import { apiHelperService } from "@/services/example";
+import { apiHelperService } from "@/services/domain";
 interface DomainData {
   _id: string;
   label: string;
@@ -81,7 +81,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   useEffect(() => {
     async function fetchDomains() {
       try {
-        const response = await apiHelperService.getDomainList();
+        const response = await apiHelperService.getAllDomain();
         if (!response.data.data) {
           toast({
             title: "Error",
