@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen, Eye, Trash2 } from "lucide-react";
 
+import { useToast } from "@/components/ui/use-toast";
 import AddDomain from "@/components/Domain/addDomain";
 import { Card } from "@/components/ui/card";
 import {
@@ -18,9 +19,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { statusType } from "@/utils/common/enum";
 
 interface DomainData {
   _id: string;
@@ -35,20 +42,25 @@ const DomainTable: React.FC = () => {
   const [domainData, setDomainData] = useState<DomainData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
-
+  const { toast } = useToast();
   // Function to fetch domain data
   const fetchDomainData = async () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
       const response = await axiosInstance.get("/domain/all");
-      if (response.data.data.length === 0) {
+      if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
         setDomainData(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching domain data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch domain data. Please Refresh the page.",
+        variant: "destructive", // Red error message
+      });
+
       setNoData(true); // Handle errors by showing no data
     } finally {
       setLoading(false);
@@ -63,28 +75,68 @@ const DomainTable: React.FC = () => {
   // Handle domain deletion
   const handleDelete = async (domainId: string) => {
     if (!domainId) {
-      console.error("Domain ID is undefined.");
+      toast({
+        title: "Error",
+        description: "Failed there is no such id . Please try again.",
+        variant: "destructive", // Red error message
+      });
       return;
     }
     try {
       await axiosInstance.delete(`/domain/${domainId}`);
       fetchDomainData(); // Re-fetch data after deletion
     } catch (error: any) {
-      console.error(
-        "Error deleting domain:",
-        error.response?.data || error.message,
-      );
+      toast({
+        title: "Error",
+        description: "Failed to delete domain . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
-  const handleSwitchChange = (labelId: string, checked: boolean) => {
+  const handleSwitchChange = async (labelId: string, checked: boolean) => {
+    // Initialize toast
     setDomainData((prevData) =>
       prevData.map((user) =>
         user._id === labelId
-          ? { ...user, status: checked ? "active" : "inactive" }
+          ? {
+              ...user,
+              status: checked ? statusType.active : statusType.inactive,
+            }
           : user,
       ),
     );
+    try {
+      await axiosInstance.put(`/domain/${labelId}`, {
+        status: checked ? statusType.active : statusType.inactive,
+      });
+      toast({
+        title: "Success",
+        description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,
+        variant: "default",
+      });
+    } catch (error) {
+      // Revert the status change if the API call fails
+      setDomainData((prevData) =>
+        prevData.map((domain) =>
+          domain._id === labelId
+            ? {
+                ...domain,
+                status: checked ? statusType.inactive : statusType.active,
+              } // revert back to original status
+            : domain,
+        ),
+      );
+      toast({
+        title: "Error",
+        description: "Failed to update domain status. Please try again.",
+        variant: "destructive", // Red error message
+      });
+    }
+  };
+  const formatID = (id: string) => {
+    if (id.length <= 7) return id;
+    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
   // Callback to re-fetch domain data after adding a new domain
   const handleAddDomain = async () => {
@@ -92,7 +144,11 @@ const DomainTable: React.FC = () => {
       // Optionally post newDomain if needed
       await fetchDomainData(); // Fetch updated data after adding the domain
     } catch (error) {
-      console.error("Error adding domain:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add domain . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
@@ -110,10 +166,11 @@ const DomainTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[180px]">Domain Id</TableHead>
                   <TableHead className="w-[180px]">Domain Name</TableHead>
-                  <TableHead className="w-[180px]">Created At</TableHead>
+                  <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
-                  <TableHead className="w-[180px]">Switch</TableHead>
+                  <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Details</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
                 </TableRow>
@@ -143,16 +200,41 @@ const DomainTable: React.FC = () => {
                 ) : domainData.length > 0 ? (
                   domainData.map((domain) => (
                     <TableRow key={domain._id}>
+                      <TableCell>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(domain._id || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {domain._id ? domain._id : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
                         {domain.createdAt || "No Data Available"}
                       </TableCell>
                       <TableCell>
-                        {domain.createdBy || "No Data Available"}
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(domain.createdBy || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {domain.createdBy
+                              ? domain.createdBy
+                              : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={domain.status === "active"}
+                          checked={domain.status === statusType.active}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(domain._id, checked)
                           }

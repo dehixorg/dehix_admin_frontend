@@ -2,7 +2,6 @@
 import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { Input } from "@/components/ui/input";
