@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen, Eye, Trash2 } from "lucide-react";
 
+import { useToast } from "@/components/ui/use-toast";
 import AddSkill from "@/components/skill/addskill";
 import { Card } from "@/components/ui/card";
 import {
@@ -18,9 +19,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { statusType } from "@/utils/common/enum";
 
 interface SkillData {
   _id: string;
@@ -35,20 +42,25 @@ const SkillTable: React.FC = () => {
   const [SkillData, setSkillData] = useState<SkillData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
-
+  const { toast } = useToast();
   // Function to fetch Skill data
   const fetchSkillData = async () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
       const response = await axiosInstance.get("/skills/all");
-      if (response.data.data.length === 0) {
+      if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
         setSkillData(response.data.data);
       }
     } catch (error) {
-      console.error("Error fetching Skill data:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch Skill data. Please Refresh the page.",
+        variant: "destructive", // Red error message
+      });
+
       setNoData(true); // Handle errors by showing no data
     } finally {
       setLoading(false);
@@ -63,45 +75,68 @@ const SkillTable: React.FC = () => {
   // Handle Skill deletion
   const handleDelete = async (SkillId: string) => {
     if (!SkillId) {
-      console.error("Skill ID is undefined.");
+      toast({
+        title: "Error",
+        description: "Failed there is no such id . Please try again.",
+        variant: "destructive", // Red error message
+      });
       return;
     }
     try {
       await axiosInstance.delete(`/skills/${SkillId}`);
       fetchSkillData(); // Re-fetch data after deletion
     } catch (error: any) {
-      console.error(
-        "Error deleting Skill:",
-        error.response?.data || error.message,
-      );
+      toast({
+        title: "Error",
+        description: "Failed to delete Skill . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
-  const handleSwitchChange = async(labelId: string, checked: boolean) => {
+  const handleSwitchChange = async (labelId: string, checked: boolean) => {
+    // Initialize toast
     setSkillData((prevData) =>
       prevData.map((user) =>
         user._id === labelId
-          ? { ...user, status: checked ? "Active" : "Inactive" }
+          ? {
+              ...user,
+              status: checked ? statusType.active : statusType.inactive,
+            }
           : user,
       ),
     );
     try {
-      await axiosInstance.patch(`/skills/${labelId}/status`, {
-        status: checked ? "Active" : "Inactive",
+      await axiosInstance.put(`/skills/${labelId}`, {
+        status: checked ? statusType.active : statusType.inactive,
       });
-      console.log("Skill status updated successfully");
+      toast({
+        title: "Success",
+        description: `Skill status updated to ${checked ? statusType.active : statusType.inactive}`,
+        variant: "default",
+      });
     } catch (error) {
-      console.error("Error updating skill status:", error);
       // Revert the status change if the API call fails
       setSkillData((prevData) =>
-        prevData.map((skill) =>
-          skill._id === labelId
-            ? { ...skill, status: checked ? "Inactive" : "Active" } // revert back to original status
-            : skill
-        )
+        prevData.map((Skill) =>
+          Skill._id === labelId
+            ? {
+                ...Skill,
+                status: checked ? statusType.inactive : statusType.active,
+              } // revert back to original status
+            : Skill,
+        ),
       );
+      toast({
+        title: "Error",
+        description: "Failed to update Skill status. Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
-    
+  };
+  const formatID = (id: string) => {
+    if (id.length <= 7) return id;
+    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
   // Callback to re-fetch Skill data after adding a new Skill
   const handleAddSkill = async () => {
@@ -109,7 +144,11 @@ const SkillTable: React.FC = () => {
       // Optionally post newSkill if needed
       await fetchSkillData(); // Fetch updated data after adding the Skill
     } catch (error) {
-      console.error("Error adding Skill:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add Skill . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
@@ -127,8 +166,9 @@ const SkillTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[180px]">Skill Id</TableHead>
                   <TableHead className="w-[180px]">Skill Name</TableHead>
-                  <TableHead className="w-[180px]">Created At</TableHead>
+                  <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Details</TableHead>
@@ -160,16 +200,41 @@ const SkillTable: React.FC = () => {
                 ) : SkillData.length > 0 ? (
                   SkillData.map((Skill) => (
                     <TableRow key={Skill._id}>
+                      <TableCell>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(Skill._id || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {Skill._id ? Skill._id : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TableCell>
                       <TableCell>{Skill.label}</TableCell>
                       <TableCell>
                         {Skill.createdAt || "No Data Available"}
                       </TableCell>
                       <TableCell>
-                        {Skill.createdBy || "No Data Available"}
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <span>
+                              {formatID(Skill.createdBy || "") ||
+                                "No Data Available"}
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {Skill.createdBy
+                              ? Skill.createdBy
+                              : "No Data Available"}
+                          </TooltipContent>
+                        </Tooltip>
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={Skill.status === "Active"}
+                          checked={Skill.status === statusType.active}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(Skill._id, checked)
                           }

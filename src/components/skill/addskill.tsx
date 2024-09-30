@@ -1,12 +1,13 @@
-'use client'
-import { useSelector } from 'react-redux';
-import { RootState } from '@/lib/store';
+"use client";
+import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { RootState } from "@/lib/store";
+import { useToast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
@@ -27,7 +28,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-
+import { statusType } from "@/utils/common/enum";
 interface SkillData {
   _id: string;
   label: string;
@@ -51,7 +52,7 @@ interface AddSkillProps {
 const SkillSchema = z.object({
   label: z.string().nonempty("Please enter a Skill name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum(["Active"]).default("Active"),
+  status: z.enum([statusType.active]).default(statusType.active),
 });
 
 const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
@@ -59,9 +60,9 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [Skills, setSkills] = useState<Skill[]>([]); // Use Skill type here
-  const currentUserId = "user-id-123";
-  //const currentUserId = useSelector((state: RootState) => state.user);
-
+  const currentUser = useSelector((state: RootState) => state.user);
+  const currentUserId = currentUser.uid;
+  const { toast } = useToast();
   const {
     control,
     handleSubmit,
@@ -72,7 +73,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
     defaultValues: {
       label: "",
       description: "",
-      status: "Active",
+      status: statusType.active,
     },
   });
 
@@ -81,9 +82,21 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
     async function fetchSkills() {
       try {
         const response = await axiosInstance.get("/skills/all");
-        setSkills(response.data.data);
+        if (!response.data.data) {
+          toast({
+            title: "Error",
+            description: "Failed to fetch Skill data . Please try again.",
+            variant: "destructive", // Red error message
+          });
+        } else {
+          setSkills(response.data.data);
+        }
       } catch (error) {
-        console.error("Error fetching Skills:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch Skill data . Please try again.",
+          variant: "destructive", // Red error message
+        });
       }
     }
 
@@ -103,27 +116,38 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
     }
 
     try {
+      const SkillDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new Skill to the backend
-      const skillDataWithUser = { ...data, createdBy: currentUserId };
-      const response = await axiosInstance.post(`/skills/createskill`, skillDataWithUser);
+      const response = await axiosInstance.post(
+        `/skills/createskill`,
+        SkillDataWithUser,
+      );
       const newSkill = response.data.data;
+      if (newSkill) {
+        // Pass the new Skill to the parent component
+        onAddSkill(newSkill);
+        setSuccessMessage("Skill added successfully!");
+        reset();
+        setErrorMessage(null); // Clear any previous error message
 
-      // Pass the new Skill to the parent component
-      onAddSkill(newSkill);
-
-      // Reset the form and show success message
-      setSuccessMessage("Skill added successfully!");
-      reset();
-      setErrorMessage(null); // Clear any previous error message
-
-      // Close the dialog after a short delay
-      setTimeout(() => {
-        setOpen(false);
-        setSuccessMessage(null);
-      }, 500);
+        // Close the dialog after a short delay
+        setTimeout(() => {
+          setOpen(false);
+          setSuccessMessage(null);
+        }, 500);
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to add Skill . Please try again.",
+          variant: "destructive", // Red error message
+        });
+      }
     } catch (error) {
-      console.error("Error submitting Skill:", error);
-      setErrorMessage("Failed to add the Skill. Please try again.");
+      toast({
+        title: "Error",
+        description: "Failed to add Skill . Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
 
@@ -153,9 +177,6 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
                 />
               )}
             />
-            {errors.label && (
-              <p className="text-red-600">{errors.label.message}</p>
-            )}
           </div>
           <div className="mb-3">
             <Controller
@@ -169,10 +190,6 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
                 />
               )}
             />
-
-            {errors.description && (
-              <p className="text-red-600">{errors.description.message}</p>
-            )}
           </div>
           <div className="mb-3">
             <Controller
@@ -184,8 +201,10 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Active">Active</SelectItem>
-                    <SelectItem value="Inactive">InActive</SelectItem>
+                    <SelectItem value={statusType.active}>Active</SelectItem>
+                    <SelectItem value={statusType.inactive}>
+                      InActive
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               )}
