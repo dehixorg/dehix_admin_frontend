@@ -10,11 +10,11 @@ import { Talentcard } from "../talent/talentCards";
 import { ConsultantCards } from "../consultant/ConsultantCards";
 
 import { Separator } from "@/components/ui/separator";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/freelancer";
 
 const fetchUserProfile = async (id: string) => {
   try {
-    const response = await axiosInstance.get(`/freelancer/${id}`);
+    const response = await apiHelperService.getAllFreelancerPersonalInfo(id);
     const educationData = Object.values(response.data.education || {});
     const projectsData = Object.values(response.data.projects || {});
     const professionalData = Object.values(
@@ -26,8 +26,8 @@ const fetchUserProfile = async (id: string) => {
     // console.log('Education:', educationData);
     // console.log('Projects:', projectsData);
     // console.log('Professional:', professionalData );
-    console.log("talent:", talent);
-    console.log("consultant:", consultant);
+    // console.log("talent:", talent);
+    // console.log("consultant:", consultant);
 
     return {
       educationData,

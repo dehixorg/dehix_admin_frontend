@@ -12,7 +12,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { apiHelperService } from "@/services/freelancer";
 
 interface Skill {
   _id: string;
@@ -50,7 +50,8 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
     console.log("id", id);
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/freelancer/${id}`);
+        const response =
+          await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { skills, domain } = response.data;
         console.log("Skills:", skills);
         console.log("Domain:", domain);

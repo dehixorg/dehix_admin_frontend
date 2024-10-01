@@ -14,7 +14,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -25,6 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { apiHelperService } from "@/services/faq";
 
 interface ImportantUrl {
   urlName: string;
@@ -50,7 +50,7 @@ const FaqTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/faq/all");
+        const response = await apiHelperService.getAllFaq();
         console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
@@ -70,7 +70,7 @@ const FaqTable: React.FC = () => {
       return;
     }
     try {
-      await axiosInstance.delete(`/faq/${faqId}`);
+      await apiHelperService.deleteFaq(faqId);
       setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
     } catch (error: any) {
       console.error(

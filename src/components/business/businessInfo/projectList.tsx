@@ -1,8 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { useToast } from "@/components/ui/use-toast";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Table,
   TableHeader,
@@ -11,11 +9,13 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
+import { apiHelperService } from "@/services/business";
+import { useToast } from "@/components/ui/use-toast";
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
-} from "@/components/ui/tooltip"; // Import Tooltip component (if available)
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface Project {
   name: string;
@@ -32,17 +32,9 @@ function ProjectList({ id }: { id: string }) {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
-        const data = response.data;
-        if (data.ProjectList) {
-          setProjects(data.ProjectList);
-        } else {
-          toast({
-            title: "Error",
-            description: "Error in fetching data. Please try again",
-            variant: "destructive", // Optional: change the variant as needed
-          });
-        }
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
+        const data = response.data; // Ensure the data format is correct
+        setProjects(data.ProjectList || []); // Adjust based on your API response structure
       } catch (error) {
         toast({
           title: "Error",
@@ -62,9 +54,9 @@ function ProjectList({ id }: { id: string }) {
       try {
         const projectdata: Project[] = [];
         for (const projectId of projectid) {
-          const response = await axiosInstance.get(
-            `/business/${projectId}/project`,
-          );
+          const response =
+            await apiHelperService.getAllBusinessProject(projectId);
+          console.log(response.data);
           const data = response.data.data;
           const info: Project = {
             name: data.projectName,

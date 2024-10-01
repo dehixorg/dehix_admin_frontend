@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { axiosInstance } from "@/lib/axiosinstance";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -11,7 +11,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components
+import { apiHelperService } from "@/services/business";
 
 function Appliedcandidates({ id }: { id: string }) {
   const [appliedCandidates, setAppliedCandidates] = useState<string[]>([]);
@@ -21,7 +21,7 @@ function Appliedcandidates({ id }: { id: string }) {
   useEffect(() => {
     const fetchAppliedCandidates = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data;
         setAppliedCandidates(data.Appliedcandidates || []);
       } catch (error) {

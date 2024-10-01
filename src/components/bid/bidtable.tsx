@@ -13,7 +13,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,6 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { apiHelperService } from "@/services/bid";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business
@@ -41,7 +41,7 @@ const BidsTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/bid/all");
+        const response = await apiHelperService.getAllBid();
         console.log(response.data.data);
         setbidData(response.data.data);
       } catch (error) {

@@ -14,7 +14,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -23,6 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { apiHelperService } from "@/services/admin";
 interface UserData {
   _id: string;
   firstName: string;
@@ -43,7 +43,7 @@ const AdminTable: React.FC = () => {
   const fetchUserData = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstance.get("/admin/all");
+      const response = await apiHelperService.getAllAdmin();
       //console.log("API Response:", response.data);
       setUserData(response.data.data);
     } catch (error) {
@@ -73,7 +73,7 @@ const AdminTable: React.FC = () => {
       return;
     }
     try {
-      await axiosInstance.delete(`/admin/${admin_id}`);
+      await apiHelperService.deleteAdmin(admin_id);
       setUserData((prevData) =>
         prevData.filter((user) => user._id !== admin_id),
       );

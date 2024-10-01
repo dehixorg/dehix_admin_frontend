@@ -6,8 +6,8 @@ import { PackageOpen } from "lucide-react"; // Icon for no data state
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { axiosInstance } from "@/lib/axiosinstance";
-import { useToast } from "@/components/ui/use-toast"; // Toast for error handling
+import { apiHelperService } from "@/services/business";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Business {
   name: string; // Combined first and last name
@@ -25,7 +25,8 @@ function PersonalInfo({ id }: { id: string }) {
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}`);
+        console.log(id);
+        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data; // Ensure data is accessed correctly
 
         // Extract and format the personal information needed

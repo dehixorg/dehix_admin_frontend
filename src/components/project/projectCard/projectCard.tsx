@@ -11,7 +11,6 @@ import {
   Dot,
 } from "lucide-react";
 
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Card,
   CardContent,
@@ -21,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { apiHelperService } from "@/services/business";
 
 interface DehixProjectInfo {
   projectName: string;
@@ -51,7 +51,7 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
 
     const fetchProjectData = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}/project`);
+        const response = await apiHelperService.getAllBusinessProject(id);
         //console.log("API Response:", response.data);
         if (response?.data?.data?.data) {
           setProjectInfo(response.data.data.data);

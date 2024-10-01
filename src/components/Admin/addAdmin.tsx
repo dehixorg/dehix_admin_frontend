@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 
 import { toast } from "../ui/use-toast";
 
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -32,6 +31,7 @@ import {
   Admin_Schema_Selecter,
   AdminType,
 } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/admin";
 
 interface AdminData {
   firstName: string;
@@ -97,7 +97,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
   const onSubmit = async (data: AdminData) => {
     try {
       // console.log("Submitting data:", data);
-      const response = await axiosInstance.post(`/admin/create`, data);
+      const response = await apiHelperService.createAdmin(data);
       const newAdmin = response.data.data ? response.data.data.data : null;
       onAddAdmin(newAdmin);
       reset();
