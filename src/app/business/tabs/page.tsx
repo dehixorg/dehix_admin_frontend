@@ -19,9 +19,6 @@ import ProjectList from "@/components/business/businessInfo/projectList";
 import Appliedcandidates from "@/components/business/businessInfo/appliedCandidates";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 
-
-
-
 const BusinessTabs = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
@@ -63,38 +60,47 @@ const BusinessTabs = () => {
         <main className="ml-5 mr-5">
           <Tabs defaultValue="Personal-Info">
             <TabsList className="flex w-full justify-between gap-2">
-            <TabsTrigger value="Personal-Info" className="flex-1 text-center">
-      Personal Info
-    </TabsTrigger>
-    <TabsTrigger value="Professional-Info" className="flex-1 text-center">
-      Professional Info
-    </TabsTrigger>
-    <TabsTrigger value="ProjectList" className="flex-1 text-center">
-      Project List
-    </TabsTrigger>
-    <TabsTrigger value="Appliedcandidates" className="flex-1 text-center">
-      Applied Candidates
-    </TabsTrigger>
-    <TabsTrigger value="hirefreelancer" className="flex-1 text-center">
-      Hire Freelancer
-    </TabsTrigger>
-  </TabsList>
-  <TabsContent value="Personal-Info">
-    <PersonalInfo id={id || ""} />
-  </TabsContent>
-  <TabsContent value="Professional-Info">
-    <ProfessionalInfo id={id || ""} />
-  </TabsContent>
-  <TabsContent value="ProjectList">
-    <ProjectList id={id || ""} />
-  </TabsContent>
-  <TabsContent value="Appliedcandidates">
-    <Appliedcandidates id={id || ""} />
-  </TabsContent>
-  <TabsContent value="hirefreelancer">
-    <Hirefreelancer id={id || ""} />
-  </TabsContent>
-</Tabs>
+              <TabsTrigger value="Personal-Info" className="flex-1 text-center">
+                Personal Info
+              </TabsTrigger>
+              <TabsTrigger
+                value="Professional-Info"
+                className="flex-1 text-center"
+              >
+                Professional Info
+              </TabsTrigger>
+              <TabsTrigger value="ProjectList" className="flex-1 text-center">
+                Project List
+              </TabsTrigger>
+              <TabsTrigger
+                value="Appliedcandidates"
+                className="flex-1 text-center"
+              >
+                Applied Candidates
+              </TabsTrigger>
+              <TabsTrigger
+                value="hirefreelancer"
+                className="flex-1 text-center"
+              >
+                Hire Freelancer
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="Personal-Info">
+              <PersonalInfo id={id || ""} />
+            </TabsContent>
+            <TabsContent value="Professional-Info">
+              <ProfessionalInfo id={id || ""} />
+            </TabsContent>
+            <TabsContent value="ProjectList">
+              <ProjectList id={id || ""} />
+            </TabsContent>
+            <TabsContent value="Appliedcandidates">
+              <Appliedcandidates id={id || ""} />
+            </TabsContent>
+            <TabsContent value="hirefreelancer">
+              <Hirefreelancer id={id || ""} />
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </div>

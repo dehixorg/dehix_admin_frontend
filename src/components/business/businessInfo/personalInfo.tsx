@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PackageOpen } from "lucide-react"; // Icon for no data state
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast"; // Toast for error handling
-import { PackageOpen } from "lucide-react"; // Icon for no data state
 
 interface Business {
   name: string; // Combined first and last name

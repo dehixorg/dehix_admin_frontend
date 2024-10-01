@@ -157,8 +157,7 @@ const SkillTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddSkill onAddSkill={handleAddSkill} />{" "}
-            {/* Pass the callback */}
+            <AddSkill onAddSkill={handleAddSkill} /> {/* Pass the callback */}
           </div>
         </div>
         <Card>
@@ -204,8 +203,7 @@ const SkillTable: React.FC = () => {
                         <Tooltip>
                           <TooltipTrigger>
                             <span>
-                              {formatID(Skill._id || "") ||
-                                "No Data Available"}
+                              {formatID(Skill._id || "") || "No Data Available"}
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>

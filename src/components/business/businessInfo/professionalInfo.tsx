@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PackageOpen } from "lucide-react"; // Icon for no data state
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast"; // For toast notifications
-import { PackageOpen } from "lucide-react"; // Icon for no data state
 
 interface Business {
   companyName: string;
@@ -58,7 +59,9 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
     return (
       <div className="text-center py-10">
         <PackageOpen className="mx-auto text-gray-500" size={100} />
-        <p className="text-gray-500">No business professional information found.</p>
+        <p className="text-gray-500">
+          No business professional information found.
+        </p>
       </div>
     );
   }
@@ -84,7 +87,11 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
           </div>
           <div>
             <Label htmlFor="personalWebsite">Personal Website</Label>
-            <Input id="personalWebsite" value={business.personalWebsite} readOnly />
+            <Input
+              id="personalWebsite"
+              value={business.personalWebsite}
+              readOnly
+            />
           </div>
           <div>
             <Label htmlFor="isVerified">Verified</Label>
@@ -92,7 +99,11 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
               id="isVerified"
               value={business.isVerified}
               readOnly
-              className={business.isVerified === "Yes" ? "text-green-500" : "text-red-500"}
+              className={
+                business.isVerified === "Yes"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }
             />
           </div>
         </div>

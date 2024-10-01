@@ -1,7 +1,7 @@
 "use client";
-import { useToast } from "@/components/ui/use-toast";
-
 import { useEffect, useState } from "react";
+
+import { useToast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Table,
@@ -63,7 +63,7 @@ function ProjectList({ id }: { id: string }) {
         const projectdata: Project[] = [];
         for (const projectId of projectid) {
           const response = await axiosInstance.get(
-            `/business/${projectId}/project`
+            `/business/${projectId}/project`,
           );
           const data = response.data.data;
           const info: Project = {
@@ -97,63 +97,71 @@ function ProjectList({ id }: { id: string }) {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Project List</h1>
-      
-        <Table className="w-full text-white bg-black">
-          <TableHeader>
-            <TableRow>
-              <TableHead >Serial No.</TableHead>
-              <TableHead >Name</TableHead>
-              <TableHead >Status</TableHead>
-              <TableHead>Description</TableHead>
-            </TableRow>
-          </TableHeader>
-          {loading ? (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-white text-center">Loading...</TableCell> {/* Center loading message */}
-                </TableRow>
-          ):project.length === 0 ? ( // Check if there are no projects
-                <TableRow>
-                <TableCell colSpan={4} className="text-white text-center">No projects found.</TableCell> {/* Center no data message */}
-              </TableRow>      ) : (
+
+      <Table className="w-full text-white bg-black">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Serial No.</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Description</TableHead>
+          </TableRow>
+        </TableHeader>
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={4} className="text-white text-center">
+              Loading...
+            </TableCell>{" "}
+            {/* Center loading message */}
+          </TableRow>
+        ) : project.length === 0 ? ( // Check if there are no projects
+          <TableRow>
+            <TableCell colSpan={4} className="text-white text-center">
+              No projects found.
+            </TableCell>{" "}
+            {/* Center no data message */}
+          </TableRow>
+        ) : (
           <TableBody>
-            
             {project.map((project1, index) => (
               <TableRow key={index}>
-                <TableCell >{index + 1}</TableCell> {/* Serial number */}
+                <TableCell>{index + 1}</TableCell> {/* Serial number */}
                 <TableCell>{project1.name}</TableCell>
-                <TableCell >
+                <TableCell>
                   <span
                     className={
                       project1.status === "Active"
                         ? "text-green-500"
                         : project1.status === "Rejected"
-                        ? "text-red-500"
-                        : project1.status === "Pending"
-                        ? "text-yellow-500"
-                        : "text-gray-500" // Fallback for unexpected statuses
+                          ? "text-red-500"
+                          : project1.status === "Pending"
+                            ? "text-yellow-500"
+                            : "text-gray-500" // Fallback for unexpected statuses
                     }
                   >
                     {project1.status}
                   </span>
                 </TableCell>
-                <TableCell >
+                <TableCell>
                   <Tooltip>
                     <TooltipTrigger>
                       <span>
-                        {formatdesc(project1.description || "") || "No Data Available"}
+                        {formatdesc(project1.description || "") ||
+                          "No Data Available"}
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {project1.description ? project1.description : "No Data Available"}
+                      {project1.description
+                        ? project1.description
+                        : "No Data Available"}
                     </TooltipContent>
                   </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-          )}
-        </Table>
-      
+        )}
+      </Table>
     </div>
   );
 }
