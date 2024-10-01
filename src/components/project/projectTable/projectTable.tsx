@@ -14,7 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { apiHelperService } from "@/services/project";
+import { apiHelperService } from "@/services/business";
 
 interface Project {
   _id: string;

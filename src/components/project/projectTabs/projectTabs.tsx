@@ -20,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { apiHelperService } from "@/services/project";
+import { apiHelperService } from "@/services/business";
 
 interface ProjectTabsProps {
   id: string;

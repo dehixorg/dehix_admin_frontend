@@ -20,30 +20,18 @@ export const apiHelperService = {
       endpoint: `/business/${itemId}`,
     });
   },
-
-  // more api example
-
-  updateItem: async (itemId: string, body: Record<string, any>) => {
-    return apiService({
-      method: Api_Methods.PUT,
-      endpoint: `/items/${itemId}`,
-      body,
-    });
-  },
-
-  patchItem: async (itemId: string, body: Record<string, any>) => {
-    return apiService({
-      method: Api_Methods.PATCH,
-      endpoint: `/items/${itemId}`,
-      body,
-    });
-  },
-
-  getCategories: async (params = {}) => {
+  getAllProject: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/categories",
+      endpoint: "/business/all_projects",
       params,
+    });
+  },
+
+  getAllBusinessProject: async (itemId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/${itemId}/project`,
     });
   },
 };

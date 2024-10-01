@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { apiHelperService } from "@/services/project";
+import { apiHelperService } from "@/services/business";
 
 interface DehixProjectInfo {
   projectName: string;
