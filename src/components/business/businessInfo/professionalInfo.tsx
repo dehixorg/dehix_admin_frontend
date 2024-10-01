@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PackageOpen } from "lucide-react"; // Icon for no data state
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Business {
-  // Combined first and last name
   companyName: string;
   companySize: string;
   linkedIn: string;
@@ -18,8 +19,8 @@ interface Business {
 
 function BusinessProfessionalInfo({ id }: { id: string }) {
   const [business, setBusiness] = useState<Business | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  //const id = "8LdE4z5D38P3pL16XDpt8THhHiw1";
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast(); // For displaying toast notifications
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -27,31 +28,42 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
         const response = await apiHelperService.getAllBusinessPersonalInfo(id);
         const data = response.data; // Ensure data is accessed correctly
 
-        // Extract and format the personal information needed
-        const personalInfo: Business = {
+        const professionalInfo: Business = {
           companyName: data.companyName || "Not Provided",
           companySize: data.companySize || "Not Provided",
           linkedIn: data.linkedIn || "Not Provided",
-          personalWebsite: data.email || "Not Provided",
+          personalWebsite: data.personalWebsite || "Not Provided",
           isVerified: data.isVerified ? "Yes" : "No",
         };
 
-        setBusiness(personalInfo);
+        setBusiness(professionalInfo);
       } catch (error) {
-        setError((error as Error).message);
-        console.error("API Error:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch professional info. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBusiness();
   }, [id]);
 
-  if (error) {
-    return <p>Error: {error}</p>;
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
   if (!business) {
-    return <p>No business found.</p>;
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">
+          No business professional information found.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -62,7 +74,7 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
       <CardContent>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="companyName">Comapny Name</Label>
+            <Label htmlFor="companyName">Company Name</Label>
             <Input id="companyName" value={business.companyName} readOnly />
           </div>
           <div>
@@ -74,7 +86,7 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
             <Input id="linkedIn" value={business.linkedIn} readOnly />
           </div>
           <div>
-            <Label htmlFor="personalWebsite">PersonalWebsite</Label>
+            <Label htmlFor="personalWebsite">Personal Website</Label>
             <Input
               id="personalWebsite"
               value={business.personalWebsite}
@@ -83,7 +95,16 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
           </div>
           <div>
             <Label htmlFor="isVerified">Verified</Label>
-            <Input id="isVerified" value={business.isVerified} readOnly />
+            <Input
+              id="isVerified"
+              value={business.isVerified}
+              readOnly
+              className={
+                business.isVerified === "Yes"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }
+            />
           </div>
         </div>
       </CardContent>

@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PackageOpen } from "lucide-react"; // Icon for no data state
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
+import { useToast } from '@/components/ui/use-toast';
 
 interface Business {
   name: string; // Combined first and last name
@@ -15,10 +17,10 @@ interface Business {
   email: string;
 }
 
-function BusinessPersonalInfo({ id }: { id: string }) {
+function PersonalInfo({ id }: { id: string }) {
   const [business, setBusiness] = useState<Business | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  //const id = "8LdE4z5D38P3pL16XDpt8THhHiw1";
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast(); // Toast for error messages
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -38,20 +40,30 @@ function BusinessPersonalInfo({ id }: { id: string }) {
 
         setBusiness(personalInfo);
       } catch (error) {
-        setError((error as Error).message);
-        console.error("API Error:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch business data. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBusiness();
   }, [id]);
 
-  if (error) {
-    return <p>Error: {error}</p>;
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
   if (!business) {
-    return <p>No business found.</p>;
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">No business found.</p>
+      </div>
+    );
   }
 
   return (
@@ -87,4 +99,4 @@ function BusinessPersonalInfo({ id }: { id: string }) {
   );
 }
 
-export default BusinessPersonalInfo;
+export default PersonalInfo;
