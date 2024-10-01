@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { axiosInstance } from "@/lib/axiosinstance";
+import { useToast } from "@/components/ui/use-toast"; // For toast notifications
+import { PackageOpen } from "lucide-react"; // Icon for no data state
 
 interface Business {
-  // Combined first and last name
   companyName: string;
   companySize: string;
   linkedIn: string;
@@ -18,40 +18,49 @@ interface Business {
 
 function BusinessProfessionalInfo({ id }: { id: string }) {
   const [business, setBusiness] = useState<Business | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  //const id = "8LdE4z5D38P3pL16XDpt8THhHiw1";
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast(); // For displaying toast notifications
 
   useEffect(() => {
     const fetchBusiness = async () => {
       try {
         const response = await axiosInstance.get(`/business/${id}`);
-        const data = response.data; // Ensure data is accessed correctly
+        const data = response.data;
 
-        // Extract and format the personal information needed
-        const personalInfo: Business = {
+        const professionalInfo: Business = {
           companyName: data.companyName || "Not Provided",
           companySize: data.companySize || "Not Provided",
           linkedIn: data.linkedIn || "Not Provided",
-          personalWebsite: data.email || "Not Provided",
+          personalWebsite: data.personalWebsite || "Not Provided",
           isVerified: data.isVerified ? "Yes" : "No",
         };
 
-        setBusiness(personalInfo);
+        setBusiness(professionalInfo);
       } catch (error) {
-        setError((error as Error).message);
-        console.error("API Error:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch professional info. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBusiness();
   }, [id]);
 
-  if (error) {
-    return <p>Error: {error}</p>;
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
   if (!business) {
-    return <p>No business found.</p>;
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">No business professional information found.</p>
+      </div>
+    );
   }
 
   return (
@@ -62,7 +71,7 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
       <CardContent>
         <div className="space-y-4">
           <div>
-            <Label htmlFor="companyName">Comapny Name</Label>
+            <Label htmlFor="companyName">Company Name</Label>
             <Input id="companyName" value={business.companyName} readOnly />
           </div>
           <div>
@@ -74,16 +83,17 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
             <Input id="linkedIn" value={business.linkedIn} readOnly />
           </div>
           <div>
-            <Label htmlFor="personalWebsite">PersonalWebsite</Label>
-            <Input
-              id="personalWebsite"
-              value={business.personalWebsite}
-              readOnly
-            />
+            <Label htmlFor="personalWebsite">Personal Website</Label>
+            <Input id="personalWebsite" value={business.personalWebsite} readOnly />
           </div>
           <div>
             <Label htmlFor="isVerified">Verified</Label>
-            <Input id="isVerified" value={business.isVerified} readOnly />
+            <Input
+              id="isVerified"
+              value={business.isVerified}
+              readOnly
+              className={business.isVerified === "Yes" ? "text-green-500" : "text-red-500"}
+            />
           </div>
         </div>
       </CardContent>
