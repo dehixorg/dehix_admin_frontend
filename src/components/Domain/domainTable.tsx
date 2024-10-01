@@ -48,7 +48,7 @@ const DomainTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await axiosInstance.get("/domain/all");
+      const response = await axiosInstance.get("/domain/all/admin");
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {

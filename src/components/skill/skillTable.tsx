@@ -48,7 +48,7 @@ const SkillTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await axiosInstance.get("/skills/all");
+      const response = await axiosInstance.get("/skills/all/admin");
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
