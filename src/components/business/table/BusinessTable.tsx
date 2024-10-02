@@ -13,8 +13,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
+import { apiHelperService } from "@/services/business";
 
 interface UserData {
   _id: string; // Assuming your API returns this field for each business
@@ -33,7 +33,7 @@ const BusinessTable: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("/business/all");
+        const response = await apiHelperService.getAllBusiness();
         console.log(response.data.data);
         setUserData(response.data.data);
       } catch (error) {

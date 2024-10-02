@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Card,
   CardContent,
@@ -21,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { apiHelperService } from "@/services/business";
 
 interface ProjectTabsProps {
   id: string;
@@ -46,7 +46,7 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get(`/business/${id}/project`);
+        const response = await apiHelperService.getAllBusinessProject(id);
         if (response?.data?.data?.data) {
           setUserData(response.data.data.data);
         } else {

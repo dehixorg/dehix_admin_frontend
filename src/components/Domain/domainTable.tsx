@@ -28,6 +28,7 @@ import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { statusType } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/domain";
 
 interface DomainData {
   _id: string;
@@ -49,6 +50,7 @@ const DomainTable: React.FC = () => {
     setNoData(false); // Reset noData state before fetching
     try {
       const response = await axiosInstance.get("/domain/all/admin");
+      const response = await apiHelperService.getAllDomain();
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
@@ -83,7 +85,7 @@ const DomainTable: React.FC = () => {
       return;
     }
     try {
-      await axiosInstance.delete(`/domain/${domainId}`);
+      await apiHelperService.deleteDomain(domainId);
       fetchDomainData(); // Re-fetch data after deletion
     } catch (error: any) {
       toast({
