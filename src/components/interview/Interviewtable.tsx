@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen, Eye } from "lucide-react";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import {
@@ -20,11 +21,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
-    Tooltip,
-    TooltipTrigger,
-    TooltipContent,
-  } from "@/components/ui/tooltip";
-  import { apiHelperService } from "@/services/interview";
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { apiHelperService } from "@/services/interview";
 
 interface InterviewData {
   _id: string;
@@ -42,14 +43,15 @@ const InterviewTable: React.FC = () => {
   const [interviewData, setInterviewData] = useState<InterviewData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
-  const [selectedInterview, setSelectedInterview] = useState<InterviewData | null>(null);
+  const [selectedInterview, setSelectedInterview] =
+    useState<InterviewData | null>(null);
   const { toast } = useToast();
 
   const fetchInterviewData = async () => {
     setLoading(true);
     setNoData(false);
     try {
-        const response = await apiHelperService.getAllInterview();
+      const response = await apiHelperService.getAllInterview();
       if (!response.data || response.data.length === 0) {
         setNoData(true);
       } else {
@@ -104,7 +106,10 @@ const InterviewTable: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.
@@ -115,7 +120,8 @@ const InterviewTable: React.FC = () => {
                 ) : interviewData.length > 0 ? (
                   interviewData.map((interview) => (
                     <TableRow key={interview._id}>
-                      <TableCell><Tooltip>
+                      <TableCell>
+                        <Tooltip>
                           <TooltipTrigger>
                             <span>
                               {formatID(interview._id || "") ||
@@ -123,10 +129,14 @@ const InterviewTable: React.FC = () => {
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {interview._id ? interview._id : "No Data Available"}
+                            {interview._id
+                              ? interview._id
+                              : "No Data Available"}
                           </TooltipContent>
-                        </Tooltip></TableCell>
-                      <TableCell><Tooltip>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        <Tooltip>
                           <TooltipTrigger>
                             <span>
                               {formatID(interview.interviewer || "") ||
@@ -134,10 +144,14 @@ const InterviewTable: React.FC = () => {
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {interview.interviewer ? interview.interviewer : "No Data Available"}
+                            {interview.interviewer
+                              ? interview.interviewer
+                              : "No Data Available"}
                           </TooltipContent>
-                        </Tooltip></TableCell>
-                      <TableCell><Tooltip>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        <Tooltip>
                           <TooltipTrigger>
                             <span>
                               {formatID(interview.interviewee || "") ||
@@ -145,16 +159,31 @@ const InterviewTable: React.FC = () => {
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            {interview.interviewee ? interview.interviewee : "No Data Available"}
+                            {interview.interviewee
+                              ? interview.interviewee
+                              : "No Data Available"}
                           </TooltipContent>
-                        </Tooltip></TableCell>
-                      <TableCell>{interview.skill||"No Data Available"}</TableCell>
-                      <TableCell>{new Date(interview.interviewDate).toLocaleString()||"No Data Available"}</TableCell>
-                      <TableCell className="text-center">{interview.rating==null?"No Data Available":interview.rating}</TableCell>
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell>
+                        {interview.skill || "No Data Available"}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(interview.interviewDate).toLocaleString() ||
+                          "No Data Available"}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {interview.rating == null
+                          ? "No Data Available"
+                          : interview.rating}
+                      </TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline" onClick={() => setSelectedInterview(interview)}>
+                            <Button
+                              variant="outline"
+                              onClick={() => setSelectedInterview(interview)}
+                            >
                               <Eye className="w-4 h-4" />
                             </Button>
                           </DialogTrigger>
@@ -164,31 +193,48 @@ const InterviewTable: React.FC = () => {
                             </DialogHeader>
                             <div>
                               <p>
-                                <strong>ID:</strong> {interview._id||"No Data Available"}
+                                <strong>ID:</strong>{" "}
+                                {interview._id || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Interviewer:</strong> {interview.interviewer||"No Data Available"}
+                                <strong>Interviewer:</strong>{" "}
+                                {interview.interviewer || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Interviewee:</strong> {interview.interviewee||"No Data Available"}
+                                <strong>Interviewee:</strong>{" "}
+                                {interview.interviewee || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Skill:</strong> {interview.skill||"No Data Available"}
+                                <strong>Skill:</strong>{" "}
+                                {interview.skill || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Interview Date:</strong> {new Date(interview.interviewDate).toLocaleString()||"No Data Available"}
+                                <strong>Interview Date:</strong>{" "}
+                                {new Date(
+                                  interview.interviewDate,
+                                ).toLocaleString() || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Rating:</strong> {interview.rating==null?"No Data Available":interview.rating}
+                                <strong>Rating:</strong>{" "}
+                                {interview.rating == null
+                                  ? "No Data Available"
+                                  : interview.rating}
                               </p>
                               <p>
-                                <strong>Comments:</strong> {interview.comments || "No Data Available"}
+                                <strong>Comments:</strong>{" "}
+                                {interview.comments || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Created At:</strong> {new Date(interview.createdAt).toLocaleString()||"No Data Available"}
+                                <strong>Created At:</strong>{" "}
+                                {new Date(
+                                  interview.createdAt,
+                                ).toLocaleString() || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Updated At:</strong> {new Date(interview.updatedAt).toLocaleString()||"No Data Available"}
+                                <strong>Updated At:</strong>{" "}
+                                {new Date(
+                                  interview.updatedAt,
+                                ).toLocaleString() || "No Data Available"}
                               </p>
                             </div>
                           </DialogContent>
@@ -200,7 +246,10 @@ const InterviewTable: React.FC = () => {
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.
