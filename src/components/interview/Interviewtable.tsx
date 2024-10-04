@@ -56,7 +56,6 @@ const InterviewTable: React.FC = () => {
         setNoData(true);
       } else {
         setInterviewData(response.data.data);
-        console.log(response.data);
       }
     } catch (error) {
       toast({
