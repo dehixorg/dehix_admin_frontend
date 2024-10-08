@@ -74,7 +74,7 @@ const BusinessTable: React.FC = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : userData.length > 0 ? (
+                ) : userData ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.firstName}</TableCell>
