@@ -82,8 +82,8 @@ const NotifyTable: React.FC = () => {
       prevData.map((user) =>
         user._id === faqId
           ? { ...user, status: checked ? "active" : "inactive" }
-          : user
-      )
+          : user,
+      ),
     );
   };
 

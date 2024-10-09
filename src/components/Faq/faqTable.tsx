@@ -75,7 +75,7 @@ const FaqTable: React.FC = () => {
     } catch (error: any) {
       console.error(
         "Error deleting FAQ:",
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   };
@@ -85,8 +85,8 @@ const FaqTable: React.FC = () => {
       prevData.map((user) =>
         user._id === faqId
           ? { ...user, status: checked ? "active" : "inactive" }
-          : user
-      )
+          : user,
+      ),
     );
   };
 

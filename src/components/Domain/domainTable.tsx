@@ -104,8 +104,8 @@ const DomainTable: React.FC = () => {
               ...user,
               status: checked ? statusType.active : statusType.inactive,
             }
-          : user
-      )
+          : user,
+      ),
     );
     try {
       await axiosInstance.put(`/domain/${labelId}`, {
@@ -125,8 +125,8 @@ const DomainTable: React.FC = () => {
                 ...domain,
                 status: checked ? statusType.inactive : statusType.active,
               } // revert back to original status
-            : domain
-        )
+            : domain,
+        ),
       );
       toast({
         title: "Error",
