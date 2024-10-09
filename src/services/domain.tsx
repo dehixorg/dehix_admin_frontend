@@ -27,4 +27,11 @@ export const apiHelperService = {
       endpoint: `/domain/${itemId}`,
     });
   },
+  getAllDomainadmin: async (params = {}) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: "/domain/all/admin",
+      params,
+    });
+  },
 };

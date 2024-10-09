@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
+import { Messages, statusType } from "@/utils/common/enum";
 import { RootState } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -27,7 +28,6 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/projectdomain";
 interface DomainData {
   _id: string;
@@ -46,6 +46,7 @@ interface Domain {
 
 interface AddDomainProps {
   onAddProjectDomain: (newDomain: DomainData) => void; // Prop to pass the new domain
+  domainData: DomainData[];
 }
 
 // Zod schema for form validation
@@ -55,7 +56,10 @@ const domainSchema = z.object({
   status: z.enum([statusType.active]).default(statusType.active),
 });
 
-const AddProjectDomain: React.FC<AddDomainProps> = ({ onAddProjectDomain }) => {
+const AddProjectDomain: React.FC<AddDomainProps> = ({
+  onAddProjectDomain,
+  domainData,
+}) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -77,36 +81,10 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({ onAddProjectDomain }) => {
     },
   });
 
-  // Fetch the list of domains from the backend
-  useEffect(() => {
-    async function fetchDomains() {
-      try {
-        const response = await apiHelperService.getAllProjectdomain();
-        if (!response.data.data) {
-          toast({
-            title: "Error",
-            description: "Failed to fetch domain data . Please try again.",
-            variant: "destructive", // Red error message
-          });
-        } else {
-          setDomains(response.data.data);
-        }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch domain data . Please try again.",
-          variant: "destructive", // Red error message
-        });
-      }
-    }
-
-    fetchDomains();
-  }, []);
-
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
     // Check if domain already exists
-    const isDomainExist = domains.some(
+    const isDomainExist = domainData.some(
       (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
     );
 
@@ -135,14 +113,14 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({ onAddProjectDomain }) => {
       } else {
         toast({
           title: "Error",
-          description: "Failed to add domain . Please try again.",
+          description: Messages.ADD_ERROR("domain"),
           variant: "destructive", // Red error message
         });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add domain . Please try again.",
+        description: Messages.ADD_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }

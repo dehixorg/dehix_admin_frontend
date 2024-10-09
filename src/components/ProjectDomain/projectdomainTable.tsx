@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen, Eye, Trash2 } from "lucide-react";
 
+import { Messages, statusType } from "@/utils/common/enum";
 import { useToast } from "@/components/ui/use-toast";
 import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
 import { Card } from "@/components/ui/card";
@@ -27,7 +28,6 @@ import {
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/projectdomain";
 
 interface DomainData {
@@ -58,7 +58,7 @@ const ProjectDomainTable: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch domain data. Please Refresh the page.",
+        description: Messages.FETCH_ERROR("domain"),
         variant: "destructive", // Red error message
       });
 
@@ -75,21 +75,13 @@ const ProjectDomainTable: React.FC = () => {
 
   // Handle domain deletion
   const handleDelete = async (domainId: string) => {
-    if (!domainId) {
-      toast({
-        title: "Error",
-        description: "Failed there is no such id . Please try again.",
-        variant: "destructive", // Red error message
-      });
-      return;
-    }
     try {
       await apiHelperService.deleteProjectdomain(domainId);
       fetchDomainData(); // Re-fetch data after deletion
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to delete domain . Please try again.",
+        description: Messages.DELETE_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }
@@ -98,13 +90,13 @@ const ProjectDomainTable: React.FC = () => {
   const handleSwitchChange = async (labelId: string, checked: boolean) => {
     // Initialize toast
     setDomainData((prevData) =>
-      prevData.map((user) =>
-        user._id === labelId
+      prevData.map((domain) =>
+        domain._id === labelId
           ? {
-              ...user,
+              ...domain,
               status: checked ? statusType.active : statusType.inactive,
             }
-          : user,
+          : domain,
       ),
     );
     try {
@@ -130,7 +122,7 @@ const ProjectDomainTable: React.FC = () => {
       );
       toast({
         title: "Error",
-        description: "Failed to update domain status. Please try again.",
+        description: Messages.UPDATE_ERROR("domain status"),
         variant: "destructive", // Red error message
       });
     }
@@ -147,7 +139,7 @@ const ProjectDomainTable: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add domain . Please try again.",
+        description: Messages.ADD_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }
@@ -158,7 +150,10 @@ const ProjectDomainTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddProjectDomain onAddProjectDomain={handleAddDomain} />{" "}
+            <AddProjectDomain
+              onAddProjectDomain={handleAddDomain}
+              domainData={domainData}
+            />{" "}
             {/* Pass the callback */}
           </div>
         </div>
