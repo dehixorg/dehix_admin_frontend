@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Eye, Trash2 } from "lucide-react";
+import { PackageOpen, Trash2 } from "lucide-react";
 
 import AddFaq from "./addFaq";
 
@@ -22,7 +22,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { ButtonIcon } from "@/components/ui/eyeButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/faq";
 
@@ -75,7 +75,7 @@ const FaqTable: React.FC = () => {
     } catch (error: any) {
       console.error(
         "Error deleting FAQ:",
-        error.response?.data || error.message,
+        error.response?.data || error.message
       );
     }
   };
@@ -85,8 +85,8 @@ const FaqTable: React.FC = () => {
       prevData.map((user) =>
         user._id === faqId
           ? { ...user, status: checked ? "active" : "inactive" }
-          : user,
-      ),
+          : user
+      )
     );
   };
 
@@ -137,9 +137,7 @@ const FaqTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <ButtonIcon variant="outline"></ButtonIcon>
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
