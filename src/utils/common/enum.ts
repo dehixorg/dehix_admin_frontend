@@ -33,3 +33,20 @@ export enum Api_Methods {
   DELETE = "DELETE",
   PATCH = "PATCH",
 }
+
+export const Messages = {
+  UPDATE_SUCCESS: (resource: string) =>
+    `The ${resource} has been updated successfully.`,
+  DELETE_SUCCESS: (resource: string) =>
+    `The ${resource} has been deleted successfully.`,
+  CREATE_SUCCESS: (resource: string) =>
+    `The ${resource} has been created successfully.`,
+  FETCH_ERROR: (resource: string) =>
+    `Failed to fetch  ${resource} data. Please try again.`,
+  DELETE_ERROR: (resource: string) =>
+    `Failed to delete the ${resource}. Please try again.`,
+  UPDATE_ERROR: (resource: string) =>
+    `Failed to update the ${resource}. Please try again.`,
+  ADD_ERROR: (resource: string) =>
+    `Failed to add the ${resource}. Please try again.`,
+};

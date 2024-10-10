@@ -6,32 +6,24 @@ import { Api_Methods } from "../utils/common/enum"; // Importing Api_Methods
 import { apiService } from "./apiService";
 
 export const apiHelperService = {
-  getAllDomain: async (params = {}) => {
+  getAllProjectdomain: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/domain/all",
+      endpoint: "/projectDomain/all",
       params,
     });
   },
-  createDomain: async (body: Record<string, any>) => {
+  createProjectdomain: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/domain/createdomain",
+      endpoint: "/projectDomain/",
       body,
     });
   },
-
-  deleteDomain: async (itemId: string) => {
+  deleteProjectdomain: async (projectDomain_id: string) => {
     return apiService({
       method: Api_Methods.DELETE,
-      endpoint: `/domain/${itemId}`,
-    });
-  },
-  getAllDomainadmin: async (params = {}) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: "/domain/all/admin",
-      params,
+      endpoint: `/projectDomain/${projectDomain_id}`,
     });
   },
 };
