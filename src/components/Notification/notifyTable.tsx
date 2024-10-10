@@ -134,7 +134,7 @@ const NotifyTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon variant="outline"></ButtonIcon>
+                            <ButtonIcon></ButtonIcon>
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
