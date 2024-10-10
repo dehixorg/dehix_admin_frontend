@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Eye } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { Card } from "@/components/ui/card";
@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+import { ButtonIcon } from "@/components/ui/eyeButton";
 import { apiHelperService } from "@/services/business";
 
 interface UserData {
@@ -83,9 +83,9 @@ const BusinessTable: React.FC = () => {
                       <TableCell>{user.skills?.length || 0}</TableCell>
                       <TableCell>{user.domains?.length || 0}</TableCell>
                       <TableCell>
-                        <Button onClick={() => handleViewBusiness(user._id)}>
-                          <Eye className="w-4 h-4" />
-                        </Button>
+                        <ButtonIcon
+                          onClick={() => handleViewBusiness(user._id)}
+                        ></ButtonIcon>
                       </TableCell>
                     </TableRow>
                   ))

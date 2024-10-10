@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Eye, Trash2 } from "lucide-react";
+import { PackageOpen, Trash2 } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import AddDomain from "@/components/Domain/addDomain";
@@ -25,7 +25,7 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { Button } from "@/components/ui/button";
+import { ButtonIcon } from "@/components/ui/eyeButton";
 import { Switch } from "@/components/ui/switch";
 import { statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
@@ -244,9 +244,7 @@ const DomainTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <ButtonIcon></ButtonIcon>
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
