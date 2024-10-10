@@ -85,9 +85,7 @@ const ProjectDomainTable: React.FC = () => {
   const handleDelete = async (domainId: string) => {
     try {
       await apiHelperService.deleteProjectdomain(domainId);
-      const updatedDomainDict = { ...domainDataDict };
-      delete updatedDomainDict[domainId]; // Remove the deleted domain
-      setDomainDataDict(updatedDomainDict);
+      fetchDomainData();
     } catch (error: any) {
       toast({
         title: "Error",
