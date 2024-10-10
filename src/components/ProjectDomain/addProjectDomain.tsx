@@ -43,10 +43,12 @@ interface Domain {
   label: string;
   description: string;
 }
-
+interface DomainDictionary {
+  [key: string]: DomainData;
+}
 interface AddDomainProps {
-  onAddProjectDomain: (newDomain: DomainData) => void; // Prop to pass the new domain
-  domainData: DomainData[];
+  onAddProjectDomain: () => void; // Prop to pass the new domain
+  domainData: DomainDictionary;
 }
 
 // Zod schema for form validation
@@ -84,10 +86,9 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
     // Check if domain already exists
-    const isDomainExist = domainData.some(
+    const isDomainExist = Object.values(domainData).some(
       (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
     );
-
     if (isDomainExist) {
       setErrorMessage(`The domain "${data.label}" already exists.`);
       return;
@@ -96,11 +97,12 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
     try {
       const domainDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new domain to the backend
-      const response = await apiHelperService.createProjectdomain(data);
+      const response =
+        await apiHelperService.createProjectdomain(domainDataWithUser);
       const newDomain = response.data.data;
       if (newDomain) {
         // Pass the new domain to the parent component
-        onAddProjectDomain(newDomain);
+        onAddProjectDomain(); // Ensure this function handles the new domain correctly
         setSuccessMessage("Domain added successfully!");
         reset();
         setErrorMessage(null); // Clear any previous error message

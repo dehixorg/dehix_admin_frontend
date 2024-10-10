@@ -38,9 +38,11 @@ interface DomainData {
   createdBy?: string;
   status?: string; // User or system that created the domain
 }
-
+interface DomainDictionary {
+  [key: string]: DomainData;
+}
 const ProjectDomainTable: React.FC = () => {
-  const [domainData, setDomainData] = useState<DomainData[]>([]);
+  const [domainDataDict, setDomainDataDict] = useState<DomainDictionary>({});
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
@@ -53,7 +55,13 @@ const ProjectDomainTable: React.FC = () => {
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
-        setDomainData(response.data.data);
+        const domainDictionary: DomainDictionary = {};
+
+        response.data.data.forEach((domain: DomainData) => {
+          domainDictionary[domain._id] = domain; // Use _id as the key
+        });
+
+        setDomainDataDict(domainDictionary);
       }
     } catch (error) {
       toast({
@@ -77,7 +85,9 @@ const ProjectDomainTable: React.FC = () => {
   const handleDelete = async (domainId: string) => {
     try {
       await apiHelperService.deleteProjectdomain(domainId);
-      fetchDomainData(); // Re-fetch data after deletion
+      const updatedDomainDict = { ...domainDataDict };
+      delete updatedDomainDict[domainId]; // Remove the deleted domain
+      setDomainDataDict(updatedDomainDict);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -89,18 +99,16 @@ const ProjectDomainTable: React.FC = () => {
 
   const handleSwitchChange = async (labelId: string, checked: boolean) => {
     // Initialize toast
-    setDomainData((prevData) =>
-      prevData.map((domain) =>
-        domain._id === labelId
-          ? {
-              ...domain,
-              status: checked ? statusType.active : statusType.inactive,
-            }
-          : domain,
-      ),
-    );
+    const updatedDomainDict = { ...domainDataDict };
+    if (updatedDomainDict[labelId]) {
+      updatedDomainDict[labelId].status = checked
+        ? statusType.active
+        : statusType.inactive;
+    }
+    setDomainDataDict(updatedDomainDict);
+
     try {
-      await axiosInstance.put(`/projectdomain/${labelId}`, {
+      await axiosInstance.put(`/domain/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
       });
       toast({
@@ -110,39 +118,22 @@ const ProjectDomainTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      setDomainData((prevData) =>
-        prevData.map((domain) =>
-          domain._id === labelId
-            ? {
-                ...domain,
-                status: checked ? statusType.inactive : statusType.active,
-              } // revert back to original status
-            : domain,
-        ),
-      );
+      if (updatedDomainDict[labelId]) {
+        updatedDomainDict[labelId].status = checked
+          ? statusType.inactive
+          : statusType.active;
+      }
+      setDomainDataDict(updatedDomainDict);
       toast({
         title: "Error",
-        description: Messages.UPDATE_ERROR("domain status"),
-        variant: "destructive", // Red error message
+        description: "Failed to update domain status. Please try again.",
+        variant: "destructive",
       });
     }
   };
   const formatID = (id: string) => {
     if (id.length <= 7) return id;
     return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
-  };
-  // Callback to re-fetch domain data after adding a new domain
-  const handleAddDomain = async () => {
-    try {
-      // Optionally post newDomain if needed
-      await fetchDomainData(); // Fetch updated data after adding the domain
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: Messages.ADD_ERROR("domain"),
-        variant: "destructive", // Red error message
-      });
-    }
   };
 
   return (
@@ -151,8 +142,8 @@ const ProjectDomainTable: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
             <AddProjectDomain
-              onAddProjectDomain={handleAddDomain}
-              domainData={domainData}
+              onAddProjectDomain={fetchDomainData}
+              domainData={domainDataDict}
             />{" "}
             {/* Pass the callback */}
           </div>
@@ -193,8 +184,8 @@ const ProjectDomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : domainData.length > 0 ? (
-                  domainData.map((domain) => (
+                ) : Object.keys(domainDataDict).length > 0 ? (
+                  Object.values(domainDataDict).map((domain) => (
                     <TableRow key={domain._id}>
                       <TableCell>
                         <Tooltip>
