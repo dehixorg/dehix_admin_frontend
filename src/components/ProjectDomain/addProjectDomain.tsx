@@ -43,12 +43,9 @@ interface Domain {
   label: string;
   description: string;
 }
-interface DomainDictionary {
-  [key: string]: DomainData;
-}
 interface AddDomainProps {
   onAddProjectDomain: () => void; // Prop to pass the new domain
-  domainData: DomainDictionary;
+  domainData: DomainData[];
 }
 
 // Zod schema for form validation
@@ -65,7 +62,6 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
   const { toast } = useToast();
@@ -86,7 +82,7 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
     // Check if domain already exists
-    const isDomainExist = Object.values(domainData).some(
+    const isDomainExist = domainData.some(
       (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
     );
     if (isDomainExist) {
