@@ -27,7 +27,8 @@ import {
 import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { statusType } from "@/utils/common/enum";
+import { Messages, statusType } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/skill";
 
 interface SkillData {
   _id: string;
@@ -48,7 +49,7 @@ const SkillTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await axiosInstance.get("/skills/all/admin");
+      const response = await apiHelperService.getAllSkilladmin();
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
@@ -57,7 +58,7 @@ const SkillTable: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch Skill data. Please Refresh the page.",
+        description: Messages.FETCH_ERROR("skill"),
         variant: "destructive", // Red error message
       });
 
@@ -74,39 +75,29 @@ const SkillTable: React.FC = () => {
 
   // Handle Skill deletion
   const handleDelete = async (SkillId: string) => {
-    if (!SkillId) {
-      toast({
-        title: "Error",
-        description: "Failed there is no such id . Please try again.",
-        variant: "destructive", // Red error message
-      });
-      return;
-    }
     try {
-      await axiosInstance.delete(`/skills/${SkillId}`);
+      await apiHelperService.deleteSkill(SkillId);
       fetchSkillData(); // Re-fetch data after deletion
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to delete Skill . Please try again.",
+        description: Messages.DELETE_ERROR("skill"),
         variant: "destructive", // Red error message
       });
     }
   };
 
-  const handleSwitchChange = async (labelId: string, checked: boolean) => {
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
     // Initialize toast
-    setSkillData((prevData) =>
-      prevData.map((user) =>
-        user._id === labelId
-          ? {
-              ...user,
-              status: checked ? statusType.active : statusType.inactive,
-            }
-          : user,
-      ),
-    );
+
     try {
+      SkillData[index].status = checked
+        ? statusType.active
+        : statusType.inactive;
       await axiosInstance.put(`/skills/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
       });
@@ -117,19 +108,12 @@ const SkillTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      setSkillData((prevData) =>
-        prevData.map((Skill) =>
-          Skill._id === labelId
-            ? {
-                ...Skill,
-                status: checked ? statusType.inactive : statusType.active,
-              } // revert back to original status
-            : Skill,
-        ),
-      );
+      SkillData[index].status = checked
+        ? statusType.inactive
+        : statusType.active;
       toast({
         title: "Error",
-        description: "Failed to update Skill status. Please try again.",
+        description: "Failed to update skill status. Please try again.",
         variant: "destructive", // Red error message
       });
     }
@@ -138,26 +122,14 @@ const SkillTable: React.FC = () => {
     if (id.length <= 7) return id;
     return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
-  // Callback to re-fetch Skill data after adding a new Skill
-  const handleAddSkill = async () => {
-    try {
-      // Optionally post newSkill if needed
-      await fetchSkillData(); // Fetch updated data after adding the Skill
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add Skill . Please try again.",
-        variant: "destructive", // Red error message
-      });
-    }
-  };
 
   return (
     <div className="px-4">
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddSkill onAddSkill={handleAddSkill} /> {/* Pass the callback */}
+            <AddSkill onAddSkill={fetchSkillData} skillData={SkillData} />{" "}
+            {/* Pass the callback */}
           </div>
         </div>
         <Card>
@@ -196,8 +168,8 @@ const SkillTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : SkillData.length > 0 ? (
-                  SkillData.map((Skill) => (
+                ) : SkillData ? (
+                  SkillData.map((Skill, index) => (
                     <TableRow key={Skill._id}>
                       <TableCell>
                         <Tooltip>
@@ -234,7 +206,7 @@ const SkillTable: React.FC = () => {
                         <Switch
                           checked={Skill.status === statusType.active}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(Skill._id, checked)
+                            handleSwitchChange(Skill._id, checked, index)
                           }
                         />
                       </TableCell>

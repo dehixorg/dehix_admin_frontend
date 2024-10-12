@@ -1,6 +1,6 @@
 "use client";
 import { useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +27,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { statusType } from "@/utils/common/enum";
+import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 interface DomainData {
   _id: string;
@@ -38,14 +38,9 @@ interface DomainData {
   status?: string;
 }
 
-interface Domain {
-  _id: string;
-  label: string;
-  description: string;
-}
-
 interface AddDomainProps {
-  onAddDomain: (newDomain: DomainData) => void; // Prop to pass the new domain
+  onAddDomain: () => void; // Prop to pass the new domain
+  domainData: DomainData[];
 }
 
 // Zod schema for form validation
@@ -55,11 +50,10 @@ const domainSchema = z.object({
   status: z.enum([statusType.active]).default(statusType.active),
 });
 
-const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
+const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [domains, setDomains] = useState<Domain[]>([]); // Use Domain type here
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
   const { toast } = useToast();
@@ -78,35 +72,11 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
   });
 
   // Fetch the list of domains from the backend
-  useEffect(() => {
-    async function fetchDomains() {
-      try {
-        const response = await apiHelperService.getAllDomain();
-        if (!response.data.data) {
-          toast({
-            title: "Error",
-            description: "Failed to fetch domain data . Please try again.",
-            variant: "destructive", // Red error message
-          });
-        } else {
-          setDomains(response.data.data);
-        }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch domain data . Please try again.",
-          variant: "destructive", // Red error message
-        });
-      }
-    }
-
-    fetchDomains();
-  }, []);
 
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
     // Check if domain already exists
-    const isDomainExist = domains.some(
+    const isDomainExist = domainData.some(
       (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
     );
 
@@ -118,11 +88,11 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
     try {
       const domainDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new domain to the backend
-      const response = await apiHelperService.createDomain(data);
+      const response = await apiHelperService.createDomain(domainDataWithUser);
       const newDomain = response.data.data;
       if (newDomain) {
         // Pass the new domain to the parent component
-        onAddDomain(newDomain);
+        onAddDomain();
         setSuccessMessage("Domain added successfully!");
         reset();
         setErrorMessage(null); // Clear any previous error message
@@ -135,14 +105,14 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain }) => {
       } else {
         toast({
           title: "Error",
-          description: "Failed to add domain . Please try again.",
+          description: Messages.ADD_ERROR("domain"),
           variant: "destructive", // Red error message
         });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add domain . Please try again.",
+        description: Messages.ADD_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }
