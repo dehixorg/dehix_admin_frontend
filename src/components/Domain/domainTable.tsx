@@ -95,9 +95,17 @@ const DomainTable: React.FC = () => {
     // Initialize toast
 
     try {
-      domainData[index].status = checked
-        ? statusType.active
-        : statusType.inactive;
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedDomainData;
+      });
       await axiosInstance.put(`/domain/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
       });
@@ -108,14 +116,22 @@ const DomainTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      (domainData[index].status = checked
-        ? statusType.inactive
-        : statusType.active),
-        toast({
-          title: "Error",
-          description: "Failed to update domain status. Please try again.",
-          variant: "destructive", // Red error message
-        });
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
+          ? statusType.inactive
+          : statusType.active;
+
+        // Return the updated array
+        return updatedDomainData;
+      });
+      toast({
+        title: "Error",
+        description: "Failed to update domain status. Please try again.",
+        variant: "destructive", // Red error message
+      });
     }
   };
   const formatID = (id: string) => {

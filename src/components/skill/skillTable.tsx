@@ -95,9 +95,17 @@ const SkillTable: React.FC = () => {
     // Initialize toast
 
     try {
-      SkillData[index].status = checked
-        ? statusType.active
-        : statusType.inactive;
+      setSkillData((prevSkillData) => {
+        // Create a shallow copy of the existing array
+        const updatedSkillData = [...prevSkillData];
+
+        updatedSkillData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedSkillData;
+      });
       await axiosInstance.put(`/skills/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
       });
@@ -108,9 +116,17 @@ const SkillTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      SkillData[index].status = checked
-        ? statusType.inactive
-        : statusType.active;
+      setSkillData((prevSkillData) => {
+        // Create a shallow copy of the existing array
+        const updatedSkillData = [...prevSkillData];
+
+        updatedSkillData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedSkillData;
+      });
       toast({
         title: "Error",
         description: "Failed to update skill status. Please try again.",
