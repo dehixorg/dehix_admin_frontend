@@ -91,10 +91,18 @@ const ProjectDomainTable: React.FC = () => {
     checked: boolean,
     index: number,
   ) => {
-    try {
-      domainData[index].status = checked
+    setDomainData((prevDomainData) => {
+      // Create a shallow copy of the existing array
+      const updatedDomainData = [...prevDomainData];
+      
+        updatedDomainData[index].status = checked
         ? statusType.active
         : statusType.inactive;
+      
+      // Return the updated array
+      return updatedDomainData;
+    });
+    try {
       await axiosInstance.put(`/domain/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
       });
