@@ -113,9 +113,17 @@ const ProjectDomainTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      domainData[index].status = checked
-        ? statusType.inactive
-        : statusType.active;
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
+          ? statusType.inactive
+          : statusType.active;
+
+        // Return the updated array
+        return updatedDomainData;
+      });
       toast({
         title: "Error",
         description: "Failed to update domain status. Please try again.",
