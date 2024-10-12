@@ -38,11 +38,8 @@ interface DomainData {
   createdBy?: string;
   status?: string; // User or system that created the domain
 }
-interface DomainDictionary {
-  [key: string]: DomainData;
-}
 const ProjectDomainTable: React.FC = () => {
-  const [domainDataDict, setDomainDataDict] = useState<DomainDictionary>({});
+  const [domainData, setDomainData] = useState<DomainData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
@@ -55,13 +52,7 @@ const ProjectDomainTable: React.FC = () => {
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
-        const domainDictionary: DomainDictionary = {};
-
-        response.data.data.forEach((domain: DomainData) => {
-          domainDictionary[domain._id] = domain; // Use _id as the key
-        });
-
-        setDomainDataDict(domainDictionary);
+        setDomainData(response.data.data);
       }
     } catch (error) {
       toast({
@@ -95,16 +86,22 @@ const ProjectDomainTable: React.FC = () => {
     }
   };
 
-  const handleSwitchChange = async (labelId: string, checked: boolean) => {
-    // Initialize toast
-    const updatedDomainDict = { ...domainDataDict };
-    if (updatedDomainDict[labelId]) {
-      updatedDomainDict[labelId].status = checked
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
+    setDomainData((prevDomainData) => {
+      // Create a shallow copy of the existing array
+      const updatedDomainData = [...prevDomainData];
+
+      updatedDomainData[index].status = checked
         ? statusType.active
         : statusType.inactive;
-    }
-    setDomainDataDict(updatedDomainDict);
 
+      // Return the updated array
+      return updatedDomainData;
+    });
     try {
       await axiosInstance.put(`/domain/${labelId}`, {
         status: checked ? statusType.active : statusType.inactive,
@@ -116,12 +113,17 @@ const ProjectDomainTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      if (updatedDomainDict[labelId]) {
-        updatedDomainDict[labelId].status = checked
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
           ? statusType.inactive
           : statusType.active;
-      }
-      setDomainDataDict(updatedDomainDict);
+
+        // Return the updated array
+        return updatedDomainData;
+      });
       toast({
         title: "Error",
         description: "Failed to update domain status. Please try again.",
@@ -141,7 +143,7 @@ const ProjectDomainTable: React.FC = () => {
           <div className="flex space-x-4">
             <AddProjectDomain
               onAddProjectDomain={fetchDomainData}
-              domainData={domainDataDict}
+              domainData={domainData}
             />{" "}
             {/* Pass the callback */}
           </div>
@@ -182,8 +184,8 @@ const ProjectDomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : Object.keys(domainDataDict).length > 0 ? (
-                  Object.values(domainDataDict).map((domain) => (
+                ) : domainData ? (
+                  domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
                       <TableCell>
                         <Tooltip>
@@ -221,7 +223,7 @@ const ProjectDomainTable: React.FC = () => {
                         <Switch
                           checked={domain.status === statusType.active}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(domain._id, checked)
+                            handleSwitchChange(domain._id, checked, index)
                           }
                         />
                       </TableCell>
