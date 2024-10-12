@@ -94,11 +94,11 @@ const ProjectDomainTable: React.FC = () => {
     setDomainData((prevDomainData) => {
       // Create a shallow copy of the existing array
       const updatedDomainData = [...prevDomainData];
-      
-        updatedDomainData[index].status = checked
+
+      updatedDomainData[index].status = checked
         ? statusType.active
         : statusType.inactive;
-      
+
       // Return the updated array
       return updatedDomainData;
     });
