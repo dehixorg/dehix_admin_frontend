@@ -15,14 +15,25 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { apiHelperService } from "@/services/freelancer";
+import { Tooltip,TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+
+interface SkillDomainData{
+  _id:string,
+  name: string,
+  level: string,
+  experience: string,
+  interviewStatus: string,
+  interviewInfo: string,
+  interviewerRating: number
+}
 
 interface UserData {
   _id: string;
   firstName: string;
   email: string;
   phone: string;
-  skills: string[];
-  domain: string[];
+  skills: SkillDomainData[];
+  domain: SkillDomainData[];
 }
 
 const FreelancerTable: React.FC = () => {
@@ -80,8 +91,50 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.firstName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell>
+                        {user.skills.length>0 ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.skills[0]?.name}{" "}
+                                {user.skills.length > 1
+                                  ? `+${user.skills.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                            {user.skills
+                                .map((skill) => skill.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
+                      </TableCell>
+
+
+                      <TableCell>
+                        {user.domain.length>0 ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.domain[0]?.name}{" "}
+                                {user.domain.length > 1
+                                  ? `+${user.domain.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                            {user.domain
+                                .map((skill) => skill.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
+                      </TableCell>
                       <TableCell>
                         <Button onClick={() => handleRedirect(user._id)}>
                           click
