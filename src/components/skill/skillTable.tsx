@@ -49,7 +49,7 @@ const SkillTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await apiHelperService.getAllSkilladmin();
+      const response = await apiHelperService.getAllSkillAdmin();
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
@@ -106,9 +106,10 @@ const SkillTable: React.FC = () => {
         // Return the updated array
         return updatedSkillData;
       });
-      await axiosInstance.put(`/skills/${labelId}`, {
-        status: checked ? statusType.active : statusType.inactive,
-      });
+      await apiHelperService.updateSkillStatus(
+        labelId,
+        checked ? statusType.active : statusType.inactive,
+      );
       toast({
         title: "Success",
         description: `Skill status updated to ${checked ? statusType.active : statusType.inactive}`,
@@ -121,8 +122,8 @@ const SkillTable: React.FC = () => {
         const updatedSkillData = [...prevSkillData];
 
         updatedSkillData[index].status = checked
-          ? statusType.active
-          : statusType.inactive;
+          ? statusType.inactive
+          : statusType.active;
 
         // Return the updated array
         return updatedSkillData;

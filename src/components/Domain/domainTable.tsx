@@ -49,7 +49,7 @@ const DomainTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await apiHelperService.getAllDomainadmin();
+      const response = await apiHelperService.getAllDomainAdmin();
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
@@ -106,9 +106,11 @@ const DomainTable: React.FC = () => {
         // Return the updated array
         return updatedDomainData;
       });
-      await axiosInstance.put(`/domain/${labelId}`, {
-        status: checked ? statusType.active : statusType.inactive,
-      });
+      await apiHelperService.updateDomainStatus(
+        labelId,
+        checked ? statusType.active : statusType.inactive,
+      );
+
       toast({
         title: "Success",
         description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,

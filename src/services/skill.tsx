@@ -26,11 +26,20 @@ export const apiHelperService = {
       endpoint: `/skills/${itemId}`,
     });
   },
-  getAllSkilladmin: async (params = {}) => {
+  getAllSkillAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
       endpoint: "/skills/all/admin",
       params,
+    });
+  },
+  updateSkillStatus: async (labelId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/skills/${labelId}`,
+      body: {
+        status,
+      },
     });
   },
 };
