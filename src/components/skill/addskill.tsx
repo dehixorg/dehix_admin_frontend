@@ -28,7 +28,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
-import { statusType } from "@/utils/common/enum";
+import { Messages, statusType } from "@/utils/common/enum";
 interface SkillData {
   _id: string;
   label: string;
@@ -38,14 +38,9 @@ interface SkillData {
   status?: string;
 }
 
-interface Skill {
-  _id: string;
-  label: string;
-  description: string;
-}
-
 interface AddSkillProps {
-  onAddSkill: (newSkill: SkillData) => void; // Prop to pass the new Skill
+  onAddSkill: () => void; // Prop to pass the new Skill
+  skillData: SkillData[];
 }
 
 // Zod schema for form validation
@@ -55,11 +50,11 @@ const SkillSchema = z.object({
   status: z.enum([statusType.active]).default(statusType.active),
 });
 
-const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
+const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [Skills, setSkills] = useState<Skill[]>([]); // Use Skill type here
+  // Use Skill type here
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
   const { toast } = useToast();
@@ -77,36 +72,10 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
     },
   });
 
-  // Fetch the list of Skills from the backend
-  useEffect(() => {
-    async function fetchSkills() {
-      try {
-        const response = await axiosInstance.get("/skills/all");
-        if (!response.data.data) {
-          toast({
-            title: "Error",
-            description: "Failed to fetch Skill data . Please try again.",
-            variant: "destructive", // Red error message
-          });
-        } else {
-          setSkills(response.data.data);
-        }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch Skill data . Please try again.",
-          variant: "destructive", // Red error message
-        });
-      }
-    }
-
-    fetchSkills();
-  }, []);
-
   // Handle form submission to add a new Skill
   const onSubmit = async (data: SkillData) => {
     // Check if Skill already exists
-    const isSkillExist = Skills.some(
+    const isSkillExist = skillData.some(
       (Skill) => Skill.label.toLowerCase() === data.label.toLowerCase(),
     );
 
@@ -125,7 +94,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
       const newSkill = response.data.data;
       if (newSkill) {
         // Pass the new Skill to the parent component
-        onAddSkill(newSkill);
+        onAddSkill();
         setSuccessMessage("Skill added successfully!");
         reset();
         setErrorMessage(null); // Clear any previous error message
@@ -138,14 +107,14 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill }) => {
       } else {
         toast({
           title: "Error",
-          description: "Failed to add Skill . Please try again.",
+          description: Messages.ADD_ERROR("skill"),
           variant: "destructive", // Red error message
         });
       }
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to add Skill . Please try again.",
+        description: Messages.ADD_ERROR("skill"),
         variant: "destructive", // Red error message
       });
     }
