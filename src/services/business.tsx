@@ -31,7 +31,7 @@ export const apiHelperService = {
   getAllBusinessProject: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/business/${itemId}/project`,
+      endpoint: `/business/${itemId}/projects`,
     });
   },
 };
