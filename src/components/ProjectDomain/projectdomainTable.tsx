@@ -158,8 +158,8 @@ const ProjectDomainTable: React.FC = () => {
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -227,6 +227,12 @@ const ProjectDomainTable: React.FC = () => {
                           }
                         />
                       </TableCell>
+                      <TableCell className="text-center">
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(domain._id)}
+                        />
+                      </TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
@@ -251,12 +257,6 @@ const ProjectDomainTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(domain._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

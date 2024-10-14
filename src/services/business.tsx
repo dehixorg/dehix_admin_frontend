@@ -23,7 +23,7 @@ export const apiHelperService = {
   getAllProject: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/business/all_projects",
+      endpoint: "/project/all_projects",
       params,
     });
   },

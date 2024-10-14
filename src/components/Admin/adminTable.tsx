@@ -1,7 +1,9 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Eye, Trash2 } from "lucide-react";
+import { PackageOpen, Trash2 } from "lucide-react";
+
+import { ButtonIcon } from "../ui/arrowButton";
 
 import AddAdmin from "./addAdmin";
 
@@ -101,11 +103,11 @@ const AdminTable: React.FC = () => {
                   <TableHead className="w-[180px]">Type</TableHead>
                   <TableHead className="w-[180px]">Name</TableHead>
                   <TableHead className="w-[180px]">Username</TableHead>
-                  <TableHead className="w-[180px]">Email</TableHead>
-                  <TableHead className="w-[180px]">Phone-No.</TableHead>
+                  <TableHead className="w-[180px]">Email ID</TableHead>
+                  <TableHead className="w-[180px]">Phone No.</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">More</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -125,9 +127,15 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(user._id)}
+                        />
+                      </TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Eye className="cursor-pointer text-gray-500 hover:text-blue-500" />
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
@@ -150,10 +158,10 @@ const AdminTable: React.FC = () => {
                                 <strong>Username:</strong> {user.userName}
                               </p>
                               <p>
-                                <strong>Email:</strong> {user.email}
+                                <strong>Email ID:</strong> {user.email}
                               </p>
                               <p>
-                                <strong>Phone:</strong> {user.phone}
+                                <strong>Phone No.:</strong> {user.phone}
                               </p>
                               <p>
                                 <strong>Type:</strong> {user.type}
@@ -170,12 +178,6 @@ const AdminTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(user._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

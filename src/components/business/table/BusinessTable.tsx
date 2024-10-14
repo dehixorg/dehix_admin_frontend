@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { apiHelperService } from "@/services/business";
 
 interface UserData {
@@ -60,11 +60,11 @@ const BusinessTable: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email-Id</TableHead>
-                  <TableHead>Phone-No.</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>Domain Count</TableHead>
-                  <TableHead>View</TableHead>
+                  <TableHead>Email ID</TableHead>
+                  <TableHead>Phone No.</TableHead>
+                  <TableHead className="text-center">Skill Count</TableHead>
+                  <TableHead className="text-center">Domain Count</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -80,8 +80,12 @@ const BusinessTable: React.FC = () => {
                       <TableCell>{user.firstName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domains?.length || 0}</TableCell>
+                      <TableCell className="text-center">
+                        {user.skills?.length || 0}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {user.domains?.length || 0}
+                      </TableCell>
                       <TableCell>
                         <ButtonIcon
                           onClick={() => handleViewBusiness(user._id)}

@@ -36,7 +36,7 @@ const FreelancerPage = () => {
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "" },
-              { label: "Project", link: "/project/table" },
+              { label: "Project", link: "/project" },
               { label: id as string, link: "#" },
             ]}
           />
