@@ -125,7 +125,7 @@ const FreelancerTable: React.FC = () => {
                                   : ""}
                               </span>
                             </TooltipTrigger>
-                            <TooltipContent>
+                            <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
                             {user.domain
                                 .map((skill) => skill.name)
                                 .join(", ")}{" "}
