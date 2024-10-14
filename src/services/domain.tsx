@@ -27,11 +27,20 @@ export const apiHelperService = {
       endpoint: `/domain/${itemId}`,
     });
   },
-  getAllDomainadmin: async (params = {}) => {
+  getAllDomainAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
       endpoint: "/domain/all/admin",
       params,
+    });
+  },
+  updateDomainStatus: async (labelId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/domain/${labelId}`,
+      body: {
+        status,
+      },
     });
   },
 };

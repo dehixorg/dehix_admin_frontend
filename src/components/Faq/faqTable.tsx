@@ -1,7 +1,9 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddFaq from "./addFaq";
 
@@ -22,7 +24,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/faq";
 
@@ -106,10 +108,10 @@ const FaqTable: React.FC = () => {
                   <TableHead className="w-[180px]">Type</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Question</TableHead>
-                  <TableHead className="w-[180px]">URL Count</TableHead>
+                  <TableHead className="text-center">URL Count</TableHead>
                   <TableHead className="w-[180px]">Switch</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -125,7 +127,9 @@ const FaqTable: React.FC = () => {
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>{truncateText(user.question, 20)}</TableCell>
-                      <TableCell>{user.importantUrl.length}</TableCell>
+                      <TableCell className="text-center">
+                        {user.importantUrl.length}
+                      </TableCell>
                       <TableCell>
                         <Switch
                           checked={user.status === "active"}
@@ -135,6 +139,11 @@ const FaqTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell>
+                        <DeleteButtonIcon
+                          onClick={() => handleDelete(user._id)}
+                        />
+                      </TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>
@@ -192,13 +201,6 @@ const FaqTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(user._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

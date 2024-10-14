@@ -1,6 +1,6 @@
 "use client";
 import { useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,11 +38,6 @@ interface DomainData {
   status?: string;
 }
 
-interface Domain {
-  _id: string;
-  label: string;
-  description: string;
-}
 interface AddDomainProps {
   onAddProjectDomain: () => void; // Prop to pass the new domain
   domainData: DomainData[];

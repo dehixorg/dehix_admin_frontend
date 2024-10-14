@@ -13,9 +13,9 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { apiHelperService } from "@/services/freelancer";
 import { Tooltip,TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 
 interface SkillDomainData{
   _id:string,
@@ -71,11 +71,11 @@ const FreelancerTable: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email-Id</TableHead>
-                  <TableHead>Phone-No.</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>Domain Count</TableHead>
-                  <TableHead>More</TableHead>
+                  <TableHead>Email ID</TableHead>
+                  <TableHead>Phone No.</TableHead>
+                  <TableHead className="text-center">Skill Count</TableHead>
+                  <TableHead className="text-center">Domain Count</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -85,7 +85,7 @@ const FreelancerTable: React.FC = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : userData.length > 0 ? (
+                ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.firstName}</TableCell>
@@ -136,9 +136,7 @@ const FreelancerTable: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        <Button onClick={() => handleRedirect(user._id)}>
-                          click
-                        </Button>
+                        <ButtonIcon onClick={() => handleRedirect(user._id)}/>
                       </TableCell>
                     </TableRow>
                   ))

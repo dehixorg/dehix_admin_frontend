@@ -30,7 +30,7 @@ export default function Talent() {
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "/dashboard/Faq" },
-              { label: "Faq", link: "#" },
+              { label: "Notifications", link: "#" },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import { useToast } from "@/components/ui/use-toast";
 import AddDomain from "@/components/Domain/addDomain";
@@ -24,11 +26,11 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { axiosInstance } from "@/lib/axiosinstance";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
-import { statusType } from "@/utils/common/enum";
+import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
+import { formatTime } from "@/lib/utils";
 
 interface DomainData {
   _id: string;
@@ -49,7 +51,7 @@ const DomainTable: React.FC = () => {
     setLoading(true);
     setNoData(false); // Reset noData state before fetching
     try {
-      const response = await apiHelperService.getAllDomain();
+      const response = await apiHelperService.getAllDomainAdmin();
       if (!response.data.data) {
         setNoData(true); // Set noData if response is empty
       } else {
@@ -58,7 +60,7 @@ const DomainTable: React.FC = () => {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to fetch domain data. Please Refresh the page.",
+        description: Messages.FETCH_ERROR("domain"),
         variant: "destructive", // Red error message
       });
 
@@ -75,42 +77,42 @@ const DomainTable: React.FC = () => {
 
   // Handle domain deletion
   const handleDelete = async (domainId: string) => {
-    if (!domainId) {
-      toast({
-        title: "Error",
-        description: "Failed there is no such id . Please try again.",
-        variant: "destructive", // Red error message
-      });
-      return;
-    }
     try {
       await apiHelperService.deleteDomain(domainId);
       fetchDomainData(); // Re-fetch data after deletion
     } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to delete domain . Please try again.",
+        description: Messages.DELETE_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }
   };
 
-  const handleSwitchChange = async (labelId: string, checked: boolean) => {
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
     // Initialize toast
-    setDomainData((prevData) =>
-      prevData.map((user) =>
-        user._id === labelId
-          ? {
-              ...user,
-              status: checked ? statusType.active : statusType.inactive,
-            }
-          : user,
-      ),
-    );
+
     try {
-      await axiosInstance.put(`/domain/${labelId}`, {
-        status: checked ? statusType.active : statusType.inactive,
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedDomainData;
       });
+      await apiHelperService.updateDomainStatus(
+        labelId,
+        checked ? statusType.active : statusType.inactive,
+      );
+
       toast({
         title: "Success",
         description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,
@@ -118,16 +120,17 @@ const DomainTable: React.FC = () => {
       });
     } catch (error) {
       // Revert the status change if the API call fails
-      setDomainData((prevData) =>
-        prevData.map((domain) =>
-          domain._id === labelId
-            ? {
-                ...domain,
-                status: checked ? statusType.inactive : statusType.active,
-              } // revert back to original status
-            : domain,
-        ),
-      );
+      setDomainData((prevDomainData) => {
+        // Create a shallow copy of the existing array
+        const updatedDomainData = [...prevDomainData];
+
+        updatedDomainData[index].status = checked
+          ? statusType.inactive
+          : statusType.active;
+
+        // Return the updated array
+        return updatedDomainData;
+      });
       toast({
         title: "Error",
         description: "Failed to update domain status. Please try again.",
@@ -140,25 +143,13 @@ const DomainTable: React.FC = () => {
     return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
   // Callback to re-fetch domain data after adding a new domain
-  const handleAddDomain = async () => {
-    try {
-      // Optionally post newDomain if needed
-      await fetchDomainData(); // Fetch updated data after adding the domain
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to add domain . Please try again.",
-        variant: "destructive", // Red error message
-      });
-    }
-  };
 
   return (
     <div className="px-4">
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddDomain onAddDomain={handleAddDomain} />{" "}
+            <AddDomain onAddDomain={fetchDomainData} domainData={domainData} />{" "}
             {/* Pass the callback */}
           </div>
         </div>
@@ -172,8 +163,8 @@ const DomainTable: React.FC = () => {
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -198,8 +189,8 @@ const DomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : domainData.length > 0 ? (
-                  domainData.map((domain) => (
+                ) : domainData ? (
+                  domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
                       <TableCell>
                         <Tooltip>
@@ -216,7 +207,7 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
-                        {domain.createdAt || "No Data Available"}
+                        {formatTime(domain.createdAt) || "No Data Available"}
                       </TableCell>
                       <TableCell>
                         <Tooltip>
@@ -237,11 +228,16 @@ const DomainTable: React.FC = () => {
                         <Switch
                           checked={domain.status === statusType.active}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(domain._id, checked)
+                            handleSwitchChange(domain._id, checked, index)
                           }
                         />
                       </TableCell>
                       <TableCell>
+                        <DeleteButtonIcon
+                          onClick={() => handleDelete(domain._id)}
+                        />
+                      </TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>
@@ -263,12 +259,6 @@ const DomainTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(domain._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))
