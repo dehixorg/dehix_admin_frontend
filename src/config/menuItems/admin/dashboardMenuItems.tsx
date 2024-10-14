@@ -50,7 +50,7 @@ export const menuItemsTop: MenuItem[] = [
     label: "Faq",
   },
   {
-    href: "/project/table",
+    href: "/project",
     icon: <FolderLock className="h-5 w-5" />,
     label: "Project",
   },
