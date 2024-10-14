@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import CustomIcon from '@/components/SVGIcon';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import CustomIcon from "@/components/SVGIcon";
 interface ProjectCardProps {
   title: string;
   content: string;

@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 
 import {
   Card,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UserCardProps {
   title: string;
@@ -35,7 +35,7 @@ const PersonalInfoCard: React.FC<UserCardProps> = ({
                 <AvatarImage src={avatarUrl} />
                 <AvatarFallback>
                   {title.charAt(0)}
-                  {title.split(' ')[1]?.charAt(0)}
+                  {title.split(" ")[1]?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
             </div>

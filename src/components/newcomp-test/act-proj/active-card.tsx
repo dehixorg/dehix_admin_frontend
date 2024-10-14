@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface CustomCardProps {
   heading: string;
   icon?: React.ElementType; // Assuming `icon` is a component
@@ -17,7 +17,7 @@ const CustomCard: React.FC<CustomCardProps> = ({
       <CardHeader>
         <div className="grid grid-cols-[auto,auto] items-center ml-10">
           <CardTitle className="text-white text-3xl font-bold items-center">
-            {' '}
+            {" "}
             {heading}
           </CardTitle>
           <div className="items-center ml-4">

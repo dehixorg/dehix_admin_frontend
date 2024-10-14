@@ -1,9 +1,9 @@
 // CardWithForm.tsx
 
-import * as React from 'react';
-import { ArrowDownNarrowWide } from 'lucide-react';
+import * as React from "react";
+import { ArrowDownNarrowWide } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface CardWithFormProps {
   title: string;

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Github, MessageSquareIcon } from 'lucide-react';
+import React from "react";
+import { Github, MessageSquareIcon } from "lucide-react";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 
 interface ProjectProps {
   _id: string;
@@ -91,7 +91,7 @@ const ProjectCard: React.FC<ProjectProps> = ({
         </p>
         <p>-</p>
         <p className="text-sm font-semibold text-black bg-white px-3 py-1 uppercase rounded">
-          {end !== 'current' ? new Date(end).toLocaleDateString() : 'Current'}
+          {end !== "current" ? new Date(end).toLocaleDateString() : "Current"}
         </p>
       </CardFooter>
     </Card>

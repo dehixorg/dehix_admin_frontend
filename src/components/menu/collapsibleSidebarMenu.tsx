@@ -1,13 +1,13 @@
-import * as React from 'react';
-import Link from 'next/link';
-import { PanelLeft } from 'lucide-react';
+import * as React from "react";
+import Link from "next/link";
+import { PanelLeft } from "lucide-react";
 
-import { ThemeToggle } from '../shared/themeToggle';
+import { ThemeToggle } from "../shared/themeToggle";
 
-import { MenuItem } from './sidebarMenu';
+import { MenuItem } from "./sidebarMenu";
 
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 interface CollapsibleSidebarMenuProps {
   menuItemsTop: MenuItem[];
@@ -41,15 +41,15 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
               href={item.href}
               onClick={() => setActive(item.label)}
               className={`flex items-center gap-4 px-2.5 ${
-                item.label === 'Dehix'
-                  ? 'group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base'
+                item.label === "Dehix"
+                  ? "group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                   : item.label === active
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.icon}
-              {item.label !== 'Dehix' && item.label}
+              {item.label !== "Dehix" && item.label}
             </Link>
           ))}
         </nav>
@@ -63,15 +63,15 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
               href={item.href}
               onClick={() => setActive(item.label)}
               className={`flex items-center gap-4 px-2.5 ${
-                item.label === 'Dehix'
-                  ? 'group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base'
+                item.label === "Dehix"
+                  ? "group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                   : item.label === active
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? "text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
               }`}
             >
               {item.icon}
-              {item.label !== 'Dehix' && item.label}
+              {item.label !== "Dehix" && item.label}
             </Link>
           ))}
         </nav>

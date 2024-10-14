@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { LayoutDashboard, LogOut, Menu, Settings } from 'lucide-react';
+import React, { useState } from "react";
+import { LayoutDashboard, LogOut, Menu, Settings } from "lucide-react";
 
-import { Button } from './ui/button';
+import { Button } from "./ui/button";
 
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 export function ProfileSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
@@ -22,7 +22,7 @@ export function ProfileSidebar() {
 
       <div
         className={`fixed inset-y-0 left-0 z-40
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:fixed md:translate-x-0`}
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:fixed md:translate-x-0`}
       >
         <ScrollArea className="min-h-screen w-60 rounded-md border top-0 left-0">
           <div>

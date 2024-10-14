@@ -1,8 +1,10 @@
-'use client';
-import * as React from 'react';
-import { useState, useEffect } from 'react';
-import { PackageOpen } from 'lucide-react';
-import { Card } from '@/components/ui/card';
+"use client";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import { PackageOpen } from "lucide-react";
+import { useRouter } from "next/navigation";
+
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableHeader,
@@ -10,29 +12,34 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '@/components/ui/table';
-import { axiosInstance } from '@/lib/axiosinstance';
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { apiHelperService } from "@/services/freelancer";
 
 interface UserData {
+  _id: string;
   firstName: string;
   email: string;
   phone: string;
   skills: string[];
-  domains: string[];
+  domain: string[];
 }
 
 const FreelancerTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('/freelancer/allfreelancer');
-        console.log('API Response:', response.data);
+        //GET API service example usage
+        //TODO: replace this with actual freelance api service function after creation
+        const response = await apiHelperService.getAllFreelancers();
+        // const response = await axiosInstance.get("/freelancer/allfreelancer");
         setUserData(response.data.data);
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -40,6 +47,9 @@ const FreelancerTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleRedirect = (id: string) => {
+    router.push(`/freelancer/tabs?id=${id}`);
+  };
 
   return (
     <div className="px-4">
@@ -54,12 +64,13 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Phone-No.</TableHead>
                   <TableHead>Skill Count</TableHead>
                   <TableHead>Domain Count</TableHead>
+                  <TableHead>More</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -70,14 +81,22 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domains?.length || 0}</TableCell>
+                      <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell>
+                        <Button onClick={() => handleRedirect(user._id)}>
+                          click
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen className="mx-auto text-gray-500" size="100" />
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
                         <p className="text-gray-500">
                           No data available.
                           <br /> This feature will be available soon.

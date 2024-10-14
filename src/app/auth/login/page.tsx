@@ -1,25 +1,25 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { UserCredential } from 'firebase/auth';
-import { LoaderCircle, Chrome, Key, Eye, EyeOff } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { UserCredential } from "firebase/auth";
+import { LoaderCircle, Chrome, Key, Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ThemeToggle } from '@/components/shared/themeToggle';
-import { getUserData, loginGoogleUser, loginUser } from '@/lib/utils';
-import { setUser } from '@/lib/userSlice';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ThemeToggle } from "@/components/shared/themeToggle";
+import { getUserData, loginGoogleUser, loginUser } from "@/lib/utils";
+import { setUser } from "@/lib/userSlice";
 
 export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>('');
-  const [pass, setPass] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [pass, setPass] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
@@ -37,9 +37,9 @@ export default function Login() {
           type: claims.type,
         }),
       );
-      router.replace(`/dashboard/${claims.type}`);
+      router.replace(`/business`);
     } catch (error: any) {
-      setError('Invalid Email or Password ');
+      setError("Invalid Email or Password ");
       console.error(error.message);
     } finally {
       setIsLoading(false);
@@ -56,7 +56,7 @@ export default function Login() {
       const { user, claims } = await getUserData(userCredential);
 
       dispatch(setUser({ ...user, type: claims.type }));
-      router.replace(`/dashboard/${claims.type}`);
+      router.replace(`/business`);
     } catch (error: any) {
       setError(error.message);
       console.error(error.message);
@@ -108,7 +108,7 @@ export default function Login() {
                 <div className="relative">
                   <Input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     onChange={(e) => setPass(e.target.value)}
                     required
                   />
@@ -130,7 +130,7 @@ export default function Login() {
                   <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <Key className="mr-2 h-4 w-4" />
-                )}{' '}
+                )}{" "}
                 Login
               </Button>
               <Button
@@ -143,13 +143,13 @@ export default function Login() {
                   <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
                   <Chrome className="mr-2 h-4 w-4" />
-                )}{' '}
+                )}{" "}
                 Google Login
               </Button>
             </div>
           </form>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
+            Don&apos;t have an account?{" "}
             <Button variant="outline" size="sm" className="ml-2" asChild>
               <Link href="/auth/sign-up/freelancer">Sign up</Link>
             </Button>

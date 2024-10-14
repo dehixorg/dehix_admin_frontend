@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-import Link from 'next/link';
+import * as React from "react";
+import Link from "next/link";
 
 import {
   NavigationMenu,
@@ -9,7 +9,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
+} from "@/components/ui/navigation-menu";
 
 interface NavItem {
   label: string;
@@ -31,8 +31,8 @@ export function Navbar({ items }: UserNavProps) {
               <NavigationMenuLink
                 className={`${navigationMenuTriggerStyle()} text-base font-semibold ${
                   item.isButton
-                    ? 'dark:bg-primary dark:text-black text-white bg-black px-5 py-3'
-                    : ''
+                    ? "dark:bg-primary dark:text-black text-white bg-black px-5 py-3"
+                    : ""
                 }`}
               >
                 {item.label}

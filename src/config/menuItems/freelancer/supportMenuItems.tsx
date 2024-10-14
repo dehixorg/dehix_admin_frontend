@@ -1,19 +1,19 @@
-import { useSelector } from 'react-redux';
-import { HeartHandshake, Boxes, HomeIcon, User } from 'lucide-react';
+import { useSelector } from "react-redux";
+import { HeartHandshake, Boxes, HomeIcon } from "lucide-react";
 
-import { MenuItem } from '@/components/menu/sidebarMenu';
-import { RootState } from '@/lib/store';
+import { MenuItem } from "@/components/menu/sidebarMenu";
+import { RootState } from "@/lib/store";
 
 export const menuItemsTop: MenuItem[] = [
   {
-    href: '#',
+    href: "#",
     icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
-    label: 'Dehix',
+    label: "Dehix",
   },
   {
-    href: '/settings/support',
+    href: "/settings/support",
     icon: <HeartHandshake className="h-5 w-5" />,
-    label: 'support',
+    label: "support",
   },
 ];
 
@@ -25,11 +25,11 @@ export function useMenuItemsBottom() {
   return [
     {
       href:
-        userType === 'business'
-          ? '/dashboard/business'
-          : '/dashboard/freelancer',
+        userType === "business"
+          ? "/dashboard/business"
+          : "/dashboard/freelancer",
       icon: <HomeIcon className="h-5 w-5" />,
-      label: 'Home',
+      label: "Home",
     },
   ];
 }

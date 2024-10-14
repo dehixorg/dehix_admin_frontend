@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { Pencil, Code, Type } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Pencil, Code, Type } from "lucide-react";
+import Image from "next/image";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-import FAQAccordion from '@/components/accordian/faqAccordian';
-import { Navbar } from '@/components/navbar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { ThemeToggle } from '@/components/shared/themeToggle';
+import FAQAccordion from "@/components/accordian/faqAccordian";
+import { Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ThemeToggle } from "@/components/shared/themeToggle";
 
 const leftNavItems = [
-  { label: 'Home', link: '/' },
-  { label: 'About', link: '/' },
-  { label: 'Contact', link: '/' },
+  { label: "Home", link: "/" },
+  { label: "About", link: "/" },
+  { label: "Contact", link: "/" },
 ];
 
 const rightNavItems = [
-  { label: 'Login', link: '/auth/login', isButton: true },
-  { label: 'Register', link: '/auth/sign-up/freelancer', isButton: true },
+  { label: "Login", link: "/auth/login", isButton: true },
+  { label: "Register", link: "/auth/sign-up/freelancer", isButton: true },
 ];
 
 const HomePage = () => {
   const router = useRouter();
   useEffect(() => {
-    router.push('/auth/login');
+    router.push("/auth/login");
   }, []);
 
   return (
@@ -131,8 +131,8 @@ const HomePage = () => {
                   height={300}
                   src="/placeholder.svg"
                   style={{
-                    aspectRatio: '400/300',
-                    objectFit: 'cover',
+                    aspectRatio: "400/300",
+                    objectFit: "cover",
                   }}
                   width={400}
                 />
@@ -150,8 +150,8 @@ const HomePage = () => {
                   height={300}
                   src="/placeholder.svg"
                   style={{
-                    aspectRatio: '400/300',
-                    objectFit: 'cover',
+                    aspectRatio: "400/300",
+                    objectFit: "cover",
                   }}
                   width={400}
                 />
@@ -169,8 +169,8 @@ const HomePage = () => {
                   height={300}
                   src="/placeholder.svg"
                   style={{
-                    aspectRatio: '400/300',
-                    objectFit: 'cover',
+                    aspectRatio: "400/300",
+                    objectFit: "cover",
                   }}
                   width={400}
                 />

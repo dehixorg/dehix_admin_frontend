@@ -1,6 +1,6 @@
-'use client';
-import React from 'react';
-import { Mail } from 'lucide-react'; // Importing Mail icon from Lucide React
+"use client";
+import React from "react";
+import { Mail } from "lucide-react"; // Importing Mail icon from Lucide React
 
 import {
   Card,
@@ -9,13 +9,13 @@ import {
   CardTitle,
   CardDescription,
   CardFooter,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 
 interface ProjectProps {
   companyName: string;
@@ -66,7 +66,7 @@ const RejectProjectCards: React.FC<ProjectProps> = ({
             </div>
             <div className="mt-2">
               <p className="text-gray-400">
-                <strong className="font-semibold text-white mr-1">Role:</strong>{' '}
+                <strong className="font-semibold text-white mr-1">Role:</strong>{" "}
                 {role}
               </p>
             </div>
@@ -84,7 +84,7 @@ const RejectProjectCards: React.FC<ProjectProps> = ({
           </div>
           {experience && (
             <p className="mt-2 flex items-center text-gray-400">
-              <strong className="text-gray-400 mr-1">Experience:</strong>{' '}
+              <strong className="text-gray-400 mr-1">Experience:</strong>{" "}
               {experience}
             </p>
           )}

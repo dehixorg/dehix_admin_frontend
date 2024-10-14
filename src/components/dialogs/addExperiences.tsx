@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Plus } from 'lucide-react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Plus } from "lucide-react";
+import { useSelector } from "react-redux";
 
 import {
   Dialog,
@@ -13,8 +13,8 @@ import {
   DialogFooter,
   DialogTitle,
   DialogDescription,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -23,11 +23,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { RootState } from '@/lib/store';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { RootState } from "@/lib/store";
 
 const experienceFormSchema = z
   .object({
@@ -49,8 +49,8 @@ const experienceFormSchema = z
       return true;
     },
     {
-      message: 'Work From date must be before Work To date',
-      path: ['workTo'],
+      message: "Work From date must be before Work To date",
+      path: ["workTo"],
     },
   );
 
@@ -67,17 +67,17 @@ export const AddExperience: React.FC<AddExperienceProps> = ({
   const form = useForm<ExperienceFormValues>({
     resolver: zodResolver(experienceFormSchema),
     defaultValues: {
-      company: '',
-      jobTitle: '',
-      workDescription: '',
-      workFrom: '',
-      workTo: '',
-      referencePersonName: '',
-      referencePersonContact: '',
-      githubRepoLink: '',
-      comments: '',
+      company: "",
+      jobTitle: "",
+      workDescription: "",
+      workFrom: "",
+      workTo: "",
+      referencePersonName: "",
+      referencePersonContact: "",
+      githubRepoLink: "",
+      comments: "",
     },
-    mode: 'all',
+    mode: "all",
   });
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -85,15 +85,15 @@ export const AddExperience: React.FC<AddExperienceProps> = ({
   useEffect(() => {
     if (isDialogOpen) {
       form.reset({
-        company: '',
-        jobTitle: '',
-        workDescription: '',
-        workFrom: '',
-        workTo: '',
-        referencePersonName: '',
-        referencePersonContact: '',
-        githubRepoLink: '',
-        comments: '',
+        company: "",
+        jobTitle: "",
+        workDescription: "",
+        workFrom: "",
+        workTo: "",
+        referencePersonName: "",
+        referencePersonContact: "",
+        githubRepoLink: "",
+        comments: "",
       });
     }
   }, [isDialogOpen, form]);
@@ -103,35 +103,35 @@ export const AddExperience: React.FC<AddExperienceProps> = ({
       const response = await axiosInstance.post(
         `/freelancer/${user.uid}/experience`,
         {
-          company: data.company || '',
-          jobTitle: data.jobTitle || '',
-          workDescription: data.workDescription || '',
+          company: data.company || "",
+          jobTitle: data.jobTitle || "",
+          workDescription: data.workDescription || "",
           workFrom: data.workFrom
             ? new Date(data.workFrom).toISOString()
             : null,
           workTo: data.workTo ? new Date(data.workTo).toISOString() : null,
-          referencePersonName: data.referencePersonName || '',
-          referencePersonContact: data.referencePersonContact || '',
-          githubRepoLink: data.githubRepoLink || '',
+          referencePersonName: data.referencePersonName || "",
+          referencePersonContact: data.referencePersonContact || "",
+          githubRepoLink: data.githubRepoLink || "",
           oracleAssigned: null, // Assuming no assignment
-          verificationStatus: 'Pending',
+          verificationStatus: "Pending",
           verificationUpdateTime: new Date().toISOString(),
-          comments: data.comments || '',
+          comments: data.comments || "",
         },
       );
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({
-        title: 'Experience Added',
-        description: 'The experience has been successfully added.',
+        title: "Experience Added",
+        description: "The experience has been successfully added.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to add experience. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add experience. Please try again later.",
       });
     }
   }

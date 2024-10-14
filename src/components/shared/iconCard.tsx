@@ -1,14 +1,14 @@
-import React, { ReactNode } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
-import { ChevronRight } from 'lucide-react';
+import React, { ReactNode } from "react";
+import PropTypes from "prop-types"; // Import PropTypes
+import { ChevronRight } from "lucide-react";
 
-import { Button, ButtonProps } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button, ButtonProps } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 
 interface IconCardProps {
   title: string;

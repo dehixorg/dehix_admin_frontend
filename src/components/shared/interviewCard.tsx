@@ -1,6 +1,6 @@
-import React from 'react';
-import { Copy } from 'lucide-react';
-import PropTypes from 'prop-types';
+import React from "react";
+import { Copy } from "lucide-react";
+import PropTypes from "prop-types";
 
 import {
   Card,
@@ -8,8 +8,8 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface InterviewCardProps {
   interviewer: string;
@@ -30,10 +30,10 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
 }) => {
   const formatDate = (date: Date) => {
     // Implement date formatting as per your preference
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -84,7 +84,7 @@ const InterviewCard: React.FC<InterviewCardProps> = ({
       </CardContent>
       <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
         <div className="text-xs text-muted-foreground">
-          Updated{' '}
+          Updated{" "}
           <time dateTime={interviewDate.toISOString()}>
             {formatDate(interviewDate)}
           </time>

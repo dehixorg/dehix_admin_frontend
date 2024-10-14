@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useSelector } from 'react-redux';
-import { Plus, X } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
+import { useSelector } from "react-redux";
+import { Plus, X } from "lucide-react";
 
-import { Card } from '../ui/card';
+import { Card } from "../ui/card";
 
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,34 +17,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/lib/axiosinstance';
-import { RootState } from '@/lib/store';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
+import { axiosInstance } from "@/lib/axiosinstance";
+import { RootState } from "@/lib/store";
+import { Badge } from "@/components/ui/badge";
 
 const profileFormSchema = z.object({
   projectName: z.string().min(2, {
-    message: 'First Name must be at least 2 characters.',
+    message: "First Name must be at least 2 characters.",
   }),
   email: z
     .string({
-      required_error: 'Please select an email to display.',
+      required_error: "Please select an email to display.",
     })
     .email(),
   urls: z
     .array(
       z.object({
-        value: z.string().url({ message: 'Please enter a valid URL.' }),
+        value: z.string().url({ message: "Please enter a valid URL." }),
       }),
     )
     .optional(),
@@ -56,7 +56,7 @@ const profileFormSchema = z.object({
         freelancersRequired: z // condition for freelancer
           .string()
           .refine((val) => parseInt(val, 10) > 0, {
-            message: 'Number of freelancers required should be greater than 0.',
+            message: "Number of freelancers required should be greater than 0.",
           }),
         skills: z.array(z.string()),
         experience: z.string(),
@@ -64,7 +64,7 @@ const profileFormSchema = z.object({
         rate: z //condition for rate
           .string()
           .refine((val) => parseFloat(val) >= 0, {
-            message: 'Per hour rate should not be less than 0.',
+            message: "Per hour rate should not be less than 0.",
           }),
         description: z.string().max(160).min(4),
       }),
@@ -75,18 +75,18 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 const defaultValues: Partial<ProfileFormValues> = {
-  projectName: '',
-  email: '', //default field for email
-  description: '',
+  projectName: "",
+  email: "", //default field for email
+  description: "",
   profiles: [
     {
-      domain: '',
-      freelancersRequired: '',
+      domain: "",
+      freelancersRequired: "",
       skills: [],
-      experience: '',
-      minConnect: '',
-      rate: '',
-      description: '',
+      experience: "",
+      minConnect: "",
+      rate: "",
+      description: "",
     },
   ],
 };
@@ -106,15 +106,15 @@ export function CreateProjectBusinessForm() {
 
   const [skills, setSkills] = useState<any>([]);
   const [currSkills, setCurrSkills] = useState<any>([]);
-  const [tmpSkill, setTmpSkill] = useState<any>('');
+  const [tmpSkill, setTmpSkill] = useState<any>("");
 
   const [domains, setDomains] = useState<any>([]);
-  const [currDomains, setCurrDomains] = useState<any>([]);
+  const currDomains: string[] = [];
 
   const handleAddSkill = () => {
     if (tmpSkill && !currSkills.some((skill: any) => skill === tmpSkill)) {
       setCurrSkills([...currSkills, tmpSkill]);
-      setTmpSkill('');
+      setTmpSkill("");
     }
   };
 
@@ -125,8 +125,8 @@ export function CreateProjectBusinessForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const domainResponse = await axiosInstance.get('/domain/all');
-        console.log('Domain API Response get:', domainResponse.data.data);
+        const domainResponse = await axiosInstance.get("/domain/all");
+        console.log("Domain API Response get:", domainResponse.data.data);
         const transformedDomain = domainResponse.data.data.map(
           (skill: Domain) => ({
             value: skill.label, // Set the value to label
@@ -135,8 +135,8 @@ export function CreateProjectBusinessForm() {
         );
         setDomains(transformedDomain);
 
-        const skillsResponse = await axiosInstance.get('/skills/all');
-        console.log('Skills API Response get:', skillsResponse.data.data);
+        const skillsResponse = await axiosInstance.get("/skills/all");
+        console.log("Skills API Response get:", skillsResponse.data.data);
         const transformedSkills = skillsResponse.data.data.map(
           (skill: Skill) => ({
             value: skill.label, // Set the value to label
@@ -145,7 +145,7 @@ export function CreateProjectBusinessForm() {
         );
         setSkills(transformedSkills);
       } catch (error) {
-        console.error('API Error:', error);
+        console.error("API Error:", error);
       }
     };
     fetchData();
@@ -154,11 +154,11 @@ export function CreateProjectBusinessForm() {
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
-    mode: 'onChange',
+    mode: "onChange",
   });
 
   const { fields: urlFields, append: appendUrl } = useFieldArray({
-    name: 'urls',
+    name: "urls",
     control: form.control,
   });
 
@@ -167,16 +167,16 @@ export function CreateProjectBusinessForm() {
     append: appendProfile,
     remove: removeProfile,
   } = useFieldArray({
-    name: 'profiles',
+    name: "profiles",
     control: form.control,
   });
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      console.log('Form body:', {
+      console.log("Form body:", {
         ...data,
-        role: '',
-        projectType: '',
+        role: "",
+        projectType: "",
         skillsRequired: currSkills,
         domains: currDomains,
       });
@@ -185,25 +185,25 @@ export function CreateProjectBusinessForm() {
         `/business/${user.uid}/project`,
         {
           ...data,
-          role: '',
-          projectType: '',
+          role: "",
+          projectType: "",
           skillsRequired: currSkills,
           domains: currDomains,
         },
       );
-      console.log('API Response:', response.data);
+      console.log("API Response:", response.data);
 
       // You can update other fields here as needed
       toast({
-        title: 'Project Added',
-        description: 'Your project has been successfully added.',
+        title: "Project Added",
+        description: "Your project has been successfully added.",
       });
     } catch (error) {
-      console.error('API Error:', error);
+      console.error("API Error:", error);
       toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to add project. Please try again later.',
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add project. Please try again later.",
       });
     }
     form.reset(defaultValues); //add reset after form is submit
@@ -266,10 +266,10 @@ export function CreateProjectBusinessForm() {
                 name={`urls.${index}.value`}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className={cn(index !== 0 && 'sr-only')}>
+                    <FormLabel className={cn(index !== 0 && "sr-only")}>
                       URLs
                     </FormLabel>
-                    <FormDescription className={cn(index !== 0 && 'sr-only')}>
+                    <FormDescription className={cn(index !== 0 && "sr-only")}>
                       Enter URL of your account
                     </FormDescription>
                     <FormControl>
@@ -284,7 +284,7 @@ export function CreateProjectBusinessForm() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => appendUrl({ value: '' })}
+              onClick={() => appendUrl({ value: "" })}
             >
               Add URL
             </Button>
@@ -341,7 +341,7 @@ export function CreateProjectBusinessForm() {
                 <FormField
                   control={form.control}
                   name={`profiles.${index}.skills`}
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="mb-4">
                       <FormLabel>Skills</FormLabel>
                       <FormControl>
@@ -468,13 +468,13 @@ export function CreateProjectBusinessForm() {
               className="mt-2"
               onClick={() =>
                 appendProfile({
-                  domain: '',
-                  freelancersRequired: '',
+                  domain: "",
+                  freelancersRequired: "",
                   skills: [],
-                  experience: '',
-                  minConnect: '',
-                  rate: '',
-                  description: '',
+                  experience: "",
+                  minConnect: "",
+                  rate: "",
+                  description: "",
                 })
               }
             >
