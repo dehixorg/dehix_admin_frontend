@@ -25,7 +25,7 @@ export const menuItemsTop: MenuItem[] = [
     label: "Business",
   },
   {
-    href: "/freelancer/table",
+    href: "/freelancer",
     icon: <User className="h-5 w-5" />,
     label: "Freelancer",
   },
