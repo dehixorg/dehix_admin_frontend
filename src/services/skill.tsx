@@ -29,7 +29,7 @@ export const apiHelperService = {
   getAllSkillAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/skills/all/admin",
+      endpoint: "/skills/admin/all/domains",
       params,
     });
   },

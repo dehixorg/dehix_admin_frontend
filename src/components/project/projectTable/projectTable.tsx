@@ -90,7 +90,7 @@ const ProjectTable: React.FC = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : userData.length > 0 ? (
+                ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.projectName}</TableCell>
