@@ -101,13 +101,13 @@ const NotifyTable: React.FC = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[180px]">Type</TableHead>
-                  <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Heading</TableHead>
-                  <TableHead className="w-[180px]">URL Count</TableHead>
-                  <TableHead className="w-[180px]">Switch</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
-                  <TableHead className="w-[180px]"></TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Heading</TableHead>
+                  <TableHead className="text-center">URL Count</TableHead>
+                  <TableHead>Switch</TableHead>
+                  <TableHead>Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -123,7 +123,9 @@ const NotifyTable: React.FC = () => {
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>{truncateText(user.heading, 20)}</TableCell>
-                      <TableCell>{user.importantUrl.length}</TableCell>
+                      <TableCell className="text-center">
+                        {user.importantUrl.length}
+                      </TableCell>
                       <TableCell>
                         <Switch
                           checked={user.status === "active"}
@@ -132,13 +134,13 @@ const NotifyTable: React.FC = () => {
                           }
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <Trash2
                           className="cursor-pointer text-gray-500 hover:text-red-500"
                           onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>

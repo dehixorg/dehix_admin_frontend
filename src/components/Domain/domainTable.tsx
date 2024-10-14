@@ -162,7 +162,7 @@ const DomainTable: React.FC = () => {
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
-                  <TableHead className="w-[180px]"></TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -236,7 +236,7 @@ const DomainTable: React.FC = () => {
                           onClick={() => handleDelete(domain._id)}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>

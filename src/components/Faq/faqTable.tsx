@@ -106,10 +106,10 @@ const FaqTable: React.FC = () => {
                   <TableHead className="w-[180px]">Type</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[180px]">Question</TableHead>
-                  <TableHead className="w-[180px]">URL Count</TableHead>
+                  <TableHead className="text-center">URL Count</TableHead>
                   <TableHead className="w-[180px]">Switch</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
-                  <TableHead className="w-[180px]"></TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -125,7 +125,9 @@ const FaqTable: React.FC = () => {
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>{truncateText(user.question, 20)}</TableCell>
-                      <TableCell>{user.importantUrl.length}</TableCell>
+                      <TableCell className="text-center">
+                        {user.importantUrl.length}
+                      </TableCell>
                       <TableCell>
                         <Switch
                           checked={user.status === "active"}
@@ -140,7 +142,7 @@ const FaqTable: React.FC = () => {
                           onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>

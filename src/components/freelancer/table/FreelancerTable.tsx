@@ -62,8 +62,8 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Name</TableHead>
                   <TableHead>Email ID</TableHead>
                   <TableHead>Phone No.</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>Domain Count</TableHead>
+                  <TableHead className="text-center">Skill Count</TableHead>
+                  <TableHead className="text-center">Domain Count</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -80,8 +80,12 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.firstName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domain?.length || 0}</TableCell>
+                      <TableCell className="text-center">
+                        {user.skills?.length || 0}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {user.domain?.length || 0}
+                      </TableCell>
                       <TableCell>
                         <ButtonIcon
                           onClick={() => handleRedirect(user._id)}
