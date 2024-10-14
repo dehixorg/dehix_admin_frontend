@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Eye, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+
+import { ButtonIcon } from "../ui/arrowButton";
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import { useToast } from "@/components/ui/use-toast";
 import AddSkill from "@/components/skill/addskill";
@@ -24,8 +27,6 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { axiosInstance } from "@/lib/axiosinstance";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
@@ -159,8 +160,8 @@ const SkillTable: React.FC = () => {
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -227,12 +228,15 @@ const SkillTable: React.FC = () => {
                           }
                         />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
+                        <DeleteButtonIcon
+                          onClick={() => handleDelete(Skill._id)}
+                        />
+                      </TableCell>
+                      <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <ButtonIcon></ButtonIcon>
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
@@ -251,12 +255,6 @@ const SkillTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(Skill._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

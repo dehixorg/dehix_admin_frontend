@@ -472,7 +472,7 @@ export default function Dashboard() {
                     <DropdownMenuTrigger asChild>
                       <Button size="icon" variant="outline" className="h-8 w-8">
                         <MoreVertical className="h-3.5 w-3.5" />
-                        <span className="sr-only">More</span>
+                        <span className="sr-only"></span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">

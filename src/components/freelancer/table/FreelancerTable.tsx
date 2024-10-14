@@ -13,8 +13,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { apiHelperService } from "@/services/freelancer";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 
 interface UserData {
   _id: string;
@@ -60,11 +60,11 @@ const FreelancerTable: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email-Id</TableHead>
-                  <TableHead>Phone-No.</TableHead>
-                  <TableHead>Skill Count</TableHead>
-                  <TableHead>Domain Count</TableHead>
-                  <TableHead>More</TableHead>
+                  <TableHead>Email ID</TableHead>
+                  <TableHead>Phone No.</TableHead>
+                  <TableHead className="text-center">Skill Count</TableHead>
+                  <TableHead className="text-center">Domain Count</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -74,18 +74,22 @@ const FreelancerTable: React.FC = () => {
                       Loading...
                     </TableCell>
                   </TableRow>
-                ) : userData.length > 0 ? (
+                ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.firstName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.skills?.length || 0}</TableCell>
-                      <TableCell>{user.domain?.length || 0}</TableCell>
-                      <TableCell>
-                        <Button onClick={() => handleRedirect(user._id)}>
-                          click
-                        </Button>
+                      <TableCell className="text-center">
+                        {user.skills?.length || 0}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {user.domain?.length || 0}
+                      </TableCell>
+                      <TableCell className="flex justify-end">
+                        <ButtonIcon
+                          onClick={() => handleRedirect(user._id)}
+                        ></ButtonIcon>
                       </TableCell>
                     </TableRow>
                   ))

@@ -91,7 +91,7 @@ const InterviewTable: React.FC = () => {
                   <TableHead className="w-[180px]">Skill</TableHead>
                   <TableHead className="w-[180px]">Interview Date</TableHead>
                   <TableHead className="w-[40px]">Rating</TableHead>
-                  <TableHead className="w-[100px]">Details</TableHead>
+                  <TableHead className="w-[100px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
