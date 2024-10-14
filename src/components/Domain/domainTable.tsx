@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import { useToast } from "@/components/ui/use-toast";
 import AddDomain from "@/components/Domain/addDomain";
@@ -161,7 +163,7 @@ const DomainTable: React.FC = () => {
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -231,8 +233,7 @@ const DomainTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                        <DeleteButtonIcon
                           onClick={() => handleDelete(domain._id)}
                         />
                       </TableCell>

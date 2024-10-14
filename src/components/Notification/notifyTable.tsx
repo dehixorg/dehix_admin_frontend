@@ -1,8 +1,10 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import Image from "next/image";
+
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddNotify from "./addNotify";
 
@@ -106,7 +108,7 @@ const NotifyTable: React.FC = () => {
                   <TableHead>Heading</TableHead>
                   <TableHead className="text-center">URL Count</TableHead>
                   <TableHead>Switch</TableHead>
-                  <TableHead>Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -135,8 +137,7 @@ const NotifyTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell className="text-center">
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                        <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>

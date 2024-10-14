@@ -1,7 +1,9 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddFaq from "./addFaq";
 
@@ -108,7 +110,7 @@ const FaqTable: React.FC = () => {
                   <TableHead className="w-[180px]">Question</TableHead>
                   <TableHead className="text-center">URL Count</TableHead>
                   <TableHead className="w-[180px]">Switch</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -137,8 +139,7 @@ const FaqTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                        <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>

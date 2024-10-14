@@ -1,9 +1,10 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Trash2 } from "lucide-react";
+import { CircleX, PackageOpen } from "lucide-react";
 
 import { ButtonIcon } from "../ui/arrowButton";
+import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddAdmin from "./addAdmin";
 
@@ -106,7 +107,7 @@ const AdminTable: React.FC = () => {
                   <TableHead className="w-[180px]">Email ID</TableHead>
                   <TableHead className="w-[180px]">Phone No.</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[20px]">Delete</TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -127,8 +128,7 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                        <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>

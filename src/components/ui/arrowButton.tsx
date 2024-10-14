@@ -8,8 +8,3 @@ export function ButtonIcon({ onClick, variant = "ghost", ...props }: ButtonProps
     </Button>
   );
 }
-
-
-
-
-

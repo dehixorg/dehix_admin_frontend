@@ -86,7 +86,7 @@ const FreelancerTable: React.FC = () => {
                       <TableCell className="text-center">
                         {user.domain?.length || 0}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="flex justify-end">
                         <ButtonIcon
                           onClick={() => handleRedirect(user._id)}
                         ></ButtonIcon>
