@@ -2,6 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 import AddNotify from "./addNotify";
 
@@ -22,7 +23,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/notification";
 
@@ -105,8 +106,8 @@ const NotifyTable: React.FC = () => {
                   <TableHead className="w-[180px]">Heading</TableHead>
                   <TableHead className="w-[180px]">URL Count</TableHead>
                   <TableHead className="w-[180px]">Switch</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[180px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -129,6 +130,12 @@ const NotifyTable: React.FC = () => {
                           onCheckedChange={(checked) =>
                             handleSwitchChange(user._id, checked)
                           }
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(user._id)}
                         />
                       </TableCell>
                       <TableCell>
@@ -158,7 +165,7 @@ const NotifyTable: React.FC = () => {
                               </p>
                               {user.background_img && (
                                 <div className="mt-4">
-                                  <img
+                                  <Image
                                     src={user.background_img} // AWS image URL
                                     alt="Notification"
                                     className="w-full h-auto"
@@ -198,12 +205,6 @@ const NotifyTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(user._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

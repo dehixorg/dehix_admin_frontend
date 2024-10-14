@@ -101,10 +101,10 @@ const AdminTable: React.FC = () => {
                   <TableHead className="w-[180px]">Type</TableHead>
                   <TableHead className="w-[180px]">Name</TableHead>
                   <TableHead className="w-[180px]">Username</TableHead>
-                  <TableHead className="w-[180px]">Email</TableHead>
-                  <TableHead className="w-[180px]">Phone-No.</TableHead>
+                  <TableHead className="w-[180px]">Email ID</TableHead>
+                  <TableHead className="w-[180px]">Phone No.</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">More</TableHead>
+                  <TableHead className="w-[180px]"></TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
                 </TableRow>
               </TableHeader>
@@ -124,6 +124,12 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell>{user.status}</TableCell>
+                      <TableCell>
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(user._id)}
+                        />
+                      </TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
@@ -150,10 +156,10 @@ const AdminTable: React.FC = () => {
                                 <strong>Username:</strong> {user.userName}
                               </p>
                               <p>
-                                <strong>Email:</strong> {user.email}
+                                <strong>Email ID:</strong> {user.email}
                               </p>
                               <p>
-                                <strong>Phone:</strong> {user.phone}
+                                <strong>Phone No.:</strong> {user.phone}
                               </p>
                               <p>
                                 <strong>Type:</strong> {user.type}
@@ -170,12 +176,6 @@ const AdminTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(user._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

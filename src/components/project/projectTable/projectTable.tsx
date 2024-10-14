@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, ChevronRight } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
@@ -13,8 +13,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { apiHelperService } from "@/services/business";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 
 interface Project {
   _id: string;
@@ -80,7 +80,7 @@ const ProjectTable: React.FC = () => {
                   <TableHead>Company</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>More</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -97,13 +97,10 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{user.companyName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.status}</TableCell>
-                      <TableCell>
-                        <Button
-                          variant="outline"
+                      <TableCell className="flex justify-end">
+                        <ButtonIcon
                           onClick={() => handleRedirect(user._id)}
-                        >
-                          <ChevronRight className="w-4 h-4" />
-                        </Button>
+                        ></ButtonIcon>
                       </TableCell>
                     </TableRow>
                   ))

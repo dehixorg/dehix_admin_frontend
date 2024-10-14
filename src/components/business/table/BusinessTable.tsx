@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { apiHelperService } from "@/services/business";
 
 interface UserData {
@@ -60,11 +60,11 @@ const BusinessTable: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email-Id</TableHead>
-                  <TableHead>Phone-No.</TableHead>
+                  <TableHead>Email ID</TableHead>
+                  <TableHead>Phone No.</TableHead>
                   <TableHead>Skill Count</TableHead>
                   <TableHead>Domain Count</TableHead>
-                  <TableHead>View</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

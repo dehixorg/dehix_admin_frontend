@@ -25,7 +25,7 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { ButtonIcon } from "@/components/ui/eyeButton";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
@@ -161,8 +161,8 @@ const DomainTable: React.FC = () => {
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
-                  <TableHead className="w-[180px]">Details</TableHead>
                   <TableHead className="w-[180px]">Delete</TableHead>
+                  <TableHead className="w-[180px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -231,6 +231,12 @@ const DomainTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell>
+                        <Trash2
+                          className="cursor-pointer text-gray-500 hover:text-red-500"
+                          onClick={() => handleDelete(domain._id)}
+                        />
+                      </TableCell>
+                      <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon></ButtonIcon>
@@ -252,12 +258,6 @@ const DomainTable: React.FC = () => {
                             </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
-                      <TableCell>
-                        <Trash2
-                          className="cursor-pointer text-gray-500 hover:text-red-500"
-                          onClick={() => handleDelete(domain._id)}
-                        />
                       </TableCell>
                     </TableRow>
                   ))

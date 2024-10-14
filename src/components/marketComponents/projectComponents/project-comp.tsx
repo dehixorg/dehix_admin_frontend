@@ -97,7 +97,7 @@ const ProjectComponent: React.FC<ProjectProps> = ({
         </div>
         <div className="mt-4 ">
           <p className="text-sm text-gray-400">
-            <strong>Email:</strong> {email}
+            <strong>Email ID:</strong> {email}
           </p>
         </div>
       </div>
