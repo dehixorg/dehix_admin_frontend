@@ -77,8 +77,8 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Name</TableHead>
                   <TableHead>Email ID</TableHead>
                   <TableHead>Phone No.</TableHead>
-                  <TableHead className="text-center">Skill Count</TableHead>
-                  <TableHead className="text-center">Domain Count</TableHead>
+                  <TableHead className="text-center">Skills</TableHead>
+                  <TableHead className="text-center">Domains</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
