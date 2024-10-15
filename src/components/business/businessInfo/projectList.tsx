@@ -16,6 +16,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 
 interface Project {
   name: string;
@@ -81,6 +82,7 @@ function ProjectList({ id }: { id: string }) {
 
     fetchProjects();
   }, [projectid]);
+
   const formatdesc = (desc: string) => {
     if (desc.length <= 90) return desc;
     return `${desc.substring(0, 70)}...${desc.substring(desc.length - 7)}`;
@@ -100,18 +102,29 @@ function ProjectList({ id }: { id: string }) {
           </TableRow>
         </TableHeader>
         {loading ? (
-          <TableRow>
-            <TableCell colSpan={4} className="text-white text-center">
-              Loading...
-            </TableCell>{" "}
-            {/* Center loading message */}
-          </TableRow>
+          <TableBody>
+            {Array.from({ length: 4 }).map((_, index) => (
+              <TableRow key={index}>
+                <TableCell>
+                  <Skeleton className="h-4 w-6" /> {/* Serial number skeleton */}
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-32" /> {/* Name skeleton */}
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-16" /> {/* Status skeleton */}
+                </TableCell>
+                <TableCell>
+                  <Skeleton className="h-4 w-full" /> {/* Description skeleton */}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
         ) : project.length === 0 ? ( // Check if there are no projects
           <TableRow>
             <TableCell colSpan={4} className="text-white text-center">
               No projects found.
-            </TableCell>{" "}
-            {/* Center no data message */}
+            </TableCell>
           </TableRow>
         ) : (
           <TableBody>
@@ -125,10 +138,10 @@ function ProjectList({ id }: { id: string }) {
                       project1.status === "Active"
                         ? "text-green-500"
                         : project1.status === "Rejected"
-                          ? "text-red-500"
-                          : project1.status === "Pending"
-                            ? "text-yellow-500"
-                            : "text-gray-500" // Fallback for unexpected statuses
+                        ? "text-red-500"
+                        : project1.status === "Pending"
+                        ? "text-yellow-500"
+                        : "text-gray-500" // Fallback for unexpected statuses
                     }
                   >
                     {project1.status}

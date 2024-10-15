@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton from Shadcn
 
 interface Business {
   name: string; // Combined first and last name
@@ -54,7 +55,38 @@ function PersonalInfo({ id }: { id: string }) {
   }, [id]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Card className="p-4">
+        <CardHeader>
+          <CardTitle>Business Personal Info</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* Skeleton Loader */}
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="companyName">Company Name</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="position">Position</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="phone">Phone</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (!business) {

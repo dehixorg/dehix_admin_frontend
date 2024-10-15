@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
 interface Business {
   companyName: string;
@@ -52,7 +53,38 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
   }, [id]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <Card className="p-4">
+        <CardHeader>
+          <CardTitle>Business Professional Info</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {/* Skeleton Loaders */}
+            <div>
+              <Label htmlFor="companyName">Company Name</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="companySize">Company Size</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="linkedIn">LinkedIn</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="personalWebsite">Personal Website</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+            <div>
+              <Label htmlFor="isVerified">Verified</Label>
+              <Skeleton className="h-8 w-full" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (!business) {
