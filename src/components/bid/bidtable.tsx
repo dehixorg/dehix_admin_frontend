@@ -192,9 +192,7 @@ const BidsTable: React.FC = () => {
                             <DialogHeader>
                               <DialogTitle>Bid Description</DialogTitle>
                               <DialogDescription>
-                                {
-                                  /*user.description*/ "No Description Available"
-                                }
+                                {/*user.description*/ "this is a desc"}
                               </DialogDescription>
                             </DialogHeader>
                           </DialogContent>
