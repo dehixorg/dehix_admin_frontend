@@ -14,17 +14,21 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/freelancer";
-import { Tooltip,TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 
-interface SkillDomainData{
-  _id:string,
-  name: string,
-  level: string,
-  experience: string,
-  interviewStatus: string,
-  interviewInfo: string,
-  interviewerRating: number
+interface SkillDomainData {
+  _id: string;
+  name: string;
+  level: string;
+  experience: string;
+  interviewStatus: string;
+  interviewInfo: string;
+  interviewerRating: number;
 }
 
 interface UserData {
@@ -91,8 +95,8 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.firstName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>
-                        {user.skills.length>0 ? (
+                      <TableCell className="text-center">
+                        {user.skills.length > 0 ? (
                           <Tooltip>
                             <TooltipTrigger>
                               <span>
@@ -103,7 +107,7 @@ const FreelancerTable: React.FC = () => {
                               </span>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
-                            {user.skills
+                              {user.skills
                                 .map((skill) => skill.name)
                                 .join(", ")}{" "}
                             </TooltipContent>
@@ -113,9 +117,8 @@ const FreelancerTable: React.FC = () => {
                         )}
                       </TableCell>
 
-
-                      <TableCell>
-                        {user.domain.length>0 ? (
+                      <TableCell className="text-center">
+                        {user.domain.length > 0 ? (
                           <Tooltip>
                             <TooltipTrigger>
                               <span>
@@ -126,7 +129,7 @@ const FreelancerTable: React.FC = () => {
                               </span>
                             </TooltipTrigger>
                             <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
-                            {user.domain
+                              {user.domain
                                 .map((skill) => skill.name)
                                 .join(", ")}{" "}
                             </TooltipContent>
@@ -136,7 +139,7 @@ const FreelancerTable: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        <ButtonIcon onClick={() => handleRedirect(user._id)}/>
+                        <ButtonIcon onClick={() => handleRedirect(user._id)} />
                       </TableCell>
                     </TableRow>
                   ))

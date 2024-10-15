@@ -15,14 +15,29 @@ import {
 } from "@/components/ui/table";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { apiHelperService } from "@/services/business";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+
+interface SkillDomainData {
+  _id: string;
+  name: string;
+  level: string;
+  experience: string;
+  interviewStatus: string;
+  interviewInfo: string;
+  interviewerRating: number;
+}
 
 interface UserData {
   _id: string; // Assuming your API returns this field for each business
   firstName: string;
   email: string;
   phone: string;
-  skills: string[];
-  domains: string[];
+  skills?: SkillDomainData[];
+  domains?: SkillDomainData[];
 }
 
 const BusinessTable: React.FC = () => {
@@ -81,11 +96,47 @@ const BusinessTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell className="text-center">
-                        {user.skills?.length || 0}
+                        {user.skills ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.skills[0]?.name}{" "}
+                                {user.skills.length > 1
+                                  ? `+${user.skills.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
+                              {user.skills
+                                .map((skill) => skill.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
                       </TableCell>
                       <TableCell className="text-center">
-                        {user.domains?.length || 0}
-                      </TableCell>
+                        {user.domains ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.domains[0]?.name}{" "}
+                                {user.domains.length > 1
+                                  ? `+${user.domains.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
+                              {user.domains
+                                .map((domain) => domain.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
+                      </TableCell>{" "}
                       <TableCell>
                         <ButtonIcon
                           onClick={() => handleViewBusiness(user._id)}
