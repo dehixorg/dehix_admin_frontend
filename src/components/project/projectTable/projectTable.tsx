@@ -13,7 +13,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/business";
+import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 
 interface Project {

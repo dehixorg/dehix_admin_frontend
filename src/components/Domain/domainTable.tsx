@@ -26,11 +26,11 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
+import { formatTime } from "@/lib/utils";
 
 interface DomainData {
   _id: string;
@@ -207,7 +207,7 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
-                        {domain.createdAt || "No Data Available"}
+                        {formatTime(domain.createdAt) || "No Data Available"}
                       </TableCell>
                       <TableCell>
                         <Tooltip>
