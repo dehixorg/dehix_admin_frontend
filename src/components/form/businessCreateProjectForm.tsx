@@ -31,7 +31,7 @@ import { toast } from "@/components/ui/use-toast";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { RootState } from "@/lib/store";
 import { Badge } from "@/components/ui/badge";
-import {apiHelperService} from "@/services/business";
+import { apiHelperService } from "@/services/business";
 
 const profileFormSchema = z.object({
   projectName: z.string().min(2, {
@@ -181,13 +181,13 @@ export function CreateProjectBusinessForm() {
         skillsRequired: currSkills,
         domains: currDomains,
       });
-      const response = await apiHelperService.createProject(user.uid,{
+      const response = await apiHelperService.createProject(user.uid, {
         ...data,
-          role: "",
-          projectType: "",
-          skillsRequired: currSkills,
-          domains: currDomains,
-        });
+        role: "",
+        projectType: "",
+        skillsRequired: currSkills,
+        domains: currDomains,
+      });
       console.log("API Response:", response.data);
       toast({
         title: "Project Added",
