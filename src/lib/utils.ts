@@ -15,6 +15,36 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const formatTime = (timestamp: string | undefined): string => {
+  if (!timestamp) {
+    return "";
+  }
+  const now = new Date();
+  const time = new Date(timestamp);
+  const secondsAgo = Math.floor((now.getTime() - time.getTime()) / 1000);
+
+  const minutesAgo = Math.floor(secondsAgo / 60);
+  const hoursAgo = Math.floor(minutesAgo / 60);
+  const daysAgo = Math.floor(hoursAgo / 24);
+  const weeksAgo = Math.floor(daysAgo / 7);
+
+  if (secondsAgo < 5) {
+    return "just now";
+  } else if (secondsAgo < 60) {
+    return `${secondsAgo} second${secondsAgo > 1 ? "s" : ""} ago`;
+  } else if (minutesAgo < 60) {
+    return `${minutesAgo} minute${minutesAgo > 1 ? "s" : ""} ago`;
+  } else if (hoursAgo < 24) {
+    return `${hoursAgo} hour${hoursAgo > 1 ? "s" : ""} ago`;
+  } else if (daysAgo < 7) {
+    return `${daysAgo} day${daysAgo > 1 ? "s" : ""} ago`;
+  } else if (weeksAgo < 5) {
+    return `${weeksAgo} week${weeksAgo > 1 ? "s" : ""} ago`;
+  } else {
+    return time.toLocaleString(); // Return the formatted date if it's more than 4 weeks ago
+  }
+};
+
 export const loginUser = async (email: string, password: string) => {
   try {
     const userCredential: UserCredential = await signInWithEmailAndPassword(

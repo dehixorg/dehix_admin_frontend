@@ -20,18 +20,14 @@ export const apiHelperService = {
       endpoint: `/business/${itemId}`,
     });
   },
-  getAllProject: async (params = {}) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: "/project/all_projects",
-      params,
-    });
-  },
 
   getAllBusinessProject: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/project/${itemId}/project`,
+
+
+      endpoint: `/project/${itemId}/projects`,
+
     });
   },
   createProject: async (userId: string, projectData:any) => {
