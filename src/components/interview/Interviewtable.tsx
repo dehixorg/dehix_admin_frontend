@@ -79,7 +79,10 @@ const InterviewTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex-grow mb-4">
+          <h2 className="text-xl font-semibold">Interview Table</h2>
+        </div>
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>

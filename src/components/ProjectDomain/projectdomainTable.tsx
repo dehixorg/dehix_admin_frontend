@@ -31,6 +31,7 @@ import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
+import AddSkill from "@/components/skill/addskill";
 
 interface DomainData {
   _id: string;
@@ -140,14 +141,17 @@ const ProjectDomainTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="text-xl font-semibold">Project Domain Table</h2>
+          </div>
+          <div>
+            {" "}
             <AddProjectDomain
               onAddProjectDomain={fetchDomainData}
               domainData={domainData}
             />{" "}
-            {/* Pass the callback */}
           </div>
         </div>
         <Card>
