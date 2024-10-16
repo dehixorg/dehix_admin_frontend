@@ -26,6 +26,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
+import AddSkill from "@/components/skill/addskill";
 interface UserData {
   _id: string;
   firstName: string;
@@ -90,10 +91,14 @@ const AdminTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
-            <AddAdmin onAddAdmin={handleAddAdmin} />
+      <div className="mb-8 mt-4 ">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="text-xl font-semibold">Admin Table</h2>
+          </div>
+          <div>
+            {" "}
+            <AddAdmin onAddAdmin={handleAddAdmin} />{" "}
           </div>
         </div>
         <Card>

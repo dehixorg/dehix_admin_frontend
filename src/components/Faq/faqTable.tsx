@@ -27,6 +27,7 @@ import {
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/faq";
+import AddNotify from "@/components/Notification/addNotify";
 
 interface ImportantUrl {
   urlName: string;
@@ -94,10 +95,14 @@ const FaqTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
-            <AddFaq />
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="text-xl font-semibold">FAQ Table</h2>
+          </div>
+          <div>
+            {" "}
+            <AddFaq />{" "}
           </div>
         </div>
         <Card>
