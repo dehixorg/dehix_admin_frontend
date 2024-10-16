@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Eye } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
@@ -18,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Tooltip,
@@ -26,6 +26,8 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/interview";
+import { formatID } from "@/utils/common/enum";
+import CopyButton from "@/components/copybutton";
 
 interface InterviewData {
   _id: string;
@@ -43,8 +45,6 @@ const InterviewTable: React.FC = () => {
   const [interviewData, setInterviewData] = useState<InterviewData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
-  const [selectedInterview, setSelectedInterview] =
-    useState<InterviewData | null>(null);
   const { toast } = useToast();
 
   const fetchInterviewData = async () => {
@@ -55,7 +55,7 @@ const InterviewTable: React.FC = () => {
       if (!response.data || response.data.length === 0) {
         setNoData(true);
       } else {
-        setInterviewData(response.data.data);
+        setInterviewData(response.data.data || []);
       }
     } catch (error) {
       toast({
@@ -67,10 +67,6 @@ const InterviewTable: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-  const formatID = (id: string) => {
-    if (id.length <= 7) return id;
-    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
   };
 
   useEffect(() => {
@@ -91,7 +87,7 @@ const InterviewTable: React.FC = () => {
                   <TableHead className="w-[180px]">Skill</TableHead>
                   <TableHead className="w-[180px]">Interview Date</TableHead>
                   <TableHead className="w-[40px]">Rating</TableHead>
-                  <TableHead className="w-[100px]"></TableHead>
+                  <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -120,50 +116,62 @@ const InterviewTable: React.FC = () => {
                   interviewData.map((interview) => (
                     <TableRow key={interview._id}>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(interview._id || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {interview._id
-                              ? interview._id
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-center space-x-2">
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>{formatID(interview._id)}</span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={interview._id} />
+
+                            <TooltipContent>
+                              {interview._id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(interview.interviewer || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {interview.interviewer
-                              ? interview.interviewer
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        {interview.interviewer ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>
+                                  {formatID(interview.interviewer || "")}
+                                </span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={interview.interviewer || ""} />
+
+                              <TooltipContent>
+                                {interview.interviewer || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
                       </TableCell>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(interview.interviewee || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {interview.interviewee
-                              ? interview.interviewee
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
-                      </TableCell>
+                        {interview.interviewee ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>
+                                  {formatID(interview.interviewee || "")}
+                                </span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={interview.interviewee || ""} />
+
+                              <TooltipContent>
+                                {interview.interviewee || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
+                      </TableCell>{" "}
                       <TableCell>
                         {interview.skill || "No Data Available"}
                       </TableCell>
@@ -179,12 +187,7 @@ const InterviewTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              onClick={() => setSelectedInterview(interview)}
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

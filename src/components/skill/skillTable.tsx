@@ -30,6 +30,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
+import CopyButton from "@/components/copybutton";
 
 interface SkillData {
   _id: string;
@@ -190,36 +191,45 @@ const SkillTable: React.FC = () => {
                   SkillData.map((Skill, index) => (
                     <TableRow key={Skill._id}>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(Skill._id || "") || "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {Skill._id ? Skill._id : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-center space-x-2">
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>{formatID(Skill._id)}</span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={Skill._id} />
+
+                            <TooltipContent>
+                              {Skill._id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </TableCell>
+
                       <TableCell>{Skill.label}</TableCell>
                       <TableCell>
                         {Skill.createdAt || "No Data Available"}
                       </TableCell>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(Skill.createdBy || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {Skill.createdBy
-                              ? Skill.createdBy
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        {Skill.createdBy ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(Skill.createdBy || "")}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={Skill.createdBy || ""} />
+
+                              <TooltipContent>
+                                {Skill.createdBy || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
                       </TableCell>
+
                       <TableCell>
                         <Switch
                           checked={Skill.status === statusType.active}

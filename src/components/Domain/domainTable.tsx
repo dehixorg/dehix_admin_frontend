@@ -28,9 +28,10 @@ import {
 } from "@/components/ui/tooltip";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
+import CopyButton from "@/components/copybutton";
 
 interface DomainData {
   _id: string;
@@ -46,6 +47,7 @@ const DomainTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
+
   // Function to fetch domain data
   const fetchDomainData = async () => {
     setLoading(true);
@@ -94,18 +96,12 @@ const DomainTable: React.FC = () => {
     checked: boolean,
     index: number,
   ) => {
-    // Initialize toast
-
     try {
       setDomainData((prevDomainData) => {
-        // Create a shallow copy of the existing array
         const updatedDomainData = [...prevDomainData];
-
         updatedDomainData[index].status = checked
           ? statusType.active
           : statusType.inactive;
-
-        // Return the updated array
         return updatedDomainData;
       });
       await apiHelperService.updateDomainStatus(
@@ -119,16 +115,11 @@ const DomainTable: React.FC = () => {
         variant: "default",
       });
     } catch (error) {
-      // Revert the status change if the API call fails
       setDomainData((prevDomainData) => {
-        // Create a shallow copy of the existing array
         const updatedDomainData = [...prevDomainData];
-
         updatedDomainData[index].status = checked
           ? statusType.inactive
           : statusType.active;
-
-        // Return the updated array
         return updatedDomainData;
       });
       toast({
@@ -138,19 +129,13 @@ const DomainTable: React.FC = () => {
       });
     }
   };
-  const formatID = (id: string) => {
-    if (id.length <= 7) return id;
-    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
-  };
-  // Callback to re-fetch domain data after adding a new domain
 
   return (
     <div className="px-4">
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
-            <AddDomain onAddDomain={fetchDomainData} domainData={domainData} />{" "}
-            {/* Pass the callback */}
+            <AddDomain onAddDomain={fetchDomainData} domainData={domainData} />
           </div>
         </div>
         <Card>
@@ -189,40 +174,47 @@ const DomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : domainData ? (
+                ) : domainData.length > 0 ? (
                   domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(domain._id || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {domain._id ? domain._id : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-center space-x-2">
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>{formatID(domain._id)}</span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={domain._id} />
+
+                            <TooltipContent>
+                              {domain._id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </TableCell>
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
                         {formatTime(domain.createdAt) || "No Data Available"}
                       </TableCell>
+
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(domain.createdBy || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {domain.createdBy
-                              ? domain.createdBy
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        {domain.createdBy ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(domain.createdBy || "")}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={domain.createdBy || ""} />
+
+                              <TooltipContent>
+                                {domain.createdBy || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
                       </TableCell>
                       <TableCell>
                         <Switch
@@ -240,7 +232,7 @@ const DomainTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
@@ -252,9 +244,8 @@ const DomainTable: React.FC = () => {
                               </p>
                               <p>
                                 <strong>Description:</strong>{" "}
-                                {domain.description
-                                  ? domain.description
-                                  : "No description available"}
+                                {domain.description ||
+                                  "No description available"}
                               </p>
                             </div>
                           </DialogContent>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen, Eye } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
 import { DeleteButtonIcon } from "../ui/deleteButton";
 
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { useToast } from "@/components/ui/use-toast";
 import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
 import { Card } from "@/components/ui/card";
@@ -28,10 +28,10 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { axiosInstance } from "@/lib/axiosinstance";
-import { Button } from "@/components/ui/button";
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
-
+import CopyButton from "@/components/copybutton";
 interface DomainData {
   _id: string;
   label: string;
@@ -133,10 +133,6 @@ const ProjectDomainTable: React.FC = () => {
       });
     }
   };
-  const formatID = (id: string) => {
-    if (id.length <= 7) return id;
-    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
-  };
 
   return (
     <div className="px-4">
@@ -190,37 +186,45 @@ const ProjectDomainTable: React.FC = () => {
                   domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(domain._id || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {domain._id ? domain._id : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-center space-x-2">
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>{formatID(domain._id)}</span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={domain._id} />
+
+                            <TooltipContent>
+                              {domain._id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
                       </TableCell>
+
                       <TableCell>{domain.label}</TableCell>
                       <TableCell>
                         {domain.createdAt || "No Data Available"}
                       </TableCell>
                       <TableCell>
-                        <Tooltip>
-                          <TooltipTrigger>
-                            <span>
-                              {formatID(domain.createdBy || "") ||
-                                "No Data Available"}
-                            </span>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            {domain.createdBy
-                              ? domain.createdBy
-                              : "No Data Available"}
-                          </TooltipContent>
-                        </Tooltip>
+                        {domain.createdBy ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(domain.createdBy || "")}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={domain.createdBy || ""} />
+
+                              <TooltipContent>
+                                {domain.createdBy || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
                       </TableCell>
+
                       <TableCell>
                         <Switch
                           checked={domain.status === statusType.active}
@@ -237,9 +241,7 @@ const ProjectDomainTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline">
-                              <Eye className="w-4 h-4" />
-                            </Button>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
