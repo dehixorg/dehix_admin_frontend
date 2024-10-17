@@ -2,9 +2,9 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
 import { DeleteButtonIcon } from "../ui/deleteButton";
-
 import AddFaq from "./addFaq";
 
 import { Card } from "@/components/ui/card";
@@ -66,7 +66,6 @@ const FaqTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (faqId: string) => {
-    console.log("FAQ ID received in handleDelete:", faqId); // Debugging line
     if (!faqId) {
       console.error("FAQ ID is undefined.");
       return;
@@ -116,11 +115,31 @@ const FaqTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
+                  // Render skeleton when loading
+                  <>
+                    {[...Array(9)].map((_, i) => (
+                    <TableRow key={i}>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-14" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-48" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-8 mx-auto" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-7 w-12 rounded-3xl" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-10" />
                     </TableCell>
                   </TableRow>
+                    ))}
+                  </>
                 ) : userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
@@ -146,7 +165,7 @@ const FaqTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
