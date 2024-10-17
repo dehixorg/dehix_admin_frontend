@@ -5,8 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { AxiosError } from "axios";
 
-import { toast } from "../ui/use-toast";
-
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Messages,
+  statusType,
+  Admin_Schema_Prompt_Messages,
+  Admin_Schema_Selecter,
+  AdminType,
+} from "@/utils/common/enum";
 import {
   Dialog,
   DialogTrigger,
@@ -26,11 +32,6 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { ToastAction } from "@/components/ui/toast";
-import {
-  Admin_Schema_Prompt_Messages,
-  Admin_Schema_Selecter,
-  AdminType,
-} from "@/utils/common/enum";
 import { apiHelperService } from "@/services/admin";
 
 interface AdminData {
@@ -76,6 +77,7 @@ const adminSchema = z.object({
 
 const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
   const {
     control,
     handleSubmit,
@@ -106,9 +108,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
         title: "Admin Added",
         description: "The Admin has been successfully added.",
       });
-    } catch (error: unknown) {
-      console.error("Error submitting admin:", error);
-
+    } catch (error) {
       // Use a type guard to check if the error is an AxiosError
       let errorMessage =
         "There was an error submitting the admin details. Please try again.";

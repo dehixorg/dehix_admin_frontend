@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -17,7 +19,7 @@ function Appliedcandidates({ id }: { id: string }) {
   const [appliedCandidates, setAppliedCandidates] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchAppliedCandidates = async () => {
       try {
@@ -25,8 +27,11 @@ function Appliedcandidates({ id }: { id: string }) {
         const data = response.data;
         setAppliedCandidates(data.Appliedcandidates || []);
       } catch (error) {
-        setError((error as Error).message);
-        console.error("API Error:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("business"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }

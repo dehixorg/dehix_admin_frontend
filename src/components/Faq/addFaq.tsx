@@ -24,7 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { apiHelperService } from "@/services/faq";
-
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -55,6 +56,7 @@ const faqSchema = z.object({
 
 const AddFaq: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
   const {
     control,
     handleSubmit,
@@ -84,7 +86,11 @@ const AddFaq: React.FC = () => {
       reset();
       setOpen(false);
     } catch (error) {
-      console.error("Error submitting FAQ:", error);
+      toast({
+        title: "Error",
+        description: Messages.ADD_ERROR("faq"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 

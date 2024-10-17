@@ -8,6 +8,8 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddNotify from "./addNotify";
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -52,14 +54,18 @@ const truncateText = (text: string, maxLength: number) => {
 const NotifyTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllNotification();
         setUserData(response.data.data);
       } catch (error) {
-        console.log("this is an error");
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("notification"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }
@@ -69,25 +75,66 @@ const NotifyTable: React.FC = () => {
   }, []);
 
   const handleDelete = async (faqId: string) => {
-    if (!faqId) {
-      return;
-    }
     try {
       await apiHelperService.deleteNotification(faqId);
       setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
     } catch (error) {
-      console.log("error");
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("notification"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
-  const handleSwitchChange = (faqId: string, checked: boolean) => {
-    setUserData((prevData) =>
-      prevData.map((user) =>
-        user._id === faqId
-          ? { ...user, status: checked ? "active" : "inactive" }
-          : user,
-      ),
-    );
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
+    // Initialize toast
+
+    try {
+      setUserData((prevUserData) => {
+        // Create a shallow copy of the existing array
+        const updatedUserData = [...prevUserData];
+
+        updatedUserData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedUserData;
+      });
+      //await apiHelperService.updateNotificationStatus(
+      //labelId,
+      //checked ? statusType.active : statusType.inactive,
+      //);
+
+      toast({
+        title: "Success",
+        description: `Notification status updated to ${checked ? statusType.active : statusType.inactive}`,
+        variant: "default",
+      });
+    } catch (error) {
+      // Revert the status change if the API call fails
+      setUserData((prevUserData) => {
+        // Create a shallow copy of the existing array
+        const updatedUserData = [...prevUserData];
+
+        updatedUserData[index].status = checked
+          ? statusType.inactive
+          : statusType.active;
+
+        // Return the updated array
+        return updatedUserData;
+      });
+      toast({
+        title: "Error",
+        description: "Failed to update dfaq status. Please try again.",
+        variant: "destructive", // Red error message
+      });
+    }
   };
 
   return (
@@ -120,7 +167,7 @@ const NotifyTable: React.FC = () => {
                     </TableCell>
                   </TableRow>
                 ) : userData.length > 0 ? (
-                  userData.map((user) => (
+                  userData.map((user, index) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
@@ -132,7 +179,7 @@ const NotifyTable: React.FC = () => {
                         <Switch
                           checked={user.status === "active"}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(user._id, checked)
+                            handleSwitchChange(user._id, checked, index)
                           }
                         />
                       </TableCell>

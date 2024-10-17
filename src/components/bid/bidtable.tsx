@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { PackageOpen, Copy } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -37,15 +39,26 @@ const BidsTable: React.FC = () => {
   const [bidData, setbidData] = useState<BidData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllBid();
-        console.log(response.data.data);
-        setbidData(response.data.data);
+        if (response.data.data) {
+          setbidData(response.data.data);
+        } else {
+          toast({
+            title: "Error",
+            description: Messages.FETCH_ERROR("bid"),
+            variant: "destructive", // Red error message
+          });
+        }
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("bid"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }

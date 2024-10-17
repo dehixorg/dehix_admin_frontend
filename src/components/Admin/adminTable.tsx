@@ -8,6 +8,8 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import AddAdmin from "./addAdmin";
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -42,7 +44,7 @@ interface UserData {
 const AdminTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { toast } = useToast();
   const fetchUserData = async () => {
     setLoading(true);
     try {
@@ -65,26 +67,24 @@ const AdminTable: React.FC = () => {
       // Assuming an API call is made in the AddAdmin component
       await fetchUserData(); // Fetch updated data after adding the admin
     } catch (error) {
-      console.error("Error adding domain:", error);
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
   const handleDelete = async (admin_id: string) => {
-    console.log("Admin ID received in handleDelete:", admin_id); // Debugging line
-    if (!admin_id) {
-      console.error("Admin ID is undefined.");
-      return;
-    }
     try {
       await apiHelperService.deleteAdmin(admin_id);
-      setUserData((prevData) =>
-        prevData.filter((user) => user._id !== admin_id),
-      );
+      fetchUserData();
     } catch (error: any) {
-      console.error(
-        "Error deleting admin:",
-        error.response?.data || error.message,
-      );
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 

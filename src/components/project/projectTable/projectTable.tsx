@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
-
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 interface Project {
   _id: string;
   projectName: string;
@@ -48,7 +49,7 @@ const ProjectTable: React.FC = () => {
   const [userData, setUserData] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -56,7 +57,11 @@ const ProjectTable: React.FC = () => {
         // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("project"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }
