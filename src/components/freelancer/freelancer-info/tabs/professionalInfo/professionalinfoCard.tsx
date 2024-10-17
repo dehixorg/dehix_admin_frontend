@@ -42,31 +42,25 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
       <CardContent>
         <div className="mb-4 border-b pb-4">
           <p>
-            <strong>Work Description:</strong>{" "}
-            <span className="text-gray-300">{info.workDescription}</span>
+            <strong>Work Description:</strong> {info.workDescription}
           </p>
           <p>
-            <strong>Work From:</strong>{" "}
-            <span className="text-gray-300">
-              {new Date(info.workFrom).toLocaleDateString()}
-            </span>
+            <strong>Work From:</strong>
+            {new Date(info.workFrom).toLocaleDateString()}
           </p>
           <p>
-            <strong>Work To:</strong>{" "}
-            <span className="text-gray-300">
-              {new Date(info.workTo).toLocaleDateString()}
-            </span>
+            <strong>Work To:</strong>
+            {new Date(info.workTo).toLocaleDateString()}
           </p>
         </div>
 
         <div className="mb-4">
           <p>
-            <strong>Reference Person Name:</strong>{" "}
-            <span className="text-gray-300">{info.referencePersonName}</span>
+            <strong>Reference Person Name:</strong> {info.referencePersonName}
           </p>
           <p>
             <strong>Reference Person Contact:</strong>{" "}
-            <span className="text-gray-300">{info.referencePersonContact}</span>
+            {info.referencePersonContact}
           </p>
         </div>
 
@@ -91,21 +85,17 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
             <span className="text-gray-300">{info.oracleAssigned}</span>
           </p>
           <p>
-            <strong>Verification Status:</strong>{" "}
-            <span className="text-gray-300">{info.verificationStatus}</span>
+            <strong>Verification Status:</strong> {info.verificationStatus}
           </p>
           <p>
             <strong>Verification Update Time:</strong>{" "}
-            <span className="text-gray-300">
-              {new Date(info.verificationUpdateTime).toLocaleDateString()}
-            </span>
+            {new Date(info.verificationUpdateTime).toLocaleDateString()}
           </p>
         </div>
 
         <div>
           <p>
-            <strong>Comments:</strong>{" "}
-            <span className="text-gray-300">{info.comments}</span>
+            <strong>Comments:</strong> {info.comments}
           </p>
         </div>
       </CardContent>
