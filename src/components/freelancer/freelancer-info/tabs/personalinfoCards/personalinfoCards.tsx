@@ -1,5 +1,5 @@
 "use client";
-import { Linkedin, Github, Globe } from "lucide-react";
+import { Linkedin, GitPullRequest, Globe } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 
@@ -36,28 +36,22 @@ export function UserProfilePage({
           {profile ? (
             <>
               <p>
-                <strong>First Name:</strong>{" "}
-                <span className="text-gray-300">{profile.firstName}</span>
+                <strong>First Name:</strong> {profile.firstName}
               </p>
               <p>
-                <strong>Last Name:</strong>{" "}
-                <span className="text-gray-300">{profile.lastName}</span>
+                <strong>Last Name:</strong> {profile.lastName}
               </p>
               <p>
-                <strong>User Name:</strong>{" "}
-                <span className="text-gray-300">{profile.userName}</span>
+                <strong>User Name:</strong> {profile.userName}
               </p>
               <p>
-                <strong>Pasword:</strong>{" "}
-                <span className="text-gray-300">{profile.password}</span>
+                <strong>Password:</strong> {profile.password}
               </p>
               <p>
-                <strong>Email:</strong>{" "}
-                <span className="text-gray-300">{profile.email}</span>
+                <strong>Email:</strong> {profile.email}
               </p>
               <p>
-                <strong>Phone:</strong>{" "}
-                <span className="text-gray-300">{profile.phone}</span>
+                <strong>Phone:</strong> {profile.phone}
               </p>
             </>
           ) : (
@@ -65,7 +59,6 @@ export function UserProfilePage({
           )}
         </div>
       </Card>
-      {/* Card 2: Social Links */}
 
       <Card className="flex-1">
         <div className="p-4">
@@ -74,21 +67,16 @@ export function UserProfilePage({
             <>
               <p>
                 <strong>Date of Birth:</strong>{" "}
-                <span className="text-gray-300">
-                  {new Date(profile.dob).toLocaleDateString()}
-                </span>
+                {new Date(profile.dob).toLocaleDateString()}
               </p>
               <p>
-                <strong>Per Hour Price:</strong>{" "}
-                <span className="text-gray-300">{profile.perHourPrice}</span>
+                <strong>Per Hour Price:</strong> {profile.perHourPrice}
               </p>
               <p>
-                <strong>Connects:</strong>{" "}
-                <span className="text-gray-300">{profile.connects}</span>
+                <strong>Connects:</strong> {profile.connects}
               </p>
               <p>
-                <strong>Work Experience:</strong>{" "}
-                <span className="text-gray-300">{profile.workExperience}</span>
+                <strong>Work Experience:</strong> {profile.workExperience}
               </p>
             </>
           ) : (
@@ -116,7 +104,7 @@ export function UserProfilePage({
                 </a>
               </p>
               <p className="flex items-center mb-2">
-                <Github className="mr-2" />
+                <GitPullRequest className="mr-2" />
                 <a
                   href={profile.github}
                   target="_blank"

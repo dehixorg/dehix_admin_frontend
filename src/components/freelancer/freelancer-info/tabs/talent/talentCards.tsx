@@ -22,18 +22,17 @@ export function Talentcard({ info, ...props }: DehixTalentCardProps) {
   return (
     <Card className={cn("flex flex-col")} {...props}>
       <CardHeader>
-        <CardTitle className="text-xl font-bold">Dehix Talent Info</CardTitle>
+        <CardTitle className="text-xl font-bold"> Dehix Talent Info</CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <div className="flex ">
-          <p className="text-md font-semibold">Skill Name: </p>
-          <p className="text-gray-300 ml-2">{info.skillName}</p>
+          <p className="text-md font-semibold">Skill Name: </p> {info.skillName}
         </div>
 
         <div className="flex ">
-          <p className="text-md font-semibold">Domain Name: </p>
-          <p className="text-gray-300 ml-2">{info.domainName}</p>
+          <p className="text-md font-semibold">Domain Name: </p>{" "}
+          {info.domainName}
         </div>
 
         <div className="flex flex-col gap-2">
