@@ -15,15 +15,30 @@ import {
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 import { apiHelperService } from "@/services/freelancer";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { ButtonIcon } from "@/components/ui/arrowButton";
+
+interface SkillDomainData {
+  _id: string;
+  name: string;
+  level: string;
+  experience: string;
+  interviewStatus: string;
+  interviewInfo: string;
+  interviewerRating: number;
+}
 
 interface UserData {
   _id: string;
   firstName: string;
   email: string;
   phone: string;
-  skills: string[];
-  domain: string[];
+  skills: SkillDomainData[];
+  domain: SkillDomainData[];
 }
 
 const FreelancerTable: React.FC = () => {
@@ -62,8 +77,8 @@ const FreelancerTable: React.FC = () => {
                   <TableHead>Name</TableHead>
                   <TableHead>Email ID</TableHead>
                   <TableHead>Phone No.</TableHead>
-                  <TableHead className="text-center">Skill Count</TableHead>
-                  <TableHead className="text-center">Domain Count</TableHead>
+                  <TableHead className="text-center">Skills</TableHead>
+                  <TableHead className="text-center">Domains</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -107,15 +122,50 @@ const FreelancerTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell className="text-center">
-                        {user.skills?.length || 0}
+                        {user.skills.length > 0 ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.skills[0]?.name}{" "}
+                                {user.skills.length > 1
+                                  ? `+${user.skills.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
+                              {user.skills
+                                .map((skill) => skill.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
                       </TableCell>
+
                       <TableCell className="text-center">
-                        {user.domain?.length || 0}
+                        {user.domain.length > 0 ? (
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>
+                                {user.domain[0]?.name}{" "}
+                                {user.domain.length > 1
+                                  ? `+${user.domain.length - 1} more`
+                                  : ""}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
+                              {user.domain
+                                .map((skill) => skill.name)
+                                .join(", ")}{" "}
+                            </TooltipContent>
+                          </Tooltip>
+                        ) : (
+                          "0"
+                        )}
                       </TableCell>
-                      <TableCell className="flex justify-end">
-                        <ButtonIcon
-                          onClick={() => handleRedirect(user._id)}
-                        ></ButtonIcon>
+                      <TableCell>
+                        <ButtonIcon onClick={() => handleRedirect(user._id)} />
                       </TableCell>
                     </TableRow>
                   ))
