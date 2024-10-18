@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { PackageOpen, Copy } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
+import { ButtonIcon } from "../ui/arrowButton";
+
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
@@ -24,7 +26,14 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/bid";
+import CopyButton from "@/components/copybutton";
+import { formatID } from "@/utils/common/enum";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business
@@ -66,14 +75,6 @@ const BidsTable: React.FC = () => {
 
     fetchUserData();
   }, []);
-  const formatID = (id: string) => {
-    if (id.length <= 7) return id;
-    return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
-  };
-  const handleCopy = (id: string) => {
-    navigator.clipboard.writeText(id);
-    //alert("ID copied to clipboard!");
-  };
   const handleproject = (id: string) => {
     router.push(`/business/tabs?id=${id}`); // Pass the ID as a query parameter
   };
@@ -91,11 +92,11 @@ const BidsTable: React.FC = () => {
                 <TableRow>
                   <TableHead>ID</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Project-ID</TableHead>
-                  <TableHead>Bidder-ID</TableHead>
+                  <TableHead>Project ID</TableHead>
+                  <TableHead>Bidder ID</TableHead>
                   <TableHead>Current Price</TableHead>
                   <TableHead>Domain ID</TableHead>
-                  <TableHead>Description</TableHead>
+                  <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -108,71 +109,97 @@ const BidsTable: React.FC = () => {
                 ) : bidData.length > 0 ? (
                   bidData.map((user, index) => (
                     <TableRow key={index}>
-                      <TableCell>{user._id}</TableCell>
-                      <TableCell>{user.bid_status}</TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <span
-                            onClick={() => handleproject(user.project_id)}
-                            className="cursor-pointer text-blue-500 hover:underline"
-                          >
-                            {formatID(user.project_id)}
-                          </span>
-                          <Button
-                            onClick={() => handleCopy(user.project_id)}
-                            variant="outline"
-                            size="sm"
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <span>{formatID(user._id)}</span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={user._id} />
+
+                            <TooltipContent>
+                              {user._id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
                       </TableCell>
+                      <TableCell>{user.bid_status}</TableCell>
+
                       <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <span
-                            onClick={() => handlebidder(user.bidder_id)}
-                            className="cursor-pointer text-blue-500 hover:underline"
-                          >
-                            {formatID(user.bidder_id)}
-                          </span>
-                          <Button
-                            onClick={() => handleCopy(user.bidder_id)}
-                            variant="outline"
-                            size="sm"
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                        </div>
+                        {user.project_id ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span
+                                  onClick={() => handleproject(user.project_id)}
+                                  className="cursor-pointer text-blue-500 hover:underline"
+                                >
+                                  <span>{formatID(user.project_id || "")}</span>
+                                </span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={user.project_id || ""} />
+
+                              <TooltipContent>
+                                {user.project_id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
+                      </TableCell>
+
+                      <TableCell>
+                        {user.bidder_id ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span
+                                  onClick={() => handleproject(user.bidder_id)}
+                                  className="cursor-pointer text-blue-500 hover:underline"
+                                >
+                                  <span>{formatID(user.bidder_id || "")}</span>
+                                </span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={user.bidder_id || ""} />
+
+                              <TooltipContent>
+                                {user.bidder_id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
                       </TableCell>
 
                       <TableCell>{user.current_price}</TableCell>
                       <TableCell>
                         {user.domain_id ? (
                           <div className="flex items-center space-x-2">
-                            <span
-                              onClick={() => handlebidder(user.domain_id!)}
-                              className="cursor-pointer text-blue-500 hover:underline"
-                            >
-                              {formatID(user.domain_id!)}
-                            </span>
-                            <Button
-                              onClick={() => handleCopy(user.domain_id!)}
-                              variant="outline"
-                              size="sm"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(user.domain_id || "")}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={user.domain_id || ""} />
+
+                              <TooltipContent>
+                                {user.domain_id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
                           </div>
                         ) : (
-                          "N/A" // Or display nothing if you prefer
+                          "No Data Available"
                         )}
                       </TableCell>
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
-                              Show Description
-                            </Button>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>

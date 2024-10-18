@@ -5,6 +5,7 @@ import { CircleX, PackageOpen } from "lucide-react";
 
 import { ButtonIcon } from "../ui/arrowButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 
 import AddAdmin from "./addAdmin";
 
@@ -28,6 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
+
 interface UserData {
   _id: string;
   firstName: string;
@@ -49,7 +51,6 @@ const AdminTable: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
-      //console.log("API Response:", response.data);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -64,7 +65,6 @@ const AdminTable: React.FC = () => {
 
   const handleAddAdmin = async (newDomain: UserData) => {
     try {
-      // Assuming an API call is made in the AddAdmin component
       await fetchUserData(); // Fetch updated data after adding the admin
     } catch (error) {
       toast({
@@ -113,11 +113,36 @@ const AdminTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    {[...Array(10)].map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-28" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-10" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-0 w-0" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>

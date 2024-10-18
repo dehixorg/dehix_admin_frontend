@@ -5,6 +5,7 @@ import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 import {
   Table,
   TableHeader,
@@ -54,7 +55,6 @@ const ProjectTable: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllProject();
-        // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
         toast({
@@ -69,6 +69,7 @@ const ProjectTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+
   const handleRedirect = (id: string) => {
     router.push(`/project/tabs?id=${id}`);
   };
@@ -90,11 +91,25 @@ const ProjectTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  // Render Skeletons when loading
+                  <>
+                    {Array.from({ length: 9 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-20" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-12 " />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>

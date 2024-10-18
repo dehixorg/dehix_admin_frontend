@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
+import CopyButton from "@/components/copybutton";
 
 interface HireFreelancer {
   freelancer: string;
@@ -104,7 +105,12 @@ function Hirefreelancer({ id }: { id: string }) {
                       {hireFreelancer.status}
                     </span>
                   </TableCell>
-                  <TableCell className="py-2">{hireFreelancer._id}</TableCell>
+                  <TableCell className="py-2">
+                    <div className="flex items-center space-x-2">
+                      {hireFreelancer._id}
+                      <CopyButton id={hireFreelancer._id}></CopyButton>
+                    </div>
+                  </TableCell>
                 </TableRow>
               ))
             )}
