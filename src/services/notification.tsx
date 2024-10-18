@@ -26,4 +26,13 @@ export const apiHelperService = {
       endpoint: `/notification/${itemId}`,
     });
   },
+  updateNotificationStatus: async (labelId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/notification/${labelId}`,
+      body: {
+        status,
+      },
+    });
+  },
 };

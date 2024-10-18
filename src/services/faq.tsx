@@ -28,4 +28,13 @@ export const apiHelperService = {
       endpoint: `/faq/${itemId}`,
     });
   },
+  updateFaqStatus: async (labelId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/faq/${labelId}`,
+      body: {
+        status,
+      },
+    });
+  },
 };
