@@ -11,7 +11,6 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
-import { Messages, statusType } from "@/utils/common/enum";
 import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
@@ -170,7 +169,6 @@ const DomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : domainData.length > 0 ? (
                 ) : domainData.length > 0 ? (
                   domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
