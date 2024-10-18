@@ -5,7 +5,6 @@ import { PackageOpen } from "lucide-react";
 import Image from "next/image";
 
 import { DeleteButtonIcon } from "../ui/deleteButton";
-
 import AddNotify from "./addNotify";
 
 import { Card } from "@/components/ui/card";
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import { apiHelperService } from "@/services/notification";
 
 interface ImportantUrl {
@@ -114,11 +114,31 @@ const NotifyTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  // Skeleton Loader
+                  <>
+                    {[...Array(10)].map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-20" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-14" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-48" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-8 mx-auto" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-7 w-12 rounded-3xl" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-10" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
