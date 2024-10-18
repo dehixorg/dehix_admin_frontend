@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/table";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { apiHelperService } from "@/services/business";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import {
   Tooltip,
   TooltipTrigger,
@@ -84,12 +85,38 @@ const BusinessTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
-                ) : userData ? (
+                  // Use Skeletons while loading
+                  <>
+                    {[...Array(9)].map((_, i) => (
+                      <TableRow key={i}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-14" />
+                        </TableCell>
+                        <TableCell>
+                        <div className="flex justify-start items-start">
+                          <Skeleton className="h-5 w-40" />
+                        </div>
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-28 justify-items-start" />
+                        </TableCell>
+                        <TableCell className="text-center">
+                        <div className="flex justify-center items-center">
+                          <Skeleton className="h-5 w-10" />
+                        </div>
+                        </TableCell>
+                        <TableCell className="text-center ">
+                       < div className="flex justify-center items-center">
+                         <Skeleton className="h-5 w-10" />
+                       </div>
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-6 justify-items-center" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                ) : userData && userData.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.firstName}</TableCell>
