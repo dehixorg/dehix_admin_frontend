@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { Messages } from "@/utils/common/enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -35,10 +36,9 @@ function Hirefreelancer({ id }: { id: string }) {
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to fetch freelancers. Please try again.",
-          variant: "destructive",
+          description: Messages.FETCH_ERROR("freelancer"),
+          variant: "destructive", // Red error message
         });
-        console.error("API Error:", error);
       } finally {
         setLoading(false);
       }

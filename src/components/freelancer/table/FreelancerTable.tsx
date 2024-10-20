@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -45,7 +47,7 @@ const FreelancerTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -53,7 +55,11 @@ const FreelancerTable: React.FC = () => {
         const response = await apiHelperService.getAllFreelancers();
         setUserData(response.data.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.ADD_ERROR("freelancer"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }

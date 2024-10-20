@@ -13,6 +13,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/freelancer";
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 
 interface RejectedProject {
   _id: string;
@@ -40,7 +42,7 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
   // Use id prop
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -48,12 +50,14 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
           await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { pendingProject, rejectedProject, acceptedProject } =
           response.data;
-        console.log("Pending-Project:", pendingProject);
-        console.log("Rejected-Project:", rejectedProject);
-        console.log("Accepted-Project:", acceptedProject);
+
         setUserData({ pendingProject, rejectedProject, acceptedProject });
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("project"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }

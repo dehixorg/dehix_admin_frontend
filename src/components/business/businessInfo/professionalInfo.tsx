@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
+import { Messages} from "@/utils/common/enum";
 
 interface Business {
   companyName: string;
@@ -40,8 +41,8 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to fetch professional info. Please try again.",
-          variant: "destructive",
+          description: Messages.FETCH_ERROR("professional info"),
+          variant: "destructive", // Red error message
         });
       } finally {
         setLoading(false);

@@ -113,7 +113,6 @@ const DomainTable: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex space-x-4">
             <AddDomain onAddDomain={fetchDomainData} domainData={domainData} />
-            <AddDomain onAddDomain={fetchDomainData} domainData={domainData} />
           </div>
         </div>
         <Card>

@@ -13,8 +13,10 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/freelancer";
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType , formatID } from "@/utils/common/enum";
 import CopyButton from "@/components/copybutton";
-import { formatID } from "@/utils/common/enum";
+
 import {
   Tooltip,
   TooltipTrigger,
@@ -52,6 +54,7 @@ interface SkillDomainProps {
 const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     console.log("id", id);
@@ -60,11 +63,13 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { skills, domain } = response.data;
-        console.log("Skills:", skills);
-        console.log("Domain:", domain);
         setUserData({ skills, domain });
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("skill and domain"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }

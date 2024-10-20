@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
-
+import { Messages } from "@/utils/common/enum";
 interface Business {
   name: string; // Combined first and last name
   companyName: string;
@@ -42,7 +42,7 @@ function PersonalInfo({ id }: { id: string }) {
       } catch (error) {
         toast({
           title: "Error",
-          description: "Failed to fetch business data. Please try again.",
+          description: Messages.FETCH_ERROR("business"),
           variant: "destructive",
         });
       } finally {
