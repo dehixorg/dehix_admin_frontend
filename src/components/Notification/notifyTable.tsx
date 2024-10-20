@@ -106,10 +106,10 @@ const NotifyTable: React.FC = () => {
         // Return the updated array
         return updatedUserData;
       });
-      //await apiHelperService.updateNotificationStatus(
-      //labelId,
-      //checked ? statusType.active : statusType.inactive,
-      //);
+      await apiHelperService.updateNotificationStatus(
+      labelId,
+      checked ? statusType.active : statusType.inactive,
+      );
 
       toast({
         title: "Success",

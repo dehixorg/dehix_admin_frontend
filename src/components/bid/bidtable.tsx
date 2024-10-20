@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen, Copy } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { ButtonIcon } from "../ui/arrowButton";
@@ -17,7 +17,6 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogTrigger,

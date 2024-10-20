@@ -7,8 +7,6 @@ import { AxiosError } from "axios";
 
 import { useToast } from "@/components/ui/use-toast";
 import {
-  Messages,
-  statusType,
   Admin_Schema_Prompt_Messages,
   Admin_Schema_Selecter,
   AdminType,

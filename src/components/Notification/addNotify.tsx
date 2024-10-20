@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
 
 interface ImportantUrl {
   urlName: string;
@@ -132,7 +132,11 @@ const AddNotify: React.FC = () => {
       reset();
       setOpen(false);
     } catch (error) {
-      console.error("Error submitting FAQ:", error);
+      toast({
+        title: "Error",
+        description: Messages.ADD_ERROR("notification"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 

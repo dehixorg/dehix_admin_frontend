@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,

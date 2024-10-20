@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages} from "@/utils/common/enum";
 
 interface Business {
   companyName: string;

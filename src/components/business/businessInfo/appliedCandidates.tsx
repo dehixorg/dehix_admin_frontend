@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages} from "@/utils/common/enum";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,

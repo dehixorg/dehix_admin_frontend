@@ -25,7 +25,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { apiHelperService } from "@/services/faq";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
 interface ImportantUrl {
   urlName: string;
   url: string;
