@@ -15,6 +15,7 @@ import {
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
 import CopyButton from "@/components/copybutton";
+import { Badge } from "@/components/ui/badge";
 
 interface HireFreelancer {
   freelancer: string;
@@ -46,6 +47,19 @@ function Hirefreelancer({ id }: { id: string }) {
 
     fetchHireFreelancers();
   }, [id]);
+  const getStatusBadge = (status: string | undefined) => {
+    switch (status?.toLowerCase()) {
+      case "accepted":
+        return "bg-green-500 hover:bg-green-600" ;
+        case "rejected":
+          return "bg-red-500 hover:bg-red-600" ;
+          case "pending":
+            return   "bg-yellow-500 hover:bg-yellow-600" ;
+      default:
+        return  "bg-gray-500 hover:bg-gray-600" ;
+    }
+  };
+
 
   return (
     <Card className="w-full max-w p-4">
@@ -79,6 +93,7 @@ function Hirefreelancer({ id }: { id: string }) {
               </TableRow>
             ) : (
               hireFreelancers.map((hireFreelancer, index) => (
+                
                 <TableRow
                   key={hireFreelancer._id}
                   className="border-b border-gray-700"
@@ -91,19 +106,13 @@ function Hirefreelancer({ id }: { id: string }) {
                     {hireFreelancer.freelancer}
                   </TableCell>
                   <TableCell className="py-2">
-                    <span
+                    <Badge
                       className={
-                        hireFreelancer.status === "Accepted"
-                          ? "text-green-500"
-                          : hireFreelancer.status === "Rejected"
-                            ? "text-red-500"
-                            : hireFreelancer.status === "Pending"
-                              ? "text-yellow-500"
-                              : ""
+                        getStatusBadge(hireFreelancer.status)
                       }
                     >
                       {hireFreelancer.status}
-                    </span>
+                    </Badge>
                   </TableCell>
                   <TableCell className="py-2">
                     <div className="flex items-center space-x-2">

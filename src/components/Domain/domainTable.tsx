@@ -223,7 +223,6 @@ const DomainTable: React.FC = () => {
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon />
-                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
