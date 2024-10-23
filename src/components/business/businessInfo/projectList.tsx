@@ -27,6 +27,7 @@ import {
 import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye button
 import { formatID, Messages } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";
+import {getStatusBadge} from "@/utils/common/utils"
 
 interface Project {
   _id: string;
@@ -73,18 +74,6 @@ function ProjectList({ id }: { id: string }) {
 
     fetchProjects();
   }, [id]);
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "active":
-        return "bg-blue-500 hover:bg-blue-600" ;
-        case "completed":
-          return "bg-green-500 hover:bg-green-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
-    }
-  };
   return (
     <Card className=" p-4">
       {" "}

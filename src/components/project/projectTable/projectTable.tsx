@@ -19,6 +19,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
   _id: string;
   projectName: string;
@@ -70,20 +71,7 @@ const ProjectTable: React.FC = () => {
 
     fetchUserData();
   }, []);
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "active":
-        return "bg-blue-500 hover:bg-blue-600" ;
-        case "completed":
-          return "bg-green-500 hover:bg-green-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-      case "rejected":
-        return   "bg-red-500 hover:bg-red-600" ;
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
-    }
-  };
+
   const handleRedirect = (id: string) => {
     router.push(`/project/tabs?id=${id}`);
   };

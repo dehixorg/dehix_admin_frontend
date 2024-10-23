@@ -13,7 +13,7 @@ import {
 
 import CopyButton from "@/components/copybutton";
 import { Badge } from "@/components/ui/badge";
-
+import {getStatusBadge} from "@/utils/common/utils"
 interface HireFreelancerInfo {
   freelancer: string;
   status: string;
@@ -35,18 +35,7 @@ function Hirefreelancer({
       </div>
     );
   }
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "accepted":
-        return "bg-green-500 hover:bg-green-600" ;
-        case "rejected":
-          return "bg-red-500 hover:bg-red-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
-    }
-  };
+  
   return (
     <Card className="w-full max-w p-4">
       <CardHeader>
