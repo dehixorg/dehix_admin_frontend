@@ -1,61 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PackageOpen } from "lucide-react"; // Icon for no data state
+
+import { Phone, Mail, Building, User, Briefcase, PackageOpen } from "lucide-react"; // Icons for various fields
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { apiHelperService } from "@/services/business";
-import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
-interface Business {
-  name: string; // Combined first and last name
+
+
+interface Personalinfo {
+  name: string; 
   companyName: string;
   position: string;
   phone: string;
   email: string;
 }
 
-function PersonalInfo({ id }: { id: string }) {
-  const [business, setBusiness] = useState<Business | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast(); // Toast for error messages
-
-  useEffect(() => {
-    const fetchBusiness = async () => {
-      try {
-        console.log(id);
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
-        const data = response.data; // Ensure data is accessed correctly
-
-        // Extract and format the personal information needed
-        const personalInfo: Business = {
-          name: `${data.firstName} ${data.lastName}` || "Not Provided",
-          companyName: data.companyName || "Not Provided",
-          position: data.position || "Not Provided",
-          phone: data.phone || "Not Provided",
-          email: data.email || "Not Provided",
-        };
-
-        setBusiness(personalInfo);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("business"),
-          variant: "destructive",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBusiness();
-  }, [id]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+function PersonalInfo({
+  personalData,
+}: {
+  personalData: Personalinfo |null ;
+}) {
+  const business = personalData;
 
   if (!business) {
     return (
@@ -67,32 +31,69 @@ function PersonalInfo({ id }: { id: string }) {
   }
 
   return (
-    <Card className="p-4">
+    <Card  className="w-full max-w p-4">
       <CardHeader>
-        <CardTitle>Business Personal Info</CardTitle>
+        <CardTitle className="text-2xl font-semibold mb-4">Business Personal Info</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" value={business.name} readOnly />
+        <div className="space-y-5">
+
+
+          <div className="flex items-center space-x-3">
+            <User className="text-gray-500" size={24} />
+            <div>
+              <p className="text-sm font-medium">Name</p>
+              <p className="text-base">{business.name}</p>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input id="companyName" value={business.companyName} readOnly />
+
+
+          <div className="flex items-center space-x-3">
+            <Building className="text-gray-500" size={24} />
+            <div>
+              <p className="text-sm font-medium">Company Name</p>
+              <p className="text-base ">{business.companyName}</p>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="position">Position</Label>
-            <Input id="position" value={business.position} readOnly />
+
+         
+          <div className="flex items-center space-x-3">
+            <Briefcase className="text-gray-500" size={24} />
+            <div>
+              <p className="text-sm font-medium">Position</p>
+              <p className="text-base ">{business.position}</p>
+            </div>
           </div>
-          <div>
-            <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" value={business.phone} readOnly />
+
+
+          <div className="flex items-center space-x-3">
+            <Phone className="text-gray-500" size={24} />
+            <div>
+              <p className="text-sm font-medium">Phone</p>
+
+                {business.phone}
+
+            </div>
           </div>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" value={business.email} readOnly />
+
+
+          <div className="flex items-center space-x-3">
+            <Mail className="text-gray-500" size={24} />
+            <div>
+              <p className="text-sm font-medium">Email</p>
+              { business.email!=="Not Provided"?(
+              <a
+                href={`mailto:${business.email}`}
+                className={"text-base underline  text-blue-500"}
+              >
+                {business.email}
+              </a>)
+              :
+              (<p className="text-base text-gray-500">{business.email}</p>)
+}
+            </div>
           </div>
+          
         </div>
       </CardContent>
     </Card>
