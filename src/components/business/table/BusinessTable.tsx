@@ -2,7 +2,7 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
-import { useRouter } from "next/navigation"; // For navigation
+import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
 import {

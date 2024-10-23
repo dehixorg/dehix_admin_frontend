@@ -31,7 +31,6 @@ import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
-import AddSkill from "@/components/skill/addskill";
 
 interface DomainData {
   _id: string;

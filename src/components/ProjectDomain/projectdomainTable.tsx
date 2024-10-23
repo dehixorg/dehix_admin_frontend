@@ -31,7 +31,6 @@ import { axiosInstance } from "@/lib/axiosinstance";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
-import AddSkill from "@/components/skill/addskill";
 
 interface DomainData {
   _id: string;

@@ -27,7 +27,6 @@ import {
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/faq";
-import AddNotify from "@/components/Notification/addNotify";
 
 interface ImportantUrl {
   urlName: string;

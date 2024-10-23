@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { CircleX, PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
 import { ButtonIcon } from "../ui/arrowButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
@@ -26,7 +26,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
-import AddSkill from "@/components/skill/addskill";
 interface UserData {
   _id: string;
   firstName: string;
@@ -61,7 +60,7 @@ const AdminTable: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleAddAdmin = async (newDomain: UserData) => {
+  const handleAddAdmin = async () => {
     try {
       // Assuming an API call is made in the AddAdmin component
       await fetchUserData(); // Fetch updated data after adding the admin
