@@ -31,6 +31,7 @@ import { Switch } from "@/components/ui/switch";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
 import CopyButton from "@/components/copybutton";
+import { formatTime } from "@/lib/utils";
 
 interface SkillData {
   _id: string;
@@ -208,7 +209,7 @@ const SkillTable: React.FC = () => {
 
                       <TableCell>{Skill.label}</TableCell>
                       <TableCell>
-                        {Skill.createdAt || "No Data Available"}
+                        {formatTime(Skill.createdAt) || "No Data Available"}
                       </TableCell>
                       <TableCell>
                         {Skill.createdBy ? (
