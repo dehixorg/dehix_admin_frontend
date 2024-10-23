@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
-
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import {
@@ -11,15 +10,9 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import {
   Tooltip,
   TooltipTrigger,
@@ -92,11 +85,31 @@ const InterviewTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  Array.from({ length: 10 }).map((_, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-20" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-14" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-36" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-8" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-[20px]" />
+                      </TableCell>
+                    </TableRow>
+                  ))
                 ) : noData ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
@@ -244,22 +257,7 @@ const InterviewTable: React.FC = () => {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
+                ) : null}
               </TableBody>
             </Table>
           </div>
