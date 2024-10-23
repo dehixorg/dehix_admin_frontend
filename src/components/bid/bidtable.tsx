@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/bid";
 import CopyButton from "@/components/copybutton";
-
+import { getStatusBadge } from "@/utils/common/utils";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business
@@ -81,20 +81,7 @@ const BidsTable: React.FC = () => {
   const handlebidder = (id: string) => {
     router.push(`/freelancer/tabs?id=${id}`); // Pass the ID as a query parameter
   };
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "interview":
-        return "bg-green-500 hover:bg-green-600" ;
-        case "rejected":
-          return "bg-red-500 hover:bg-red-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-          case "panel":
-            return "bg-gray-500 hover:bg-gray-600";
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
-    }
-  };
+
 
 
   return (

@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
 import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface UserData {
   _id: string;
   firstName: string;
@@ -85,18 +86,6 @@ const AdminTable: React.FC = () => {
         description: Messages.DELETE_ERROR("admin"),
         variant: "destructive", // Red error message
       });
-    }
-  };
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "accepted":
-        return "bg-green-500 hover:bg-green-600" ;
-        case "rejected":
-          return "bg-red-500 hover:bg-red-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
     }
   };
 
