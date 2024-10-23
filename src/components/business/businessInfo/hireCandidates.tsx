@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-import { Messages } from "@/utils/common/enum";
+import { PackageOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -12,55 +10,31 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/business";
-import { useToast } from "@/components/ui/use-toast";
+
 import CopyButton from "@/components/copybutton";
 import { Badge } from "@/components/ui/badge";
 
-interface HireFreelancer {
+interface HireFreelancerInfo {
   freelancer: string;
   status: string;
   _id: string;
 }
 
-function Hirefreelancer({ id }: { id: string }) {
-  const [hireFreelancers, setHireFreelancers] = useState<HireFreelancer[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { toast } = useToast(); // For displaying toast notifications
+function Hirefreelancer({
+  hirefreelancerData,
+}: {
+  hirefreelancerData: HireFreelancerInfo[] |null ;
+}) {
+  const hireFreelancers = hirefreelancerData;
 
-  useEffect(() => {
-    const fetchHireFreelancers = async () => {
-      try {
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
-        const data = response.data;
-        setHireFreelancers(data.hirefreelancer || []);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("freelancer"),
-          variant: "destructive", // Red error message
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHireFreelancers();
-  }, [id]);
-  const getStatusBadge = (status: string | undefined) => {
-    switch (status?.toLowerCase()) {
-      case "accepted":
-        return "bg-green-500 hover:bg-green-600" ;
-        case "rejected":
-          return "bg-red-500 hover:bg-red-600" ;
-          case "pending":
-            return   "bg-yellow-500 hover:bg-yellow-600" ;
-      default:
-        return  "bg-gray-500 hover:bg-gray-600" ;
-    }
-  };
-
-
+  if (!hireFreelancers) {
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">No freelancers found.</p>
+      </div>
+    );
+  }
   return (
     <Card className="w-full max-w p-4">
       <CardHeader>
@@ -79,19 +53,7 @@ function Hirefreelancer({ id }: { id: string }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-white text-center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : hireFreelancers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-white text-center">
-                  No freelancers found.
-                </TableCell>
-              </TableRow>
-            ) : (
+            { 
               hireFreelancers.map((hireFreelancer, index) => (
                 
                 <TableRow
@@ -121,8 +83,8 @@ function Hirefreelancer({ id }: { id: string }) {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))
-            )}
+              ))}
+            
           </TableBody>
         </Table>
       </CardContent>

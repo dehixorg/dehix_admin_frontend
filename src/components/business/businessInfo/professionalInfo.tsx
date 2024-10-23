@@ -1,16 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PackageOpen } from "lucide-react"; // Icon for no data state
+import { PackageOpen, Shield, ShieldOff, Globe, Users, Link } from "lucide-react"; // Added icons for better representation
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { apiHelperService } from "@/services/business";
-import { useToast } from "@/components/ui/use-toast";
-import { Messages} from "@/utils/common/enum";
 
-interface Business {
+
+interface ProfessionalData {
   companyName: string;
   companySize: string;
   linkedIn: string;
@@ -18,43 +13,12 @@ interface Business {
   isVerified: string;
 }
 
-function BusinessProfessionalInfo({ id }: { id: string }) {
-  const [business, setBusiness] = useState<Business | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast(); // For displaying toast notifications
-
-  useEffect(() => {
-    const fetchBusiness = async () => {
-      try {
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
-        const data = response.data; // Ensure data is accessed correctly
-
-        const professionalInfo: Business = {
-          companyName: data.companyName || "Not Provided",
-          companySize: data.companySize || "Not Provided",
-          linkedIn: data.linkedIn || "Not Provided",
-          personalWebsite: data.personalWebsite || "Not Provided",
-          isVerified: data.isVerified ? "Yes" : "No",
-        };
-
-        setBusiness(professionalInfo);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("professional info"),
-          variant: "destructive", // Red error message
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBusiness();
-  }, [id]);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+function BusinessProfessionalInfo({
+  professionalData,
+}: {
+  professionalData: ProfessionalData |null ;
+}) {
+  const business = professionalData;
 
   if (!business) {
     return (
@@ -68,44 +32,94 @@ function BusinessProfessionalInfo({ id }: { id: string }) {
   }
 
   return (
-    <Card className="p-4">
+    <Card className="w-full max-w p-4">
       <CardHeader>
-        <CardTitle>Business Professional Info</CardTitle>
+        <CardTitle className="text-2xl font-semibold mb-4">
+          Business Professional Info
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input id="companyName" value={business.companyName} readOnly />
+        <div className="space-y-6">
+          {/* Company Name and Verification Status */}
+          <div className="flex items-center justify-between border-b pb-4 mb-4">
+            <h2 className="text-xl font-medium">{business.companyName}</h2>
+            {business.isVerified === "Yes" ? (
+              <Shield className="text-green-500" size={28} />
+            ) : (
+              <ShieldOff className="text-red-500" size={28} />
+            )}
           </div>
-          <div>
-            <Label htmlFor="companySize">Company Size</Label>
-            <Input id="companySize" value={business.companySize} readOnly />
-          </div>
-          <div>
-            <Label htmlFor="linkedIn">LinkedIn</Label>
-            <Input id="linkedIn" value={business.linkedIn} readOnly />
-          </div>
-          <div>
-            <Label htmlFor="personalWebsite">Personal Website</Label>
-            <Input
-              id="personalWebsite"
-              value={business.personalWebsite}
-              readOnly
-            />
-          </div>
-          <div>
-            <Label htmlFor="isVerified">Verified</Label>
-            <Input
-              id="isVerified"
-              value={business.isVerified}
-              readOnly
-              className={
-                business.isVerified === "Yes"
-                  ? "text-green-500"
-                  : "text-red-500"
-              }
-            />
+
+          {/* Business Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-center space-x-3">
+              <Users className="text-gray-500" size={20} />
+              <div>
+                <p className="text-sm font-medium">Company Size</p>
+                <p className="text-base">{business.companySize}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <Link className="text-gray-500" size={20} />
+              <div>
+                <p className="text-sm font-medium">LinkedIn</p>
+                {business.linkedIn !== "Not Provided" ? (
+                  <a
+                    href={business.linkedIn}
+                    target="_blank"
+                    rel="noopener noreferrer" // Ensures security when opening in a new tab
+                    className="text-base underline text-blue-500"
+                  >
+                    {business.linkedIn}
+                  </a>
+                ) : (
+                  <p className="text-base text-gray-500">{business.linkedIn}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <Globe className="text-gray-500" size={20} />
+              <div>
+                <p className="text-sm font-medium">Personal Website</p>
+                {business.personalWebsite !== "Not Provided" ? (
+                  <a
+                    href={business.personalWebsite}
+                    target="_blank"
+                    rel="noopener noreferrer" // Ensures security when opening in a new tab
+                    className="text-base underline text-blue-500"
+                  >
+                    {business.personalWebsite}
+                  </a>
+                ) : (
+                  <p className="text-base text-gray-500">
+                    {business.personalWebsite}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <Shield
+                className={`text-${
+                  business.isVerified === "Yes" ? "green" : "red"
+                }-500`}
+                size={20}
+              />
+              <div>
+                <p className="text-sm font-medium">Verified Status</p>
+                <p
+                  className={`text-base ${
+                    business.isVerified === "Yes"
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {business.isVerified}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>
