@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
-
 import { DeleteButtonIcon } from "../ui/deleteButton";
-
 import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { useToast } from "@/components/ui/use-toast";
 import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
@@ -32,6 +30,8 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
+import { Skeleton } from "@/components/ui/skeleton"; // Assuming Shadcn has this component
+
 interface DomainData {
   _id: string;
   label: string;
@@ -40,11 +40,13 @@ interface DomainData {
   createdBy?: string;
   status?: string; // User or system that created the domain
 }
+
 const ProjectDomainTable: React.FC = () => {
   const [domainData, setDomainData] = useState<DomainData[]>([]);
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
+
   // Function to fetch domain data
   const fetchDomainData = async () => {
     setLoading(true);
@@ -62,7 +64,6 @@ const ProjectDomainTable: React.FC = () => {
         description: Messages.FETCH_ERROR("domain"),
         variant: "destructive", // Red error message
       });
-
       setNoData(true); // Handle errors by showing no data
     } finally {
       setLoading(false);
@@ -73,6 +74,36 @@ const ProjectDomainTable: React.FC = () => {
   useEffect(() => {
     fetchDomainData();
   }, []);
+
+  const renderSkeleton = () => (
+    <>
+      {Array.from({ length: 9 }).map((_, index) => (
+        <TableRow key={index}>
+          <TableCell>
+            <Skeleton className="h-4 w-20" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-28" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-28" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-7 w-12 rounded-3xl" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-6 w-10" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-6" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </>
+  );
 
   // Handle domain deletion
   const handleDelete = async (domainId: string) => {
@@ -110,7 +141,9 @@ const ProjectDomainTable: React.FC = () => {
       });
       toast({
         title: "Success",
-        description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,
+        description: `Domain status updated to ${
+          checked ? statusType.active : statusType.inactive
+        }`,
         variant: "default",
       });
     } catch (error) {
@@ -162,11 +195,7 @@ const ProjectDomainTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  renderSkeleton()
                 ) : noData ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
@@ -182,7 +211,7 @@ const ProjectDomainTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : domainData ? (
+                ) : (
                   domainData.map((domain, index) => (
                     <TableRow key={domain._id}>
                       <TableCell>
@@ -263,21 +292,7 @@ const ProjectDomainTable: React.FC = () => {
                       </TableCell>
                     </TableRow>
                   ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
+                  
                 )}
               </TableBody>
             </Table>
