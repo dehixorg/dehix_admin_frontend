@@ -29,7 +29,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
-
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface UserData {
   _id: string;
   firstName: string;
@@ -151,7 +152,15 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.userName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell >
+                    <Badge
+                      className={
+                        getStatusBadge(user.status)
+                      }
+                    >
+                      {user.status}
+                    </Badge>
+                  </TableCell>
                       <TableCell>
                         <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}

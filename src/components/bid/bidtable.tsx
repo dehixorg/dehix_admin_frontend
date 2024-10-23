@@ -9,6 +9,7 @@ import { ButtonIcon } from "../ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages , formatID } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge"
 import {
   Table,
   TableHeader,
@@ -32,7 +33,7 @@ import {
 } from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/bid";
 import CopyButton from "@/components/copybutton";
-
+import { getStatusBadge } from "@/utils/common/utils";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business
@@ -75,11 +76,13 @@ const BidsTable: React.FC = () => {
     fetchUserData();
   }, []);
   const handleproject = (id: string) => {
-    router.push(`/business/tabs?id=${id}`); // Pass the ID as a query parameter
+    router.push(`/project/tabs?id=${id}`); // Pass the ID as a query parameter
   };
   const handlebidder = (id: string) => {
-    router.push(`/business/tabs?id=${id}`); // Pass the ID as a query parameter
+    router.push(`/freelancer/tabs?id=${id}`); // Pass the ID as a query parameter
   };
+
+
 
   return (
     <div className="px-4">
@@ -123,8 +126,14 @@ const BidsTable: React.FC = () => {
                           </Tooltip>
                         </div>
                       </TableCell>
-                      <TableCell>{user.bid_status}</TableCell>
-
+                      <TableCell>
+                          <div className="flex items-center space-x-2">
+                        <Badge className= {getStatusBadge(user.bid_status)}>
+                        {user.bid_status}
+                        </Badge>
+                       </div>
+                      </TableCell>
+                    
                       <TableCell>
                         {user.project_id ? (
                           <div className="flex items-center space-x-2">
@@ -156,7 +165,7 @@ const BidsTable: React.FC = () => {
                             <Tooltip>
                               <TooltipTrigger>
                                 <span
-                                  onClick={() => handleproject(user.bidder_id)}
+                                  onClick={() => handlebidder(user.bidder_id)}
                                   className="cursor-pointer text-blue-500 hover:underline"
                                 >
                                   <span>{formatID(user.bidder_id || "")}</span>

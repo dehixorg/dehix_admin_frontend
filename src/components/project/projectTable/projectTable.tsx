@@ -17,7 +17,9 @@ import {
 import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
   _id: string;
   projectName: string;
@@ -116,7 +118,11 @@ const ProjectTable: React.FC = () => {
                       <TableCell>{user.projectName}</TableCell>
                       <TableCell>{user.companyName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell>
+                    <Badge className={getStatusBadge(user.status)}>
+                    {user.status}
+                    </Badge>
+                    </TableCell>
                       <TableCell className="flex justify-end">
                         <ButtonIcon
                           onClick={() => handleRedirect(user._id)}
