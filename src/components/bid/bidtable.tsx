@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/bid";
 import CopyButton from "@/components/copybutton";
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton from Shadcn UI
+import BidsTableSkeleton from "@/utils/common/BidsTableSkeleton"; // Import the new skeleton component
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each business
@@ -83,37 +83,6 @@ const BidsTable: React.FC = () => {
     router.push(`/business/tabs?id=${id}`); // Pass the ID as a query parameter
   };
 
-  // Render skeleton rows
-  const renderSkeleton = () => (
-    <>
-      {Array.from({ length: 15 }).map((_, index) => (
-        <TableRow key={index}>
-          <TableCell>
-            <Skeleton className="h-4 w-20" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-16" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-20" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-20" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-12" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-28" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-6" />
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
-
   return (
     <div className="px-4">
       <div className="mb-8 mt-4">
@@ -133,7 +102,7 @@ const BidsTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  renderSkeleton() // Show skeleton while loading
+                  <BidsTableSkeleton /> // Use the new skeleton component
                 ) : bidData.length > 0 ? (
                   bidData.map((user, index) => (
                     <TableRow key={index}>

@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
-import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import {
   Tooltip,
   TooltipTrigger,
@@ -21,6 +20,7 @@ import {
 import { apiHelperService } from "@/services/interview";
 import { formatID } from "@/utils/common/enum";
 import CopyButton from "@/components/copybutton";
+import InterviewTableSkeleton from "@/utils/common/InterviewTableSkeleton"; // Import the new skeleton component
 
 interface InterviewData {
   _id: string;
@@ -85,31 +85,7 @@ const InterviewTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  Array.from({ length: 10 }).map((_, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <Skeleton className="h-4 w-20" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-20" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-20" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-14" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-36" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-8" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-[20px]" />
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  <InterviewTableSkeleton /> // Use the new skeleton component
                 ) : noData ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
@@ -184,7 +160,7 @@ const InterviewTable: React.FC = () => {
                         ) : (
                           "No Data Available"
                         )}
-                      </TableCell>{" "}
+                      </TableCell>
                       <TableCell>
                         {interview.skill || "No Data Available"}
                       </TableCell>

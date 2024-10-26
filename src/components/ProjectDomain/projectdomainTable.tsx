@@ -30,7 +30,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
-import { Skeleton } from "@/components/ui/skeleton"; // Assuming Shadcn has this component
+import ProjectDomainTableSkeleton from "@/utils/common/ProjectDomainTableSkeleton"; // Import the new skeleton component
 
 interface DomainData {
   _id: string;
@@ -74,36 +74,6 @@ const ProjectDomainTable: React.FC = () => {
   useEffect(() => {
     fetchDomainData();
   }, []);
-
-  const renderSkeleton = () => (
-    <>
-      {Array.from({ length: 9 }).map((_, index) => (
-        <TableRow key={index}>
-          <TableCell>
-            <Skeleton className="h-4 w-20" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-16" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-28" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-28" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-7 w-12 rounded-3xl" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-6 w-10" />
-          </TableCell>
-          <TableCell>
-            <Skeleton className="h-4 w-6" />
-          </TableCell>
-        </TableRow>
-      ))}
-    </>
-  );
 
   // Handle domain deletion
   const handleDelete = async (domainId: string) => {
@@ -195,7 +165,7 @@ const ProjectDomainTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  renderSkeleton()
+                  <ProjectDomainTableSkeleton /> // Use the new skeleton component
                 ) : noData ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center">
@@ -292,7 +262,6 @@ const ProjectDomainTable: React.FC = () => {
                       </TableCell>
                     </TableRow>
                   ))
-                  
                 )}
               </TableBody>
             </Table>
