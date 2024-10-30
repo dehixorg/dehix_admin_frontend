@@ -137,11 +137,11 @@ export function ProfileForm({ user_id }: { user_id: string }) {
         setCurrSkills(response.data.skills);
         setCurrDomains(response.data.domain);
 
-        const skillsResponse = await axiosInstance.get("/skills/all");
+        const skillsResponse = await axiosInstance.get("/skills");
         console.log("API Response get:", skillsResponse.data.data);
         setSkills(skillsResponse.data.data);
 
-        const domainsResponse = await axiosInstance.get("/domain/all");
+        const domainsResponse = await axiosInstance.get("/domain");
         console.log("API Response get:", domainsResponse.data.data);
         setDomains(domainsResponse.data.data);
       } catch (error) {

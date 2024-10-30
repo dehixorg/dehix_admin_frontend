@@ -88,7 +88,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
       const SkillDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new Skill to the backend
       const response = await axiosInstance.post(
-        `/skills/createskill`,
+        `/skills`,
         SkillDataWithUser,
       );
       const newSkill = response.data.data;
