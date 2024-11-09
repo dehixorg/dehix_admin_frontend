@@ -126,7 +126,7 @@ export function CreateProjectBusinessForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const domainResponse = await axiosInstance.get("/domain/all");
+        const domainResponse = await axiosInstance.get("/domain");
         console.log("Domain API Response get:", domainResponse.data.data);
         const transformedDomain = domainResponse.data.data.map(
           (skill: Domain) => ({
@@ -136,7 +136,7 @@ export function CreateProjectBusinessForm() {
         );
         setDomains(transformedDomain);
 
-        const skillsResponse = await axiosInstance.get("/skills/all");
+        const skillsResponse = await axiosInstance.get("/skills");
         console.log("Skills API Response get:", skillsResponse.data.data);
         const transformedSkills = skillsResponse.data.data.map(
           (skill: Skill) => ({

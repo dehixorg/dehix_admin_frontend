@@ -9,14 +9,14 @@ export const apiHelperService = {
   getAllSkill: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/skills/all",
+      endpoint: "/skills",
       params,
     });
   },
   createSkill: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/skills/createskill",
+      endpoint: "/skills",
       body,
     });
   },
@@ -29,7 +29,7 @@ export const apiHelperService = {
   getAllSkillAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/skills/admin/all/domains",
+      endpoint: "/skills/admin",
       params,
     });
   },

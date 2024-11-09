@@ -9,14 +9,14 @@ export const apiHelperService = {
   getAllNotification: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/notification/all_notification",
+      endpoint: "/notification",
       params,
     });
   },
   createNotification: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/notification/createnotification",
+      endpoint: "/notification",
       body,
     });
   },

@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllBusiness: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/business/all",
+      endpoint: "/business",
       params,
     });
   },

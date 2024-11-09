@@ -9,21 +9,21 @@ export const apiHelperService = {
   getAllProjectdomain: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/projectDomain/all",
+      endpoint: "/projectdomain",
       params,
     });
   },
   createProjectdomain: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/projectDomain/",
+      endpoint: "/projectdomain",
       body,
     });
   },
   deleteProjectdomain: async (projectDomain_id: string) => {
     return apiService({
       method: Api_Methods.DELETE,
-      endpoint: `/projectDomain/${projectDomain_id}`,
+      endpoint: `/projectdomain/${projectDomain_id}`,
     });
   },
 };

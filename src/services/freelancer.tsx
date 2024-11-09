@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllFreelancers: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/freelancer/allfreelancer",
+      endpoint: "/freelancer",
       params,
     });
   },
