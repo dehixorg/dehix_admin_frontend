@@ -27,6 +27,7 @@ interface Verificationinfo {
   verifier_username:string;
   requester_id:string;
   document_id:string;
+  verification_status:string;
   comment:string;
   verified_at:string;
   doc_type:string;

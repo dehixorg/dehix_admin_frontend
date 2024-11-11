@@ -1,15 +1,18 @@
 "use client";
 import * as React from "react";
-
 import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
-
-
-
+import { ButtonIcon } from "@/components/ui/arrowButton";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { formatTime } from "@/lib/utils";
 import { formatID } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
-
 import {
   Table,
   TableHeader,
@@ -18,29 +21,29 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-
 import CopyButton from "@/components/copybutton";
-
-
+import { Badge } from "@/components/ui/badge";
+import {getStatusBadge} from "@/utils/common/utils"
 
 interface Verificationinfo {
   verifier_id:string;
   verifier_username:string;
   requester_id:string;
   document_id:string;
+  verification_status:string;
   comment:string;
   verified_at:string;
   doc_type:string;
 }
+
 interface Props {
     projectData:Verificationinfo[]|null;
-  }
+}
 
 const Project: React.FC <Props>= ({ projectData }) => {
     const router = useRouter();
@@ -53,10 +56,6 @@ const Project: React.FC <Props>= ({ projectData }) => {
             </div>
           );
     }
-
-
-
-
 
   return (
     <div className="px-4">
@@ -71,12 +70,13 @@ const Project: React.FC <Props>= ({ projectData }) => {
                   <TableHead>Requester ID</TableHead>
                   <TableHead>Document ID</TableHead>
                   <TableHead>Verified At</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 { projectData.length > 0 ? (
                   projectData.map((user) => (
-                    <TableRow>
+                    <TableRow key={user.document_id}>
                       <TableCell>
                       {user.verifier_id ? (
                         <div className="flex items-center space-x-2">
@@ -157,6 +157,33 @@ const Project: React.FC <Props>= ({ projectData }) => {
                         {formatTime(user.verified_at)||"No Data Available"}
                         </div>
                       </TableCell>
+                      <TableCell>
+                        {user.verification_status?(
+                    <Badge className={getStatusBadge(user.verification_status)}>
+                    {user.verification_status}
+                    </Badge>)
+                    :("N/A")}
+                    </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <ButtonIcon />
+                          </DialogTrigger>
+                          <DialogContent className="p-4">
+                            <DialogHeader>
+                              <DialogTitle>Verification Details</DialogTitle>
+                            </DialogHeader>
+                            <div>
+                              <p>
+                                <strong>Comment:</strong>{" "}
+                                {user.comment
+                                  ? user.comment
+                                  : "No Comments Available"}
+                              </p>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -173,6 +200,7 @@ const Project: React.FC <Props>= ({ projectData }) => {
                         </p>
                       </div>
                     </TableCell>
+                    
                   </TableRow>
                 )}
               </TableBody>
