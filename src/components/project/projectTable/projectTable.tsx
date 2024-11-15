@@ -5,6 +5,7 @@ import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 import {
   Table,
   TableHeader,
@@ -13,9 +14,12 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/business";
+import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
-
+import { useToast } from "@/components/ui/use-toast";
+import { Messages } from "@/utils/common/enum";
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
   _id: string;
   projectName: string;
@@ -48,15 +52,18 @@ const ProjectTable: React.FC = () => {
   const [userData, setUserData] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllProject();
-        // console.log("API Response:", response.data);
         setUserData(response.data.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("project"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }
@@ -64,6 +71,7 @@ const ProjectTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+
   const handleRedirect = (id: string) => {
     router.push(`/project/tabs?id=${id}`);
   };
@@ -85,18 +93,36 @@ const ProjectTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  // Render Skeletons when loading
+                  <>
+                    {Array.from({ length: 9 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-20" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-12 " />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.projectName}</TableCell>
                       <TableCell>{user.companyName}</TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell>
+                    <Badge className={getStatusBadge(user.status)}>
+                    {user.status}
+                    </Badge>
+                    </TableCell>
                       <TableCell className="flex justify-end">
                         <ButtonIcon
                           onClick={() => handleRedirect(user._id)}

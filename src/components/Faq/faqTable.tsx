@@ -2,9 +2,9 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton component
 
 import { DeleteButtonIcon } from "../ui/deleteButton";
-
 import AddFaq from "./addFaq";
 
 import { Card } from "@/components/ui/card";
@@ -27,7 +27,8 @@ import {
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/faq";
-
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType } from "@/utils/common/enum";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -48,48 +49,87 @@ const truncateText = (text: string, maxLength: number) => {
 const FaqTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
+  const fetchUserData = async () => {
+    try {
+      const response = await apiHelperService.getAllFaq();
+      setUserData(response.data.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("faq"),
+        variant: "destructive", // Red error message
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await apiHelperService.getAllFaq();
-        console.log("API Response:", response.data);
-        setUserData(response.data.data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserData();
   }, []);
 
   const handleDelete = async (faqId: string) => {
-    console.log("FAQ ID received in handleDelete:", faqId); // Debugging line
-    if (!faqId) {
-      console.error("FAQ ID is undefined.");
-      return;
-    }
     try {
       await apiHelperService.deleteFaq(faqId);
-      setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
+      fetchUserData();
     } catch (error: any) {
-      console.error(
-        "Error deleting FAQ:",
-        error.response?.data || error.message,
-      );
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("faq"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
-  const handleSwitchChange = (faqId: string, checked: boolean) => {
-    setUserData((prevData) =>
-      prevData.map((user) =>
-        user._id === faqId
-          ? { ...user, status: checked ? "active" : "inactive" }
-          : user,
-      ),
-    );
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
+    // Initialize toast
+
+    try {
+      setUserData((prevUserData) => {
+        // Create a shallow copy of the existing array
+        const updatedUserData = [...prevUserData];
+
+        updatedUserData[index].status = checked
+          ? statusType.active
+          : statusType.inactive;
+
+        // Return the updated array
+        return updatedUserData;
+      });
+      await apiHelperService.updateFaqStatus(
+      labelId,
+      checked ? statusType.active : statusType.inactive,
+      );
+
+      toast({
+        title: "Success",
+        description: `Faq status updated to ${checked ? statusType.active : statusType.inactive}`,
+        variant: "default",
+      });
+    } catch (error) {
+      // Revert the status change if the API call fails
+      setUserData((prevUserData) => {
+        // Create a shallow copy of the existing array
+        const updatedUserData = [...prevUserData];
+
+        updatedUserData[index].status = checked
+          ? statusType.inactive
+          : statusType.active;
+
+        // Return the updated array
+        return updatedUserData;
+      });
+      toast({
+        title: "Error",
+        description: "Failed to update faq status. Please try again.",
+        variant: "destructive", // Red error message
+      });
+    }
   };
 
   return (
@@ -116,13 +156,33 @@ const FaqTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      Loading...
+                  // Render skeleton when loading
+                  <>
+                    {[...Array(9)].map((_, i) => (
+                    <TableRow key={i}>
+                    <TableCell>
+                      <Skeleton className="h-5 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-14" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-48" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-5 w-8 mx-auto" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-7 w-12 rounded-3xl" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-10" />
                     </TableCell>
                   </TableRow>
+                    ))}
+                  </>
                 ) : userData.length > 0 ? (
-                  userData.map((user) => (
+                  userData.map((user, index) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
@@ -134,7 +194,7 @@ const FaqTable: React.FC = () => {
                         <Switch
                           checked={user.status === "active"}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(user._id, checked)
+                            handleSwitchChange(user._id, checked, index)
                           }
                         />
                       </TableCell>
@@ -146,7 +206,7 @@ const FaqTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

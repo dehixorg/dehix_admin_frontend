@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { PackageOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -11,41 +10,32 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/business";
-import { useToast } from "@/components/ui/use-toast";
 
-interface HireFreelancer {
+import CopyButton from "@/components/copybutton";
+import { Badge } from "@/components/ui/badge";
+import {getStatusBadge} from "@/utils/common/utils"
+interface HireFreelancerInfo {
   freelancer: string;
   status: string;
   _id: string;
 }
 
-function Hirefreelancer({ id }: { id: string }) {
-  const [hireFreelancers, setHireFreelancers] = useState<HireFreelancer[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const { toast } = useToast(); // For displaying toast notifications
+function Hirefreelancer({
+  hirefreelancerData,
+}: {
+  hirefreelancerData: HireFreelancerInfo[] |null ;
+}) {
+  const hireFreelancers = hirefreelancerData;
 
-  useEffect(() => {
-    const fetchHireFreelancers = async () => {
-      try {
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
-        const data = response.data;
-        setHireFreelancers(data.hirefreelancer || []);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to fetch freelancers. Please try again.",
-          variant: "destructive",
-        });
-        console.error("API Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHireFreelancers();
-  }, [id]);
-
+  if (!hireFreelancers) {
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">No freelancers found.</p>
+      </div>
+    );
+  }
+  
   return (
     <Card className="w-full max-w p-4">
       <CardHeader>
@@ -64,20 +54,9 @@ function Hirefreelancer({ id }: { id: string }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-white text-center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : hireFreelancers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={4} className="text-white text-center">
-                  No freelancers found.
-                </TableCell>
-              </TableRow>
-            ) : (
+            { 
               hireFreelancers.map((hireFreelancer, index) => (
+                
                 <TableRow
                   key={hireFreelancer._id}
                   className="border-b border-gray-700"
@@ -90,24 +69,23 @@ function Hirefreelancer({ id }: { id: string }) {
                     {hireFreelancer.freelancer}
                   </TableCell>
                   <TableCell className="py-2">
-                    <span
+                    <Badge
                       className={
-                        hireFreelancer.status === "Accepted"
-                          ? "text-green-500"
-                          : hireFreelancer.status === "Rejected"
-                            ? "text-red-500"
-                            : hireFreelancer.status === "Pending"
-                              ? "text-yellow-500"
-                              : ""
+                        getStatusBadge(hireFreelancer.status)
                       }
                     >
                       {hireFreelancer.status}
-                    </span>
+                    </Badge>
                   </TableCell>
-                  <TableCell className="py-2">{hireFreelancer._id}</TableCell>
+                  <TableCell className="py-2">
+                    <div className="flex items-center space-x-2">
+                      {hireFreelancer._id}
+                      <CopyButton id={hireFreelancer._id}></CopyButton>
+                    </div>
+                  </TableCell>
                 </TableRow>
-              ))
-            )}
+              ))}
+            
           </TableBody>
         </Table>
       </CardContent>

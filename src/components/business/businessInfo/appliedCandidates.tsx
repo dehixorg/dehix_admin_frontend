@@ -1,7 +1,5 @@
 "use client";
-
-import { useEffect, useState } from "react";
-
+import { PackageOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -11,29 +9,23 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/business";
 
-function Appliedcandidates({ id }: { id: string }) {
-  const [appliedCandidates, setAppliedCandidates] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchAppliedCandidates = async () => {
-      try {
-        const response = await apiHelperService.getAllBusinessPersonalInfo(id);
-        const data = response.data;
-        setAppliedCandidates(data.Appliedcandidates || []);
-      } catch (error) {
-        setError((error as Error).message);
-        console.error("API Error:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+function Appliedcandidates({
+  AppliedCandidateData,
+}: {
+  AppliedCandidateData: string[] |null ;
+}) {
+  const appliedCandidates = AppliedCandidateData;
 
-    fetchAppliedCandidates();
-  }, [id]);
+  if (!appliedCandidates) {
+    return (
+      <div className="text-center py-10">
+        <PackageOpen className="mx-auto text-gray-500" size={100} />
+        <p className="text-gray-500">No Candidates found.</p>
+      </div>
+    );
+  }
 
   return (
     <Card className=" p-4">
@@ -53,28 +45,7 @@ function Appliedcandidates({ id }: { id: string }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={2} className="text-white text-center">
-                  Loading...
-                </TableCell>{" "}
-                {/* Center loading message */}
-              </TableRow>
-            ) : error ? (
-              <TableRow>
-                <TableCell colSpan={2} className="text-white text-center">
-                  Error: {error}
-                </TableCell>{" "}
-                {/* Center error message */}
-              </TableRow>
-            ) : appliedCandidates.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={2} className="text-white text-center">
-                  No applied candidates found.
-                </TableCell>{" "}
-                {/* Center no data message */}
-              </TableRow>
-            ) : (
+            {
               appliedCandidates.map((candidate, index) => (
                 <TableRow key={index} className="border-b border-gray-700">
                   {" "}
@@ -84,7 +55,7 @@ function Appliedcandidates({ id }: { id: string }) {
                   <TableCell className="py-2">{candidate}</TableCell>
                 </TableRow>
               ))
-            )}
+            }
           </TableBody>
         </Table>
       </CardContent>

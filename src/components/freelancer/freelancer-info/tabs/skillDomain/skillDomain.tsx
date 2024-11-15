@@ -13,6 +13,15 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/freelancer";
+import { useToast } from "@/components/ui/use-toast";
+import { Messages, statusType , formatID } from "@/utils/common/enum";
+import CopyButton from "@/components/copybutton";
+
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 interface Skill {
   _id: string;
@@ -45,6 +54,7 @@ interface SkillDomainProps {
 const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     console.log("id", id);
@@ -53,11 +63,13 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { skills, domain } = response.data;
-        console.log("Skills:", skills);
-        console.log("Domain:", domain);
         setUserData({ skills, domain });
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("skill and domain"),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }
@@ -98,7 +110,21 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
                     {userData.skills.map((skill) => (
                       <TableRow key={skill._id}>
                         <TableCell>Skill</TableCell>
-                        <TableCell>{skill._id}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(skill._id)}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={skill._id} />
+
+                              <TooltipContent>
+                                {skill._id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        </TableCell>
                         <TableCell>{skill.name}</TableCell>
                         <TableCell>{skill.level}</TableCell>
                         <TableCell>{skill.experience}</TableCell>
@@ -110,7 +136,21 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
                     {userData.domain.map((domain) => (
                       <TableRow key={domain._id}>
                         <TableCell>Domain</TableCell>
-                        <TableCell>{domain._id}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span>{formatID(domain._id)}</span>
+                              </TooltipTrigger>
+
+                              <CopyButton id={domain._id} />
+
+                              <TooltipContent>
+                                {domain._id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        </TableCell>{" "}
                         <TableCell>{domain.name}</TableCell>
                         <TableCell>{domain.level}</TableCell>
                         <TableCell>{domain.experience}</TableCell>

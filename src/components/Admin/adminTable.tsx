@@ -1,13 +1,16 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { CircleX, PackageOpen } from "lucide-react";
+import {  PackageOpen } from "lucide-react";
 
 import { ButtonIcon } from "../ui/arrowButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
+import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 
 import AddAdmin from "./addAdmin";
 
+import { useToast } from "@/components/ui/use-toast";
+import { Messages } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -26,6 +29,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface UserData {
   _id: string;
   firstName: string;
@@ -42,12 +47,11 @@ interface UserData {
 const AdminTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { toast } = useToast();
   const fetchUserData = async () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
-      //console.log("API Response:", response.data);
       setUserData(response.data.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -62,29 +66,26 @@ const AdminTable: React.FC = () => {
 
   const handleAddAdmin = async (newDomain: UserData) => {
     try {
-      // Assuming an API call is made in the AddAdmin component
       await fetchUserData(); // Fetch updated data after adding the admin
     } catch (error) {
-      console.error("Error adding domain:", error);
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
   const handleDelete = async (admin_id: string) => {
-    console.log("Admin ID received in handleDelete:", admin_id); // Debugging line
-    if (!admin_id) {
-      console.error("Admin ID is undefined.");
-      return;
-    }
     try {
       await apiHelperService.deleteAdmin(admin_id);
-      setUserData((prevData) =>
-        prevData.filter((user) => user._id !== admin_id),
-      );
+      fetchUserData();
     } catch (error: any) {
-      console.error(
-        "Error deleting admin:",
-        error.response?.data || error.message,
-      );
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
@@ -113,11 +114,36 @@ const AdminTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  <>
+                    {[...Array(10)].map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-28" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-24" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-10" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-0 w-0" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
@@ -126,7 +152,15 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.userName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell >
+                    <Badge
+                      className={
+                        getStatusBadge(user.status)
+                      }
+                    >
+                      {user.status}
+                    </Badge>
+                  </TableCell>
                       <TableCell>
                         <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}

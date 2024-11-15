@@ -9,6 +9,9 @@ import {
   BellRing,
   MessageSquareMore,
   FolderLock,
+  Gavel,
+  NotebookPen,
+  UserCheck,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -58,6 +61,23 @@ export const menuItemsTop: MenuItem[] = [
     href: "/admin",
     icon: <EarthLock className="h-5 w-5" />,
     label: "Admin",
+  },
+  {
+    href: "/interview",
+    icon: <NotebookPen className="h-5 w-5" />,
+    label: "Interview",
+  },
+
+  {
+    href: "/bid",
+    icon: <Gavel className="h-5 w-5" />,
+    label: "Bid",
+  },
+
+  {
+    href: "/projectdomain",
+    icon: <UserCheck className="h-5 w-5" />,
+    label: "Project Domain",
   },
 ];
 

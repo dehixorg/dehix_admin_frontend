@@ -18,19 +18,19 @@ export default function Talent() {
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Business"
+        active="Bid"
       />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Business"
+            active="bid"
           />
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "/dashboard/" },
-              { label: "Business ", link: "#" },
+              { label: "Bid ", link: "#" },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
