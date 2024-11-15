@@ -16,10 +16,7 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import Business from "@/components/verification/tabs/business";
-import Education from "@/components/verification/tabs/education";
-import Experience from "@/components/verification/tabs/experience";
-import Project from "@/components/verification/tabs/project";
+import Verification from "@/components/verification/verificationTable";
 
 
 interface Verificationinfo {
@@ -45,17 +42,17 @@ const BusinessTabs = () => {
       try {
         const response = await apiHelperService.getAllVerification();
         const data = response.data.data;
-        console.log(data);
+        
       const tempExperience: Verificationinfo[] = [];
       const tempProject: Verificationinfo[] = [];
       const tempEducation: Verificationinfo[] = [];
       const tempBusiness: Verificationinfo[] = [];
 
       // Iterate through data and assign based on doc_type
-      
+      if(data)
+      {
 
       data.forEach((item:Verificationinfo) => {
-        console.log(item.verifier_id);
         switch (item.doc_type) {
           case 'experience':
             tempExperience.push(item); 
@@ -78,12 +75,20 @@ const BusinessTabs = () => {
             break;
         }
       });
-      console.log(tempBusiness);
       setexperience(tempExperience);
       setproject(tempProject);
       seteducation(tempEducation);
       setbusiness(tempBusiness);
       setLoading(false); // Stop loading after data processing
+    }
+    else{
+    toast({
+      title: "Error",
+      description: Messages.FETCH_ERROR("verification"),
+      variant: "destructive",
+    });
+  }
+
     } catch (error) {
       toast({
         title: "Error",
@@ -156,16 +161,16 @@ const BusinessTabs = () => {
               
             </TabsList>
             <TabsContent value="Experience">
-              <Experience experienceData={experience} />
+              <Verification Data={experience} />
             </TabsContent>
             <TabsContent value="Project">
-              <Project projectData={project} />
+              <Verification Data={project} />
             </TabsContent>
             <TabsContent value="Education">
-              <Education educationData={education} />
+              <Verification Data={education} />
             </TabsContent>
             <TabsContent value="Business">
-              <Business businessData={business}/>
+              <Verification Data={business}/>
             </TabsContent>
 
           </Tabs>
