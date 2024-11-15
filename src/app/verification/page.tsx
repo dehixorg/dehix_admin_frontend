@@ -41,7 +41,7 @@ const BusinessTabs = () => {
     const fetchBusiness = async () => {
       try {
         const response = await apiHelperService.getAllVerification();
-        const data = response.data.data;
+        const data = response?.data?.data;
         
       const tempExperience: Verificationinfo[] = [];
       const tempProject: Verificationinfo[] = [];
