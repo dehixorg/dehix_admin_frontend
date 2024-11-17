@@ -9,14 +9,14 @@ export const apiHelperService = {
   getAllProjectdomain: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/projectDomain/all",
+      endpoint: "/projectDomain",
       params,
     });
   },
   createProjectdomain: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/projectDomain/",
+      endpoint: "/projectDomain",
       body,
     });
   },
