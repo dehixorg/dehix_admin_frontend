@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllVerification: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/admin/oracles",
+      endpoint: "/verification/oracle",
       params,
     });
   },

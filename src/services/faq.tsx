@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllFaq: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/faq/all",
+      endpoint: "/faq",
       params,
     });
   },
@@ -17,7 +17,7 @@ export const apiHelperService = {
   createFaq: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/faq/createfaq",
+      endpoint: "/faq",
       body,
     });
   },
