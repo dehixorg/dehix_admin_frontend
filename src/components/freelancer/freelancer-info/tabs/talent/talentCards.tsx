@@ -44,7 +44,7 @@ export function Talentcard({ info, ...props }: DehixTalentCardProps) {
 
           <div className="flex ">
             <p className="text-md font-semibold">Active Status: </p>
-            <Badge className="ml-2">{info.activestatus}</Badge>
+            {info.activestatus?"Active":"Inactive"}
           </div>
         </div>
       </CardContent>
