@@ -49,6 +49,8 @@ export const Messages = {
     `Failed to update the ${resource}. Please try again.`,
   ADD_ERROR: (resource: string) =>
     `Failed to add the ${resource}. Please try again.`,
+  FILE_TYPE_ERROR:(resource:string)=>
+    `Unsupported ${resource} type`
 };
 
 export const formatID = (id: string): string => {

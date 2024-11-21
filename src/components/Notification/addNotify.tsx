@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef  } from "react";
 import { Controller, useForm, useFieldArray } from "react-hook-form";
-import { Plus } from "lucide-react";
+import { Plus , Image as ImageIcon, UploadCloud } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
@@ -27,22 +27,23 @@ import {
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/notification";
 
 interface ImportantUrl {
   urlName: string;
   url: string;
 }
 
-interface FAQData {
+interface notifyData {
   heading: string;
   description: string;
   type: string;
   status: string;
   importantUrl: ImportantUrl[];
-  image: FileList;
+  background_img:string;
 }
 
-const faqSchema = z.object({
+const notifySchema = z.object({
   heading: z.string().nonempty("Please enter a heading"),
   description: z.string().nonempty("Please enter a description"),
   type: z.enum(["both", "business", "freelancer"]),
@@ -51,40 +52,42 @@ const faqSchema = z.object({
     .array(
       z.object({
         urlName: z.string().nonempty("Please enter the URL name"),
-        url: z.string().url("Please enter a valid URL"),
+        url: z.string().nonempty("Please enter a valid URL"),
       }),
     )
     .nonempty({ message: "Please add at least one URL" }),
-  image: z
-    .any()
-    .refine((files) => files && files.length === 1, "Please upload an image")
-    .refine(
-      (files) =>
-        files &&
-        ["image/jpeg", "image/jpg", "image/png"].includes(files[0]?.type),
-      "Only .jpg, .jpeg, and .png files are allowed",
-    ),
 });
 
-const AddNotify: React.FC = () => {
+const allowedImageFormats = [
+  'image/png',
+  'image/jpeg',
+  'image/jpg',
+  'image/gif',
+  'image/svg+xml',
+];
+const maxImageSize = 2 * 1024 * 1024; // 1MB
+interface AddNotifyProps {
+  onAddNotify: () => void; // Prop to pass the new domain
+}
+const AddNotify: React.FC<AddNotifyProps> = ({onAddNotify}) => {
   const [open, setOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(
-    null,
-  );
+  const [selectedPicture, setSelectedPicture] =useState<File | null>(null);
+const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+const fileInputRef = useRef<HTMLInputElement | null>(null);
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FAQData>({
-    resolver: zodResolver(faqSchema),
+  } = useForm<notifyData>({
+    resolver: zodResolver(notifySchema),
     defaultValues: {
       heading: "",
       description: "",
       type: "",
       status: "active",
       importantUrl: [{ urlName: "", url: "" }],
-      image: undefined,
+      background_img: "",
     },
   });
   const { toast } = useToast();
@@ -92,45 +95,90 @@ const AddNotify: React.FC = () => {
     control,
     name: "importantUrl",
   });
-
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
+    if (file && allowedImageFormats.includes(file.type)) {
+      if (file.size <= maxImageSize) {
+        setSelectedPicture(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      } else {
+        alert('File size exceeds the 2MB limit.');
+      }
+    } else {
+      toast({
+        title: "Error",
+        description: Messages.FILE_TYPE_ERROR("image"),
+        variant: "destructive", // Red error message
+      });
     }
   };
 
-  const onSubmit = async (data: FAQData) => {
-    console.log("Form data:", data); // Log data to verify it's being captured
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files?.[0];
+    if (file && allowedImageFormats.includes(file.type)) {
+      if (file.size <= maxImageSize) {
+        setSelectedPicture(file);
+        setPreviewUrl(URL.createObjectURL(file));
+      } else {
+        alert('File size exceeds the 2MB limit.');
+      }
+    } else {
+      toast({
+      title: "Error",
+      description: Messages.FILE_TYPE_ERROR("image"),
+      variant: "destructive", // Red error message
+    });
+    }
+  };
+
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
+  const onSubmit = async (data: notifyData) => {
+  
     try {
       const formData = new FormData();
-      formData.append("heading", data.heading);
-      formData.append("description", data.description);
-      formData.append("type", data.type);
-      formData.append("status", data.status);
-      data.importantUrl.forEach((url, index) => {
-        formData.append(`importantUrl[${index}][urlName]`, url.urlName);
-        formData.append(`importantUrl[${index}][url]`, url.url);
-      });
-      if (data.image) {
-        formData.append("image", data.image[0]);
+      if(selectedPicture)
+      {
+      formData.append('background_img', selectedPicture);
       }
-
-      await axiosInstance.post(
-        ``, //  API
-        formData,
+      const postResponse = await axiosInstance.post(
+        '/register/upload-image',
+       formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         },
       );
-      reset();
+      const { Location } = postResponse.data.data;
+      formData.append("background_img",Location);
+
+       const response =await apiHelperService.createNotification(
+        {...data,"background_img":Location}
+      );
+      if(response?.data?.data)
+      {
+        toast({
+          title: "Success",
+          description: "Notification Added Successfully",
+          variant: "default", // Red error message
+        });
+        reset();
       setOpen(false);
+      onAddNotify();
+      
+      }
+      else{
+        toast({
+          title: "Error",
+          description: Messages.ADD_ERROR("notification"),
+          variant: "destructive", // Red error message
+        });
+      }
+      
+      
     } catch (error) {
       toast({
         title: "Error",
@@ -209,51 +257,45 @@ const AddNotify: React.FC = () => {
           </div>
 
           <div className="mb-3">
-            <Controller
-              control={control}
-              name="image"
-              render={({ field }) => (
-                <div
-                  className="border p-2 rounded mt-2 w-full text-center"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const file = e.dataTransfer.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setImagePreview(reader.result as string);
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                >
-                  <label className="cursor-pointer">
-                    {imagePreview ? (
-                      <Image
-                        src={imagePreview as string}
-                        alt="Preview"
-                        className="w-full h-auto"
-                      />
-                    ) : (
-                      <p>Drag & Drop your image here or click to select</p>
-                    )}
-                    <Input
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => {
-                        field.onChange(e.target.files);
-                        handleImageChange(e);
-                      }}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              )}
-            />
-            {errors.image && (
-              <p className="text-red-600">{errors.image.message}</p>
-            )}
+           
+            <input
+        type="file"
+        accept={allowedImageFormats.join(',')}
+        onChange={handleImageChange}
+        className="hidden"
+        ref={fileInputRef}
+      />
+
+      <div  className="h-48  border p-2 rounded mt-2 w-full rounded-lg shadow-lg flex items-center justify-center"
+        
+        onClick={() => fileInputRef.current?.click()}
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        {previewUrl ? (
+          <div className="w-40 h-40 border-2 border-black-300 bg-gray-700 flex items-center justify-center cursor-pointer"
+          >
+          <Image
+            width={112}
+            height={112}
+            src={previewUrl}
+            alt="Avatar Preview"
+            className="w-full h-full object-cover"
+          />
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center border-dashed border-2 border-gray-400 rounded-lg p-6">
+          <UploadCloud className="text-gray-500 w-12 h-12 mb-2" />
+          <p className="text-gray-700 text-center">
+            Drag and drop your image here or click to upload
+          </p>
+          <div className="flex items-center mt-2">
+            <ImageIcon className="text-gray-500 w-5 h-5 mr-1" />
+            <span className="text-gray-600 text-sm">Supported formats: JPG, PNG,JPEG</span>
+          </div>
+        </div>
+        )}
+      </div>
           </div>
           {fields.map((field, index) => (
             <div key={field.id} className="mb-3">
