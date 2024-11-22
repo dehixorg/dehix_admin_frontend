@@ -10,12 +10,12 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
-import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
+import { Skeleton } from "@/components/ui/skeleton";
 import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
 import CopyButton from "@/components/copybutton";
-
+import EditDomainDescription from "@/components/Domain/editDomaindesc";
 interface DomainData {
   _id: string;
   label: string;
@@ -122,7 +122,7 @@ const DomainTable: React.FC = () => {
                 <TableRow>
                   <TableHead className="w-[180px]">Domain Id</TableHead>
                   <TableHead className="w-[180px]">Domain Name</TableHead>
-                  <TableHead className="w-[300px]">Created At</TableHead>
+                  <TableHead className="w-[180px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[20px]">Delete</TableHead>
@@ -238,6 +238,19 @@ const DomainTable: React.FC = () => {
                                   "No description available"}
                               </p>
                             </div>
+                            <EditDomainDescription
+  
+    domainId={domain._id}
+    currentDescription={domain.description || ""}
+    onDescriptionUpdate={(newDescription:string) => {
+      setDomainData((prev) =>
+        prev.map((d) =>
+          d._id === domain._id ? { ...d, description: newDescription } : d
+        )
+      );
+    }}
+  />
+
                           </DialogContent>
                         </Dialog>
                       </TableCell>
