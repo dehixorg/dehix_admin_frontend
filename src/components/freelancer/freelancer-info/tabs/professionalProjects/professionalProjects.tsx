@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { getStatusIcon } from "@/utils/common/utils";
 
 interface PersonalProjects {
   _id: string;
@@ -39,9 +41,19 @@ export function projectsCard({
   return (
     <Card className={cn("flex flex-col", className)} {...props}>
       <CardHeader>
+      <div className="flex items-center justify-between">
         <CardTitle className="h-12 overflow-hidden text-ellipsis">
           {projects.projectName}
         </CardTitle>
+        <Tooltip>
+          <TooltipTrigger>
+            <span>{getStatusIcon(projects.verificationStatus)}</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span >{projects.verificationStatus}</span>
+          </TooltipContent>
+        </Tooltip>
+        </div>
         <CardDescription className="h-10 overflow-hidden text-ellipsis">
           {projects.description}
         </CardDescription>
@@ -88,9 +100,6 @@ export function projectsCard({
             <p>No technologies listed.</p>
           )}
         </div>
-        <p>
-          <strong>Verification Status:</strong> {projects.verificationStatus}
-        </p>
         <p>
           <strong>Comments:</strong> {projects.comments}
         </p>
