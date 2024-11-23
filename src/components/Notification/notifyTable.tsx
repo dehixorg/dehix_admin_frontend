@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
-import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
+import { Skeleton } from "@/components/ui/skeleton";
 import { apiHelperService } from "@/services/notification";
 
 interface ImportantUrl {
@@ -44,7 +44,6 @@ interface UserData {
   status: string;
   background_img: string;
   importantUrl: ImportantUrl[];
-  // AWS image URL
 }
 
 const truncateText = (text: string, maxLength: number) => {
@@ -55,16 +54,17 @@ const NotifyTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllNotification();
-        setUserData(response.data.data);
+        setUserData(response.data.data || []);
       } catch (error) {
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR("notification"),
-          variant: "destructive", // Red error message
+          variant: "destructive",
         });
       } finally {
         setLoading(false);
@@ -74,15 +74,17 @@ const NotifyTable: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleDelete = async (faqId: string) => {
+  const handleDelete = async (notificationId: string) => {
     try {
-      await apiHelperService.deleteNotification(faqId);
-      setUserData((prevData) => prevData.filter((user) => user._id !== faqId));
+      await apiHelperService.deleteNotification(notificationId);
+      setUserData((prevData) =>
+        prevData.filter((user) => user._id !== notificationId)
+      );
     } catch (error) {
       toast({
         title: "Error",
         description: Messages.DELETE_ERROR("notification"),
-        variant: "destructive", // Red error message
+        variant: "destructive",
       });
     }
   };
@@ -90,64 +92,49 @@ const NotifyTable: React.FC = () => {
   const handleSwitchChange = async (
     labelId: string,
     checked: boolean,
-    index: number,
+    index: number
   ) => {
-    // Initialize toast
-
     try {
       setUserData((prevUserData) => {
-        // Create a shallow copy of the existing array
         const updatedUserData = [...prevUserData];
-
         updatedUserData[index].status = checked
           ? statusType.active
           : statusType.inactive;
-
-        // Return the updated array
         return updatedUserData;
       });
       await apiHelperService.updateNotificationStatus(
-      labelId,
-      checked ? statusType.active : statusType.inactive,
+        labelId,
+        checked ? statusType.active : statusType.inactive
       );
-
       toast({
         title: "Success",
-        description: `Notification status updated to ${checked ? statusType.active : statusType.inactive}`,
+        description: `Notification status updated to ${
+          checked ? statusType.active : statusType.inactive
+        }`,
         variant: "default",
       });
     } catch (error) {
-      // Revert the status change if the API call fails
       setUserData((prevUserData) => {
-        // Create a shallow copy of the existing array
         const updatedUserData = [...prevUserData];
-
         updatedUserData[index].status = checked
           ? statusType.inactive
           : statusType.active;
-
-        // Return the updated array
         return updatedUserData;
       });
       toast({
         title: "Error",
-        description: "Failed to update dfaq status. Please try again.",
-        variant: "destructive", // Red error message
+        description: "Failed to update notification status. Please try again.",
+        variant: "destructive",
       });
     }
   };
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4 mr-4">
-        <div className="flex items-center justify-between mb-4 ">
-          <div className="flex-grow">
-            <h2 className="text-xl font-semibold">Notification Table</h2>
-          </div>
-          <div>
-            {" "}
-            <AddNotify />{" "}
-          </div>
+      <div className="mb-8 mt-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Notification Table</h2>
+          <AddNotify />
         </div>
         <Card>
           <div className="lg:overflow-x-auto">
@@ -165,7 +152,6 @@ const NotifyTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  // Skeleton Loader
                   <>
                     {[...Array(10)].map((_, i) => (
                       <TableRow key={i}>
@@ -207,7 +193,7 @@ const NotifyTable: React.FC = () => {
                           }
                         />
                       </TableCell>
-                      <TableCell className="text-center">
+                      <TableCell>
                         <DeleteButtonIcon
                           onClick={() => handleDelete(user._id)}
                         />
@@ -215,7 +201,7 @@ const NotifyTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
+                            <ButtonIcon />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
@@ -240,7 +226,7 @@ const NotifyTable: React.FC = () => {
                               {user.background_img && (
                                 <div className="mt-4">
                                   <Image
-                                    src={user.background_img} // AWS image URL
+                                    src={user.background_img}
                                     alt="Notification"
                                     className="w-full h-auto"
                                   />

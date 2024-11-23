@@ -52,7 +52,7 @@ const AdminTable: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
-      setUserData(response.data.data);
+      setUserData(response.data.data || []);
     } catch (error) {
       console.error("Error fetching user data:", error);
     } finally {
@@ -97,8 +97,8 @@ const AdminTable: React.FC = () => {
                   <h2 className="text-xl font-semibold">Admin Table</h2>
                 </div>
                 <div>
-                  {" "}
-                  <AddAdmin onAddAdmin={handleAddAdmin} />{" "}
+                
+                  <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
@@ -148,7 +148,7 @@ const AdminTable: React.FC = () => {
                       </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
+                ) : Array.isArray(userData) && userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>

@@ -54,7 +54,7 @@ const FaqTable: React.FC = () => {
   const fetchUserData = async () => {
     try {
       const response = await apiHelperService.getAllFaq();
-      setUserData(response.data.data);
+      setUserData(response.data.data || []);
     } catch (error) {
       toast({
         title: "Error",
@@ -140,8 +140,8 @@ const FaqTable: React.FC = () => {
             <h2 className="text-xl font-semibold">FAQ Table</h2>
           </div>
           <div>
-            {" "}
-            <AddFaq />{" "}
+
+            <AddFaq/>
           </div>
         </div>
         <Card>
@@ -185,7 +185,7 @@ const FaqTable: React.FC = () => {
                   </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
+                ): Array.isArray(userData) && userData.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>

@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllBid: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/bid/all",
+      endpoint: "/bid",
       params,
     });
   },
