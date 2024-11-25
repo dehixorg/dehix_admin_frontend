@@ -22,3 +22,13 @@ export const getStatusBadge = (status: string | undefined) => {
             return  "bg-gray-500 hover:bg-gray-600" ;
     }
   };
+
+  export const getStatusButton = (status: string | undefined) => {
+    switch (status?.toLowerCase()) {
+        case "delete":
+            return "bg-red-800 text-white border border-red-800 hover:bg-red-600";
+        case "cancel":
+            return "bg-gray-999 text-white border border-gray-999 hover:bg-gray-800";
+        
+    }
+  };

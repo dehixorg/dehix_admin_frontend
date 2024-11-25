@@ -54,9 +54,24 @@ const AdminTable: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
+      if(response.data.data)
+      {
       setUserData(response?.data?.data||[]);
+      }
+      else
+      {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
+    }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     } finally {
       setLoading(false);
     }
@@ -257,10 +272,13 @@ const AdminTable: React.FC = () => {
       </div>
       <ConfirmationDialog
         isOpen={dialogOpen}
-        onConfirm={handleDelete}
-        onCancel={() => setDialogOpen(false)}
+        onFirstButton={handleDelete}
+        onSecondButton={() => setDialogOpen(false)}
         title="Confirm Deletion"
         description="Are you sure you want to delete this admin? This action cannot be undone."
+        firstButtonStatus="Delete"
+        secondButtonStatus="Cancel"
+
       />
     </div>
   );
