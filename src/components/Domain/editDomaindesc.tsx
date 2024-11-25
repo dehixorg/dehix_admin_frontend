@@ -14,19 +14,24 @@ import { Messages } from "@/utils/common/enum";
 interface EditDomainDescriptionProps {
   domainId: string;
   currentDescription: string;
+  isDialogopen: boolean;
   onDescriptionUpdate: (newDescription: string) => void;
+  setIsDialogOpen:(open:boolean)=>void;
+  
 }
 
 const EditDomainDescription: React.FC<EditDomainDescriptionProps> = ({
+  isDialogopen,
   domainId,
   currentDescription,
   onDescriptionUpdate,
+  setIsDialogOpen,
 }) => {
   const [description, setDescription] = useState(currentDescription);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  //const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-
+  
   const handleSave = async () => {
     setIsLoading(true);
     try {
@@ -55,9 +60,14 @@ const EditDomainDescription: React.FC<EditDomainDescriptionProps> = ({
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogopen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+      <Button
+  variant="outline"
+  onClick={() => {
+    setIsDialogOpen(true);
+  }}
+>
           Edit Description
         </Button>
       </DialogTrigger>

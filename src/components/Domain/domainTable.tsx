@@ -16,6 +16,7 @@ import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
 import CopyButton from "@/components/copybutton";
 import EditDomainDescription from "@/components/Domain/editDomaindesc";
+import { Button } from "@/components/ui/button";
 interface DomainData {
   _id: string;
   label: string;
@@ -30,8 +31,10 @@ const DomainTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
   const { toast } = useToast();
-
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedDomain, setSelectedDomain] = useState<DomainData | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   // Function to fetch domain data
   const fetchDomainData = async () => {
     setLoading(true);
@@ -220,42 +223,63 @@ const DomainTable: React.FC = () => {
                         <DeleteButtonIcon onClick={() => handleDelete(domain._id)} />
                       </TableCell>
                       <TableCell className="flex justify-end">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <ButtonIcon />
-                          </DialogTrigger>
-                          <DialogContent className="p-4">
-                            <DialogHeader>
-                              <DialogTitle>Domain Details</DialogTitle>
-                            </DialogHeader>
-                            <div>
-                              <p>
-                                <strong>Name:</strong> {domain.label}
-                              </p>
-                              <p>
-                                <strong>Description:</strong>{" "}
-                                {domain.description ||
-                                  "No description available"}
-                              </p>
-                            </div>
-                            <EditDomainDescription
-  
-    domainId={domain._id}
-    currentDescription={domain.description || ""}
-    onDescriptionUpdate={(newDescription:string) => {
-      setDomainData((prev) =>
-        prev.map((d) =>
-          d._id === domain._id ? { ...d, description: newDescription } : d
-        )
-      );
-    }}
-  />
-
-                          </DialogContent>
+                      <ButtonIcon variant="outline"
+                            onClick={() => {
+                              setSelectedDomain(domain);
+                              setSelectedIndex(index);
+                              setIsDialogOpen(true);
+                            }} />
+                        </TableCell>
+                        
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      
+                        <DialogContent className="p-4">
+  <DialogHeader>
+    <DialogTitle>Domain Details</DialogTitle>
+  </DialogHeader>
+  <div>
+    {selectedDomain ? (
+      <div>
+        <p>
+          <strong>Name:</strong> {selectedDomain.label}
+        </p>
+        <p>
+          <strong>Description:</strong>{" "}
+          {selectedDomain.description || "No description available"}
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            setIsDialogOpen(false);
+            setIsEditDialogOpen(true);
+          }}
+        >
+          Edit Description
+        </Button>
+      </div>
+    ) : (
+      <p>No domain selected.</p>
+    )}
+  </div>
+</DialogContent>
                         </Dialog>
-                      </TableCell>
+                        {isEditDialogOpen &&selectedDomain &&<EditDomainDescription
+                        isDialogopen= {isEditDialogOpen}
+                            setIsDialogOpen={() => setIsEditDialogOpen(false)} 
+                              domainId={selectedDomain._id}
+                              currentDescription={selectedDomain.description || ""}
+                              onDescriptionUpdate={(newDescription:string) => {
+                                setDomainData((prevDomainData) => {
+                                  const updatedDomainData = [...prevDomainData];
+                                  updatedDomainData[index].description = newDescription;
+                                  return updatedDomainData;
+                                });
+                              }}
+                            />}
                     </TableRow>
+                         
                   ))
+                  
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
@@ -274,6 +298,7 @@ const DomainTable: React.FC = () => {
           </div>
         </Card>
       </div>
+
     </div>
   );
 };
