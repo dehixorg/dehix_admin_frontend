@@ -28,7 +28,7 @@ import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/notification";
-
+import {imageSize} from "@/utils/common/enum";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -65,7 +65,8 @@ const allowedImageFormats = [
   'image/gif',
   'image/svg+xml',
 ];
-const maxImageSize = 2 * 1024 * 1024; // 1MB
+const maxImageSize = imageSize.maxImageSize; // 1MB
+
 interface AddNotifyProps {
   onAddNotify: () => void; // Prop to pass the new domain
 }
@@ -74,6 +75,7 @@ const AddNotify: React.FC<AddNotifyProps> = ({onAddNotify}) => {
   const [selectedPicture, setSelectedPicture] =useState<File | null>(null);
 const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 const fileInputRef = useRef<HTMLInputElement | null>(null);
+const sizeInMb = maxImageSize/(1024*1024);
   const {
     control,
     handleSubmit,
@@ -102,7 +104,7 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
         setSelectedPicture(file);
         setPreviewUrl(URL.createObjectURL(file));
       } else {
-        alert('File size exceeds the 2MB limit.');
+        alert(`File size exceeds the ${sizeInMb} limit.`);
       }
     } else {
       toast({
@@ -121,7 +123,7 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
         setSelectedPicture(file);
         setPreviewUrl(URL.createObjectURL(file));
       } else {
-        alert('File size exceeds the 2MB limit.');
+        alert(`File size exceeds the ${sizeInMb} limit.`);
       }
     } else {
       toast({
@@ -152,6 +154,8 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
           },
         },
       );
+      if(postResponse.data.data)
+      {
       const { Location } = postResponse.data.data;
       formData.append("background_img",Location);
 
@@ -177,6 +181,15 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
           variant: "destructive", // Red error message
         });
       }
+    }
+    else{
+     
+        toast({
+          title: "Error",
+          description: Messages.ADD_ERROR("notification"),
+          variant: "destructive", // Red error message
+        });
+    }
       
       
     } catch (error) {
@@ -293,6 +306,7 @@ const fileInputRef = useRef<HTMLInputElement | null>(null);
             <ImageIcon className="text-gray-500 w-5 h-5 mr-1" />
             <span className="text-gray-600 text-sm">Supported formats: JPG, PNG,JPEG</span>
           </div>
+          <span className="text-gray-600 text-sm">Maximum size -: {sizeInMb} Mb</span>
         </div>
         )}
       </div>

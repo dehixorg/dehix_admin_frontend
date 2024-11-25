@@ -33,6 +33,9 @@ export enum Api_Methods {
   DELETE = "DELETE",
   PATCH = "PATCH",
 }
+export enum imageSize {
+  maxImageSize = 2*1024*1024
+}
 
 export const Messages = {
   UPDATE_SUCCESS: (resource: string) =>

@@ -59,7 +59,18 @@ const NotifyTable: React.FC = () => {
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllNotification();
+        if(setUserData)
+        {
         setUserData(response.data.data||[]);
+        }
+        else
+        {
+          toast({
+            title: "Error",
+            description: Messages.FETCH_ERROR("notification"),
+            variant: "destructive", 
+          });
+        }
       } catch (error) {
         toast({
           title: "Error",
