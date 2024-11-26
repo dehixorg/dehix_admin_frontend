@@ -27,7 +27,6 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
@@ -105,9 +104,7 @@ const ProjectDomainTable: React.FC = () => {
       return updatedDomainData;
     });
     try {
-      await axiosInstance.put(`/domain/${labelId}`, {
-        status: checked ? statusType.active : statusType.inactive,
-      });
+      await apiHelperService.updateProjectomainStatus(labelId,checked?statusType.active:statusType.inactive);
       toast({
         title: "Success",
         description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,

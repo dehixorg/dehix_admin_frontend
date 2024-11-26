@@ -7,7 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { getStatusIcon } from "@/utils/common/utils";
 interface Education {
   __id: string;
   degree: string;
@@ -31,10 +32,20 @@ export function educationCard({
   education,
   ...props
 }: EducationCardProps) {
-  return (
+  return  (
     <Card className={cn("flex flex-col", className)} {...props}>
-      <CardHeader>
-        <CardTitle>{education.degree}</CardTitle>
+    <CardHeader>
+      <div className="flex items-center justify-between">
+      <CardTitle >{education.degree}</CardTitle>
+        <Tooltip>
+          <TooltipTrigger>
+            <span>{getStatusIcon(education.verificationStatus)}</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span >{education.verificationStatus}</span>
+          </TooltipContent>
+        </Tooltip>
+        </div>
         <CardDescription>{education.universityName}</CardDescription>
       </CardHeader>
       <CardContent>
@@ -50,13 +61,10 @@ export function educationCard({
           {new Date(education.endDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>Grade:</strong> {education.grade}
+          <strong>Grade:</strong> {education.grade||"No Data Available"}
         </p>
         <p>
-          <strong>Verification Status:</strong> {education.verificationStatus}
-        </p>
-        <p>
-          <strong>Comments:</strong> {education.comments}
+          <strong>Comments:</strong> {education.comments||"No Data Available"}
         </p>
       </CardContent>
       <CardFooter>
