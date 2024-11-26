@@ -272,12 +272,12 @@ const AdminTable: React.FC = () => {
       </div>
       <ConfirmationDialog
         isOpen={dialogOpen}
-        onFirstButton={handleDelete}
-        onSecondButton={() => setDialogOpen(false)}
+        onConfirm={handleDelete}
+        onCancel={() => setDialogOpen(false)}
         title="Confirm Deletion"
         description="Are you sure you want to delete this admin? This action cannot be undone."
-        firstButtonStatus="Delete"
-        secondButtonStatus="Cancel"
+        confirmButtonName="Delete"
+        cancelButtonName="Cancel"
 
       />
     </div>

@@ -14,36 +14,36 @@ import { getStatusButton } from "@/utils/common/utils";
 
 interface ConfirmationDialogProps {
   isOpen: boolean;
-  onFirstButton: () => void;
-  onSecondButton: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
   title?: string;
   description?: string;
-  firstButtonStatus?:string;
-  secondButtonStatus?:string;
+  confirmButtonName?:string;
+  cancelButtonName?:string;
 }
 
 const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   isOpen,
-  onFirstButton,
-  onSecondButton,
+  onConfirm,
+  onCancel,
   title = "Are you sure?",
   description = "This action cannot be undone.",
-  firstButtonStatus,
-  secondButtonStatus,
+  confirmButtonName,
+  cancelButtonName,
 }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onSecondButton}>
+    <Dialog open={isOpen} onOpenChange={ onCancel}>
       <DialogContent className="p-4">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button  className= {getStatusButton(firstButtonStatus)} onClick={onFirstButton}>
-            {firstButtonStatus}
+          <Button  className= {getStatusButton(confirmButtonName)} onClick={ onConfirm}>
+            {confirmButtonName}
           </Button>
-          <Button   className={getStatusButton(secondButtonStatus)} onClick={onSecondButton}>
-            {secondButtonStatus}
+          <Button   className={getStatusButton(cancelButtonName)} onClick={ onCancel}>
+            {cancelButtonName}
           </Button>
         </DialogFooter>
       </DialogContent>
