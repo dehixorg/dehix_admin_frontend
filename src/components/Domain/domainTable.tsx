@@ -33,7 +33,6 @@ const DomainTable: React.FC = () => {
   const { toast } = useToast();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedDomain, setSelectedDomain] = useState<DomainData | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   // Function to fetch domain data
   const fetchDomainData = async () => {
@@ -74,7 +73,14 @@ const DomainTable: React.FC = () => {
       });
     }
   };
-
+  const handleDescButtonClick = (index: number) => {
+    setSelectedIndex(index);
+    setIsDialogOpen(true);
+  };
+  const handleEditButtonClick = () => {
+    setIsDialogOpen(false);
+    setIsEditDialogOpen(true);
+  };
   const handleSwitchChange = async (
     labelId: string,
     checked: boolean,
@@ -225,9 +231,7 @@ const DomainTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                       <ButtonIcon variant="outline"
                             onClick={() => {
-                              setSelectedDomain(domain);
-                              setSelectedIndex(index);
-                              setIsDialogOpen(true);
+                                    handleDescButtonClick(index);
                             }} />
                         </TableCell>
                         
@@ -238,20 +242,19 @@ const DomainTable: React.FC = () => {
     <DialogTitle>Domain Details</DialogTitle>
   </DialogHeader>
   <div>
-    {selectedDomain ? (
+    {selectedIndex ? (
       <div>
         <p>
-          <strong>Name:</strong> {selectedDomain.label}
+          <strong>Name:</strong> {domainData[index].label}
         </p>
         <p>
           <strong>Description:</strong>{" "}
-          {selectedDomain.description || "No description available"}
+          {domainData[index].description || "No description available"}
         </p>
         <Button
           variant="outline"
           onClick={() => {
-            setIsDialogOpen(false);
-            setIsEditDialogOpen(true);
+            handleEditButtonClick();
           }}
         >
           Edit Description
@@ -263,11 +266,11 @@ const DomainTable: React.FC = () => {
   </div>
 </DialogContent>
                         </Dialog>
-                        {isEditDialogOpen &&selectedDomain &&<EditDomainDescription
+                        {isEditDialogOpen &&selectedIndex &&<EditDomainDescription
                         isDialogopen= {isEditDialogOpen}
                             setIsDialogOpen={() => setIsEditDialogOpen(false)} 
-                              domainId={selectedDomain._id}
-                              currentDescription={selectedDomain.description || ""}
+                              domainId={domainData[index]._id}
+                              currentDescription={domainData[index].description || ""}
                               onDescriptionUpdate={(newDescription:string) => {
                                 setDomainData((prevDomainData) => {
                                   const updatedDomainData = [...prevDomainData];
