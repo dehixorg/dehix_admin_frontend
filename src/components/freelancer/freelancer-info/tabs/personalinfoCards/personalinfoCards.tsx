@@ -36,22 +36,19 @@ export function UserProfilePage({
           {profile ? (
             <>
               <p>
-                <strong>First Name:</strong> {profile.firstName}
+                <strong>First Name:</strong> {profile.firstName||"No Data Available"}
               </p>
               <p>
-                <strong>Last Name:</strong> {profile.lastName}
+                <strong>Last Name:</strong> {profile.lastName||"No Data Available"}
               </p>
               <p>
-                <strong>User Name:</strong> {profile.userName}
+                <strong>User Name:</strong> {profile.userName||"No Data Available"}
               </p>
               <p>
-                <strong>Password:</strong> {profile.password}
+                <strong>Email:</strong> {profile.email||"No Data Available"}
               </p>
               <p>
-                <strong>Email:</strong> {profile.email}
-              </p>
-              <p>
-                <strong>Phone:</strong> {profile.phone}
+                <strong>Phone:</strong> {profile.phone||"No Data Available"}
               </p>
             </>
           ) : (
@@ -70,13 +67,13 @@ export function UserProfilePage({
                 {new Date(profile.dob).toLocaleDateString()}
               </p>
               <p>
-                <strong>Per Hour Price:</strong> {profile.perHourPrice}
+                <strong>Per Hour Price:</strong> {profile.perHourPrice||"No Data Available"}
               </p>
               <p>
-                <strong>Connects:</strong> {profile.connects}
+                <strong>Connects:</strong> {profile.connects||"No Data Available"}
               </p>
               <p>
-                <strong>Work Experience:</strong> {profile.workExperience}
+                <strong>Work Experience:</strong> {profile.workExperience||"No Data Available"}
               </p>
             </>
           ) : (
