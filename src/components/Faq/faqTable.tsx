@@ -54,7 +54,10 @@ const FaqTable: React.FC = () => {
   const fetchUserData = async () => {
     try {
       const response = await apiHelperService.getAllFaq();
+
       setUserData(response.data.data || []);
+      setUserData(response?.data?.data||[]);
+      
     } catch (error) {
       toast({
         title: "Error",
@@ -81,7 +84,6 @@ const FaqTable: React.FC = () => {
       });
     }
   };
-
   const handleSwitchChange = async (
     labelId: string,
     checked: boolean,

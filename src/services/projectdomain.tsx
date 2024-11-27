@@ -23,7 +23,16 @@ export const apiHelperService = {
   deleteProjectdomain: async (projectDomain_id: string) => {
     return apiService({
       method: Api_Methods.DELETE,
-      endpoint: `/projectDomain/${projectDomain_id}`,
+      endpoint: `/projectdomain/${projectDomain_id}`,
+    });
+  },
+  updateProjectomainStatus: async (labelId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/projectdomain/${labelId}`,
+      body: {
+        status,
+      },
     });
   },
 };
