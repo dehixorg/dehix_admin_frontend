@@ -137,7 +137,7 @@ const FaqTable: React.FC = () => {
       <div className="mb-8 mt-4 mr-4">
         <div className="flex items-center justify-between mb-4 ">
           <div className="flex-grow">
-            <h2 className="text-xl font-semibold">FAQ Table</h2>
+            <h2 className="table-title">FAQ Table</h2>
           </div>
           <div>
 
@@ -233,7 +233,7 @@ const FaqTable: React.FC = () => {
                                 <strong>Answer:</strong> {user.answer}
                               </p>
                               <p>
-                                <strong>URL Count:</strong>{" "}
+                                <strong>URL Count:</strong>
                                 {user.importantUrl.length}
                               </p>
                               <ul className="list-disc list-inside">
@@ -244,7 +244,7 @@ const FaqTable: React.FC = () => {
                                         <strong>URL Name:</strong> {url.urlName}
                                       </p>
                                       <p>
-                                        <strong>URL:</strong>{" "}
+                                        <strong>URL:</strong>
                                         <a
                                           href={url.url}
                                           target="_blank"

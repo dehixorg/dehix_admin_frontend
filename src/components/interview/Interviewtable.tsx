@@ -76,8 +76,8 @@ const InterviewTable: React.FC = () => {
   return (
     <div className="px-4">
       <div className="mb-8 mt-4 mr-4">
-        <div className="flex-grow mb-4">
-          <h2 className="text-xl font-semibold">Interview Table</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="table-title">Interview Table</h2>
         </div>
         <Card>
           <div className="lg:overflow-x-auto">
@@ -174,7 +174,7 @@ const InterviewTable: React.FC = () => {
                             ) : (
                                 "No Data Available"
                             )}
-                          </TableCell>{" "}
+                          </TableCell>
                           <TableCell>
                             {interview.skill || "No Data Available"}
                           </TableCell>
@@ -198,45 +198,45 @@ const InterviewTable: React.FC = () => {
                                 </DialogHeader>
                                 <div>
                                   <p>
-                                    <strong>ID:</strong>{" "}
+                                    <strong>ID:</strong>
                                     {interview._id || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Interviewer:</strong>{" "}
+                                    <strong>Interviewer:</strong>
                                     {interview.interviewer || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Interviewee:</strong>{" "}
+                                    <strong>Interviewee:</strong>
                                     {interview.interviewee || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Skill:</strong>{" "}
+                                    <strong>Skill:</strong>
                                     {interview.skill || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Interview Date:</strong>{" "}
+                                    <strong>Interview Date:</strong>
                                     {new Date(
                                         interview.interviewDate,
                                     ).toLocaleString() || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Rating:</strong>{" "}
+                                    <strong>Rating:</strong>
                                     {interview.rating == null
                                         ? "No Data Available"
                                         : interview.rating}
                                   </p>
                                   <p>
-                                    <strong>Comments:</strong>{" "}
+                                    <strong>Comments:</strong>
                                     {interview.comments || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Created At:</strong>{" "}
+                                    <strong>Created At:</strong>
                                     {new Date(
                                         interview.createdAt,
                                     ).toLocaleString() || "No Data Available"}
                                   </p>
                                   <p>
-                                    <strong>Updated At:</strong>{" "}
+                                    <strong>Updated At:</strong>
                                     {new Date(
                                         interview.updatedAt,
                                     ).toLocaleString() || "No Data Available"}

@@ -94,7 +94,7 @@ const AdminTable: React.FC = () => {
             <div className="mb-8 mt-4 ">
               <div className="flex items-center justify-between mb-4 ">
                 <div className="flex-grow">
-                  <h2 className="text-xl font-semibold">Admin Table</h2>
+                  <h2 className="table-title">Admin Table</h2>
                 </div>
                 <div>
                 

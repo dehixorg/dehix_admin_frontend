@@ -133,7 +133,7 @@ const NotifyTable: React.FC = () => {
     <div className="px-4">
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Notification Table</h2>
+          <h2 className="table-title">Notification Table</h2>
           <AddNotify />
         </div>
         <Card>
@@ -233,7 +233,7 @@ const NotifyTable: React.FC = () => {
                                 </div>
                               )}
                               <p>
-                                <strong>URL Count:</strong>{" "}
+                                <strong>URL Count:</strong>
                                 {user.importantUrl.length}
                               </p>
                               <ul className="list-disc list-inside">
@@ -244,7 +244,7 @@ const NotifyTable: React.FC = () => {
                                         <strong>URL Name:</strong> {url.urlName}
                                       </p>
                                       <p>
-                                        <strong>URL:</strong>{" "}
+                                        <strong>URL:</strong>
                                         <a
                                           href={url.url}
                                           target="_blank"
