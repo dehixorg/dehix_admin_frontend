@@ -86,7 +86,10 @@ const BidsTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="table-title">Bid Table</h2>
+        </div>
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
@@ -103,143 +106,143 @@ const BidsTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center">
+                        Loading...
+                      </TableCell>
+                    </TableRow>
                 ) : bidData.length > 0 ? (
-                  bidData.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          <Tooltip>
-                            <TooltipTrigger>
-                              <span>{formatID(user._id)}</span>
-                            </TooltipTrigger>
+                    bidData.map((user, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <span>{formatID(user._id)}</span>
+                                </TooltipTrigger>
 
-                            <CopyButton id={user._id} />
+                                <CopyButton id={user._id}/>
 
-                            <TooltipContent>
-                              {user._id || "No Data Available"}
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                          <div className="flex items-center space-x-2">
-                        <Badge className= {getStatusBadge(user.bid_status)}>
-                        {user.bid_status}
-                        </Badge>
-                       </div>
-                      </TableCell>
-                    
-                      <TableCell>
-                        {user.project_id ? (
-                          <div className="flex items-center space-x-2">
-                            <Tooltip>
-                              <TooltipTrigger>
+                                <TooltipContent>
+                                  {user._id || "No Data Available"}
+                                </TooltipContent>
+                              </Tooltip>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Badge className={getStatusBadge(user.bid_status)}>
+                                {user.bid_status}
+                              </Badge>
+                            </div>
+                          </TableCell>
+
+                          <TableCell>
+                            {user.project_id ? (
+                                <div className="flex items-center space-x-2">
+                                  <Tooltip>
+                                    <TooltipTrigger>
                                 <span
-                                  onClick={() => handleproject(user.project_id)}
-                                  className="cursor-pointer text-blue-500 hover:underline"
+                                    onClick={() => handleproject(user.project_id)}
+                                    className="cursor-pointer text-blue-500 hover:underline"
                                 >
                                   <span>{formatID(user.project_id || "")}</span>
                                 </span>
-                              </TooltipTrigger>
+                                    </TooltipTrigger>
 
-                              <CopyButton id={user.project_id || ""} />
+                                    <CopyButton id={user.project_id || ""}/>
 
-                              <TooltipContent>
-                                {user.project_id || "No Data Available"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                        ) : (
-                          "No Data Available"
-                        )}
-                      </TableCell>
+                                    <TooltipContent>
+                                      {user.project_id || "No Data Available"}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                            ) : (
+                                "No Data Available"
+                            )}
+                          </TableCell>
 
-                      <TableCell>
-                        {user.bidder_id ? (
-                          <div className="flex items-center space-x-2">
-                            <Tooltip>
-                              <TooltipTrigger>
+                          <TableCell>
+                            {user.bidder_id ? (
+                                <div className="flex items-center space-x-2">
+                                  <Tooltip>
+                                    <TooltipTrigger>
                                 <span
-                                  onClick={() => handlebidder(user.bidder_id)}
-                                  className="cursor-pointer text-blue-500 hover:underline"
+                                    onClick={() => handlebidder(user.bidder_id)}
+                                    className="cursor-pointer text-blue-500 hover:underline"
                                 >
                                   <span>{formatID(user.bidder_id || "")}</span>
                                 </span>
-                              </TooltipTrigger>
+                                    </TooltipTrigger>
 
-                              <CopyButton id={user.bidder_id || ""} />
+                                    <CopyButton id={user.bidder_id || ""}/>
 
-                              <TooltipContent>
-                                {user.bidder_id || "No Data Available"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                        ) : (
-                          "No Data Available"
-                        )}
-                      </TableCell>
+                                    <TooltipContent>
+                                      {user.bidder_id || "No Data Available"}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                            ) : (
+                                "No Data Available"
+                            )}
+                          </TableCell>
 
-                      <TableCell>{user.current_price}</TableCell>
-                      <TableCell>
-                        {user.domain_id ? (
-                          <div className="flex items-center space-x-2">
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <span>{formatID(user.domain_id || "")}</span>
-                              </TooltipTrigger>
+                          <TableCell>{user.current_price}</TableCell>
+                          <TableCell>
+                            {user.domain_id ? (
+                                <div className="flex items-center space-x-2">
+                                  <Tooltip>
+                                    <TooltipTrigger>
+                                      <span>{formatID(user.domain_id || "")}</span>
+                                    </TooltipTrigger>
 
-                              <CopyButton id={user.domain_id || ""} />
+                                    <CopyButton id={user.domain_id || ""}/>
 
-                              <TooltipContent>
-                                {user.domain_id || "No Data Available"}
-                              </TooltipContent>
-                            </Tooltip>
-                          </div>
-                        ) : (
-                          "No Data Available"
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <ButtonIcon />
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Bid Description</DialogTitle>
-                              <DialogDescription>
-                                {
-                                  // /*user.description*/ "this is a desc" ||
-                                  "No description available"
-                                }
-                              </DialogDescription>
-                            </DialogHeader>
-                          </DialogContent>
-                        </Dialog>
+                                    <TooltipContent>
+                                      {user.domain_id || "No Data Available"}
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </div>
+                            ) : (
+                                "No Data Available"
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <ButtonIcon/>
+                              </DialogTrigger>
+                              <DialogContent>
+                                <DialogHeader>
+                                  <DialogTitle>Bid Description</DialogTitle>
+                                  <DialogDescription>
+                                    {
+                                      // /*user.description*/ "this is a desc" ||
+                                      "No description available"
+                                    }
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          </TableCell>
+                        </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center">
+                        <div className="text-center py-10 w-full mt-10">
+                          <PackageOpen
+                              className="mx-auto text-gray-500"
+                              size="100"
+                          />
+                          <p className="text-gray-500">
+                            No data available. <br/>
+                            This feature will be available soon. <br/>
+                            Here you can get directly hired for different roles.
+                          </p>
+                        </div>
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available. <br />
-                          This feature will be available soon. <br />
-                          Here you can get directly hired for different roles.
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>
