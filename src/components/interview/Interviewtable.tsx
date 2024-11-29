@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
-
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
 import {
@@ -11,15 +10,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Tooltip,
   TooltipTrigger,
@@ -28,6 +20,7 @@ import {
 import { apiHelperService } from "@/services/interview";
 import { formatID } from "@/utils/common/enum";
 import CopyButton from "@/components/copybutton";
+import InterviewTableSkeleton from "@/utils/common/skeleton"; // Import the new skeleton component
 
 interface InterviewData {
   _id: string;
@@ -95,11 +88,7 @@ const InterviewTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        Loading...
-                      </TableCell>
-                    </TableRow>
+                  <InterviewTableSkeleton /> // Use the new skeleton component
                 ) : noData ? (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center">
@@ -166,103 +155,88 @@ const InterviewTable: React.FC = () => {
 
                                     <CopyButton id={interview.interviewee || ""}/>
 
-                                    <TooltipContent>
-                                      {interview.interviewee || "No Data Available"}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </div>
-                            ) : (
-                                "No Data Available"
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {interview.skill || "No Data Available"}
-                          </TableCell>
-                          <TableCell>
-                            {new Date(interview.interviewDate).toLocaleString() ||
-                                "No Data Available"}
-                          </TableCell>
-                          <TableCell className="text-center">
-                            {interview.rating == null
-                                ? "No Data Available"
-                                : interview.rating}
-                          </TableCell>
-                          <TableCell>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <ButtonIcon/>
-                              </DialogTrigger>
-                              <DialogContent className="p-4">
-                                <DialogHeader>
-                                  <DialogTitle>Interview Details</DialogTitle>
-                                </DialogHeader>
-                                <div>
-                                  <p>
-                                    <strong>ID:</strong>
-                                    {interview._id || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Interviewer:</strong>
-                                    {interview.interviewer || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Interviewee:</strong>
-                                    {interview.interviewee || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Skill:</strong>
-                                    {interview.skill || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Interview Date:</strong>
-                                    {new Date(
-                                        interview.interviewDate,
-                                    ).toLocaleString() || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Rating:</strong>
-                                    {interview.rating == null
-                                        ? "No Data Available"
-                                        : interview.rating}
-                                  </p>
-                                  <p>
-                                    <strong>Comments:</strong>
-                                    {interview.comments || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Created At:</strong>
-                                    {new Date(
-                                        interview.createdAt,
-                                    ).toLocaleString() || "No Data Available"}
-                                  </p>
-                                  <p>
-                                    <strong>Updated At:</strong>
-                                    {new Date(
-                                        interview.updatedAt,
-                                    ).toLocaleString() || "No Data Available"}
-                                  </p>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
-                          </TableCell>
-                        </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        <div className="text-center py-10 w-full mt-10">
-                          <PackageOpen
-                              className="mx-auto text-gray-500"
-                              size="100"
-                          />
-                          <p className="text-gray-500">
-                            No data available.
-                            <br/> This feature will be available soon.
-                          </p>
-                        </div>
+                              <TooltipContent>
+                                {interview.interviewee || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {interview.skill || "No Data Available"}
+                      </TableCell>
+                      <TableCell>
+                        {new Date(interview.interviewDate).toLocaleString() ||
+                          "No Data Available"}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {interview.rating == null
+                          ? "No Data Available"
+                          : interview.rating}
+                      </TableCell>
+                      <TableCell>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <ButtonIcon />
+                          </DialogTrigger>
+                          <DialogContent className="p-4">
+                            <DialogHeader>
+                              <DialogTitle>Interview Details</DialogTitle>
+                            </DialogHeader>
+                            <div>
+                              <p>
+                                <strong>ID:</strong>{" "}
+                                {interview._id || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Interviewer:</strong>{" "}
+                                {interview.interviewer || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Interviewee:</strong>{" "}
+                                {interview.interviewee || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Skill:</strong>{" "}
+                                {interview.skill || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Interview Date:</strong>{" "}
+                                {new Date(
+                                  interview.interviewDate,
+                                ).toLocaleString() || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Rating:</strong>{" "}
+                                {interview.rating == null
+                                  ? "No Data Available"
+                                  : interview.rating}
+                              </p>
+                              <p>
+                                <strong>Comments:</strong>{" "}
+                                {interview.comments || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Created At:</strong>{" "}
+                                {new Date(
+                                  interview.createdAt,
+                                ).toLocaleString() || "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Updated At:</strong>{" "}
+                                {new Date(
+                                  interview.updatedAt,
+                                ).toLocaleString() || "No Data Available"}
+                              </p>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
-                )}
+                  ))
+                ) : null}
               </TableBody>
             </Table>
           </div>
