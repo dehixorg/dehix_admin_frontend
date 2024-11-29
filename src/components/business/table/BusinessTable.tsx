@@ -23,7 +23,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-
+import { Button } from "@/components/ui/button";
+import StatusDropdown from "@/components/dropdown";
 interface SkillDomainData {
   _id: string;
   name: string;
@@ -41,12 +42,14 @@ interface UserData {
   phone: string;
   skills?: SkillDomainData[];
   domains?: SkillDomainData[];
+  status: string;
 }
 
 const BusinessTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [selectedStatus, setSelectedStatus] = useState("Active");
   const { toast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
@@ -66,6 +69,11 @@ const BusinessTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleStatusChange = (newStatus: string) => {
+    setSelectedStatus(newStatus);
+    console.log(`Status changed to: ${newStatus}`);
+    // Optionally, send this updated status to your backend API
+  };
 
   // Handle button click to navigate to tabs page with the business ID
   const handleViewBusiness = (id: string) => {
@@ -85,6 +93,7 @@ const BusinessTable: React.FC = () => {
                   <TableHead>Phone No.</TableHead>
                   <TableHead className="text-center">Skills</TableHead>
                   <TableHead className="text-center">Domains</TableHead>
+                  <TableHead className="w-[40px]"></TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -169,6 +178,16 @@ const BusinessTable: React.FC = () => {
                           "0"
                         )}
                       </TableCell>{" "}
+                      <TableCell>
+  <StatusDropdown
+    currentStatus={user.status} // Use dynamic data for current status
+    options={["Active", "Inactive", "Pending"]} // Add other statuses if required
+    onChange={(newStatus) => {
+      handleStatusChange(newStatus);
+    }}
+  />
+</TableCell>
+
                       <TableCell>
                         <ButtonIcon
                           onClick={() => handleViewBusiness(user._id)}
