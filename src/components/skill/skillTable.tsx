@@ -145,11 +145,13 @@ const SkillTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
-            <AddSkill onAddSkill={fetchSkillData} skillData={SkillData} />{" "}
-            {/* Pass the callback */}
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="table-title">Skill Table</h2>
+          </div>
+          <div>
+            <AddSkill onAddSkill={fetchSkillData} skillData={SkillData} />
           </div>
         </div>
         <Card>
@@ -258,7 +260,7 @@ const SkillTable: React.FC = () => {
                                 <strong>Name:</strong> {Skill.label}
                               </p>
                               <p>
-                                <strong>Description:</strong>{" "}
+                                <strong>Description:</strong>
                                 {Skill.description
                                   ? Skill.description
                                   : "No description available"}

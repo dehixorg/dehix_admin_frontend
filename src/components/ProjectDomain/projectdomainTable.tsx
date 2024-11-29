@@ -133,13 +133,16 @@ const ProjectDomainTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="table-title">Project Domain Table</h2>
+          </div>
+          <div>
             <AddProjectDomain
               onAddProjectDomain={fetchDomainData}
               domainData={domainData}
-            />{" "}
+            />
             {/* Pass the callback */}
           </div>
         </div>
@@ -249,7 +252,7 @@ const ProjectDomainTable: React.FC = () => {
                                 <strong>Name:</strong> {domain.label}
                               </p>
                               <p>
-                                <strong>Description:</strong>{" "}
+                                <strong>Description:</strong>
                                 {domain.description
                                   ? domain.description
                                   : "No description available"}

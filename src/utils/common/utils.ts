@@ -25,6 +25,16 @@ export const getStatusBadge = (status: string | undefined) => {
     }
   };
 
+  export const getStatusButton = (status: string | undefined) => {
+    switch (status?.toLowerCase()) {
+        case "delete":
+            return "bg-red-800 text-white border border-red-800 hover:bg-red-600";
+        case "cancel":
+            return "bg-gray-999 text-white border border-gray-999 hover:bg-gray-800";
+        
+    }
+  };
+
   export const getStatusIcon = (status: string): JSX.Element | null => {
     switch (status?.toLowerCase()) {
       case "added":

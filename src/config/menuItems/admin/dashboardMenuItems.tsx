@@ -12,6 +12,7 @@ import {
   Gavel,
   NotebookPen,
   UserCheck,
+  ShieldCheck
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -78,6 +79,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/projectdomain",
     icon: <UserCheck className="h-5 w-5" />,
     label: "Project Domain",
+  },
+  {
+    href: "/verification",
+    icon: <ShieldCheck className="h-5 w-5" />,
+    label: "Verification",
   },
 ];
 
