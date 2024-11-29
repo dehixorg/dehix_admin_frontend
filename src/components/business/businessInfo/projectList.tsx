@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye button
 import { formatID, Messages } from "@/utils/common/enum";
+import { Badge } from "@/components/ui/badge";
+import {getStatusBadge} from "@/utils/common/utils"
 
 interface Project {
   _id: string;
@@ -53,7 +55,6 @@ function ProjectList({ id }: { id: string }) {
         if (response.data.data) {
           setProject(response.data.data);
         } else {
-          // should i use throw here ?
           toast({
             title: "Error",
             description: Messages.FETCH_ERROR("projects"),
@@ -73,7 +74,6 @@ function ProjectList({ id }: { id: string }) {
 
     fetchProjects();
   }, [id]);
-
   return (
     <Card className=" p-4">
       {" "}
@@ -117,7 +117,11 @@ function ProjectList({ id }: { id: string }) {
                     </Tooltip>
                   </TableCell>
                   <TableCell>{project1.projectName}</TableCell>
-                  <TableCell>{project1.status}</TableCell>
+                  <TableCell>
+                    <Badge className={getStatusBadge(project1.status)}>
+                    {project1.status}
+                    </Badge>
+                    </TableCell>
 
                   <TableCell>
                     {new Date(project1.createdAt).toLocaleString()}

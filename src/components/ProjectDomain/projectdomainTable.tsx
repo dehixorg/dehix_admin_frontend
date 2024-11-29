@@ -25,12 +25,11 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { axiosInstance } from "@/lib/axiosinstance";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
-import ProjectDomainTableSkeleton from "@/utils/common/ProjectDomainTableSkeleton"; // Import the new skeleton component
+import ProjectDomainTableSkeleton from "@/utils/common/skeleton"; // Import the new skeleton component
 
 interface DomainData {
   _id: string;
@@ -106,9 +105,7 @@ const ProjectDomainTable: React.FC = () => {
       return updatedDomainData;
     });
     try {
-      await axiosInstance.put(`/domain/${labelId}`, {
-        status: checked ? statusType.active : statusType.inactive,
-      });
+      await apiHelperService.updateProjectomainStatus(labelId,checked?statusType.active:statusType.inactive);
       toast({
         title: "Success",
         description: `Domain status updated to ${
@@ -139,13 +136,16 @@ const ProjectDomainTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="table-title">Project Domain Table</h2>
+          </div>
+          <div>
             <AddProjectDomain
               onAddProjectDomain={fetchDomainData}
               domainData={domainData}
-            />{" "}
+            />
             {/* Pass the callback */}
           </div>
         </div>
@@ -251,7 +251,7 @@ const ProjectDomainTable: React.FC = () => {
                                 <strong>Name:</strong> {domain.label}
                               </p>
                               <p>
-                                <strong>Description:</strong>{" "}
+                                <strong>Description:</strong>
                                 {domain.description
                                   ? domain.description
                                   : "No description available"}

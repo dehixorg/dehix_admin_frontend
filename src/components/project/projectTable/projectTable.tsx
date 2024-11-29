@@ -17,7 +17,9 @@ import {
 import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
   _id: string;
   projectName: string;
@@ -76,7 +78,10 @@ const ProjectTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex-grow mb-4">
+          <h2 className="table-title">Project Table</h2>
+        </div>
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
@@ -91,56 +96,60 @@ const ProjectTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  // Render Skeletons when loading
-                  <>
-                    {Array.from({ length: 9 }).map((_, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <Skeleton className="h-5 w-20" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-6 w-12 " />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-5 w-40" />
-                        </TableCell>
-                        <TableCell>
-                          <Skeleton className="h-5 w-16" />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </>
+                    // Render Skeletons when loading
+                    <>
+                      {Array.from({length: 9}).map((_, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Skeleton className="h-5 w-20"/>
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-6 w-12 "/>
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-40"/>
+                            </TableCell>
+                            <TableCell>
+                              <Skeleton className="h-5 w-16"/>
+                            </TableCell>
+                          </TableRow>
+                      ))}
+                    </>
                 ) : userData?.length > 0 ? (
-                  userData.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{user.projectName}</TableCell>
-                      <TableCell>{user.companyName}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.status}</TableCell>
-                      <TableCell className="flex justify-end">
-                        <ButtonIcon
-                          onClick={() => handleRedirect(user._id)}
-                        ></ButtonIcon>
+                    userData.map((user, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{user.projectName}</TableCell>
+                          <TableCell>{user.companyName}</TableCell>
+                          <TableCell>{user.email}</TableCell>
+                          <TableCell>
+                            <Badge className={getStatusBadge(user.status)}>
+                              {user.status}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="flex justify-end">
+                            <ButtonIcon
+                                onClick={() => handleRedirect(user._id)}
+                            ></ButtonIcon>
+                          </TableCell>
+                        </TableRow>
+                    ))
+                ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center">
+                        <div className="text-center py-10 w-full mt-10">
+                          <PackageOpen
+                              className="mx-auto text-gray-500"
+                              size="100"
+                          />
+                          <p className="text-gray-500">
+                            No data available.
+                            <br/> This feature will be available soon.
+                            <br/>
+                            Here you can get directly hired for different roles.
+                          </p>
+                        </div>
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                          <br />
-                          Here you can get directly hired for different roles.
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
                 )}
               </TableBody>
             </Table>

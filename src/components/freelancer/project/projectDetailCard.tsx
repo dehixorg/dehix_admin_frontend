@@ -20,21 +20,8 @@ export interface ProjectDetailCardProps {
   domains: string[];
   skills: string[];
 }
+import {getStatusBadge} from "@/utils/common/utils"
 
-const getStatusBadge = (status: string | undefined) => {
-  switch (status?.toLowerCase()) {
-    case "active":
-      return { text: "ACTIVE", className: "bg-blue-500 hover:bg-blue-600" };
-    case "pending":
-      return { text: "PENDING", className: "bg-warning hover:bg-warning" };
-    case "completed":
-      return { text: "COMPLETED", className: "bg-success hover:bg-success" };
-    case "rejected":
-      return { text: "REJECTED", className: "bg-red-500 hover:bg-red-600" };
-    default:
-      return { text: "UNKNOWN", className: "bg-gray-500 hover:bg-gray-600" };
-  }
-};
 function ProjectDetailCard({
   projectName,
   description,
@@ -45,7 +32,6 @@ function ProjectDetailCard({
   domains,
   skills,
 }: ProjectDetailCardProps) {
-  const { text, className } = getStatusBadge(status);
 
   return (
     <Card className="p-4">
@@ -53,7 +39,7 @@ function ProjectDetailCard({
         <CardTitle className="text-2xl font-bold">{projectName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <Badge className={className}>{text}</Badge>
+        <Badge className= {getStatusBadge(status)}>status</Badge>
         <div className="mt-4 grid grid-cols-1 lg:grid-cols-4 xl:grid-cols-4 gap-6">
           <div className="lg:col-span-full">
             <p className="mb-6">{description}</p>

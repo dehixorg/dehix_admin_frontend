@@ -6,18 +6,12 @@ import { Api_Methods } from "../utils/common/enum"; // Importing Api_Methods
 import { apiService } from "./apiService";
 
 export const apiHelperService = {
-  getAllFreelancers: async (params = {}) => {
+  getAllVerification: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/freelancer",
+      endpoint: "/verification/oracle",
       params,
     });
   },
-
-  getAllFreelancerPersonalInfo: async (itemId: string) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: `/freelancer/${itemId}`,
-    });
-  },
+ 
 };

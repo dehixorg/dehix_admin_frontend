@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/table";
 
 import CopyButton from "@/components/copybutton";
-
+import { Badge } from "@/components/ui/badge";
+import {getStatusBadge} from "@/utils/common/utils"
 interface HireFreelancerInfo {
   freelancer: string;
   status: string;
@@ -34,6 +35,7 @@ function Hirefreelancer({
       </div>
     );
   }
+  
   return (
     <Card className="w-full max-w p-4">
       <CardHeader>
@@ -54,6 +56,7 @@ function Hirefreelancer({
           <TableBody>
             { 
               hireFreelancers.map((hireFreelancer, index) => (
+                
                 <TableRow
                   key={hireFreelancer._id}
                   className="border-b border-gray-700"
@@ -66,19 +69,13 @@ function Hirefreelancer({
                     {hireFreelancer.freelancer}
                   </TableCell>
                   <TableCell className="py-2">
-                    <span
+                    <Badge
                       className={
-                        hireFreelancer.status === "Accepted"
-                          ? "text-green-500"
-                          : hireFreelancer.status === "Rejected"
-                            ? "text-red-500"
-                            : hireFreelancer.status === "Pending"
-                              ? "text-yellow-500"
-                              : ""
+                        getStatusBadge(hireFreelancer.status)
                       }
                     >
                       {hireFreelancer.status}
-                    </span>
+                    </Badge>
                   </TableCell>
                   <TableCell className="py-2">
                     <div className="flex items-center space-x-2">
