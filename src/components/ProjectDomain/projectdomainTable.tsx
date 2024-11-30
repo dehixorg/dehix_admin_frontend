@@ -32,6 +32,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
+import EditDomainDescription from "./editProjectDomainDesc";
 interface DomainData {
   _id: string;
   label: string;
@@ -258,6 +259,18 @@ const ProjectDomainTable: React.FC = () => {
                                   : "No description available"}
                               </p>
                             </div>
+                            <EditDomainDescription
+  
+    domainId={domain._id}
+    currentDescription={domain.description || ""}
+    onDescriptionUpdate={(newDescription:string) => {
+      setDomainData((prev) =>
+        prev.map((d) =>
+          d._id === domain._id ? { ...d, description: newDescription } : d
+        )
+      );
+    }}
+  />
                           </DialogContent>
                         </Dialog>
                       </TableCell>

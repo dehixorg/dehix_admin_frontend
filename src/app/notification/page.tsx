@@ -31,7 +31,7 @@ export default function Talent() {
             items={[
               { label: "Dashboard", link: "/dashboard/Faq" },
               { label: "Notifications", link: "#" },
-            ]}
+            ]}  
           />
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

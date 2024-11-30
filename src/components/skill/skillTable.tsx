@@ -32,7 +32,7 @@ import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
 import CopyButton from "@/components/copybutton";
 import { formatTime } from "@/lib/utils";
-
+import EditSkillDescription from "./editSkillDesc";
 interface SkillData {
   _id: string;
   label: string;
@@ -264,6 +264,15 @@ const SkillTable: React.FC = () => {
                                   : "No description available"}
                               </p>
                             </div>
+                            <EditSkillDescription skillId={Skill._id}
+                            currentDescription={Skill.description||""}
+                            onDescriptionUpdate={(newDescription:string) => {
+                              setSkillData((prev) =>
+                                prev.map((d) =>
+                                  d._id === Skill._id ? { ...d, description: newDescription } : d
+                                )
+                              );
+                            }}/>
                           </DialogContent>
                         </Dialog>
                       </TableCell>
