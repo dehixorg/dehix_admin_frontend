@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { StatusEnum } from "@/utils/common/enum";
 
 interface ProjectType {
   _id: string;
@@ -32,9 +33,9 @@ interface ProjectType {
     appliedCandidates?: string[];
     rejected?: string[];
     accepted?: string[];
-    status?: string;
+    status?: StatusEnum;
   }[];
-  status?: string;
+  status?:StatusEnum;
   team?: string[];
   createdAt: Date;
   updatedAt: Date;

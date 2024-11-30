@@ -8,7 +8,7 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 import AddNotify from "./addNotify";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages, NotificationStatusEnum, statusType } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -41,7 +41,7 @@ interface UserData {
   heading: string;
   description: string;
   type: string;
-  status: string;
+  status:statusType ;
   background_img: string;
   importantUrl: ImportantUrl[];
 }

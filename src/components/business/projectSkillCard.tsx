@@ -9,12 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { StatusEnum } from "@/utils/common/enum";
 
 export interface ProjectSkillCardProps {
   skillName: string;
   description: string;
   email: string;
-  status: string | undefined;
+  status: StatusEnum;
   startDate: Date | null | undefined;
   endDate: Date | null | undefined;
   domains: string[];

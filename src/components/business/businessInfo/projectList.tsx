@@ -25,7 +25,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye button
-import { formatID, Messages } from "@/utils/common/enum";
+import { formatID, Messages, StatusEnum } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";
 import {getStatusBadge} from "@/utils/common/utils"
 
@@ -33,7 +33,7 @@ interface Project {
   _id: string;
   projectName: string;
   description: string;
-  status: string;
+  status: StatusEnum; //use enum
   createdAt: string;
   updatedAt: string;
   skillsRequired: string[];

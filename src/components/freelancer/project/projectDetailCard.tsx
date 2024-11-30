@@ -14,13 +14,14 @@ export interface ProjectDetailCardProps {
   projectName: string;
   description: string;
   email: string;
-  status: string | undefined;
+  status: StatusEnum;
   startDate: Date | null | undefined;
   endDate: Date | null | undefined;
   domains: string[];
   skills: string[];
 }
 import {getStatusBadge} from "@/utils/common/utils"
+import { StatusEnum } from "@/utils/common/enum";
 
 function ProjectDetailCard({
   projectName,

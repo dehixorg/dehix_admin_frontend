@@ -17,7 +17,7 @@ import {
 import { apiHelperService } from "@/services/project";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages, StatusEnum } from "@/utils/common/enum";
 import {Badge} from "@/components/ui/badge"
 import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
@@ -32,7 +32,7 @@ interface Project {
   role: string;
   projectType: string;
   profiles: Profile[];
-  status: string;
+  status: StatusEnum;
   team: string[];
   url: string[];
   createdAt: string;

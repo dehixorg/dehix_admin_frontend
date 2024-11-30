@@ -10,6 +10,7 @@ import {
   Admin_Schema_Prompt_Messages,
   Admin_Schema_Selecter,
   AdminType,
+  StatusEnum,
 } from "@/utils/common/enum";
 import {
   Dialog,
@@ -39,7 +40,7 @@ interface AdminData {
   email: string;
   phone: string;
   type: "Admin" | "Super_Admin";
-  status: "Pending"; // status is fixed to "Pending"
+  status: StatusEnum.PENDING; // status is fixed to "Pending"
 }
 interface UserData {
   _id: string;
@@ -49,7 +50,7 @@ interface UserData {
   email: string;
   phone: string;
   type: string;
-  status: string;
+  status: StatusEnum;
   createdAt: string;
   updatedAt: string;
 }
@@ -70,7 +71,7 @@ const adminSchema = z.object({
     .nonempty(Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
   phone: z.string().nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
   type: z.nativeEnum(AdminType).default(AdminType.ADMIN),
-  status: z.literal("Pending"), // status is always "Pending"
+  status: z.literal(StatusEnum.PENDING), // status is always "Pending"
 });
 
 const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
@@ -89,8 +90,8 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
       userName: "",
       email: "",
       phone: "",
-      status: "Pending",
-      type: "Admin", // default type
+      status: StatusEnum.PENDING,
+      type: AdminType.ADMIN, // default type
     },
   });
 

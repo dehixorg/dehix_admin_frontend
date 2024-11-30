@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton comp
 import AddAdmin from "./addAdmin";
 import ConfirmationDialog from "../confirmationDialog";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages, StatusEnum } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -39,7 +39,7 @@ interface UserData {
   email: string;
   phone: string;
   type: string;
-  status: string;
+  status: StatusEnum;
   createdAt: string;
   updatedAt: string;
 }
