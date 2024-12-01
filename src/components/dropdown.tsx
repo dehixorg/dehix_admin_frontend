@@ -21,14 +21,19 @@ const StatusDropdown: React.FC<DropdownProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">{currentStatus}</Button>
+        <Button variant="secondary" className="w-32">{currentStatus}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {options.map((option, index) => (
           <DropdownMenuItem
             key={index}
-            onClick={() => onChange(option)}
-            className="cursor-pointer"
+            onClick={() => {
+              if (option !== currentStatus) onChange(option);
+            }}
+            className={`cursor-pointer ${
+              option === currentStatus ? "text-gray-400 cursor-not-allowed" : ""
+            }`}
+            disabled={option === currentStatus}
           >
             {option}
           </DropdownMenuItem>

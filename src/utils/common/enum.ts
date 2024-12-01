@@ -51,6 +51,8 @@ export const Messages = {
     `Failed to add the ${resource}. Please try again.`,
 };
 
+export const AccountOption =["ACTIVE", "INACTIVE", "PENDING"]; 
+
 export const formatID = (id: string): string => {
   if (id.length <= 7) return id;
   return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
