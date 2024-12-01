@@ -78,7 +78,6 @@ const ProjectVerificationCard: React.FC<ProjectProps> = ({
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setVerificationStatus(data.type);
     onStatusUpdate(data.type);
-    // console.log("Comments:", data.comment || "");
     onCommentUpdate(data.comment || "");
   }
 

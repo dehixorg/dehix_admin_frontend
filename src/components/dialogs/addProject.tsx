@@ -100,7 +100,6 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
     const fetchData = async () => {
       try {
         const skillsResponse = await axiosInstance.get("/skills/all");
-        console.log("Skills API Response get:", skillsResponse.data.data);
         const transformedSkills = skillsResponse.data.data.map(
           (skill: Skill) => ({
             value: skill.label, // Set the value to label
@@ -157,13 +156,6 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
   // Submit handler for the form
   async function onSubmit(data: ProjectFormValues) {
     try {
-      // Convert comma-separated techUsed string into an array
-      // console.log('Form body:', {
-      //   ...data,
-      //   role: '',
-      //   techUsed: currSkills,
-      //   projectType: '',
-      // });
       const techUsedArray = data.techUsed
         .split(",")
         .map((tech) => tech.trim())
@@ -181,7 +173,6 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
           verificationUpdateTime: new Date().toISOString(),
         },
       );
-      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({

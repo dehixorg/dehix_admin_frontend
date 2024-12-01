@@ -23,12 +23,7 @@ const fetchUserProfile = async (id: string) => {
     const talent = Object.values(response.data.dehixTalent || {});
     const consultant = Object.values(response.data.consultant || {});
     const profileData = response.data;
-    // console.log('Education:', educationData);
-    // console.log('Projects:', projectsData);
-    // console.log('Professional:', professionalData );
-    // console.log("talent:", talent);
-    // console.log("consultant:", consultant);
-
+  
     return {
       educationData,
       projectsData,
