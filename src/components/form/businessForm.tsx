@@ -63,7 +63,6 @@ export function BusinessForm({ user_id }: { user_id: string }) {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/business/${user_id}`);
-        console.log("API Response get:", response.data);
         setUser(response.data);
       } catch (error) {
         console.error("API Error:", error);
@@ -89,11 +88,9 @@ export function BusinessForm({ user_id }: { user_id: string }) {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      // console.log('Form data:', data);
       const response = await axiosInstance.put(`/business/${user_id}`, {
         ...data,
       });
-      console.log("API Response:", response.data);
 
       setUser({
         ...user,

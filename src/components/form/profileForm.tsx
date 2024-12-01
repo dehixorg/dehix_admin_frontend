@@ -113,7 +113,6 @@ export function ProfileForm({ user_id }: { user_id: string }) {
   };
 
   useEffect(() => {
-    console.log("domain selected", currDomains);
   }, [currDomains]);
 
   const handleDeleteSkill = (skillToDelete: string) => {
@@ -132,17 +131,14 @@ export function ProfileForm({ user_id }: { user_id: string }) {
     const fetchData = async () => {
       try {
         const response = await axiosInstance.get(`/freelancer/${user_id}`);
-        console.log("API Response get:", response.data);
         setUser(response.data);
         setCurrSkills(response.data.skills);
         setCurrDomains(response.data.domain);
 
         const skillsResponse = await axiosInstance.get("/skills/all");
-        console.log("API Response get:", skillsResponse.data.data);
         setSkills(skillsResponse.data.data);
 
         const domainsResponse = await axiosInstance.get("/domain/all");
-        console.log("API Response get:", domainsResponse.data.data);
         setDomains(domainsResponse.data.data);
       } catch (error) {
         console.error("API Error:", error);
@@ -165,17 +161,11 @@ export function ProfileForm({ user_id }: { user_id: string }) {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      console.log("API body", {
-        ...data,
-        skills: currSkills,
-        domain: currDomains,
-      });
       const response = await axiosInstance.put(`/freelancer/${user_id}`, {
         ...data,
         skills: currSkills,
         domain: currDomains,
       });
-      console.log("API Response:", response.data);
 
       setUser({
         ...user,

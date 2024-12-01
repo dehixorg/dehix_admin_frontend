@@ -127,7 +127,6 @@ export function CreateProjectBusinessForm() {
     const fetchData = async () => {
       try {
         const domainResponse = await axiosInstance.get("/domain/all");
-        console.log("Domain API Response get:", domainResponse.data.data);
         const transformedDomain = domainResponse.data.data.map(
           (skill: Domain) => ({
             value: skill.label, // Set the value to label
@@ -137,7 +136,6 @@ export function CreateProjectBusinessForm() {
         setDomains(transformedDomain);
 
         const skillsResponse = await axiosInstance.get("/skills/all");
-        console.log("Skills API Response get:", skillsResponse.data.data);
         const transformedSkills = skillsResponse.data.data.map(
           (skill: Skill) => ({
             value: skill.label, // Set the value to label
@@ -174,13 +172,6 @@ export function CreateProjectBusinessForm() {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      console.log("Form body:", {
-        ...data,
-        role: "",
-        projectType: "",
-        skillsRequired: currSkills,
-        domains: currDomains,
-      });
       const response = await apiHelperService.createProject(user.uid, {
         ...data,
         role: "",
@@ -188,7 +179,6 @@ export function CreateProjectBusinessForm() {
         skillsRequired: currSkills,
         domains: currDomains,
       });
-      console.log("API Response:", response.data);
       toast({
         title: "Project Added",
         description: "Your project has been successfully added.",

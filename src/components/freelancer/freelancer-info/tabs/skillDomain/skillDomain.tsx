@@ -57,7 +57,6 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
   const { toast } = useToast();
 
   useEffect(() => {
-    console.log("id", id);
     const fetchUserData = async () => {
       try {
         const response =

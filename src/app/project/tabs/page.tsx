@@ -17,7 +17,6 @@ import { ProjectCard } from "@/components/project/projectCard/projectCard";
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  // console.log("Retrieved ID:", id);
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu

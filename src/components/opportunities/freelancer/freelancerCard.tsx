@@ -18,12 +18,6 @@ const FreelancerCard: React.FC<FreelancerCardProps> = ({
   domains,
   experience,
 }) => {
-  console.log({
-    name,
-    skills,
-    domains,
-    experience,
-  });
   return (
     <Card className="w-full max-w-4xl">
       <CardHeader className="pb-3">

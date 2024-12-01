@@ -105,7 +105,6 @@ const AddNotify: React.FC = () => {
   };
 
   const onSubmit = async (data: FAQData) => {
-    console.log("Form data:", data); // Log data to verify it's being captured
     try {
       const formData = new FormData();
       formData.append("heading", data.heading);

@@ -81,7 +81,6 @@ const EducationVerificationCard: React.FC<EducationProps> = ({
     // Update status based on selection
     setVerificationStatus(data.type);
     onStatusUpdate(data.type);
-    // console.log("Comments:", data.comment || "");
     onCommentUpdate(data.comment || "");
   }
 
