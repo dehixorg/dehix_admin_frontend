@@ -96,7 +96,6 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
 
   const onSubmit = async (data: AdminData) => {
     try {
-      // console.log("Submitting data:", data);
       const response = await apiHelperService.createAdmin(data);
       const newAdmin = response.data.data ? response.data.data.data : null;
       onAddAdmin(newAdmin);

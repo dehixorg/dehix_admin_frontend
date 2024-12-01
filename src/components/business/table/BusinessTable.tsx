@@ -53,6 +53,7 @@ const BusinessTable: React.FC = () => {
   const [selectedIndex,setSelectedIndex] = useState(-1);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -128,7 +129,11 @@ const BusinessTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
+      <div className="mb-8 mt-2">
+        {/* Title Section */}
+        <div className="mb-8 mt-4 mr-4">
+          <h2 className="table-title">Business Table</h2>
+        </div>
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
@@ -153,22 +158,22 @@ const BusinessTable: React.FC = () => {
                           <Skeleton className="h-5 w-14" />
                         </TableCell>
                         <TableCell>
-                        <div className="flex justify-start items-start">
-                          <Skeleton className="h-5 w-40" />
-                        </div>
+                          <div className="flex justify-start items-start">
+                            <Skeleton className="h-5 w-40" />
+                          </div>
                         </TableCell>
                         <TableCell>
                           <Skeleton className="h-5 w-28 justify-items-start" />
                         </TableCell>
                         <TableCell className="text-center">
-                        <div className="flex justify-center items-center">
-                          <Skeleton className="h-5 w-10" />
-                        </div>
+                          <div className="flex justify-center items-center">
+                            <Skeleton className="h-5 w-10" />
+                          </div>
                         </TableCell>
-                        <TableCell className="text-center ">
-                       < div className="flex justify-center items-center">
-                         <Skeleton className="h-5 w-10" />
-                       </div>
+                        <TableCell className="text-center">
+                          <div className="flex justify-center items-center">
+                            <Skeleton className="h-5 w-10" />
+                          </div>
                         </TableCell>
                         <TableCell>
                           <Skeleton className="h-5 w-6 justify-items-center" />
@@ -187,7 +192,7 @@ const BusinessTable: React.FC = () => {
                           <Tooltip>
                             <TooltipTrigger>
                               <span>
-                                {user.skills[0]?.name}{" "}
+                                {user.skills[0]?.name}
                                 {user.skills.length > 1
                                   ? `+${user.skills.length - 1} more`
                                   : ""}
@@ -196,7 +201,7 @@ const BusinessTable: React.FC = () => {
                             <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
                               {user.skills
                                 .map((skill) => skill.name)
-                                .join(", ")}{" "}
+                                .join(", ")}
                             </TooltipContent>
                           </Tooltip>
                         ) : (
@@ -208,7 +213,7 @@ const BusinessTable: React.FC = () => {
                           <Tooltip>
                             <TooltipTrigger>
                               <span>
-                                {user.domains[0]?.name}{" "}
+                                {user.domains[0]?.name}
                                 {user.domains.length > 1
                                   ? `+${user.domains.length - 1} more`
                                   : ""}
@@ -217,13 +222,13 @@ const BusinessTable: React.FC = () => {
                             <TooltipContent className="max-w-[500px] max-h-[250px] whitespace-normal break-words">
                               {user.domains
                                 .map((domain) => domain.name)
-                                .join(", ")}{" "}
+                                .join(", ")}
                             </TooltipContent>
                           </Tooltip>
                         ) : (
                           "0"
                         )}
-                      </TableCell>{" "}
+                      </TableCell>
                       <TableCell>
                         <div className="flex justify-center">
   <StatusDropdown

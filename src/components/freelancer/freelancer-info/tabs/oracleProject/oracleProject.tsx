@@ -43,7 +43,6 @@ const OracleProject: React.FC<OracleProjectProps> = ({ id }) => {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
         const { oracleProject } = response.data;
-        console.log("Pending-Project:", oracleProject);
         setUserData({ oracleProject });
       } catch (error) {
         console.error("Error fetching user data:", error);

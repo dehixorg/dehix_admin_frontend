@@ -52,7 +52,6 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
     const fetchProjectData = async () => {
       try {
         const response = await apiHelperService.getAllBusinessProject(id);
-        //console.log("API Response:", response.data);
         if (response?.data?.data?.data) {
           setProjectInfo(response.data.data.data);
         } else {

@@ -104,7 +104,6 @@ export const AddEducation: React.FC<AddEducationProps> = ({ onFormSubmit }) => {
         `/freelancer/${user.uid}/education`,
         formattedData,
       );
-      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({

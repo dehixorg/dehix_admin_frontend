@@ -119,7 +119,6 @@ export const AddExperience: React.FC<AddExperienceProps> = ({
           comments: data.comments || "",
         },
       );
-      console.log("API Response:", response.data);
       onFormSubmit();
       setIsDialogOpen(false);
       toast({

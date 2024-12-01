@@ -54,6 +54,7 @@ const AdminTable: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
+      setUserData(response.data.data || []);
       if(response.data.data)
       {
       setUserData(response?.data?.data||[]);
@@ -123,10 +124,14 @@ const AdminTable: React.FC = () => {
 
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
-            <AddAdmin onAddAdmin={handleAddAdmin} />
+            <div className="mb-8 mt-4 ">
+              <div className="flex items-center justify-between mb-4 ">
+                <div className="flex-grow">
+                  <h2 className="table-title">Admin Table</h2>
+                </div>
+                <div>
+                
+                  <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
@@ -176,7 +181,7 @@ const AdminTable: React.FC = () => {
                       </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
+                ) : Array.isArray(userData) && userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
