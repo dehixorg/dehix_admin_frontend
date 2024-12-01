@@ -1,3 +1,5 @@
+import { BadgePlus, BadgeCheck, BadgeAlert, RotateCcw } from "lucide-react";
+import React from "react";
 export const getStatusBadge = (status: string | undefined) => {
     switch (status?.toLowerCase()) {
         case "accepted":
@@ -20,5 +22,32 @@ export const getStatusBadge = (status: string | undefined) => {
             return "bg-gray-500 hover:bg-gray-600";
         default:
             return  "bg-gray-500 hover:bg-gray-600" ;
+    }
+  };
+
+  export const getStatusButton = (status: string | undefined) => {
+    switch (status?.toLowerCase()) {
+        case "delete":
+            return "bg-red-800 text-white border border-red-800 hover:bg-red-600";
+        case "cancel":
+            return "bg-gray-999 text-white border border-gray-999 hover:bg-gray-800";
+        
+    }
+  };
+
+  export const getStatusIcon = (status: string): JSX.Element | null => {
+    switch (status?.toLowerCase()) {
+      case "added":
+        return React.createElement(BadgePlus, { className: "text-yellow-500" });
+      case "verified":
+        return React.createElement(BadgeCheck, { className: "text-green-500" });
+      case "rejected":
+        return React.createElement(BadgeAlert, { className: "text-red-500" });
+      case "reapplied":
+        return React.createElement(RotateCcw, { className: "text-gray-500" });
+      case "pending":
+        return React.createElement(BadgePlus, { className: "text-yellow-500" });
+      default:
+        return null;
     }
   };

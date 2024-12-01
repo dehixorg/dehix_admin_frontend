@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { getStatusIcon } from "@/utils/common/utils";
 interface ProfessionalInfo {
   id: string;
   company: string;
@@ -33,7 +34,18 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
   return (
     <Card className={cn("flex flex-col")} {...props}>
       <CardHeader>
+      <div className="flex items-center justify-between">
         <CardTitle className="text-xl font-bold mb-2">{info.company}</CardTitle>
+        <Tooltip>
+          <TooltipTrigger>
+            <span>{getStatusIcon(info.verificationStatus)}</span>
+          </TooltipTrigger>
+          <TooltipContent>
+            <span >{info.verificationStatus}</span>
+          </TooltipContent>
+        </Tooltip>
+        </div>
+
         <CardDescription className="text-lg font-semibold mb-2">
           {info.jobTitle}
         </CardDescription>
@@ -83,9 +95,6 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
           <p>
             <strong>Oracle Assigned:</strong>{" "}
             <span className="text-gray-300">{info.oracleAssigned}</span>
-          </p>
-          <p>
-            <strong>Verification Status:</strong> {info.verificationStatus}
           </p>
           <p>
             <strong>Verification Update Time:</strong>{" "}

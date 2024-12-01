@@ -34,6 +34,15 @@ export const apiHelperService = {
       params,
     });
   },
+  updateDomainDesc: async (labelId: string, description: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/domain/${labelId}`,
+      body: {
+        description,
+      },
+    });
+  },
   updateDomainStatus: async (labelId: string, status: string) => {
     return apiService({
       method: Api_Methods.PUT,

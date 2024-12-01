@@ -5,11 +5,10 @@ import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { ButtonIcon } from "../ui/arrowButton";
-
 import { useToast } from "@/components/ui/use-toast";
-import { Messages , formatID } from "@/utils/common/enum";
+import { Messages, formatID } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
-import {Badge} from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableHeader,
@@ -33,10 +32,11 @@ import {
 } from "@/components/ui/tooltip";
 import { apiHelperService } from "@/services/bid";
 import CopyButton from "@/components/copybutton";
+import BidsTableSkeleton from "@/utils/common/skeleton"; // Skeleton component
 import { getStatusBadge } from "@/utils/common/utils";
 
 interface BidData {
-  _id: string; // Assuming your API returns this field for each business
+  _id: string; // Assuming your API returns this field for each bid
   bid_status: string;
   project_id: string;
   bidder_id: string;
@@ -49,6 +49,7 @@ const BidsTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { toast } = useToast();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -75,18 +76,21 @@ const BidsTable: React.FC = () => {
 
     fetchUserData();
   }, []);
-  const handleproject = (id: string) => {
+
+  const handleProject = (id: string) => {
     router.push(`/project/tabs?id=${id}`); // Pass the ID as a query parameter
   };
-  const handlebidder = (id: string) => {
+
+  const handleBidder = (id: string) => {
     router.push(`/freelancer/tabs?id=${id}`); // Pass the ID as a query parameter
   };
 
-
-
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
+      <div className="mb-8 mt-4 mr-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="table-title">Bid Table</h2>
+        </div>
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
@@ -103,87 +107,72 @@ const BidsTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
+                  <BidsTableSkeleton />
                 ) : bidData.length > 0 ? (
-                  bidData.map((user, index) => (
-                    <TableRow key={index}>
+                  bidData.map((user) => (
+                    <TableRow key={user._id}>
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Tooltip>
                             <TooltipTrigger>
                               <span>{formatID(user._id)}</span>
                             </TooltipTrigger>
-
-                            <CopyButton id={user._id} />
-
                             <TooltipContent>
                               {user._id || "No Data Available"}
                             </TooltipContent>
                           </Tooltip>
+                          <CopyButton id={user._id} />
                         </div>
                       </TableCell>
                       <TableCell>
-                          <div className="flex items-center space-x-2">
-                        <Badge className= {getStatusBadge(user.bid_status)}>
-                        {user.bid_status}
+                        <Badge className={getStatusBadge(user.bid_status)}>
+                          {user.bid_status}
                         </Badge>
-                       </div>
                       </TableCell>
-                    
                       <TableCell>
                         {user.project_id ? (
                           <div className="flex items-center space-x-2">
                             <Tooltip>
                               <TooltipTrigger>
                                 <span
-                                  onClick={() => handleproject(user.project_id)}
+                                  onClick={() => handleProject(user.project_id)}
                                   className="cursor-pointer text-blue-500 hover:underline"
                                 >
-                                  <span>{formatID(user.project_id || "")}</span>
+                                  {formatID(user.project_id || "")}
                                 </span>
                               </TooltipTrigger>
-
-                              <CopyButton id={user.project_id || ""} />
-
                               <TooltipContent>
                                 {user.project_id || "No Data Available"}
                               </TooltipContent>
                             </Tooltip>
+                            <CopyButton id={user.project_id || ""} />
                           </div>
                         ) : (
                           "No Data Available"
                         )}
                       </TableCell>
-
                       <TableCell>
                         {user.bidder_id ? (
                           <div className="flex items-center space-x-2">
                             <Tooltip>
                               <TooltipTrigger>
                                 <span
-                                  onClick={() => handlebidder(user.bidder_id)}
+                                  onClick={() => handleBidder(user.bidder_id)}
                                   className="cursor-pointer text-blue-500 hover:underline"
                                 >
-                                  <span>{formatID(user.bidder_id || "")}</span>
+                                  {formatID(user.bidder_id || "")}
                                 </span>
                               </TooltipTrigger>
-
-                              <CopyButton id={user.bidder_id || ""} />
-
                               <TooltipContent>
                                 {user.bidder_id || "No Data Available"}
                               </TooltipContent>
                             </Tooltip>
+                            <CopyButton id={user.bidder_id || ""} />
                           </div>
                         ) : (
                           "No Data Available"
                         )}
                       </TableCell>
-
                       <TableCell>{user.current_price}</TableCell>
                       <TableCell>
                         {user.domain_id ? (
@@ -192,13 +181,11 @@ const BidsTable: React.FC = () => {
                               <TooltipTrigger>
                                 <span>{formatID(user.domain_id || "")}</span>
                               </TooltipTrigger>
-
-                              <CopyButton id={user.domain_id || ""} />
-
                               <TooltipContent>
                                 {user.domain_id || "No Data Available"}
                               </TooltipContent>
                             </Tooltip>
+                            <CopyButton id={user.domain_id || ""} />
                           </div>
                         ) : (
                           "No Data Available"
@@ -213,10 +200,7 @@ const BidsTable: React.FC = () => {
                             <DialogHeader>
                               <DialogTitle>Bid Description</DialogTitle>
                               <DialogDescription>
-                                {
-                                  // /*user.description*/ "this is a desc" ||
-                                  "No description available"
-                                }
+                                No description available
                               </DialogDescription>
                             </DialogHeader>
                           </DialogContent>
@@ -226,7 +210,7 @@ const BidsTable: React.FC = () => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center">
+                    <TableCell colSpan={7} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen
                           className="mx-auto text-gray-500"
