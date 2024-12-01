@@ -15,7 +15,8 @@ import { Messages, statusType, formatID } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
 import CopyButton from "@/components/copybutton";
-
+import EditDomainDescription from "@/components/Domain/editDomaindesc";
+import { Button } from "@/components/ui/button";
 interface DomainData {
   _id: string;
   label: string;
@@ -30,7 +31,10 @@ const DomainTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
   const { toast } = useToast();
-
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  // Function to fetch domain data
   const fetchDomainData = async () => {
     setLoading(true);
     setNoData(false);
@@ -69,8 +73,19 @@ const DomainTable: React.FC = () => {
       });
     }
   };
-
-  const handleSwitchChange = async (labelId: string, checked: boolean, index: number) => {
+  const handleDescButtonClick = (index: number) => {
+    setSelectedIndex(index);
+    setIsDialogOpen(true);
+  };
+  const handleEditButtonClick = () => {
+    setIsDialogOpen(false);
+    setIsEditDialogOpen(true);
+  };
+  const handleSwitchChange = async (
+    labelId: string,
+    checked: boolean,
+    index: number,
+  ) => {
     try {
       setDomainData((prevDomainData) => {
         const updatedDomainData = [...prevDomainData];
@@ -111,7 +126,7 @@ const DomainTable: React.FC = () => {
                 <TableRow>
                   <TableHead className="w-[180px]">Domain Id</TableHead>
                   <TableHead className="w-[180px]">Domain Name</TableHead>
-                  <TableHead className="w-[300px]">Created At</TableHead>
+                  <TableHead className="w-[180px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
                   <TableHead className="w-[20px]">Delete</TableHead>
@@ -166,21 +181,60 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell><DeleteButtonIcon onClick={() => handleDelete(domain._id)} /></TableCell>
                       <TableCell className="flex justify-end">
-                        <Dialog>
-                          <DialogTrigger asChild><ButtonIcon /></DialogTrigger>
-                          <DialogContent className="p-4">
-                            <DialogHeader>
-                              <DialogTitle>Domain Details</DialogTitle>
-                            </DialogHeader>
-                            <div>
-                              <p><strong>Name:</strong> {domain.label}</p>
-                              <p><strong>Description:</strong> {domain.description || "No description available"}</p>
-                            </div>
-                          </DialogContent>
+                      <ButtonIcon variant="outline"
+                            onClick={() => {
+                                    handleDescButtonClick(index);
+                            }} />
+                        </TableCell>
+                        
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      
+                        <DialogContent className="p-4">
+  <DialogHeader>
+    <DialogTitle>Domain Details</DialogTitle>
+  </DialogHeader>
+  <div>
+    {selectedIndex ? (
+      <div>
+        <p>
+          <strong>Name:</strong> {domainData[index].label}
+        </p>
+        <p>
+          <strong>Description:</strong>{" "}
+          {domainData[index].description || "No description available"}
+        </p>
+        <Button
+          variant="outline"
+          onClick={() => {
+            handleEditButtonClick();
+          }}
+        >
+          Edit Description
+        </Button>
+      </div>
+    ) : (
+      <p>No domain selected.</p>
+    )}
+  </div>
+</DialogContent>
                         </Dialog>
-                      </TableCell>
+                        {isEditDialogOpen &&selectedIndex &&<EditDomainDescription
+                        isDialogopen= {isEditDialogOpen}
+                            setIsDialogOpen={() => setIsEditDialogOpen(false)} 
+                              domainId={domainData[index]._id}
+                              currentDescription={domainData[index].description || ""}
+                              onDescriptionUpdate={(newDescription:string) => {
+                                setDomainData((prevDomainData) => {
+                                  const updatedDomainData = [...prevDomainData];
+                                  updatedDomainData[index].description = newDescription;
+                                  return updatedDomainData;
+                                });
+                              }}
+                            />}
                     </TableRow>
+                         
                   ))
+                  
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
@@ -196,6 +250,7 @@ const DomainTable: React.FC = () => {
           </div>
         </Card>
       </div>
+
     </div>
   );
 };
