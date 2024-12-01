@@ -104,7 +104,7 @@ const sizeInMb = maxImageSize/(1024*1024);
         setSelectedPicture(file);
         setPreviewUrl(URL.createObjectURL(file));
       } else {
-        alert(`File size exceeds the ${sizeInMb} limit.`);
+        alert(`File size exceeds the ${sizeInMb} Mb limit.`);
       }
     } else {
       toast({
@@ -123,7 +123,7 @@ const sizeInMb = maxImageSize/(1024*1024);
         setSelectedPicture(file);
         setPreviewUrl(URL.createObjectURL(file));
       } else {
-        alert(`File size exceeds the ${sizeInMb} limit.`);
+        alert(`File size exceeds the ${sizeInMb} Mb limit.`);
       }
     } else {
       toast({
