@@ -21,6 +21,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { apiHelperService } from "@/services/business";
+import { StatusEnum } from "@/utils/common/enum";
 
 interface DehixProjectInfo {
   projectName: string;
@@ -31,7 +32,7 @@ interface DehixProjectInfo {
   skillsRequired: string[];
   role: string;
   projectType: string;
-  status: string;
+  status: StatusEnum;
   team: string[];
   url: { value: string; _id: string }[];
   createdAt: string;

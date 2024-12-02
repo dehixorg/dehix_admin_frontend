@@ -34,6 +34,7 @@ import {
   SelectValue,
   SelectContent,
 } from "@/components/ui/select";
+import { StatusEnum } from "@/utils/common/enum";
 
 interface Skill {
   label: string;
@@ -49,7 +50,7 @@ interface SkillDomainData {
   experience: string;
   monthlyPay: string;
   show: boolean;
-  status: string;
+  status: StatusEnum;
 }
 
 const defaultStatus = "Pending";

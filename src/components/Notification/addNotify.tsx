@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages, NotificationStatusEnum } from "@/utils/common/enum";
 
 interface ImportantUrl {
   urlName: string;
@@ -37,7 +37,7 @@ interface FAQData {
   heading: string;
   description: string;
   type: string;
-  status: string;
+  status:NotificationStatusEnum ;
   importantUrl: ImportantUrl[];
   image: FileList;
 }
@@ -82,7 +82,7 @@ const AddNotify: React.FC = () => {
       heading: "",
       description: "",
       type: "",
-      status: "active",
+      status: NotificationStatusEnum.ACTIVE,
       importantUrl: [{ urlName: "", url: "" }],
       image: undefined,
     },
