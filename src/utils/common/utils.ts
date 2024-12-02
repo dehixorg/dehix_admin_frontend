@@ -31,6 +31,8 @@ export const getStatusBadge = (status: string | undefined) => {
             return "bg-red-800 text-white border border-red-800 hover:bg-red-600";
         case "cancel":
             return "bg-gray-999 text-white border border-gray-999 hover:bg-gray-800";
+        case "confirm":
+            return "bg-yellow-500 text-white border border-yellow-500 hover:bg-yellow-400";
         
     }
   };
