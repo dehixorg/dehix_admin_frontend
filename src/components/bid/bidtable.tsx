@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"; // For navigation
 
 import { ButtonIcon } from "../ui/arrowButton";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, formatID } from "@/utils/common/enum";
+import { BidstatusEnum, Messages, formatID } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -37,7 +37,7 @@ import { getStatusBadge } from "@/utils/common/utils";
 
 interface BidData {
   _id: string; // Assuming your API returns this field for each bid
-  bid_status: string;
+  bid_status: BidstatusEnum;
   project_id: string;
   bidder_id: string;
   current_price: string;

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/freelancer";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
 
 interface RejectedProject {
   _id: string;

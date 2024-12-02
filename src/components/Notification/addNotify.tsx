@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages, NotificationStatusEnum } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/notification";
 import {imageSize} from "@/utils/common/enum";
 interface ImportantUrl {
@@ -38,7 +38,7 @@ interface notifyData {
   heading: string;
   description: string;
   type: string;
-  status: string;
+  status:NotificationStatusEnum ;
   importantUrl: ImportantUrl[];
   background_img:string;
 }
@@ -87,7 +87,7 @@ const sizeInMb = maxImageSize/(1024*1024);
       heading: "",
       description: "",
       type: "",
-      status: "active",
+      status: NotificationStatusEnum.ACTIVE,
       importantUrl: [{ urlName: "", url: "" }],
       background_img: "",
     },

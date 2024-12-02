@@ -14,9 +14,10 @@ import {
 import CopyButton from "@/components/copybutton";
 import { Badge } from "@/components/ui/badge";
 import {getStatusBadge} from "@/utils/common/utils"
+import { StatusEnum } from "@/utils/common/enum";
 interface HireFreelancerInfo {
   freelancer: string;
-  status: string;
+  status: StatusEnum;
   _id: string;
 }
 
