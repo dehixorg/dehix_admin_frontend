@@ -53,3 +53,19 @@ export const getStatusBadge = (status: string | undefined) => {
         return null;
     }
   };
+
+  export const toTitleCase = (text:string) => {
+    if (!text) return "";
+    
+    const exceptions = ["a", "and", "the", "of", "in", "on", "at", "to", "for"]; 
+    return text
+      .toLowerCase()
+      .split(/[\s_]+/)
+      .map((word, index) =>
+        exceptions.includes(word) && index !== 0
+          ? word 
+          : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join(" ");
+  };
+  

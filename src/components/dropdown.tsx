@@ -5,8 +5,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-
+import {Badge} from "@/components/ui/badge"
+import { getStatusBadge } from "@/utils/common/utils";
+import { toTitleCase } from "@/utils/common/utils";
 interface DropdownProps {
   currentStatus: string; // Current status to display
   options: string[]; // Available options for dropdown
@@ -21,8 +22,12 @@ const StatusDropdown: React.FC<DropdownProps> = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" className="w-32">{currentStatus}</Button>
-      </DropdownMenuTrigger>
+        <span>
+  <Badge className={`${getStatusBadge(currentStatus)} cursor-pointer`}>
+    {toTitleCase(currentStatus)}
+  </Badge>
+  </span>
+</DropdownMenuTrigger>
       <DropdownMenuContent>
         {options.map((option, index) => (
           <DropdownMenuItem
@@ -35,7 +40,7 @@ const StatusDropdown: React.FC<DropdownProps> = ({
             }`}
             disabled={option === currentStatus}
           >
-            {option}
+            {toTitleCase(option)}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>
