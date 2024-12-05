@@ -54,23 +54,22 @@ const NotifyTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-
-  useEffect(() => {
+  
     const fetchUserData = async () => {
       try {
         const response = await apiHelperService.getAllNotification();
-        setUserData(response.data.data || []);
+        setUserData(response.data.data);
       } catch (error) {
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR("notification"),
-          variant: "destructive",
+          variant: "destructive", 
         });
       } finally {
         setLoading(false);
       }
     };
-
+    useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -84,7 +83,7 @@ const NotifyTable: React.FC = () => {
       toast({
         title: "Error",
         description: Messages.DELETE_ERROR("notification"),
-        variant: "destructive",
+        variant: "destructive", 
       });
     }
   };
@@ -134,7 +133,7 @@ const NotifyTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="table-title">Notification Table</h2>
-          <AddNotify />
+          <AddNotify onAddNotify={fetchUserData}/>
         </div>
         <Card>
           <div className="lg:overflow-x-auto">
@@ -224,9 +223,11 @@ const NotifyTable: React.FC = () => {
                                 <strong>Description:</strong> {user.description}
                               </p>
                               {user.background_img && (
-                                <div className="mt-4">
+                                <div className="mt-4 w-40 h-40 border-2 border-black-300 bg-gray-700 flex items-center justify-center cursor-pointer">
                                   <Image
-                                    src={user.background_img}
+                                    width={32}
+                                    height={32}
+                                    src={user.background_img} // AWS image URL
                                     alt="Notification"
                                     className="w-full h-auto"
                                   />
@@ -236,12 +237,12 @@ const NotifyTable: React.FC = () => {
                                 <strong>URL Count:</strong>
                                 {user.importantUrl.length}
                               </p>
-                              <ul className="list-disc list-inside">
+                              <ul className=" list-inside">
                                 {user.importantUrl.length > 0 ? (
                                   user.importantUrl.map((url, urlIndex) => (
                                     <li key={urlIndex}>
                                       <p>
-                                        <strong>URL Name:</strong> {url.urlName}
+                                        <strong>URL Name:</strong>{url.urlName}
                                       </p>
                                       <p>
                                         <strong>URL:</strong>
