@@ -1,315 +1,339 @@
-import React, { useState } from "react";
-import { Controller, useForm, useFieldArray } from "react-hook-form";
-import { Plus } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import Image from "next/image";
-import { AiOutlineCloudUpload } from "react-icons/ai"; // Cloud upload icon
+  import React, { useState } from "react";
+  import { Controller, useForm, useFieldArray } from "react-hook-form";
+  import { Plus } from "lucide-react";
+  import { zodResolver } from "@hookform/resolvers/zod";
+  import { z } from "zod";
+  import Image from "next/image";
+  import { AiOutlineCloudUpload } from "react-icons/ai";
 
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectTrigger,
-  SelectItem,
-  SelectValue,
-  SelectContent,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
-import { axiosInstance } from "@/lib/axiosinstance";
-import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+  import { Input } from "@/components/ui/input";
+  import { Textarea } from "@/components/ui/textarea";
+  import { Button } from "@/components/ui/button";
+  import {
+    Select,
+    SelectTrigger,
+    SelectItem,
+    SelectValue,
+    SelectContent,
+  } from "@/components/ui/select";
+  import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogFooter,
+    DialogTitle,
+    DialogDescription,
+  } from "@/components/ui/dialog";
+  import { axiosInstance } from "@/lib/axiosinstance";
+  import { useToast } from "@/components/ui/use-toast";
+  import { Messages } from "@/utils/common/enum";
 
-interface ImportantUrl {
-  urlName: string;
-  url: string;
-}
+  interface ImportantUrl {
+    urlName: string;
+    url: string;
+  }
 
-interface FAQData {
-  heading: string;
-  description: string;
-  type: string;
-  status: string;
-  importantUrl: ImportantUrl[];
-  image: FileList;
-}
+  interface FAQData {
+    heading: string;
+    description: string;
+    type: string;
+    status: string;
+    importantUrl: ImportantUrl[];
+    image: FileList;
+  }
 
-const faqSchema = z.object({
-  heading: z.string().nonempty("Please enter a heading"),
-  description: z.string().nonempty("Please enter a description"),
-  type: z.enum(["both", "business", "freelancer"]),
-  status: z.enum(["active"]).default("active"),
-  importantUrl: z
-    .array(
-      z.object({
-        urlName: z.string().nonempty("Please enter the URL name"),
-        url: z.string().url("Please enter a valid URL"),
-      }),
-    )
-    .nonempty({ message: "Please add at least one URL" }),
-  image: z
-    .any()
-    .refine((files) => files && files.length === 1, "Please upload an image")
-    .refine(
-      (files) =>
-        files &&
-        ["image/jpeg", "image/jpg", "image/png"].includes(files[0]?.type),
-      "Only .jpg, .jpeg, and .png files are allowed",
-    ),
-});
-
-const AddNotify: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | ArrayBuffer | null>(
-    null
-  );
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<FAQData>({
-    resolver: zodResolver(faqSchema),
-    defaultValues: {
-      heading: "",
-      description: "",
-      type: "",
-      status: "active",
-      importantUrl: [{ urlName: "", url: "" }],
-      image: undefined,
-    },
-  });
-  const { toast } = useToast();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "importantUrl",
+  const faqSchema = z.object({
+    heading: z.string().nonempty("Please enter a heading"),
+    description: z.string().nonempty("Please enter a description"),
+    type: z.enum(["both", "business", "freelancer"]),
+    status: z.enum(["active"]).default("active"),
+    importantUrl: z
+      .array(
+        z.object({
+          urlName: z.string().nonempty("Please enter the URL name"),
+          url: z.string().url("Please enter a valid URL"),
+        })
+      )
+      .nonempty({ message: "Please add at least one URL" }),
+    image: z
+      .any()
+      .refine((files) => files && files.length === 1, "Please upload an image")
+      .refine(
+        (files) =>
+          files &&
+          ["image/jpeg", "image/jpg", "image/png"].includes(files[0]?.type),
+        "Only .jpg, .jpeg, and .png files are allowed"
+      ),
   });
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const AddNotify: React.FC = () => {
+    const [open, setOpen] = useState(false);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const {
+      control,
+      handleSubmit,
+      formState: { errors },
+      reset,
+    } = useForm<FAQData>({
+      resolver: zodResolver(faqSchema),
+      defaultValues: {
+        heading: "",
+        description: "",
+        type: "",
+        status: "active",
+        importantUrl: [{ urlName: "", url: "" }],
+        image: undefined,
+      },
+    });
+    const { toast } = useToast();
+    const { fields, append, remove } = useFieldArray({
+      control,
+      name: "importantUrl",
+    });
 
-  const onSubmit = async (data: FAQData) => {
-    try {
-      const formData = new FormData();
-      formData.append("heading", data.heading);
-      formData.append("description", data.description);
-      formData.append("type", data.type);
-      formData.append("status", data.status);
-      data.importantUrl.forEach((url, index) => {
-        formData.append(`importantUrl[${index}][urlName]`, url.urlName);
-        formData.append(`importantUrl[${index}][url]`, url.url);
-      });
-      if (data.image) {
-        formData.append("image", data.image[0]);
-      }
-
-      await axiosInstance.post(
-        "", // API endpoint
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        // Check file size (example limit: 5MB)
+        const maxSizeInMB = 5;
+        if (file.size > maxSizeInMB * 1024 * 1024) {
+          alert(`File size exceeds ${maxSizeInMB}MB. Please upload a smaller file.`);
+          return;
         }
-      );
-      reset();
-      setOpen(false);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: Messages.ADD_ERROR("notification"),
-        variant: "destructive", // Red error message
-      });
-    }
-  };
+    
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result) {
+            setImagePreview(reader.result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setImagePreview(null);
+      }
+    };
+    
 
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Notification
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Add Notification</DialogTitle>
-          <DialogDescription>
-            Enter the Notification details below.
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="type"
-              render={({ field }) => (
-                <Select {...field} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="both">Both</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="freelancer">Freelancer</SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="heading"
-              render={({ field }) => (
-                <Input
-                  type="text"
-                  placeholder="Heading"
-                  {...field}
-                  className="border p-2 rounded mt-2 w-full"
-                />
-              )}
-            />
-            {errors.heading && (
-              <p className="text-red-600">{errors.heading.message}</p>
-            )}
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <Textarea
-                  placeholder="Description"
-                  {...field}
-                  className="border p-2 rounded mt-2 w-full"
-                />
-              )}
-            />
-            {errors.description && (
-              <p className="text-red-600">{errors.description.message}</p>
-            )}
-          </div>
+    const onSubmit = async (data: FAQData) => {
+      try {
+        const formData = new FormData();
+        formData.append("heading", data.heading);
+        formData.append("description", data.description);
+        formData.append("type", data.type);
+        formData.append("status", data.status);
+        data.importantUrl.forEach((url, index) => {
+          formData.append(`importantUrl[${index}][urlName]`, url.urlName);
+          formData.append(`importantUrl[${index}][url]`, url.url);
+        });
+        if (data.image) {
+          formData.append("image", data.image[0]);
+        }
 
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="image"
-              render={({ field }) => (
-                <div
-                  className="border-dashed border-4 border-gray-300 p-8 rounded-lg text-center transition-all duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-100"
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    const file = e.dataTransfer.files?.[0];
-                    if (file) {
-                      const reader = new FileReader();
-                      reader.onloadend = () => {
-                        setImagePreview(reader.result as string);
-                      };
-                      reader.readAsDataURL(file);
-                    }
-                  }}
-                >
-                  <label className="cursor-pointer">
-                    {imagePreview ? (
-                      <Image
-                        src={imagePreview as string}
-                        alt="Preview"
-                        className="w-full h-auto rounded-md mb-3"
-                      />
-                    ) : (
-                      <>
-                        <AiOutlineCloudUpload className="mx-auto text-4xl text-gray-500 mb-3" />
-                        <p className="text-gray-500 mb-3">Drag & Drop your image here</p>
-                        <p className="text-sm text-gray-400">or click to select</p>
-                      </>
-                    )}
-                    <Input
-                      type="file"
-                      accept=".jpg,.jpeg,.png"
-                      onChange={(e) => {
-                        field.onChange(e.target.files);
-                        handleImageChange(e);
-                      }}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
-              )}
-            />
-            {errors.image && (
-              <p className="text-red-600">{errors.image.message}</p>
-            )}
-          </div>
-          
-          {fields.map((field, index) => (
-            <div key={field.id} className="mb-3">
+        await axiosInstance.post(
+          "", 
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        reset();
+        setOpen(false);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: Messages.ADD_ERROR("notification"),
+          variant: "destructive",
+        });
+      }
+    };
+
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button onClick={() => setOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Notification
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add Notification</DialogTitle>
+            <DialogDescription>
+              Enter the Notification details below.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-3">
               <Controller
                 control={control}
-                name={`importantUrl.${index}.urlName`}
+                name="type"
+                render={({ field }) => (
+                  <Select {...field} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="both">Both</SelectItem>
+                      <SelectItem value="business">Business</SelectItem>
+                      <SelectItem value="freelancer">Freelancer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            <div className="mb-3">
+              <Controller
+                control={control}
+                name="heading"
                 render={({ field }) => (
                   <Input
                     type="text"
-                    placeholder="URL Name"
+                    placeholder="Heading"
                     {...field}
                     className="border p-2 rounded mt-2 w-full"
                   />
                 )}
               />
+              {errors.heading && (
+                <p className="text-red-600">{errors.heading.message}</p>
+              )}
+            </div>
+            <div className="mb-3">
               <Controller
                 control={control}
-                name={`importantUrl.${index}.url`}
+                name="description"
                 render={({ field }) => (
-                  <Input
-                    type="url"
-                    placeholder="URL"
+                  <Textarea
+                    placeholder="Description"
                     {...field}
                     className="border p-2 rounded mt-2 w-full"
                   />
                 )}
+              />
+              {errors.description && (
+                <p className="text-red-600">{errors.description.message}</p>
+              )}
+            </div>
+
+            <div className="mb-3">
+            <Controller
+    control={control}
+    name="image"
+    render={({ field }) => (
+      <div
+        className="border-dashed border-4 border-gray-300 p-8 rounded-lg text-center transition-all duration-300 ease-in-out hover:border-gray-500 hover:bg-gray-300"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          const file = e.dataTransfer.files?.[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+          }
+        }}
+      >
+        <label className="cursor-pointer">
+          {imagePreview ? (
+            <>
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                width={300}
+                height={300}
+                className="w-full h-auto rounded-md mb-3"
+                onError={() => setImagePreview(null)}
               />
               <Button
                 type="button"
-                onClick={() => remove(index)}
-                className="mt-2 bg-red-600 text-white"
+                onClick={() => {
+                  setImagePreview(null); 
+                  field.onChange(undefined); 
+                }}
+                className="mt-3 bg-gray-300 text-gray-500"
               >
-                Remove URL
+                Remove Image
+              </Button>
+            </>
+          ) : (
+            <>
+              <AiOutlineCloudUpload className="mx-auto text-4xl text-black mb-3" />
+              <p className="text-gray-500 mb-3">Drag & Drop your image here</p>
+              <p className="text-sm text-gray-400">or click to select</p>
+            </>
+          )}
+          <Input
+            type="file"
+            accept=".jpg,.jpeg,.png"
+            onChange={(e) => {
+              field.onChange(e.target.files); 
+              handleImageChange(e); 
+            }}
+            className="hidden"
+          />
+        </label>
+      </div>
+    )}
+  />
+
+              {errors.image && (
+                <p className="text-red-600">{errors.image.message}</p>
+              )}
+            </div>
+
+            {fields.map((field, index) => (
+              <div key={field.id} className="mb-3">
+                <Controller
+                  control={control}
+                  name={`importantUrl.${index}.urlName`}
+                  render={({ field }) => (
+                    <Input
+                      type="text"
+                      placeholder="URL Name"
+                      {...field}
+                      className="border p-2 rounded mt-2 w-full"
+                    />
+                  )}
+                />
+                <Controller
+                  control={control}
+                  name={`importantUrl.${index}.url`}
+                  render={({ field }) => (
+                    <Input
+                      type="url"
+                      placeholder="URL"
+                      {...field}
+                      className="border p-2 rounded mt-2 w-full"
+                    />
+                  )}
+                />
+                <Button
+                  type="button"
+                  onClick={() => remove(index)}
+                  className="mt-2 bg-red-600 text-white"
+                >
+                  Remove URL
+                </Button>
+              </div>
+            ))}
+
+            <div className="flex justify-between mt-4">
+              <Button type="button" onClick={() => append({ urlName: "", url: "" })}>
+                Add URL
               </Button>
             </div>
-          ))}
-          
-          <div className="flex justify-between mt-4">
-            <Button type="submit" className="bg-gray-500 text-white">
-              Submit
-            </Button>
             <DialogFooter>
-              <DialogDescription>
-                {/* Add any other footer details here */}
-              </DialogDescription>
+              <Button type="submit">Save</Button>
             </DialogFooter>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-};
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  };
 
-export default AddNotify;
+  export default AddNotify;
