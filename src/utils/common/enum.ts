@@ -53,6 +53,10 @@ export const Messages = {
 
 export const AccountOption =["ACTIVE", "INACTIVE", "PENDING"]; 
 
+export const ProjectOption = ["ACTIVE", "PENDING","REJECTED"];
+
+export const AdminOption = ["ACCEPT","REJECT","PENDING"];
+
 export const formatID = (id: string): string => {
   if (id.length <= 7) return id;
   return `${id.substring(0, 5)}...${id.substring(id.length - 2)}`;
