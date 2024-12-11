@@ -194,7 +194,7 @@ const DomainTable: React.FC = () => {
     <DialogTitle>Domain Details</DialogTitle>
   </DialogHeader>
   <div>
-    {selectedIndex ? (
+    {selectedIndex!=-1? (
       <div>
         <p>
           <strong>Name:</strong> {domainData[index].label}
