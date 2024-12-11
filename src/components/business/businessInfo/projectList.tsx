@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { useRouter } from "next/navigation"; // For navigation
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -28,7 +28,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye bu
 import { formatID, Messages, StatusEnum } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";
 import {getStatusBadge} from "@/utils/common/utils"
-
+import CopyButton from "@/components/copybutton";
 interface Project {
   _id: string;
   projectName: string;
@@ -46,6 +46,7 @@ function ProjectList({ id }: { id: string }) {
   const [project, setProject] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -74,6 +75,9 @@ function ProjectList({ id }: { id: string }) {
 
     fetchProjects();
   }, [id]);
+  const handleProject = (id: string) => {
+    router.push(`/project/tabs?id=${id}`); // Pass the ID as a query parameter
+  }; 
   return (
     <Card className=" p-4">
       {" "}
@@ -109,13 +113,27 @@ function ProjectList({ id }: { id: string }) {
               {project.map((project1, index) => (
                 <TableRow key={project1._id}>
                   <TableCell>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <span>{formatID(project1._id)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent>{project1._id}</TooltipContent>
-                    </Tooltip>
-                  </TableCell>
+                        {project1._id ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <span
+                                  onClick={() => handleProject(project1._id)}
+                                  className="cursor-pointer text-blue-500 hover:underline"
+                                >
+                                  {formatID(project1._id|| "")}
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                {project1._id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                            <CopyButton id={project1._id|| ""} />
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
+                      </TableCell>
                   <TableCell>{project1.projectName}</TableCell>
                   <TableCell>
                     <Badge className={getStatusBadge(project1.status)}>
