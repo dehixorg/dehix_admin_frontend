@@ -6,7 +6,7 @@ export const apiHelperService = {
   getAllProject: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/project/all_projects",
+      endpoint: "/project",
       params,
     });
   },

@@ -21,6 +21,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { apiHelperService } from "@/services/business";
+import { StatusEnum } from "@/utils/common/enum";
 
 interface DehixProjectInfo {
   projectName: string;
@@ -31,7 +32,7 @@ interface DehixProjectInfo {
   skillsRequired: string[];
   role: string;
   projectType: string;
-  status: string;
+  status: StatusEnum;
   team: string[];
   url: { value: string; _id: string }[];
   createdAt: string;
@@ -52,7 +53,6 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
     const fetchProjectData = async () => {
       try {
         const response = await apiHelperService.getAllBusinessProject(id);
-        //console.log("API Response:", response.data);
         if (response?.data?.data?.data) {
           setProjectInfo(response.data.data.data);
         } else {

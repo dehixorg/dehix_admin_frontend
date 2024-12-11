@@ -8,9 +8,9 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 
 import AddAdmin from "./addAdmin";
-
+import ConfirmationDialog from "../confirmationDialog";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages, StatusEnum } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -39,7 +39,7 @@ interface UserData {
   email: string;
   phone: string;
   type: string;
-  status: string;
+  status: StatusEnum;
   createdAt: string;
   updatedAt: string;
 }
@@ -48,13 +48,31 @@ const AdminTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
   const fetchUserData = async () => {
     setLoading(true);
     try {
       const response = await apiHelperService.getAllAdmin();
-      setUserData(response.data.data);
+      setUserData(response.data.data || []);
+      if(response.data.data)
+      {
+      setUserData(response?.data?.data||[]);
+      }
+      else
+      {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
+    }
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("admin"),
+        variant: "destructive", // Red error message
+      });
     } finally {
       setLoading(false);
     }
@@ -76,25 +94,44 @@ const AdminTable: React.FC = () => {
     }
   };
 
-  const handleDelete = async (admin_id: string) => {
-    try {
-      await apiHelperService.deleteAdmin(admin_id);
-      fetchUserData();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: Messages.DELETE_ERROR("admin"),
-        variant: "destructive", // Red error message
-      });
+  const handleDelete = async () => {
+    if (selectedAdminId) {
+      try {
+        await apiHelperService.deleteAdmin(selectedAdminId);
+        fetchUserData();
+        toast({
+          title: "Success",
+          description: "Admin deleted successfully.",
+        });
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: Messages.DELETE_ERROR("admin"),
+          variant: "destructive",
+        });
+      } finally {
+        setDialogOpen(false);
+        setSelectedAdminId(null);
+      }
     }
   };
 
+  const confirmDelete = (adminId: string) => {
+    setSelectedAdminId(adminId);
+    setDialogOpen(true);
+  };
+
+
   return (
     <div className="px-4">
-      <div className="mb-8 mt-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex space-x-4">
-            <AddAdmin onAddAdmin={handleAddAdmin} />
+            <div className="mb-8 mt-4 ">
+              <div className="flex items-center justify-between mb-4 ">
+                <div className="flex-grow">
+                  <h2 className="table-title">Admin Table</h2>
+                </div>
+                <div>
+                
+                  <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
@@ -144,7 +181,7 @@ const AdminTable: React.FC = () => {
                       </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
+                ) : Array.isArray(userData) && userData.length > 0 ? (
                   userData.map((user) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
@@ -163,7 +200,7 @@ const AdminTable: React.FC = () => {
                   </TableCell>
                       <TableCell>
                         <DeleteButtonIcon
-                          onClick={() => handleDelete(user._id)}
+                          onClick={() => confirmDelete(user._id)}
                         />
                       </TableCell>
                       <TableCell className="flex justify-end">
@@ -238,6 +275,16 @@ const AdminTable: React.FC = () => {
           </div>
         </Card>
       </div>
+      <ConfirmationDialog
+        isOpen={dialogOpen}
+        onConfirm={handleDelete}
+        onCancel={() => setDialogOpen(false)}
+        title="Confirm Deletion"
+        description="Are you sure you want to delete this admin? This action cannot be undone."
+        confirmButtonName="Delete"
+        cancelButtonName="Cancel"
+
+      />
     </div>
   );
 };

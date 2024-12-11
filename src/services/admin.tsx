@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/admin/all",
+      endpoint: "/admin",
       params,
     });
   },
@@ -17,7 +17,7 @@ export const apiHelperService = {
   createAdmin: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/admin/create",
+      endpoint: "/admin",
       body,
     });
   },

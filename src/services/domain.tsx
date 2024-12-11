@@ -9,14 +9,14 @@ export const apiHelperService = {
   getAllDomain: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/domain/all",
+      endpoint: "/domain",
       params,
     });
   },
   createDomain: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/domain/createdomain",
+      endpoint: "/domain",
       body,
     });
   },
@@ -30,8 +30,17 @@ export const apiHelperService = {
   getAllDomainAdmin: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/domain/all/admin",
+      endpoint: "/domain/admin",
       params,
+    });
+  },
+  updateDomainDesc: async (labelId: string, description: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/domain/${labelId}`,
+      body: {
+        description,
+      },
     });
   },
   updateDomainStatus: async (labelId: string, status: string) => {

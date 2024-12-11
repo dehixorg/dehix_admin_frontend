@@ -8,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { StatusEnum } from "@/utils/common/enum";
 interface ProjectProfileDetailCardProps {
   domain: string;
   freelancersRequired: string;
@@ -17,7 +18,7 @@ interface ProjectProfileDetailCardProps {
   rate: number;
   description: string;
   email?: string; // Optional fields
-  status?: string; // Optional fields
+  status?: StatusEnum; // Optional fields
   startDate?: string; // Optional fields
   endDate?: string; // Optional fields
   className?: string; // For custom styling

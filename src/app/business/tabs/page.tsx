@@ -20,7 +20,7 @@ import ProjectList from "@/components/business/businessInfo/projectList";
 import Appliedcandidates from "@/components/business/businessInfo/appliedCandidates";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 import { apiHelperService } from "@/services/business";
-import { Messages } from "@/utils/common/enum";
+import { Messages, StatusEnum, statusType } from "@/utils/common/enum";
 
 interface Personalinfo {
   name: string; // Combined first and last name
@@ -38,7 +38,7 @@ interface Professionalinfo {
 }
 interface HireFreelancerinfo {
   freelancer: string;
-  status: string;
+  status: StatusEnum;
   _id: string;
 }
 const BusinessTabs = () => {
