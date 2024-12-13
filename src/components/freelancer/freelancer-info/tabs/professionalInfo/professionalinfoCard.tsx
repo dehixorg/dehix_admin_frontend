@@ -77,7 +77,7 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
         </div>
 
         <div className="mb-4 flex items-center gap-2">
-          <Github className="text-blue-500" />
+         
           <p>
             <strong>GitHub Repo Link:</strong>{" "}
             <a
