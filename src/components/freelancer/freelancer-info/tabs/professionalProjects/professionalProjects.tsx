@@ -30,12 +30,12 @@ interface PersonalProjects {
 }
 
 type projectsCardProps = React.ComponentProps<typeof Card> & {
-  projects: PersonalProjects;
+ data: PersonalProjects;
 };
 
 export function projectsCard({
   className,
-  projects,
+  data,
   ...props
 }: projectsCardProps) {
   return (
@@ -43,55 +43,55 @@ export function projectsCard({
       <CardHeader>
       <div className="flex items-center justify-between">
         <CardTitle className="h-12 overflow-hidden text-ellipsis">
-          {projects.projectName}
+          {data.projectName}
         </CardTitle>
         <Tooltip>
           <TooltipTrigger>
-            <span>{getStatusIcon(projects.verificationStatus)}</span>
+            <span>{getStatusIcon(data.verificationStatus)}</span>
           </TooltipTrigger>
           <TooltipContent>
-            <span >{projects.verificationStatus}</span>
+            <span >{data.verificationStatus}</span>
           </TooltipContent>
         </Tooltip>
         </div>
         <CardDescription className="h-10 overflow-hidden text-ellipsis">
-          {projects.description}
+          {data.description}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p>
-          <strong>Role:</strong> {projects.role}
+          <strong>Role:</strong> {data.role}
         </p>
         <p>
-          <strong>Project Type:</strong> {projects.projectType}
+          <strong>Project Type:</strong> {data.projectType}
         </p>
         <p>
           <strong>Start Date:</strong>{" "}
-          {new Date(projects.start).toLocaleDateString()}
+          {new Date(data.start).toLocaleDateString()}
         </p>
         <p>
           <strong>End Date:</strong>{" "}
-          {new Date(projects.end).toLocaleDateString()}
+          {new Date(data.end).toLocaleDateString()}
         </p>
         <p>
           <strong>GitHub Link:</strong>{" "}
           <a
-            href={projects.githubLink}
+            href={data.githubLink}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {projects.githubLink}
+            {data.githubLink}
           </a>
         </p>
         <p>
-          <strong>Refer:</strong> {projects.refer}
+          <strong>Refer:</strong> {data.refer}
         </p>
         <p>
           <strong>Technologies Used:</strong>
         </p>
         <div className="flex flex-wrap gap-2">
-          {projects?.techUsed?.length ? (
-            projects.techUsed.map((tech, index) => (
+          {data?.techUsed?.length ? (
+            data.techUsed.map((tech, index) => (
               <Badge key={index} className="mr-1">
                 {tech}
               </Badge>
@@ -101,13 +101,13 @@ export function projectsCard({
           )}
         </div>
         <p>
-          <strong>Comments:</strong> {projects.comments}
+          <strong>Comments:</strong> {data.comments}
         </p>
       </CardContent>
       <CardFooter>
         <p>
           Updated on:{" "}
-          {new Date(projects.verificationUpdateTime).toLocaleDateString()}
+          {new Date(data.verificationUpdateTime).toLocaleDateString()}
         </p>
       </CardFooter>
     </Card>
