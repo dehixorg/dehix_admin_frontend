@@ -117,12 +117,9 @@ function ProjectList({ id }: { id: string }) {
                           <div className="flex items-center space-x-2">
                             <Tooltip>
                               <TooltipTrigger>
-                                <span
-                                  onClick={() => handleProject(project1._id)}
-                                  className="cursor-pointer text-blue-500 hover:underline"
-                                >
+
                                   {formatID(project1._id|| "")}
-                                </span>
+
                               </TooltipTrigger>
                               <TooltipContent>
                                 {project1._id || "No Data Available"}
@@ -147,8 +144,10 @@ function ProjectList({ id }: { id: string }) {
                   <TableCell>
                     {new Date(project1.updatedAt).toLocaleString()}
                   </TableCell>
-
                   <TableCell>
+                      <ButtonIcon onClick={()=> handleProject(project1._id)}></ButtonIcon>
+                  </TableCell>
+                  {/* <TableCell>
                     <Dialog>
                       <DialogTrigger asChild>
                         <ButtonIcon></ButtonIcon>
@@ -211,7 +210,7 @@ function ProjectList({ id }: { id: string }) {
                         </div>
                       </DialogContent>
                     </Dialog>
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
             </TableBody>
