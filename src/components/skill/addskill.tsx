@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { RootState } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
-import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Dialog,
   DialogTrigger,
@@ -29,6 +28,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { Messages, statusType } from "@/utils/common/enum";
+import { apiHelperService } from "@/services/skill";
 interface SkillData {
   _id: string;
   label: string;
@@ -85,12 +85,11 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
     }
 
     try {
-      const SkillDataWithUser = { ...data, createdBy: currentUserId };
+      const skillDataWithUser = { ...data, createdBy: currentUserId };
       // Post the new Skill to the backend
-      const response = await axiosInstance.post(
-        `/skills/createskill`,
-        SkillDataWithUser,
-      );
+      const response = await apiHelperService.createSkill(skillDataWithUser);
+            
+       
       const newSkill = response.data.data;
       if (newSkill) {
         // Pass the new Skill to the parent component
