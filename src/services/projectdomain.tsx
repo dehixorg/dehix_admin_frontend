@@ -26,12 +26,21 @@ export const apiHelperService = {
       endpoint: `/projectdomain/${projectDomain_id}`,
     });
   },
-  updateProjectomainStatus: async (labelId: string, status: string) => {
+  updateProjectdomainStatus: async (labelId: string, status: string) => {
     return apiService({
       method: Api_Methods.PUT,
       endpoint: `/projectdomain/${labelId}`,
       body: {
         status,
+      },
+    });
+  },
+  updateProjectdomainDesc: async (labelId: string, description: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/projectdomain/${labelId}`,
+      body: {
+        description,
       },
     });
   },

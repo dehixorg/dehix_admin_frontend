@@ -30,6 +30,7 @@ import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
 import ProjectDomainTableSkeleton from "@/utils/common/skeleton"; // Import the new skeleton component
+import EditDomainDescription from "@/components/ProjectDomain/editDomaindesc";
 
 interface DomainData {
   _id: string;
@@ -45,6 +46,10 @@ const ProjectDomainTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+    
 
   // Function to fetch domain data
   const fetchDomainData = async () => {
@@ -88,6 +93,17 @@ const ProjectDomainTable: React.FC = () => {
     }
   };
 
+  const handleDescButtonClick = (index: number) => {
+    setSelectedIndex(index);
+    setIsDialogOpen(true);
+  };
+
+
+  const handleEditButtonClick = () => {
+    setIsDialogOpen(false);
+    setIsEditDialogOpen(true);
+  };
+
   const handleSwitchChange = async (
     labelId: string,
     checked: boolean,
@@ -105,7 +121,7 @@ const ProjectDomainTable: React.FC = () => {
       return updatedDomainData;
     });
     try {
-      await apiHelperService.updateProjectomainStatus(labelId,checked?statusType.active:statusType.inactive);
+      await apiHelperService.updateProjectdomainStatus(labelId,checked?statusType.active:statusType.inactive);
       toast({
         title: "Success",
         description: `Domain status updated to ${
@@ -155,7 +171,7 @@ const ProjectDomainTable: React.FC = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[180px]">Domain Id</TableHead>
-                  <TableHead className="w-[180px]">Domain Name</TableHead>
+                  <TableHead className="w-[300px]">Domain Name</TableHead>
                   <TableHead className="w-[300px]">Created At</TableHead>
                   <TableHead className="w-[180px]">Created By</TableHead>
                   <TableHead className="w-[180px]">Status</TableHead>
@@ -237,15 +253,21 @@ const ProjectDomainTable: React.FC = () => {
                           onClick={() => handleDelete(domain._id)}
                         />
                       </TableCell>
+                      <TableCell className="text-center">
+                        <ButtonIcon variant="outline"
+                                    onClick={() => {
+                                  handleDescButtonClick(index);
+                                        }} />
+                                  </TableCell>
                       <TableCell>
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <ButtonIcon />
-                          </DialogTrigger>
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    
                           <DialogContent className="p-4">
                             <DialogHeader>
                               <DialogTitle>Domain Details</DialogTitle>
                             </DialogHeader>
+                            <div>
+                            {selectedIndex!=-1? (
                             <div>
                               <p>
                                 <strong>Name:</strong> {domain.label}
@@ -257,9 +279,26 @@ const ProjectDomainTable: React.FC = () => {
                                   : "No description available"}
                               </p>
                             </div>
+                             ) : (
+                              <p>No domain selected.</p>
+                            )}
+                          </div>
                           </DialogContent>
                         </Dialog>
                       </TableCell>
+                      {isEditDialogOpen &&selectedIndex &&<EditDomainDescription
+                        isDialogopen= {isEditDialogOpen}
+                            setIsDialogOpen={() => setIsEditDialogOpen(false)} 
+                              domainId={domainData[index]._id}
+                              currentDescription={domainData[index].description || ""}
+                              onDescriptionUpdate={(newDescription:string) => {
+                                setDomainData((prevDomainData) => {
+                                  const updatedDomainData = [...prevDomainData];
+                                  updatedDomainData[index].description = newDescription;
+                                  return updatedDomainData;
+                                });
+                              }}
+                            />}
                     </TableRow>
                   ))
                 )}
