@@ -23,30 +23,30 @@ interface ConsultantInfo {
 }
 
 type ConsultantCardsProps = React.ComponentProps<typeof Card> & {
-  info: ConsultantInfo;
+  data: ConsultantInfo;
 };
 
-export function ConsultantCards({ info, ...props }: ConsultantCardsProps) {
+export function ConsultantCards({ data, ...props }: ConsultantCardsProps) {
   return (
     <Card className={cn("flex flex-col")} {...props}>
       <CardHeader className=" text-lg font-semibold">
-        {info.description}
+        {data.description}
       </CardHeader>
 
       <CardContent>
-        <CardDescription>{info._id}</CardDescription>
+        <CardDescription>{data._id}</CardDescription>
         <div className="flex">
           <p className="text-md font-semibold">Status:</p>
-          <Badge className="ml-2">{info.status}</Badge>
+          <Badge className="ml-2">{data.status}</Badge>
         </div>
 
         <div className="flex">
           <p className="text-md font-semibold">Price:</p>
-          <p className=" ml-2">{info.price}</p>
+          <p className=" ml-2">{data.price}</p>
         </div>
         <div className="flex">
           <p className="text-md font-semibold">experience:</p>
-          <p className="ml-2">{info.experience}</p>
+          <p className="ml-2">{data.experience}</p>
         </div>
       </CardContent>
 
@@ -56,8 +56,8 @@ export function ConsultantCards({ info, ...props }: ConsultantCardsProps) {
           <p className="text-md font-semibold mr-2">Links:</p>
         </div>
         <div className="flex flex-col gap-1">
-          {info.links && info.links.length > 0 ? (
-            info.links.map((url, index) => (
+          {data.links && data.links.length > 0 ? (
+            data.links.map((url, index) => (
               <a
                 key={index}
                 href={url}

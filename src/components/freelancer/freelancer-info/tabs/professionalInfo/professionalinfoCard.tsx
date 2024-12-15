@@ -1,4 +1,3 @@
-import { Github } from "lucide-react";
 import React from "react";
 
 import {
@@ -27,66 +26,66 @@ interface ProfessionalInfo {
   comments: string;
 }
 type ProfessionalCardProps = React.ComponentProps<typeof Card> & {
-  info: ProfessionalInfo;
+  data: ProfessionalInfo;
 };
 
-export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
+export function ProfessionalCard({ data, ...props }: ProfessionalCardProps) {
   return (
     <Card className={cn("flex flex-col")} {...props}>
       <CardHeader>
       <div className="flex items-center justify-between">
-        <CardTitle className="text-xl font-bold mb-2">{info.company}</CardTitle>
+        <CardTitle className="text-xl font-bold mb-2">{data.company}</CardTitle>
         <Tooltip>
           <TooltipTrigger>
-            <span>{getStatusIcon(info.verificationStatus)}</span>
+            <span>{getStatusIcon(data.verificationStatus)}</span>
           </TooltipTrigger>
           <TooltipContent>
-            <span >{info.verificationStatus}</span>
+            <span >{data.verificationStatus}</span>
           </TooltipContent>
         </Tooltip>
         </div>
 
         <CardDescription className="text-lg font-semibold mb-2">
-          {info.jobTitle}
+          {data.jobTitle}
         </CardDescription>
       </CardHeader>
 
       <CardContent>
         <div className="mb-4 border-b pb-4">
           <p>
-            <strong>Work Description:</strong> {info.workDescription}
+            <strong>Work Description:</strong> {data.workDescription}
           </p>
           <p>
             <strong>Work From:</strong>
-            {new Date(info.workFrom).toLocaleDateString()}
+            {new Date(data.workFrom).toLocaleDateString()}
           </p>
           <p>
             <strong>Work To:</strong>
-            {new Date(info.workTo).toLocaleDateString()}
+            {new Date(data.workTo).toLocaleDateString()}
           </p>
         </div>
 
         <div className="mb-4">
           <p>
-            <strong>Reference Person Name:</strong> {info.referencePersonName}
+            <strong>Reference Person Name:</strong> {data.referencePersonName}
           </p>
           <p>
             <strong>Reference Person Contact:</strong>{" "}
-            {info.referencePersonContact}
+            {data.referencePersonContact}
           </p>
         </div>
 
         <div className="mb-4 flex items-center gap-2">
-          <Github className="text-blue-500" />
+         
           <p>
             <strong>GitHub Repo Link:</strong>{" "}
             <a
-              href={info.githubRepoLink}
+              href={data.githubRepoLink}
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-700"
             >
-              {info.githubRepoLink}
+              {data.githubRepoLink}
             </a>
           </p>
         </div>
@@ -94,17 +93,17 @@ export function ProfessionalCard({ info, ...props }: ProfessionalCardProps) {
         <div className="mb-4">
           <p>
             <strong>Oracle Assigned:</strong>{" "}
-            <span className="text-gray-300">{info.oracleAssigned}</span>
+            <span className="text-gray-300">{data.oracleAssigned}</span>
           </p>
           <p>
             <strong>Verification Update Time:</strong>{" "}
-            {new Date(info.verificationUpdateTime).toLocaleDateString()}
+            {new Date(data.verificationUpdateTime).toLocaleDateString()}
           </p>
         </div>
 
         <div>
           <p>
-            <strong>Comments:</strong> {info.comments}
+            <strong>Comments:</strong> {data.comments}
           </p>
         </div>
       </CardContent>
