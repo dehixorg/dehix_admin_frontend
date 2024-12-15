@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-
+import { useRouter } from "next/navigation"; // For navigation
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -28,7 +28,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye bu
 import { formatID, Messages, StatusEnum } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";
 import {getStatusBadge} from "@/utils/common/utils"
-
+import CopyButton from "@/components/copybutton";
 interface Project {
   _id: string;
   projectName: string;
@@ -46,6 +46,7 @@ function ProjectList({ id }: { id: string }) {
   const [project, setProject] = useState<Project[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -74,6 +75,9 @@ function ProjectList({ id }: { id: string }) {
 
     fetchProjects();
   }, [id]);
+  const handleProject = (id: string) => {
+    router.push(`/project/tabs?id=${id}`); // Pass the ID as a query parameter
+  }; 
   return (
     <Card className=" p-4">
       {" "}
@@ -109,13 +113,24 @@ function ProjectList({ id }: { id: string }) {
               {project.map((project1, index) => (
                 <TableRow key={project1._id}>
                   <TableCell>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <span>{formatID(project1._id)}</span>
-                      </TooltipTrigger>
-                      <TooltipContent>{project1._id}</TooltipContent>
-                    </Tooltip>
-                  </TableCell>
+                        {project1._id ? (
+                          <div className="flex items-center space-x-2">
+                            <Tooltip>
+                              <TooltipTrigger>
+
+                                  {formatID(project1._id|| "")}
+
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                {project1._id || "No Data Available"}
+                              </TooltipContent>
+                            </Tooltip>
+                            <CopyButton id={project1._id|| ""} />
+                          </div>
+                        ) : (
+                          "No Data Available"
+                        )}
+                      </TableCell>
                   <TableCell>{project1.projectName}</TableCell>
                   <TableCell>
                     <Badge className={getStatusBadge(project1.status)}>
@@ -129,70 +144,8 @@ function ProjectList({ id }: { id: string }) {
                   <TableCell>
                     {new Date(project1.updatedAt).toLocaleString()}
                   </TableCell>
-
                   <TableCell>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <ButtonIcon></ButtonIcon>
-                      </DialogTrigger>
-
-                      <DialogContent className="p-4">
-                        <DialogHeader>
-                          <DialogTitle>Project Details</DialogTitle>
-                        </DialogHeader>
-                        <div>
-                          <h3 className="text-xl font-bold mb-2">
-                            {project1.projectName}
-                          </h3>
-
-                          <div className="mb-2">
-                            <strong>Status:</strong>
-                            {project1.status}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Description:</strong>{" "}
-                            {project1.description || "No Data Available"}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Email:</strong>{" "}
-                            {project1.email || "No Data Available"}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Skills Required:</strong>{" "}
-                            {project1.skillsRequired.length > 0
-                              ? project1.skillsRequired.join(", ")
-                              : "No skills specified"}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Project Domains:</strong>{" "}
-                            {project1.projectDomain.length > 0
-                              ? project1.projectDomain.join(", ")
-                              : "No domains specified"}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Url:</strong>{" "}
-                            {project1.url.length > 0
-                              ? project1.url.join(", ")
-                              : "No url specified"}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Created At:</strong>{" "}
-                            {new Date(project1.createdAt).toLocaleString()}
-                          </div>
-
-                          <div className="mb-2">
-                            <strong>Updated At:</strong>{" "}
-                            {new Date(project1.updatedAt).toLocaleString()}
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
+                      <ButtonIcon onClick={()=> handleProject(project1._id)}></ButtonIcon>
                   </TableCell>
                 </TableRow>
               ))}

@@ -68,30 +68,30 @@ export enum HireDehixTalentStatusEnum {
   APPROVED = 'Approved',
   CLOSED = 'Closed',
   COMPLETED = 'Completed',
-}
+};
 
 export enum BusinessStatusEnum {
   ACTIVE = 'Active',
   IN_ACTIVE = 'Inactive',
   NOT_VERIFIED = 'Not Verified',
-}
+};
 
 export enum NotificationTypeEnum {
   BUSINESS = 'Business',
   FREELANCER = 'Freelancer',
   BOTH = 'Both',
-}
+};
 export enum NotificationStatusEnum {
   ACTIVE = 'Active',
   IN_ACTIVE = 'Inactive',
-}
+};
 
 // Enum for Oracle Status
 export enum OracleStatusEnum {
   NOT_APPLICABLE = 'Not Applicaple',
   APPLICABLE = 'Applicable',
   STOPPED = 'Stopped',
-}
+};
 
 // Enum for Bid Status
 export enum BidstatusEnum {
@@ -100,36 +100,36 @@ export enum BidstatusEnum {
   REJECTED = 'Rejected',
   PANEL = 'Panel',
   INTERVIEW = 'Interview',
-}
+};
 
 export enum DomainStatus {
   ACTIVE = 'ActiveE',
   INACTIVE = 'Inactive',
   ARCHIVED = 'Archieved',
-}
+};
 
 export enum FreelancerStatusEnum {
   ACTIVE = 'Active',
   PENDING = 'Pending',
   INACTIVE = 'Inactive',
   CLOSED = 'Closed',
-}
+};
 
 export enum Type {
   FREELANCER = 'freelancer',
   ADMIN = 'Admin',
   BUSINESS = 'business',
-}
+};
 
 export enum TicketStatus {
   CREATED = 'Created',
   CLOSED = 'Closed',
   ACTIVE = 'Active',
-}
+};
 
 export enum StatusEnum {
   PENDING = 'Pending',
   ACCEPTED = 'Accepted',
   REJECTED = 'Rejected',
   COMPLETED ='Completed',
-}
+};
