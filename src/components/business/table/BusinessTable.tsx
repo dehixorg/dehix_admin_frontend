@@ -5,7 +5,7 @@ import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { useToast } from "@/components/ui/use-toast";
-import { Messages } from "@/utils/common/enum";
+import { Messages , AccountOption } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -23,7 +23,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-
+import ConfirmationDialog from "@/components/confirmationDialog";
+import StatusDropdown from "@/components/dropdown";
 interface SkillDomainData {
   _id: string;
   name: string;
@@ -41,12 +42,16 @@ interface UserData {
   phone: string;
   skills?: SkillDomainData[];
   domains?: SkillDomainData[];
+  status: string;
 }
 
 const BusinessTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [selectedStatus, setSelectedStatus] = useState("Active");
+  const [selectedIndex,setSelectedIndex] = useState(-1);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -67,6 +72,55 @@ const BusinessTable: React.FC = () => {
 
     fetchUserData();
   }, []);
+  const handleStatusChange = (newStatus: string,index :number) => {
+    setSelectedStatus(newStatus);
+    setSelectedIndex(index);
+    setDialogOpen(true);
+    
+  };
+  const handleStatusUpdate  = async () =>{
+    if (selectedIndex === -1) {
+      toast({
+        title: "Error",
+        description: "No user selected for status update.",
+        variant: "destructive",
+      });
+      return;
+    }
+  
+    const status = userData[selectedIndex].status;
+    try {
+      setUserData((prevUserData) => {
+        const updatedUserData = [...prevUserData];
+        updatedUserData[selectedIndex].status = selectedStatus;
+        return updatedUserData;
+      });
+      await apiHelperService.updateUserStatus(userData[selectedIndex]._id, selectedStatus);
+      toast({
+        title: "Success",
+        description: `User status updated to ${selectedStatus}`,
+        variant: "default",
+      });
+    } catch (error) {
+      setUserData((prevUserData) => {
+        const updatedUserData = [...prevUserData];
+        updatedUserData[selectedIndex].status =status;
+        return updatedUserData;
+      });
+      toast({
+        title: "Error",
+        description: "Failed to update User status. Please try again.",
+        variant: "destructive",
+      });
+    }
+    finally {
+      setDialogOpen(false);
+      setSelectedIndex(-1);
+    }
+  };
+
+
+
 
   // Handle button click to navigate to tabs page with the business ID
   const handleViewBusiness = (id: string) => {
@@ -90,6 +144,7 @@ const BusinessTable: React.FC = () => {
                   <TableHead>Phone No.</TableHead>
                   <TableHead className="text-center">Skills</TableHead>
                   <TableHead className="text-center">Domains</TableHead>
+                  <TableHead className="text-center">Account Status</TableHead>
                   <TableHead className="w-[20px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -175,6 +230,18 @@ const BusinessTable: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
+                        <div className="flex justify-center">
+  <StatusDropdown
+    currentStatus={user.status} // Use dynamic data for current status
+    options={AccountOption} // Add other statuses if required
+    onChange={(newStatus) => {
+      handleStatusChange(newStatus,index);
+    }}
+  />
+  </div>
+</TableCell>
+
+                      <TableCell>
                         <ButtonIcon
                           onClick={() => handleViewBusiness(user._id)}
                         ></ButtonIcon>
@@ -203,6 +270,16 @@ const BusinessTable: React.FC = () => {
           </div>
         </Card>
       </div>
+      <ConfirmationDialog
+        isOpen={dialogOpen}
+        onConfirm={handleStatusUpdate}
+        onCancel={() => setDialogOpen(false)}
+        title="Confirm Updation"
+        description={`Are you sure you want to change the account status to "${selectedStatus}"`}
+        confirmButtonName="Confirm"
+        cancelButtonName="Cancel"
+
+      />
     </div>
   );
 };

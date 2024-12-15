@@ -10,4 +10,13 @@ export const apiHelperService = {
       params,
     });
   },
+  updateUserStatus:async (Id: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/project/${Id}`,
+      body: {
+        status,
+      },
+    });
+  },
 };
