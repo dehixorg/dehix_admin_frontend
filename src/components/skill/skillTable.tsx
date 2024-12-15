@@ -32,7 +32,8 @@ import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
 import CopyButton from "@/components/copybutton";
 import { formatTime } from "@/lib/utils";
-
+import { Button } from "@/components/ui/button";
+import EditSkillDescription from "@/components/skill/editSkilldesc";
 interface SkillData {
   _id: string;
   label: string;
@@ -47,6 +48,9 @@ const SkillTable: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false); // State to handle no data available
   const { toast } = useToast();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   // Function to fetch Skill data
   const fetchSkillData = async () => {
     setLoading(true);
@@ -88,6 +92,15 @@ const SkillTable: React.FC = () => {
         variant: "destructive", // Red error message
       });
     }
+  };
+
+  const handleDescButtonClick = (index: number) => {
+    setSelectedIndex(index);
+    setIsDialogOpen(true);
+  };
+  const handleEditButtonClick = () => {
+    setIsDialogOpen(false);
+    setIsEditDialogOpen(true);
   };
 
   const handleSwitchChange = async (
@@ -247,28 +260,61 @@ const SkillTable: React.FC = () => {
                         />
                       </TableCell>
                       <TableCell className="flex justify-end">
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
-                          </DialogTrigger>
+                        <ButtonIcon variant="outline"
+                                  onClick={() => {
+                                 handleDescButtonClick(index);
+                                        }} />
+                                    </TableCell>
+                    
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                          
                           <DialogContent className="p-4">
                             <DialogHeader>
+                              
                               <DialogTitle>Skill Details</DialogTitle>
                             </DialogHeader>
                             <div>
+                            {selectedIndex!=-1? (
+                            <div>
                               <p>
-                                <strong>Name:</strong> {Skill.label}
+                                <strong>Name:</strong> {SkillData[selectedIndex].label}
                               </p>
                               <p>
                                 <strong>Description:</strong>
-                                {Skill.description
-                                  ? Skill.description
+                                {SkillData[selectedIndex].description
+                                  ? SkillData[selectedIndex].description
                                   : "No description available"}
                               </p>
+                              <Button
+                            variant="outline"
+                            onClick={() => {
+                              handleEditButtonClick();
+                            }}
+                          >
+                            Edit Description
+                          </Button>
+                            
                             </div>
+                          ) : (
+                            <p>No skill selected.</p>
+                          )}
+                        </div>
                           </DialogContent>
                         </Dialog>
-                      </TableCell>
+                       
+                        {isEditDialogOpen &&selectedIndex &&<EditSkillDescription
+                        isDialogopen= {isEditDialogOpen}
+                            setIsDialogOpen={() => setIsEditDialogOpen(false)} 
+                              skillId={SkillData[selectedIndex]._id}
+                              currentDescription={SkillData[selectedIndex].description || ""}
+                              onDescriptionUpdate={(newDescription:string) => {
+                                setSkillData((prevSkillData) => {
+                                  const updatedSkillData = [...prevSkillData];
+                                  updatedSkillData[selectedIndex].description = newDescription;
+                                  return updatedSkillData;
+                                });
+                              }}
+                            />}
                     </TableRow>
                   ))
                 ) : (
