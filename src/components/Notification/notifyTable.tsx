@@ -175,20 +175,20 @@ const NotifyTable: React.FC = () => {
                       </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
-                  userData.map((user, index) => (
+                ) : userData?.length > 0 ? (
+                  userData?.map((user, index) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>{truncateText(user.heading, 20)}</TableCell>
                       <TableCell className="text-center">
-                        {user.importantUrl.length}
+                        {user?.importantUrl?.length}
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={user.status === "active"}
+                          checked={user?.status === "active"}
                           onCheckedChange={(checked) =>
-                            handleSwitchChange(user._id, checked, index)
+                            handleSwitchChange(user?._id, checked, index)
                           }
                         />
                       </TableCell>
@@ -211,23 +211,23 @@ const NotifyTable: React.FC = () => {
                             </DialogHeader>
                             <div>
                               <p>
-                                <strong>Type:</strong> {user.type}
+                                <strong>Type:</strong> {user?.type}
                               </p>
                               <p>
-                                <strong>Status:</strong> {user.status}
+                                <strong>Status:</strong> {user?.status}
                               </p>
                               <p>
-                                <strong>Heading:</strong> {user.heading}
+                                <strong>Heading:</strong> {user?.heading}
                               </p>
                               <p>
-                                <strong>Description:</strong> {user.description}
+                                <strong>Description:</strong> {user?.description}
                               </p>
                               {user.background_img && (
                                 <div className="mt-4 w-40 h-40 border-2 border-black-300 bg-gray-700 flex items-center justify-center cursor-pointer">
                                   <Image
                                     width={32}
                                     height={32}
-                                    src={user.background_img} // AWS image URL
+                                    src={user?.background_img} // AWS image URL
                                     alt="Notification"
                                     className="w-full h-auto"
                                   />
@@ -235,24 +235,24 @@ const NotifyTable: React.FC = () => {
                               )}
                               <p>
                                 <strong>URL Count:</strong>
-                                {user.importantUrl.length}
+                                {user?.importantUrl?.length}
                               </p>
                               <ul className=" list-inside">
-                                {user.importantUrl.length > 0 ? (
-                                  user.importantUrl.map((url, urlIndex) => (
+                                {user?.importantUrl?.length > 0 ? (
+                                  user?.importantUrl?.map((url, urlIndex) => (
                                     <li key={urlIndex}>
                                       <p>
-                                        <strong>URL Name:</strong>{url.urlName}
+                                        <strong>URL Name:</strong>{url?.urlName}
                                       </p>
                                       <p>
                                         <strong>URL:</strong>
                                         <a
-                                          href={url.url}
+                                          href={url?.url}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           className="text-blue-500 underline"
                                         >
-                                          {url.url}
+                                          {url?.url}
                                         </a>
                                       </p>
                                     </li>
