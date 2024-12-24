@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import {  PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
 import { ButtonIcon } from "../ui/arrowButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
@@ -29,7 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
-import {Badge} from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge"
 import { getStatusBadge } from "@/utils/common/utils";
 interface UserData {
   _id: string;
@@ -55,18 +55,16 @@ const AdminTable: React.FC = () => {
     try {
       const response = await apiHelperService.getAllAdmin();
       setUserData(response.data.data || []);
-      if(response.data.data)
-      {
-      setUserData(response?.data?.data||[]);
+      if (response.data.data) {
+        setUserData(response?.data?.data || []);
       }
-      else
-      {
-      toast({
-        title: "Error",
-        description: Messages.FETCH_ERROR("admin"),
-        variant: "destructive", // Red error message
-      });
-    }
+      else {
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("admin"),
+          variant: "destructive", // Red error message
+        });
+      }
     } catch (error) {
       toast({
         title: "Error",
@@ -124,14 +122,14 @@ const AdminTable: React.FC = () => {
 
   return (
     <div className="px-4">
-            <div className="mb-8 mt-4 ">
-              <div className="flex items-center justify-between mb-4 ">
-                <div className="flex-grow">
-                  <h2 className="table-title">Admin Table</h2>
-                </div>
-                <div>
-                
-                  <AddAdmin onAddAdmin={handleAddAdmin} />
+      <div className="mb-8 mt-4 ">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="table-title">Admin Table</h2>
+          </div>
+          <div>
+
+            <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
@@ -190,14 +188,14 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
                       <TableCell >
-                    <Badge
-                      className={
-                        getStatusBadge(user.status)
-                      }
-                    >
-                      {user.status}
-                    </Badge>
-                  </TableCell>
+                        <Badge
+                          className={
+                            getStatusBadge(user.status)
+                          }
+                        >
+                          {user.status}
+                        </Badge>
+                      </TableCell>
                       <TableCell>
                         <DeleteButtonIcon
                           onClick={() => confirmDelete(user._id)}
@@ -208,48 +206,57 @@ const AdminTable: React.FC = () => {
                           <DialogTrigger asChild>
                             <ButtonIcon />
                           </DialogTrigger>
-                          <DialogContent className="p-4">
-                            <DialogHeader>
-                              <DialogTitle>Admin Details</DialogTitle>
-                              <DialogDescription>
-                                Detailed information about the Admin.
-                              </DialogDescription>
+                          <DialogContent className="p-6 sm:p-4 lg:p-6 rounded-lg shadow-lg max-w-lg sm:max-w-md mx-auto">
+                            <DialogHeader className="mb-4">
+                              <DialogTitle className="text-2xl font-semibold">Admin Details</DialogTitle>
+                              <DialogDescription className="text-sm">Detailed information about the Admin.</DialogDescription>
                             </DialogHeader>
-                            <div>
-                              <p>
-                                <strong>ID:</strong> {user._id}
-                              </p>
-                              <p>
-                                <strong>First Name:</strong> {user.firstName}
-                              </p>
-                              <p>
-                                <strong>Last Name:</strong> {user.lastName}
-                              </p>
-                              <p>
-                                <strong>Username:</strong> {user.userName}
-                              </p>
-                              <p>
-                                <strong>Email ID:</strong> {user.email}
-                              </p>
-                              <p>
-                                <strong>Phone No.:</strong> {user.phone}
-                              </p>
-                              <p>
-                                <strong>Type:</strong> {user.type}
-                              </p>
-                              <p>
-                                <strong>Status:</strong> {user.status}
-                              </p>
-                              <p>
-                                <strong>Created At:</strong> {user.createdAt}
-                              </p>
-                              <p>
-                                <strong>Updated At:</strong> {user.updatedAt}
-                              </p>
+                            <div className="space-y-4">
+                              <div className="flex justify-between">
+                                <strong>ID:</strong>
+                                <span>{user._id}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>First Name:</strong>
+                                <span>{user.firstName}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Last Name:</strong>
+                                <span>{user.lastName}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Username:</strong>
+                                <span>{user.userName}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Email ID:</strong>
+                                <span>{user.email}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Phone No.:</strong>
+                                <span>{user.phone}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Type:</strong>
+                                <span>{user.type}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Status:</strong>
+                                <span>{user.status}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Created At:</strong>
+                                <span>{user.createdAt}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <strong>Updated At:</strong>
+                                <span>{user.updatedAt}</span>
+                              </div>
                             </div>
                           </DialogContent>
                         </Dialog>
                       </TableCell>
+
                     </TableRow>
                   ))
                 ) : (
