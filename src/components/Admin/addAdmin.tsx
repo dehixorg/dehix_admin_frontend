@@ -69,7 +69,11 @@ const adminSchema = z.object({
     .string()
     .email(Admin_Schema_Prompt_Messages.VALID_MAIL)
     .nonempty(Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
-  phone: z.string().nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
+  phone: z
+    .string()
+    .nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED)
+    .length(10, "Phone number must be exactly 10 digits.") //length of phone number
+    .regex(/^\d{10}$/, "Phone number must only contain digits."),  // for digit only 
   type: z.nativeEnum(AdminType).default(AdminType.ADMIN),
   status: z.literal(StatusEnum.PENDING), // status is always "Pending"
 });
@@ -155,7 +159,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
               )}
             />
             {errors.firstName && (
-              <p className="text-red-600">{errors.firstName.message}</p>
+              <p className="text-red-600 text-sm mt-1">{errors.firstName.message}</p>
             )}
           </div>
           <div className="mb-3">
@@ -172,7 +176,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
               )}
             />
             {errors.lastName && (
-              <p className="text-red-600">{errors.lastName.message}</p>
+              <p className="text-red-600 text-sm mt-1">{errors.lastName.message}</p>
             )}
           </div>
           <div className="mb-3">
@@ -185,11 +189,12 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
                   placeholder="Username"
                   {...field}
                   className="border p-2 rounded mt-2 w-full"
+                  // className="border outline-none p-2 rounded mt-2 w-full focus:outline-none focus:ring-0 focus-visible:ring-1"
                 />
               )}
             />
             {errors.userName && (
-              <p className="text-red-600">{errors.userName.message}</p>
+              <p className="text-red-600 text-sm mt-1 ">{errors.userName.message}</p>
             )}
           </div>
           <div className="mb-3">
@@ -206,7 +211,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
               )}
             />
             {errors.email && (
-              <p className="text-red-600">{errors.email.message}</p>
+              <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
           <div className="mb-3">
@@ -223,7 +228,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
               )}
             />
             {errors.phone && (
-              <p className="text-red-600">{errors.phone.message}</p>
+              <p className="text-red-600 text-sm mt-1">{errors.phone.message}</p>
             )}
           </div>
           <div className="mb-3">
@@ -246,7 +251,7 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
               )}
             />
             {errors.type && (
-              <p className="text-red-600">{errors.type.message}</p>
+              <p className="text-red-600 text-sm mt-1">{errors.type.message}</p>
             )}
           </div>
           <DialogFooter className="mt-3">
