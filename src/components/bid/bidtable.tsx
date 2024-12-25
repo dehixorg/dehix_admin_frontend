@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
-import { ButtonIcon } from "../ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { useToast } from "@/components/ui/use-toast";
 import { BidstatusEnum, Messages, formatID } from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
@@ -194,7 +194,7 @@ const BidsTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon />
+                            <InfoButton />
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>

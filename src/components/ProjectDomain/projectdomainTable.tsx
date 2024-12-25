@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { Switch } from "@/components/ui/switch";
 import { apiHelperService } from "@/services/projectdomain";
 import CopyButton from "@/components/copybutton";
@@ -240,7 +240,7 @@ const ProjectDomainTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon />
+                            <InfoButton />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

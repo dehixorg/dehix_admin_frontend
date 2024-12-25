@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
-
-import { ButtonIcon } from "../ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
 
 import { useToast } from "@/components/ui/use-toast";
@@ -93,7 +92,7 @@ const SkillTable: React.FC = () => {
   const handleSwitchChange = async (
     labelId: string,
     checked: boolean,
-    index: number,
+    index: number
   ) => {
     // Initialize toast
 
@@ -111,7 +110,7 @@ const SkillTable: React.FC = () => {
       });
       await apiHelperService.updateSkillStatus(
         labelId,
-        checked ? statusType.active : statusType.inactive,
+        checked ? statusType.active : statusType.inactive
       );
       toast({
         title: "Success",
@@ -249,7 +248,7 @@ const SkillTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon></ButtonIcon>
+                            <InfoButton></InfoButton>
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>

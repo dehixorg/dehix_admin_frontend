@@ -15,7 +15,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+// import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { apiHelperService } from "@/services/business";
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 import {
@@ -175,9 +176,9 @@ const BusinessTable: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        <ButtonIcon
+                        <InfoButton
                           onClick={() => handleViewBusiness(user._id)}
-                        ></ButtonIcon>
+                        ></InfoButton>
                       </TableCell>
                     </TableRow>
                   ))
