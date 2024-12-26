@@ -26,9 +26,9 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, NotificationStatusEnum } from "@/utils/common/enum";
+import { Messages, NotificationStatusEnum ,imageSize} from "@/utils/common/enum";
 import { apiHelperService } from "@/services/notification";
-import {imageSize} from "@/utils/common/enum";
+
 interface ImportantUrl {
   urlName: string;
   url: string;

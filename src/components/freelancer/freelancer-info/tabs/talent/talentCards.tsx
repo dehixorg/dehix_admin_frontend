@@ -15,10 +15,10 @@ interface DehixTalentInfo {
 }
 
 type DehixTalentCardProps = React.ComponentProps<typeof Card> & {
-  info: DehixTalentInfo;
+  data: DehixTalentInfo;
 };
 
-export function Talentcard({ info, ...props }: DehixTalentCardProps) {
+export function Talentcard({ data, ...props }: DehixTalentCardProps) {
   return (
     <Card className={cn("flex flex-col")} {...props}>
       <CardHeader>
@@ -27,24 +27,24 @@ export function Talentcard({ info, ...props }: DehixTalentCardProps) {
 
       <CardContent className="space-y-4">
         <div className="flex ">
-          <p className="text-md font-semibold">Skill Name: </p> {info.skillName}
+          <p className="text-md font-semibold">Skill Name: </p> {data.skillName}
         </div>
 
         <div className="flex ">
           <p className="text-md font-semibold">Domain Name: </p>{" "}
-          {info.domainName}
+          {data.domainName}
         </div>
 
         <div className="flex flex-col gap-2">
           <div className="flex ">
             <p className="text-md font-semibold">Status: </p>
 
-            <Badge className="ml-2">{info.status}</Badge>
+            <Badge className="ml-2">{data.status}</Badge>
           </div>
 
           <div className="flex ">
             <p className="text-md font-semibold">Active Status: </p>
-            {info.activestatus?"Active":"Inactive"}
+            {data.activestatus?"Active":"Inactive"}
           </div>
         </div>
       </CardContent>

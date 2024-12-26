@@ -1,6 +1,5 @@
 "use client";
 import { Linkedin, GitPullRequest, Globe } from "lucide-react";
-
 import { Card } from "@/components/ui/card";
 
 interface UserProfile {
@@ -18,37 +17,34 @@ interface UserProfile {
   connects: string;
   workExperience: string;
 }
+
 type UserProfileProps = React.ComponentProps<typeof Card> & {
   profile: UserProfile;
 };
 
-export function UserProfilePage({
-  className,
-  profile,
-  ...props
-}: UserProfileProps) {
+export function UserProfilePage({ className, profile, ...props }: UserProfileProps) {
   return (
-    <div className="flex space-x-4 w-full mx-0 px-0">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-4">
       {/* Card 1: Personal Information */}
-      <Card className="flex-1">
+      <Card className="h-full">
         <div className="p-4">
           <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
           {profile ? (
             <>
               <p>
-                <strong>First Name:</strong> {profile.firstName||"No Data Available"}
+                <strong>First Name:</strong> {profile.firstName || "No Data Available"}
               </p>
               <p>
-                <strong>Last Name:</strong> {profile.lastName||"No Data Available"}
+                <strong>Last Name:</strong> {profile.lastName || "No Data Available"}
               </p>
               <p>
-                <strong>User Name:</strong> {profile.userName||"No Data Available"}
+                <strong>User Name:</strong> {profile.userName || "No Data Available"}
               </p>
               <p>
-                <strong>Email:</strong> {profile.email||"No Data Available"}
+                <strong>Email:</strong> {profile.email || "No Data Available"}
               </p>
               <p>
-                <strong>Phone:</strong> {profile.phone||"No Data Available"}
+                <strong>Phone:</strong> {profile.phone || "No Data Available"}
               </p>
             </>
           ) : (
@@ -57,23 +53,23 @@ export function UserProfilePage({
         </div>
       </Card>
 
-      <Card className="flex-1">
+      {/* Card 2: Additional Information */}
+      <Card className="h-full">
         <div className="p-4">
-          <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
+          <h2 className="text-2xl font-semibold mb-4">Additional Information</h2>
           {profile ? (
             <>
               <p>
-                <strong>Date of Birth:</strong>{" "}
-                {new Date(profile.dob).toLocaleDateString()}
+                <strong>Date of Birth:</strong> {profile.dob ? new Date(profile.dob).toLocaleDateString() : "No Data Available"}
               </p>
               <p>
-                <strong>Per Hour Price:</strong> {profile.perHourPrice||"No Data Available"}
+                <strong>Per Hour Price:</strong> {profile.perHourPrice || "No Data Available"}
               </p>
               <p>
-                <strong>Connects:</strong> {profile.connects||"No Data Available"}
+                <strong>Connects:</strong> {profile.connects || "No Data Available"}
               </p>
               <p>
-                <strong>Work Experience:</strong> {profile.workExperience||"No Data Available"}
+                <strong>Work Experience:</strong> {profile.workExperience || "No Data Available"}
               </p>
             </>
           ) : (
@@ -82,9 +78,8 @@ export function UserProfilePage({
         </div>
       </Card>
 
-      {/* Card 2: Social Links */}
-
-      <Card className="flex-1">
+      {/* Card 3: Social Links */}
+      <Card className="h-full">
         <div className="p-4">
           <h2 className="text-2xl font-semibold mb-4">Social Links</h2>
           {profile ? (
@@ -111,7 +106,7 @@ export function UserProfilePage({
                   GitHub
                 </a>
               </p>
-              <p className="flex items-center mb-2 ">
+              <p className="flex items-center mb-2">
                 <Globe className="mr-2" />
                 <a
                   href={profile.personalWebsite}
