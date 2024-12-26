@@ -16,7 +16,7 @@ export const apiHelperService = {
   createNotification: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/notification",
+      endpoint: "/notification/createnotification",
       body,
     });
   },
