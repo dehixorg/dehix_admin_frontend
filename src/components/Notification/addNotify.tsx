@@ -140,60 +140,20 @@ const AddNotify: React.FC<AddNotifyProps> = ({ onAddNotify }) => {
   const onSubmit = async (data: notifyData) => {
     try {
       const formData = new FormData();
-      let response:any = null;
+      let response: any = null;
 
       if (selectedPicture) {
         formData.append("background_img", selectedPicture);
         const postResponse = await axiosInstance.post(
           "/register/upload-image",
-          formData,
-          // {
-          //   headers: {
-          //     "Content-Type": "multipart/form-data",
-          //   },
-          // }
+          formData
         );
         if (postResponse.data.data) {
           const { Location } = postResponse.data.data;
-          console.log("Location", Location);
-          formData.append("background_img", Location);
-        }
-        response = await apiHelperService.createNotification({
-          ...data,
-          background_img: Location.toString(),
-        });
-      } else {
-        response = await apiHelperService.createNotification({
-          ...data,
-          background_img: "",
-        });
-      }
-      // const postResponse = await axiosInstance.post(
-      //   "/register/upload-image",
-      //   formData,
-      //   {
-      //     headers: {
-      //       "Content-Type": "multipart/form-data",
-      //     },
-      //   }
-      // );
-      // if (postResponse.data.data) {
-      //   const { Location } = postResponse.data.data;
-      //   formData.append("background_img", Location);
-
-        // response = await apiHelperService.createNotification({
-        //   ...data,
-        //   background_img: Location,
-        // });
-        if (response?.data?.data) {
-          toast({
-            title: "Success",
-            description: "Notification Added Successfully",
-            variant: "default", // Red error message
+          response = await apiHelperService.createNotification({
+            ...data,
+            background_img: Location,
           });
-          reset();
-          setOpen(false);
-          onAddNotify();
         } else {
           toast({
             title: "Error",
@@ -201,13 +161,28 @@ const AddNotify: React.FC<AddNotifyProps> = ({ onAddNotify }) => {
             variant: "destructive", // Red error message
           });
         }
-      // } else {
-      //   toast({
-      //     title: "Error",
-      //     description: Messages.ADD_ERROR("notification"),
-      //     variant: "destructive", // Red error message
-      //   });
-      // }
+      } else {
+        response = await apiHelperService.createNotification({
+          ...data,
+          background_img: "",
+        });
+      }
+      if (response?.data?.data) {
+        toast({
+          title: "Success",
+          description: "Notification Added Successfully",
+          variant: "default", // Red error message
+        });
+        reset();
+        setOpen(false);
+        onAddNotify();
+      } else {
+        toast({
+          title: "Error",
+          description: Messages.ADD_ERROR("notification"),
+          variant: "destructive", // Red error message
+        });
+      }
     } catch (error) {
       toast({
         title: "Error",
