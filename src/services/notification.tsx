@@ -9,7 +9,7 @@ export const apiHelperService = {
   getAllNotification: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/notification",
+      endpoint: "/notification/all_notification",
       params,
     });
   },
