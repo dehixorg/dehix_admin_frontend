@@ -243,7 +243,7 @@ const NotifyTable: React.FC = () => {
                                       key={index}
                                       href={url.url}
                                       target="_blank"
-                                      className="text-blue-500 underline text-sm"
+                                      className="text-blue-500 underline text-sm" rel="noreferrer"
                                     >
                                       {url.url}
                                     </a>
