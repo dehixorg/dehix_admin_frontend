@@ -26,8 +26,9 @@ import {
 } from "@/components/ui/dialog";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, NotificationStatusEnum , imageSize } from "@/utils/common/enum";
+import { Api_Methods, Messages, NotificationStatusEnum , imageSize } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/notification";
+import { apiService } from "@/services/apiService";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -143,10 +144,11 @@ const AddNotify: React.FC<AddNotifyProps> = ({ onAddNotify }) => {
 
       if (selectedPicture) {
         formData.append("background_img", selectedPicture);
-        const postResponse = await axiosInstance.post(
-          "/register/upload-image",
-          formData
-        );
+        const postResponse = await apiService({
+          method: Api_Methods.POST,
+          endpoint: "/register/upload-image",
+          body: formData,
+        })
         if (postResponse.data.data) {
           const { Location } = postResponse.data.data;
           response = await apiHelperService.createNotification({
