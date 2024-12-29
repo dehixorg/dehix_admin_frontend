@@ -45,8 +45,8 @@ interface notifyData {
 const notifySchema = z.object({
   heading: z.string().min(1, "Please enter a heading"),
   description: z.string().min(1, "Please enter a description"),
-  type: z.enum(["both", "business", "freelancer"]),
-  status: z.enum(["active"]).default("active"),
+  type: z.enum(["BOTH", "BUSINESS", "FREELANCER"]),
+  status: z.enum(["ACTIVE"]).default("ACTIVE"),
   importantUrl: z
     .array(
       z.object({
@@ -217,9 +217,9 @@ const AddNotify: React.FC<AddNotifyProps> = ({ onAddNotify }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="both">Both</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="freelancer">Freelancer</SelectItem>
+                    <SelectItem value="BOTH">Both</SelectItem>
+                    <SelectItem value="BUSINESS">Business</SelectItem>
+                    <SelectItem value="FREELANCER">Freelancer</SelectItem>
                   </SelectContent>
                 </Select>
               )}
