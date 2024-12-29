@@ -35,4 +35,11 @@ export const apiHelperService = {
       },
     });
   },
+  uploadNotificationImage: async (body: Record<string, any>) => {
+    return apiService({
+      method: Api_Methods.POST,
+      endpoint: "/register/upload-image",
+      body,
+    });
+  },
 };
