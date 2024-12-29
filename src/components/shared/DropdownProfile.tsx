@@ -16,9 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RootState } from "@/lib/store";
-import { clearUser } from "@/lib/userSlice";
-import { signOut } from "firebase/auth";
-import { auth } from "@/config/firebaseConfig";
+import { handleLogout } from "@/lib/utils";
 
 export default function DropdownProfile() {
   const user = useSelector((state: RootState) => state.user);
@@ -38,19 +36,11 @@ export default function DropdownProfile() {
     }
   }, [user]);
 
-  const handleLogout = async () => {
+  const onLogoutClick = async () => {
     try {
-      
-      await signOut(auth);// Log out from Firebase
-      
-      dispatch(clearUser());// Clear user from Redux
-  
-      Cookies.remove('userType'); // Remove userType cookie
-      Cookies.remove('token'); // Remove token cookie
-  
-      router.replace('/auth/login');   // Redirect to login page
+      await handleLogout(dispatch, router); 
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Logout failed:", error);
     }
   };
 
@@ -90,7 +80,7 @@ export default function DropdownProfile() {
           <DropdownMenuItem>Support</DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={onLogoutClick}>
           <LogOut size={18} className="mr-2" />
           Logout
         </DropdownMenuItem>
