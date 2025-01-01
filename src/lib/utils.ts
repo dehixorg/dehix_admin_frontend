@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
   UserCredential,
 } from "firebase/auth";
 import Cookies from "js-cookie";
@@ -10,6 +11,7 @@ import Cookies from "js-cookie";
 import { initializeAxiosWithToken } from "./axiosinstance";
 
 import { auth, googleProvider } from "@/config/firebaseConfig";
+import { clearUser } from "./userSlice";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -120,6 +122,27 @@ export const getUserData = async (
     };
   } catch (error) {
     console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
+
+//logout function
+
+export const handleLogout = async (dispatch: any, router: any) => {
+  try {
+    await signOut(auth); 
+    dispatch(clearUser()); 
+
+    // Clear cookies
+    Cookies.remove("userType");
+    Cookies.remove("token");
+
+    // Redirect to login page
+    router.replace("/auth/login");
+    console.log("User successfully logged out");
+  } catch (error) {
+    console.error("Error during logout:", error);
     throw error;
   }
 };

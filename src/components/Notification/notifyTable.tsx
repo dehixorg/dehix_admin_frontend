@@ -8,7 +8,11 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 import AddNotify from "./addNotify";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, NotificationStatusEnum, statusType } from "@/utils/common/enum";
+import {
+  Messages,
+  NotificationStatusEnum,
+  statusType,
+} from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -30,6 +34,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiHelperService } from "@/services/notification";
+import { DotFilledIcon } from "@radix-ui/react-icons";
 
 interface ImportantUrl {
   urlName: string;
@@ -41,7 +46,7 @@ interface UserData {
   heading: string;
   description: string;
   type: string;
-  status:statusType ;
+  status: statusType;
   background_img: string;
   importantUrl: ImportantUrl[];
 }
@@ -54,22 +59,22 @@ const NotifyTable: React.FC = () => {
   const [userData, setUserData] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  
-    const fetchUserData = async () => {
-      try {
-        const response = await apiHelperService.getAllNotification();
-        setUserData(response.data.data);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("notification"),
-          variant: "destructive", 
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    useEffect(() => {
+
+  const fetchUserData = async () => {
+    try {
+      const response = await apiHelperService.getAllNotification();
+      setUserData(response.data.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("notification"),
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -83,7 +88,7 @@ const NotifyTable: React.FC = () => {
       toast({
         title: "Error",
         description: Messages.DELETE_ERROR("notification"),
-        variant: "destructive", 
+        variant: "destructive",
       });
     }
   };
@@ -133,7 +138,7 @@ const NotifyTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="table-title">Notification Table</h2>
-          <AddNotify onAddNotify={fetchUserData}/>
+          <AddNotify onAddNotify={fetchUserData} />
         </div>
         <Card>
           <div className="lg:overflow-x-auto">
@@ -202,67 +207,49 @@ const NotifyTable: React.FC = () => {
                           <DialogTrigger asChild>
                             <ButtonIcon />
                           </DialogTrigger>
-                          <DialogContent className="p-4">
+                          <DialogContent className="p-4 max-h-[80%] overflow-y-scroll">
                             <DialogHeader>
                               <DialogTitle>Notification Details</DialogTitle>
                               <DialogDescription>
                                 Detailed information about the Notification.
                               </DialogDescription>
                             </DialogHeader>
-                            <div>
-                              <p>
-                                <strong>Type:</strong> {user.type}
+                            <div className="flex flex-col items-start justify-start gap-0">
+                              <h1 className="text-3xl w-full text-center font-medium text-neutral-900">
+                                {user.heading}
+                              </h1>
+                              <p className="text-sm text-gray-500 mb-2">
+                                {user.type}
                               </p>
-                              <p>
-                                <strong>Status:</strong> {user.status}
-                              </p>
-                              <p>
-                                <strong>Heading:</strong> {user.heading}
-                              </p>
-                              <p>
-                                <strong>Description:</strong> {user.description}
-                              </p>
-                              {user.background_img && (
-                                <div className="mt-4 w-40 h-40 border-2 border-black-300 bg-gray-700 flex items-center justify-center cursor-pointer">
-                                  <Image
-                                    width={32}
-                                    height={32}
-                                    src={user.background_img} // AWS image URL
-                                    alt="Notification"
-                                    className="w-full h-auto"
-                                  />
-                                </div>
+                              <p className=" mb-2">{user.description}</p>
+                              {user.background_img !== "" && (
+                                <Image
+                                  src={user.background_img}
+                                  alt="notification"
+                                  width={2000}
+                                  height={2000}
+                                  className="w-full h-fit"
+                                />
                               )}
-                              <p>
-                                <strong>URL Count:</strong>
-                                {user.importantUrl.length}
-                              </p>
-                              <ul className=" list-inside">
-                                {user.importantUrl.length > 0 ? (
-                                  user.importantUrl.map((url, urlIndex) => (
-                                    <li key={urlIndex}>
-                                      <p>
-                                        <strong>URL Name:</strong>{url.urlName}
-                                      </p>
-                                      <p>
-                                        <strong>URL:</strong>
-                                        <a
-                                          href={url.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-blue-500 underline"
-                                        >
-                                          {url.url}
-                                        </a>
-                                      </p>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <li className="text-gray-500">
-                                    No URLs available
-                                  </li>
-                                )}
-                              </ul>
+                              <div className="mt-4 text-sm text-gray-800">
+                                Important URLs:
+                                {user.importantUrl.map((url, index) => (
+                                  <div key={index}>
+                                    <span className="ml-2 text-sm text-gray-600">
+                                      <DotFilledIcon className="inline mr-2" />
+                                      {url.urlName} :{" "}
+                                    </span>
+                                    <a
+                                      key={index}
+                                      href={url.url}
+                                      target="_blank"
+                                      className="text-blue-500 underline text-sm" rel="noreferrer"
+                                    >
+                                      {url.url}
+                                    </a>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
                           </DialogContent>
                         </Dialog>
