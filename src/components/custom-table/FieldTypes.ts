@@ -24,7 +24,7 @@ export interface Field {
   type: FieldType; // type of the field
   sortable?: boolean;
   width?: number;
-  formating?: {};
+  formating?: object;
   link?: string; // the placeholder link to be displayed if type === FieldType.LINK
   tooltip?: boolean;
   tooltipContent?: string; // tooltip content to be displayed if tooltip === true
