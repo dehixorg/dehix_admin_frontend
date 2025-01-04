@@ -13,32 +13,8 @@ import {
 } from "../ui/table";
 import { useEffect, useState } from "react";
 import { apiHelperService } from "@/services/customTable";
-import { FieldComponentProps, FieldType, Params } from "./FieldTypes";
-import { ArrayValueField, DateTimeField, DeleteButton, LinkField, TextField, ToggleField } from "./FieldComponents";
-
-const mapTypeToComponent = (type: FieldType) => {
-  switch (type) {
-    case FieldType.DATETIME:
-      return DateTimeField;
-    case FieldType.TEXT:
-      return TextField;
-    case FieldType.DELETE:
-      return DeleteButton;
-    case FieldType.LINK:
-      return LinkField;
-    case FieldType.ARRAY_VALUE:
-      return ArrayValueField;
-    case FieldType.TOGGLE:
-      return ToggleField;
-    default:
-      return TextField;
-  }
-};
-
-const CustomTableCell = ({ value, fieldData, id }: FieldComponentProps) => {
-  const FieldComponentToRender = mapTypeToComponent(fieldData.type);
-  return <FieldComponentToRender fieldData={fieldData} value={value} id={id} />;
-};
+import { Params } from "./FieldTypes";
+import { CustomTableCell } from "./FieldComponents";
 
 export const CustomTable = ({ fields, filterData, api, params, uniqueId }: Params) => {
   const [data, setData] = useState([]);
@@ -98,7 +74,7 @@ export const CustomTable = ({ fields, filterData, api, params, uniqueId }: Param
                         >
                           <CustomTableCell
                             fieldData={field}
-                            value={elem[field.fieldName]}
+                            value={field.fieldName ? elem[field.fieldName] : undefined}
                             id={elem[uniqueId]}
                           />
                         </TableCell>

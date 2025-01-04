@@ -2,6 +2,8 @@
 
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType } from "@/components/custom-table/FieldTypes";
+import { GearIcon } from "@radix-ui/react-icons";
+import { ArrowLeft, Pencil, Settings, Trash2Icon } from "lucide-react";
 
 const FreelancerTable: React.FC = () => {
 
@@ -39,26 +41,47 @@ const FreelancerTable: React.FC = () => {
             sortable: false,
           },
           {
-            fieldName: "delete",
-            textValue: "Delete",
-            type: FieldType.DELETE,
-            deleteAction: (id: string) => {
-              console.log("Delete hogya: ", id);
-            },
-          },
-          {
             fieldName: "skills",
             textValue: "Skills",
             type: FieldType.ARRAY_VALUE,
             arrayName: "name",
           },
+          // {
+          //   fieldName: "isFreelancer",
+          //   textValue: "Freelancer",
+          //   type: FieldType.TOGGLE,
+          //   onToggle: (val, id) =>
+          //     console.log("value changed to: ", val, "of", id),
+          // },
           {
-            fieldName: "isFreelancer",
-            textValue: "Freelancer",
-            type: FieldType.TOGGLE,
-            onToggle: (val, id) =>
-              console.log("value changed to: ", val, "of", id),
-          },
+            // fieldName: "isFreelancer",
+            textValue: "Actions",
+            type: FieldType.ACTION,
+            actions: {
+              // icon: <ArrowLeft />,
+              options: [
+                {
+                  actionName: "Edit",
+                  actionIcon: <Pencil />,
+                  type: "Link",
+                  handler: () => console.log("kch kaam hua!")
+                },
+                {
+                  actionName: "Settings",
+                  actionIcon: <Settings />,
+                  type: "Button",
+                  handler: () => console.log("kch kaam hua!")
+                },
+                {
+                  actionName: "Delete",
+                  actionIcon: <Trash2Icon />,
+                  type: "Link",
+                  handler: () => console.log("kch kaam hua!"),
+                  className: "bg-red-50 border-transparent border-[1px] hover:border-red-300 rounded text-red-400 transition"
+                }
+              ]
+            }
+          }
         ]}
       />
     </div>

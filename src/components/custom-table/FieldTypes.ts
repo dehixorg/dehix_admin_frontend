@@ -1,3 +1,5 @@
+import React from "react";
+
 export enum FilterDataType {
   SINGLE = "Single",
   MULTI = "Multi",
@@ -18,8 +20,20 @@ export enum FieldType {
   DELETE = "Delete",
 }
 
+export interface Actions {
+  icon?: React.ReactNode,
+  options: Array<{
+    actionName: string,
+    actionIcon: React.JSX.Element,
+    type: "Button" | "Link",
+    href?: string,
+    handler?: (id: string) => void,
+    className?: string
+  }>
+}
+
 export interface Field {
-  fieldName: string; // name of the key for the field in the api response
+  fieldName?: string; // name of the key for the field in the api response
   textValue: string; // text to be displayed in the table header
   type: FieldType; // type of the field
   sortable?: boolean;
@@ -29,10 +43,10 @@ export interface Field {
   tooltip?: boolean;
   tooltipContent?: string; // tooltip content to be displayed if tooltip === true
   className?: string; // custom tailwind classes to be added to the table cell
-  deleteAction?: (id: string) => void; // function to be executed if type === FieldType.DELETE
   arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than array of strings
   // toggleChecked?: boolean;
   onToggle?: (value: boolean, id: string) => void;
+  actions? : Actions
 }
 
 export interface Params {
@@ -51,8 +65,8 @@ export interface Params {
   params?: Record<string, any>;
 }
 
-export interface FieldComponentProps {
-  value: string | any;
+export interface FieldComponentProps<T> {
+  value: T;
   fieldData: Field;
   id: string;
 }
