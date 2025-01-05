@@ -42,6 +42,7 @@ interface BidData {
   bidder_id: string;
   current_price: string;
   domain_id: string;
+  description?: string;
 }
 
 const BidsTable: React.FC = () => {
@@ -110,6 +111,7 @@ const BidsTable: React.FC = () => {
                   <BidsTableSkeleton />
                 ) : bidData.length > 0 ? (
                   bidData.map((user) => (
+
                     <TableRow key={user._id}>
                       <TableCell>
                         <div className="flex items-center space-x-2">
@@ -198,10 +200,32 @@ const BidsTable: React.FC = () => {
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Bid Description</DialogTitle>
-                              <DialogDescription>
-                                No description available
-                              </DialogDescription>
+                              <DialogTitle>Bid Details</DialogTitle>
+                                <DialogDescription>
+                                  <div className="space-y-2">
+                                    <p>
+                                      <strong>ID:</strong> {user._id || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Status:</strong> {user.bid_status || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Project ID:</strong> {user.project_id || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Bidder ID:</strong> {user.bidder_id || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Current Price:</strong> {user.current_price || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Domain ID:</strong> {user.domain_id || "N/A"}
+                                    </p>
+                                    <p>
+                                      <strong>Description:</strong> {user.description || "No description available"}
+                                    </p>
+                                  </div>
+                                </DialogDescription>
                             </DialogHeader>
                           </DialogContent>
                         </Dialog>

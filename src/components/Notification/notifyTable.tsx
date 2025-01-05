@@ -7,7 +7,11 @@ import { DeleteButtonIcon } from "../ui/deleteButton";
 import AddNotify from "./addNotify";
 
 import { useToast } from "@/components/ui/use-toast";
-import { Messages, NotificationStatusEnum, statusType } from "@/utils/common/enum";
+import {
+  Messages,
+  NotificationStatusEnum,
+  statusType,
+} from "@/utils/common/enum";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -29,6 +33,7 @@ import { ButtonIcon } from "@/components/ui/arrowButton";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiHelperService } from "@/services/notification";
+import { DotFilledIcon } from "@radix-ui/react-icons";
 
 interface ImportantUrl {
   urlName: string;
@@ -68,7 +73,7 @@ const NotifyTable: React.FC = () => {
       setLoading(false);
     }
   };
-
+  
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -200,36 +205,29 @@ const NotifyTable: React.FC = () => {
                           <DialogTrigger asChild>
                             <ButtonIcon />
                           </DialogTrigger>
-                          <DialogContent className="p-4">
+                          <DialogContent className="p-4 max-h-[80%] overflow-y-scroll">
                             <DialogHeader>
                               <DialogTitle>Notification Details</DialogTitle>
                               <DialogDescription>
                                 Detailed information about the Notification.
                               </DialogDescription>
                             </DialogHeader>
-                            <div>
-                              <p>
-                                <strong>Type:</strong> {user.type}
+                            <div className="flex flex-col items-start justify-start gap-0">
+                              <h1 className="text-3xl w-full text-center font-medium text-neutral-900">
+                                {user.heading}
+                              </h1>
+                              <p className="text-sm text-gray-500 mb-2">
+                                {user.type}
                               </p>
-                              <p>
-                                <strong>Status:</strong> {user.status}
-                              </p>
-                              <p>
-                                <strong>Heading:</strong> {user.heading}
-                              </p>
-                              <p>
-                                <strong>Description:</strong> {user.description}
-                              </p>
-                              {user.background_img && (
-                                <div className="mt-4 w-40 h-40 border-2 border-black-300 bg-gray-700 flex items-center justify-center cursor-pointer">
-                                  <Image
-                                    width={32}
-                                    height={32}
-                                    src={user.background_img} // AWS image URL
-                                    alt="Notification"
-                                    className="w-full h-auto"
-                                  />
-                                </div>
+                              <p className=" mb-2">{user.description}</p>
+                              {user.background_img !== "" && (
+                                <Image
+                                  src={user.background_img}
+                                  alt="notification"
+                                  width={2000}
+                                  height={2000}
+                                  className="w-full h-fit"
+                                />
                               )}
                               <p>
                                 <strong>URL Count:</strong>
