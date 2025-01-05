@@ -1,6 +1,5 @@
 "use client";
-import * as React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { PackageOpen } from "lucide-react";
 import Image from "next/image";
 
@@ -41,7 +40,7 @@ interface UserData {
   heading: string;
   description: string;
   type: string;
-  status:statusType ;
+  status: statusType;
   background_img: string;
   importantUrl: ImportantUrl[];
 }
@@ -51,25 +50,26 @@ const truncateText = (text: string, maxLength: number) => {
 };
 
 const NotifyTable: React.FC = () => {
-  const [userData, setUserData] = useState<UserData[]>([]);
+  const [userData, setUserData] = useState<UserData[]>([]); // Initialize as an empty array
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-  
-    const fetchUserData = async () => {
-      try {
-        const response = await apiHelperService.getAllNotification();
-        setUserData(response.data.data);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("notification"),
-          variant: "destructive", 
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-    useEffect(() => {
+
+  const fetchUserData = async () => {
+    try {
+      const response = await apiHelperService.getAllNotification();
+      setUserData(response.data.data || []); // Default to an empty array if data is undefined
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("notification"),
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserData();
   }, []);
 
@@ -83,7 +83,7 @@ const NotifyTable: React.FC = () => {
       toast({
         title: "Error",
         description: Messages.DELETE_ERROR("notification"),
-        variant: "destructive", 
+        variant: "destructive",
       });
     }
   };
@@ -133,7 +133,7 @@ const NotifyTable: React.FC = () => {
       <div className="mb-8 mt-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="table-title">Notification Table</h2>
-          <AddNotify onAddNotify={fetchUserData}/>
+          <AddNotify onAddNotify={fetchUserData} />
         </div>
         <Card>
           <div className="lg:overflow-x-auto">
@@ -175,27 +175,25 @@ const NotifyTable: React.FC = () => {
                       </TableRow>
                     ))}
                   </>
-                ) : userData.length > 0 ? (
+                ) : userData?.length > 0 ? (
                   userData.map((user, index) => (
                     <TableRow key={user._id}>
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>{truncateText(user.heading, 20)}</TableCell>
                       <TableCell className="text-center">
-                        {user.importantUrl.length}
+                        {user.importantUrl?.length || 0}
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={user.status === "active"}
+                          checked={user.status === statusType.active}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(user._id, checked, index)
                           }
                         />
                       </TableCell>
                       <TableCell>
-                        <DeleteButtonIcon
-                          onClick={() => handleDelete(user._id)}
-                        />
+                        <DeleteButtonIcon onClick={() => handleDelete(user._id)} />
                       </TableCell>
                       <TableCell className="flex justify-end">
                         <Dialog>
@@ -237,12 +235,12 @@ const NotifyTable: React.FC = () => {
                                 <strong>URL Count:</strong>
                                 {user.importantUrl.length}
                               </p>
-                              <ul className=" list-inside">
+                              <ul className="list-inside">
                                 {user.importantUrl.length > 0 ? (
                                   user.importantUrl.map((url, urlIndex) => (
                                     <li key={urlIndex}>
                                       <p>
-                                        <strong>URL Name:</strong>{url.urlName}
+                                        <strong>URL Name:</strong> {url.urlName}
                                       </p>
                                       <p>
                                         <strong>URL:</strong>

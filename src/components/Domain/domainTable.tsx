@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { Switch } from "@/components/ui/switch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Messages, statusType, formatID } from "@/utils/common/enum";
@@ -181,7 +181,7 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell><DeleteButtonIcon onClick={() => handleDelete(domain._id)} /></TableCell>
                       <TableCell className="flex justify-end">
-                      <ButtonIcon variant="outline"
+                      <InfoButton 
                             onClick={() => {
                                     handleDescButtonClick(index);
                             }} />

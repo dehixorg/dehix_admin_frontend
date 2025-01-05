@@ -15,10 +15,11 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { apiHelperService } from "@/services/project";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+// import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages, StatusEnum } from "@/utils/common/enum";
-import {Badge} from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import { getStatusBadge } from "@/utils/common/utils";
 interface Project {
   _id: string;
@@ -96,60 +97,58 @@ const ProjectTable: React.FC = () => {
               </TableHeader>
               <TableBody>
                 {loading ? (
-                    // Render Skeletons when loading
-                    <>
-                      {Array.from({length: 9}).map((_, index) => (
-                          <TableRow key={index}>
-                            <TableCell>
-                              <Skeleton className="h-5 w-20"/>
-                            </TableCell>
-                            <TableCell>
-                              <Skeleton className="h-6 w-12 "/>
-                            </TableCell>
-                            <TableCell>
-                              <Skeleton className="h-5 w-40"/>
-                            </TableCell>
-                            <TableCell>
-                              <Skeleton className="h-5 w-16"/>
-                            </TableCell>
-                          </TableRow>
-                      ))}
-                    </>
+                  // Render Skeletons when loading
+                  <>
+                    {Array.from({ length: 9 }).map((_, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <Skeleton className="h-5 w-20" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-12 " />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-40" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-5 w-16" />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
                 ) : userData?.length > 0 ? (
-                    userData.map((user, index) => (
-                        <TableRow key={index}>
-                          <TableCell>{user.projectName}</TableCell>
-                          <TableCell>{user.companyName}</TableCell>
-                          <TableCell>{user.email}</TableCell>
-                          <TableCell>
-                            <Badge className={getStatusBadge(user.status)}>
-                              {user.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="flex justify-end">
-                            <ButtonIcon
-                                onClick={() => handleRedirect(user._id)}
-                            ></ButtonIcon>
-                          </TableCell>
-                        </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">
-                        <div className="text-center py-10 w-full mt-10">
-                          <PackageOpen
-                              className="mx-auto text-gray-500"
-                              size="100"
-                          />
-                          <p className="text-gray-500">
-                            No data available.
-                            <br/> This feature will be available soon.
-                            <br/>
-                            Here you can get directly hired for different roles.
-                          </p>
-                        </div>
+                  userData.map((user, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{user.projectName}</TableCell>
+                      <TableCell>{user.companyName}</TableCell>
+                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        <Badge className={getStatusBadge(user.status)}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="flex justify-end">
+                        <InfoButton onClick={() => handleRedirect(user._id)} />
                       </TableCell>
                     </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center">
+                      <div className="text-center py-10 w-full mt-10">
+                        <PackageOpen
+                          className="mx-auto text-gray-500"
+                          size="100"
+                        />
+                        <p className="text-gray-500">
+                          No data available.
+                          <br /> This feature will be available soon.
+                          <br />
+                          Here you can get directly hired for different roles.
+                        </p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
                 )}
               </TableBody>
             </Table>

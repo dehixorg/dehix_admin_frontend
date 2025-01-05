@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import {  PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 
-import { ButtonIcon } from "../ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { DeleteButtonIcon } from "../ui/deleteButton";
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
 
@@ -29,7 +29,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { apiHelperService } from "@/services/admin";
-import {Badge} from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import { getStatusBadge } from "@/utils/common/utils";
 interface UserData {
   _id: string;
@@ -55,18 +55,15 @@ const AdminTable: React.FC = () => {
     try {
       const response = await apiHelperService.getAllAdmin();
       setUserData(response.data.data || []);
-      if(response.data.data)
-      {
-      setUserData(response?.data?.data||[]);
+      if (response.data.data) {
+        setUserData(response?.data?.data || []);
+      } else {
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("admin"),
+          variant: "destructive", // Red error message
+        });
       }
-      else
-      {
-      toast({
-        title: "Error",
-        description: Messages.FETCH_ERROR("admin"),
-        variant: "destructive", // Red error message
-      });
-    }
     } catch (error) {
       toast({
         title: "Error",
@@ -121,17 +118,15 @@ const AdminTable: React.FC = () => {
     setDialogOpen(true);
   };
 
-
   return (
     <div className="px-4">
-            <div className="mb-8 mt-4 ">
-              <div className="flex items-center justify-between mb-4 ">
-                <div className="flex-grow">
-                  <h2 className="table-title">Admin Table</h2>
-                </div>
-                <div>
-                
-                  <AddAdmin onAddAdmin={handleAddAdmin} />
+      <div className="mb-8 mt-4 ">
+        <div className="flex items-center justify-between mb-4 ">
+          <div className="flex-grow">
+            <h2 className="table-title">Admin Table</h2>
+          </div>
+          <div>
+            <AddAdmin onAddAdmin={handleAddAdmin} />
           </div>
         </div>
         <Card>
@@ -189,15 +184,11 @@ const AdminTable: React.FC = () => {
                       <TableCell>{user.userName}</TableCell>
                       <TableCell>{user.email}</TableCell>
                       <TableCell>{user.phone}</TableCell>
-                      <TableCell >
-                    <Badge
-                      className={
-                        getStatusBadge(user.status)
-                      }
-                    >
-                      {user.status}
-                    </Badge>
-                  </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusBadge(user.status)}>
+                          {user.status}
+                        </Badge>
+                      </TableCell>
                       <TableCell>
                         <DeleteButtonIcon
                           onClick={() => confirmDelete(user._id)}
@@ -206,7 +197,7 @@ const AdminTable: React.FC = () => {
                       <TableCell className="flex justify-end">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon />
+                            <InfoButton />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
@@ -283,7 +274,6 @@ const AdminTable: React.FC = () => {
         description="Are you sure you want to delete this admin? This action cannot be undone."
         confirmButtonName="Delete"
         cancelButtonName="Cancel"
-
       />
     </div>
   );

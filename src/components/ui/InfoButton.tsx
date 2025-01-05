@@ -1,7 +1,7 @@
-import { ChevronRight } from "lucide-react";
+import { Info } from "lucide-react"; // Importing an "Info" icon from Lucide
 import { Button, ButtonProps } from "@/components/ui/button";
 
-export function ButtonIcon({
+export function InfoButton({
   onClick,
   variant = "ghost",
   ...props
@@ -14,7 +14,7 @@ export function ButtonIcon({
       onClick={onClick}
       {...props}
     >
-      <ChevronRight className="w-4 h-4" />
+      <Info className="w-6 h-6" /> {/* Info icon */}
     </Button>
   );
 }
