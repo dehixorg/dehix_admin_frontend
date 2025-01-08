@@ -70,3 +70,9 @@ export interface FieldComponentProps<T> {
   fieldData: Field;
   id: string;
 }
+
+export interface FiltersArrayElem {
+  fieldName: string;
+  textValue: string;
+  value: string;
+};

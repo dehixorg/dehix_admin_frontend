@@ -13,18 +13,36 @@ import {
 } from "../ui/table";
 import { useEffect, useState } from "react";
 import { apiHelperService } from "@/services/customTable";
-import { Params } from "./FieldTypes";
+import { FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
+import FilterTable from "../filtertable/FilterTable";
 
-export const CustomTable = ({ fields, filterData, api, params, uniqueId }: Params) => {
+export const CustomTable = ({
+  fields,
+  filterData,
+  api,
+  params,
+  uniqueId,
+}: Params) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>([])
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        const response = await apiHelperService.fetchData(api, params || {});
+        let filters: Record<string, any> = {
+          filters: ''
+        }
+        selectedFilters.map((filter) => {
+          filters['filters'] += [`filter[${filter.fieldName}],`]
+        })
+        selectedFilters.map((filter) => {
+          filters[`filter[${filter.fieldName}]`] = filter.value
+        })
+        console.log(filters)
+        const response = await apiHelperService.fetchData(api, filters);
         setData(response.data.data);
         console.log(response.data.data);
       } catch (error) {
@@ -33,12 +51,18 @@ export const CustomTable = ({ fields, filterData, api, params, uniqueId }: Param
         setLoading(false);
       }
     })();
-  }, []);
+
+  }, [selectedFilters]);
+
+  const setFilters = (filters: FiltersArrayElem[]) => {
+    setSelectedFilters(filters)
+  }
 
   return (
     <div className="px-4">
       <div className="mb-8 mt-4">
         <Card>
+          <FilterTable filterData={filterData} filters={selectedFilters} setFilters={setFilters} />
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>
@@ -74,7 +98,11 @@ export const CustomTable = ({ fields, filterData, api, params, uniqueId }: Param
                         >
                           <CustomTableCell
                             fieldData={field}
-                            value={field.fieldName ? elem[field.fieldName] : undefined}
+                            value={
+                              field.fieldName
+                                ? elem[field.fieldName]
+                                : undefined
+                            }
                             id={elem[uniqueId]}
                           />
                         </TableCell>

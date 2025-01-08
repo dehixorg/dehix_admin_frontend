@@ -1,7 +1,7 @@
 "use client";
 
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType } from "@/components/custom-table/FieldTypes";
+import { FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
 import { GearIcon } from "@radix-ui/react-icons";
 import { ArrowLeft, Pencil, Settings, Trash2Icon } from "lucide-react";
 
@@ -81,6 +81,39 @@ const FreelancerTable: React.FC = () => {
                 }
               ]
             }
+          }
+        ]}
+        filterData={[
+          {
+            name: "skills",
+            textValue: "Skills",
+            type: FilterDataType.MULTI,
+            options: [
+              {label: "React", value: "React"},
+              {label: "Vue", value: "Vue"},
+              {label: "Django", value: "Django"},
+              {label: "Angular", value: "Angular"},
+              {label: "Node JS", value: "Nodejs"},
+            ]
+          },
+          {
+            name: "domain",
+            textValue: "Domain",
+            type: FilterDataType.SINGLE,
+            options: [
+              { label: "Frontend Developer", value: "Frontend" },
+              { label: "Backend Developer", value: "Backend" },
+              { label: "Full STack Developer", value: "Fullstack" },
+            ]
+          },
+          {
+            name: "role",
+            textValue: "Role",
+            type: FilterDataType.SINGLE,
+            options: [
+              { label: "Backend Developer", value: "Backend Developer" },
+              { label: "Freelancer", value: "freelancer" },
+            ]
           }
         ]}
       />
