@@ -15,7 +15,8 @@ import { useEffect, useState } from "react";
 import { apiHelperService } from "@/services/customTable";
 import { FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
-import FilterTable from "../filtertable/FilterTable";
+import FilterTable from "./FilterTable";
+import { HeaderActionComponent } from "./HeaderActionsComponent";
 
 export const CustomTable = ({
   fields,
@@ -23,6 +24,8 @@ export const CustomTable = ({
   api,
   params,
   uniqueId,
+  tableHeaderActions,
+  mainTableActions
 }: Params) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -60,9 +63,10 @@ export const CustomTable = ({
 
   return (
     <div className="px-4">
+      <HeaderActionComponent headerActions={mainTableActions} />
       <div className="mb-8 mt-4">
         <Card>
-          <FilterTable filterData={filterData} filters={selectedFilters} setFilters={setFilters} />
+          <FilterTable filterData={filterData} filters={selectedFilters} tableHeaderActions={tableHeaderActions} setFilters={setFilters} />
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>

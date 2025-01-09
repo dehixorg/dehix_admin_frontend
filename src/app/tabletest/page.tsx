@@ -3,7 +3,7 @@
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { Currency, FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
 import { GearIcon } from "@radix-ui/react-icons";
-import { ArrowLeft, Pencil, Settings, Trash2Icon } from "lucide-react";
+import { ArrowLeft, Pencil, PencilIcon, Settings, Trash2Icon } from "lucide-react";
 
 const FreelancerTable: React.FC = () => {
 
@@ -46,13 +46,13 @@ const FreelancerTable: React.FC = () => {
             type: FieldType.ARRAY_VALUE,
             arrayName: "name",
           },
-          {
-            // fieldName: "skills",
-            textValue: "Salary",
-            type: FieldType.CURRENCY,
-            currency: Currency.USD
-            // arrayName: "name",
-          },
+          // {
+          //   // fieldName: "skills",
+          //   textValue: "Salary",
+          //   type: FieldType.CURRENCY,
+          //   currency: Currency.USD
+          //   // arrayName: "name",
+          // },
           // {
           //   fieldName: "isFreelancer",
           //   textValue: "Freelancer",
@@ -131,6 +131,31 @@ const FreelancerTable: React.FC = () => {
           //     { label: "Freelancer", value: "freelancer" },
           //   ]
           // }
+        ]}
+        tableHeaderActions={[
+          {
+            name: "Delete",
+            icon: <Trash2Icon className="text-red-500" size={20} />,
+            handler: () => { console.log("hogya") },
+            className: "text-red-500 bg-red-100 hover:bg-red-200"
+          },
+          {
+            name: "Edit",
+            icon: <PencilIcon className="" size={20} />,
+            handler: () => { console.log("hogya") },
+          },
+          {
+            name: "Actions",
+            icon: <GearIcon className="size-[20px]" />,
+            handler: () => { console.log("hogya") },
+          },
+        ]}
+        mainTableActions={[
+          {
+            name: "Settings",
+            icon: <GearIcon className="size-[20px]" />,
+            handler: () => { console.log("hogya") },
+          },
         ]}
       />
     </div>

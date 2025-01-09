@@ -51,7 +51,14 @@ export interface Field {
   arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than  array of strings
   onToggle?: (value: boolean, id: string) => void;
   actions?: Actions;
-  currency?: Currency
+  currency?: Currency;
+}
+
+export interface HeaderActions {
+  name: string;
+  icon: React.ReactNode;
+  handler: () => void;
+  className?: string
 }
 
 export interface Params {
@@ -68,6 +75,11 @@ export interface Params {
   fields: Array<Field>;
   api: string;
   params?: Record<string, any>;
+  searchColumn?: Array<string>
+  isFilter?: boolean;
+  isDownload?: boolean;
+  tableHeaderActions?: Array<HeaderActions>;
+  mainTableActions?: Array<HeaderActions>;
 }
 
 export interface FieldComponentProps<T> {

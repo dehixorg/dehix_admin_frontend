@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SearchComponent } from "../FilterSearch";
+import { SearchComponent } from "../custom-table/FilterSearch";
 import {
   Sheet,
   SheetContent,
@@ -8,10 +8,16 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Filter } from "lucide-react";
-import { FilterDataType, FiltersArrayElem } from "../custom-table/FieldTypes";
+import {
+  FilterDataType,
+  FiltersArrayElem,
+  HeaderActions,
+} from "../custom-table/FieldTypes";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { twMerge } from "tailwind-merge";
+import { HeaderActionComponent } from "./HeaderActionsComponent";
 
 type Params = {
   filterData?: Array<{
@@ -25,13 +31,19 @@ type Params = {
   }>;
   filters: FiltersArrayElem[];
   setFilters: (filters: FiltersArrayElem[]) => void;
+  tableHeaderActions?: HeaderActions[];
 };
 
 const displayValue = (val: string) => {
   return `${val[0].toUpperCase()}${val.slice(1).replaceAll("_", " ")}`;
 };
 
-export const FilterTable = ({ filterData, filters, setFilters }: Params) => {
+export const FilterTable = ({
+  filterData,
+  filters,
+  setFilters,
+  tableHeaderActions,
+}: Params) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
@@ -64,47 +76,7 @@ export const FilterTable = ({ filterData, filters, setFilters }: Params) => {
 
       {/* Filters */}
       <div className="w-2/3 flex items-center justify-between gap-4">
-        {/* Badges for selected filters */}
-        <div className="flex gap-2 mr-4 flex-wrap">
-          {/* Added flex-wrap to allow wrapping of badges */}
-          {!isOpen &&
-            selectedFilters.map((filter, index) =>
-              filter.value.split(",").map(
-                (filterVal) =>
-                  filterVal !== "" && (
-                    <span
-                      key={index}
-                      className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full flex items-center gap-2 sm:px-2 sm:py-1 md:px-3 md:py-1 lg:px-3 lg:py-1 xl:px-3 xl:py-1"
-                    >
-                      {displayValue(filterVal)}
-                      <button
-                        className="ml-2 text-red-500"
-                        onClick={() => {
-                          const newSelectedFilters = selectedFilters.map(
-                            (selectFilter) => {
-                              if (selectFilter.fieldName === filter.fieldName)
-                                if (selectFilter.value.includes(filterVal)) {
-                                  const newFilterValue =
-                                    selectFilter.value.replace(filterVal, "");
-                                  return {
-                                    ...selectFilter,
-                                    value: newFilterValue,
-                                  };
-                                }
-                              return selectFilter;
-                            }
-                          );
-                          setSelectedFilters(newSelectedFilters);
-                          setFilters(newSelectedFilters);
-                        }}
-                      >
-                        ×
-                      </button>
-                    </span>
-                  )
-              )
-            )}
-        </div>
+        <HeaderActionComponent headerActions={tableHeaderActions} />
 
         {/* Filter Button */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
