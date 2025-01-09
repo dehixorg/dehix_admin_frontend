@@ -6,8 +6,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import {Badge} from "@/components/ui/badge"
-import { getStatusBadge } from "@/utils/common/utils";
-import { toTitleCase } from "@/utils/common/utils";
+import { getStatusBadge , toTitleCase } from "@/utils/common/utils";
+
 interface DropdownProps {
   currentStatus: string; // Current status to display
   options: string[]; // Available options for dropdown

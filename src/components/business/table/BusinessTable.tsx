@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { PackageOpen } from "lucide-react";
+import { Filter, PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { useToast } from "@/components/ui/use-toast";
@@ -15,16 +15,17 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+// import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
 import { apiHelperService } from "@/services/business";
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
+import { FilterTable } from "@/components/filter/filtertable/FilterTable";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
 import ConfirmationDialog from "@/components/confirmationDialog";
-import StatusDropdown from "@/components/dropdown";
 interface SkillDomainData {
   _id: string;
   name: string;
@@ -131,9 +132,12 @@ const BusinessTable: React.FC = () => {
     <div className="px-4">
       <div className="mb-8 mt-2">
         {/* Title Section */}
-        <div className="mb-8 mt-4 mr-4">
+        <div className="mb-4 mt-4 mr-4">
           <h2 className="table-title">Business Table</h2>
         </div>
+
+        <FilterTable />
+
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
@@ -230,21 +234,9 @@ const BusinessTable: React.FC = () => {
                         )}
                       </TableCell>
                       <TableCell>
-                        <div className="flex justify-center">
-  <StatusDropdown
-    currentStatus={user.status} // Use dynamic data for current status
-    options={AccountOption} // Add other statuses if required
-    onChange={(newStatus) => {
-      handleStatusChange(newStatus,index);
-    }}
-  />
-  </div>
-</TableCell>
-
-                      <TableCell>
-                        <ButtonIcon
+                        <InfoButton
                           onClick={() => handleViewBusiness(user._id)}
-                        ></ButtonIcon>
+                        ></InfoButton>
                       </TableCell>
                     </TableRow>
                   ))

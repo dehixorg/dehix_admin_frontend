@@ -9,30 +9,37 @@ export const apiHelperService = {
   getAllNotification: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/notification",
+      endpoint: "/ads",
       params,
     });
   },
   createNotification: async (body: Record<string, any>) => {
     return apiService({
       method: Api_Methods.POST,
-      endpoint: "/notification",
+      endpoint: "/ads",
       body,
     });
   },
   deleteNotification: async (itemId: string) => {
     return apiService({
       method: Api_Methods.DELETE,
-      endpoint: `/notification/${itemId}`,
+      endpoint: `/ads/${itemId}`,
     });
   },
   updateNotificationStatus: async (labelId: string, status: string) => {
     return apiService({
       method: Api_Methods.PUT,
-      endpoint: `/notification/${labelId}`,
+      endpoint: `/ads/${labelId}`,
       body: {
         status,
       },
+    });
+  },
+  uploadNotificationImage: async (body: Record<string, any>) => {
+    return apiService({
+      method: Api_Methods.POST,
+      endpoint: "/register/upload-image",
+      body,
     });
   },
 };

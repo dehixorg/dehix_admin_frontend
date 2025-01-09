@@ -88,9 +88,9 @@ export enum NotificationTypeEnum {
   BOTH = 'Both',
 };
 export enum NotificationStatusEnum {
-  ACTIVE = 'Active',
-  IN_ACTIVE = 'Inactive',
-};
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
+}
 
 // Enum for Oracle Status
 export enum OracleStatusEnum {

@@ -1,14 +1,11 @@
-import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getDatabase } from "firebase/database";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
-// import { getAnalytics } from 'firebase/analytics'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// firebaseConfig.js
+import { initializeApp } from "firebase/app"; // For initializing the app
+import { getAuth, GoogleAuthProvider } from "firebase/auth"; // For authentication
+import { getFirestore } from "firebase/firestore"; // For Firestore database
+import { getDatabase } from "firebase/database"; // For Realtime Database
+import { getStorage } from "firebase/storage"; // For Firebase Storage
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC__API_KEY,
   authDomain: process.env.NEXT_PUBLIC__AUTH_DOMAIN,
@@ -21,10 +18,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
+
+// Firebase services
 export const db = getFirestore(app);
-const auth = getAuth(app);
-auth.useDeviceLanguage();
-export const googleProvider = new GoogleAuthProvider();
 export const realtime = getDatabase(app);
 export const storage = getStorage(app);
 export { auth };
