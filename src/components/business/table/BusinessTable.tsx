@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { Filter, PackageOpen } from "lucide-react";
+import { PackageOpen } from "lucide-react";
 import { useRouter } from "next/navigation"; // For navigation
 
 import { useToast } from "@/components/ui/use-toast";
@@ -19,7 +19,6 @@ import {
 import { InfoButton } from "@/components/ui/InfoButton";
 import { apiHelperService } from "@/services/business";
 import { Skeleton } from "@/components/ui/skeleton"; // Import the Skeleton component
-import { FilterTable } from "@/components/filter/filtertable/FilterTable";
 import {
   Tooltip,
   TooltipTrigger,
@@ -135,8 +134,6 @@ const BusinessTable: React.FC = () => {
         <div className="mb-4 mt-4 mr-4">
           <h2 className="table-title">Business Table</h2>
         </div>
-
-        <FilterTable />
 
         <Card>
           <div className="lg:overflow-x-auto">

@@ -310,6 +310,7 @@ const SkillTable: React.FC = () => {
                                 });
                               }}
                             />}
+                            </TableCell>
                     </TableRow>
                   ))
                 ) : (
