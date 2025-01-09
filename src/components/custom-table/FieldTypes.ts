@@ -21,15 +21,20 @@ export enum FieldType {
 }
 
 export interface Actions {
-  icon?: React.ReactNode,
+  icon?: React.ReactNode;
   options: Array<{
-    actionName: string,
-    actionIcon: React.JSX.Element,
-    type: "Button" | "Link",
-    href?: string,
-    handler?: (id: string) => void,
-    className?: string
-  }>
+    actionName: string;
+    actionIcon: React.JSX.Element;
+    type: "Button" | "Link";
+    href?: string;
+    handler?: (id: string) => void;
+    className?: string;
+  }>;
+}
+
+export enum Currency {
+  INR = "INR",
+  USD = "USD",
 }
 
 export interface Field {
@@ -43,10 +48,10 @@ export interface Field {
   tooltip?: boolean;
   tooltipContent?: string; // tooltip content to be displayed if tooltip === true
   className?: string; // custom tailwind classes to be added to the table cell
-  arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than array of strings
-  // toggleChecked?: boolean;
+  arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than  array of strings
   onToggle?: (value: boolean, id: string) => void;
-  actions? : Actions
+  actions?: Actions;
+  currency?: Currency
 }
 
 export interface Params {
@@ -75,4 +80,4 @@ export interface FiltersArrayElem {
   fieldName: string;
   textValue: string;
   value: string;
-};
+}

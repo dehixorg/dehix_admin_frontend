@@ -1,7 +1,7 @@
 "use client";
 
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
+import { Currency, FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
 import { GearIcon } from "@radix-ui/react-icons";
 import { ArrowLeft, Pencil, Settings, Trash2Icon } from "lucide-react";
 
@@ -45,6 +45,13 @@ const FreelancerTable: React.FC = () => {
             textValue: "Skills",
             type: FieldType.ARRAY_VALUE,
             arrayName: "name",
+          },
+          {
+            // fieldName: "skills",
+            textValue: "Salary",
+            type: FieldType.CURRENCY,
+            currency: Currency.USD
+            // arrayName: "name",
           },
           // {
           //   fieldName: "isFreelancer",
@@ -114,7 +121,16 @@ const FreelancerTable: React.FC = () => {
               { label: "Backend Developer", value: "Backend Developer" },
               { label: "Freelancer", value: "freelancer" },
             ]
-          }
+          },
+          // {
+          //   name: "Salary",
+          //   textValue: "Salary",
+          //   type: FilterDataType.SINGLE,
+          //   options: [
+          //     { label: "Backend Developer", value: "Backend Developer" },
+          //     { label: "Freelancer", value: "freelancer" },
+          //   ]
+          // }
         ]}
       />
     </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DeleteButtonIcon } from "../ui/deleteButton";
-import { Actions, FieldComponentProps, FieldType } from "./FieldTypes";
+import { Actions, Currency, FieldComponentProps, FieldType } from "./FieldTypes";
 import { useState } from "react";
 import { Switch } from "../ui/switch";
 import {
@@ -113,15 +113,33 @@ export const ActionField = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {fieldData.actions?.options.map(
-          ({ actionIcon, actionName, type, handler, href, className }, index) => (
-            <DropdownMenuItem key={index} className={`w-${fieldData.width || "32"} px-0 py-0 my-1`}>
+          (
+            { actionIcon, actionName, type, handler, href, className },
+            index
+          ) => (
+            <DropdownMenuItem
+              key={index}
+              className={`w-${fieldData.width || "32"} px-0 py-0 my-1`}
+            >
               {type == "Button" ? (
-                <div onClick={() => handler?.(id)} className={twMerge("text-sm w-full py-2 px-3 flex items-center justify-start hover:cursor-pointer gap-4 font-medium text-gray-600", className)}>
+                <div
+                  onClick={() => handler?.(id)}
+                  className={twMerge(
+                    "text-sm w-full py-2 px-3 flex items-center justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
+                    className
+                  )}
+                >
                   {actionIcon}
                   <span>{actionName}</span>
                 </div>
               ) : (
-                <Link href={href || "#"} className={twMerge("text-sm w-full flex py-2 px-3 items-center justify-start gap-4 font-medium text-gray-600", className)}>
+                <Link
+                  href={href || "#"}
+                  className={twMerge(
+                    "text-sm w-full flex py-2 px-3 items-center justify-start gap-4 font-medium text-gray-600",
+                    className
+                  )}
+                >
                   {actionIcon}
                   <span>{actionName}</span>
                 </Link>
@@ -132,6 +150,17 @@ export const ActionField = ({
       </DropdownMenuContent>
     </DropdownMenu>
   );
+};
+
+const numberFormat = (value: string, currency: Currency = Currency.INR) =>
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: currency,
+    maximumFractionDigits: 0
+  }).format(Number(value));
+
+export const CurrencyField = ({ fieldData, value }: FieldComponentProps<string>) => {
+  return <span>{numberFormat(value, fieldData.currency)}</span>;
 };
 
 export const mapTypeToComponent = (type: FieldType) => {
@@ -150,6 +179,8 @@ export const mapTypeToComponent = (type: FieldType) => {
       return ToggleField;
     case FieldType.ACTION:
       return ActionField;
+    case FieldType.CURRENCY:
+      return CurrencyField
     default:
       return TextField;
   }
