@@ -157,6 +157,7 @@ const FreelancerTable: React.FC = () => {
             handler: () => { console.log("hogya") },
           },
         ]}
+        searchColumn={['username', 'skills']}
       />
     </div>
   );

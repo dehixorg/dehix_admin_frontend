@@ -22,14 +22,15 @@ export const CustomTable = ({
   fields,
   filterData,
   api,
-  params,
   uniqueId,
   tableHeaderActions,
-  mainTableActions
+  mainTableActions,
+  searchColumn
 }: Params) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>([])
+  const [search, setSearch] = useState<string>("")
 
   useEffect(() => {
     (async () => {
@@ -44,10 +45,13 @@ export const CustomTable = ({
         selectedFilters.map((filter) => {
           filters[`filter[${filter.fieldName}]`] = filter.value
         })
+        if(search != '') {
+          filters['filter[search][value]'] = search
+          filters['filter[search][columns]'] = searchColumn?.join(',')
+        }
         console.log(filters)
         const response = await apiHelperService.fetchData(api, filters);
         setData(response.data.data);
-        console.log(response.data.data);
       } catch (error) {
         console.log(error);
       } finally {
@@ -55,7 +59,7 @@ export const CustomTable = ({
       }
     })();
 
-  }, [selectedFilters]);
+  }, [selectedFilters, search]);
 
   const setFilters = (filters: FiltersArrayElem[]) => {
     setSelectedFilters(filters)
@@ -66,7 +70,7 @@ export const CustomTable = ({
       <HeaderActionComponent headerActions={mainTableActions} />
       <div className="mb-8 mt-4">
         <Card>
-          <FilterTable filterData={filterData} filters={selectedFilters} tableHeaderActions={tableHeaderActions} setFilters={setFilters} />
+          <FilterTable filterData={filterData} filters={selectedFilters} tableHeaderActions={tableHeaderActions} setFilters={setFilters} search={search} setSearch={setSearch} />
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>

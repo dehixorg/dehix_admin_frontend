@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SearchComponent } from "../custom-table/FilterSearch";
 import {
   Sheet,
@@ -32,6 +32,8 @@ type Params = {
   filters: FiltersArrayElem[];
   setFilters: (filters: FiltersArrayElem[]) => void;
   tableHeaderActions?: HeaderActions[];
+  search: string;
+  setSearch: Dispatch<SetStateAction<string>>;
 };
 
 const displayValue = (val: string) => {
@@ -43,6 +45,8 @@ export const FilterTable = ({
   filters,
   setFilters,
   tableHeaderActions,
+  search,
+  setSearch
 }: Params) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -71,7 +75,7 @@ export const FilterTable = ({
     <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white text-black dark:bg-black dark:text-white rounded-lg">
       {/* Search Bar */}
       <div className="w-1/3 mr-4">
-        <SearchComponent />
+        <SearchComponent searchValue={search} setSearchValue={setSearch} />
       </div>
 
       {/* Filters */}
