@@ -1,40 +1,71 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Loader2 } from 'lucide-react';
+
 import SidebarMenu from '@/components/menu/sidebarMenu';
 import CollapsibleSidebarMenu from '@/components/menu/collapsibleSidebarMenu';
-import { menuItemsBottom, menuItemsTop } from '@/config/menuItems/business/dashboardMenuItems';
+import {
+  menuItemsBottom,
+  menuItemsTop
+} from '@/config/menuItems/business/dashboardMenuItems';
 import { notesMenu } from '@/config/menuItems/admin/dashboardMenuItems';
 import NotesHeader from '@/components/business/header/NotesHeader';
 import NotesRender from '@/components/shared/NotesRender';
-
-export type Note = {
-  id: string;
-  title: string;
-  content: string;
-  color?: string;
-  banner?: string;
-  createdAt: Date;
-  isHTML: boolean;
-};
+import { axiosInstance } from '@/lib/axiosinstance'; // Adjust the import as per your project structure
+import { LabelType, Note, NoteType } from '@/utils/types/note';
+import { toast } from '@/components/ui/use-toast';
+import useFetchNotes from '@/hooks/useFetchNotes';
 
 const Notes = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
+  // Get userId from Redux
+  const user = useSelector((state: any) => state.user);
+  const userId = user.uid;
+  const { notes, isLoading, fetchNotes, setNotes } = useFetchNotes(userId);
   useEffect(() => {
-    setIsLoading(true);
-    const storedNotes = localStorage.getItem("notes");
-    if (storedNotes) {
-      setNotes(JSON.parse(storedNotes));
+    if (userId) {
+      fetchNotes();
     }
-    setIsLoading(false);
-  }, []);
+  }, [fetchNotes, userId]);
 
-  const handleCreateNote = (note: Note) => {
-    const updatedNotes = [note, ...notes];
-    setNotes(updatedNotes);
-    localStorage.setItem("notes", JSON.stringify(updatedNotes));
+  const handleCreateNote = async (note: Partial<Note>) => {
+    // Field validation
+    if (!note.title || !note.content || !userId) {
+      console.error('Missing required fields.');
+      return;
+    }
+
+    const newNote = {
+      ...note,
+      userId,
+      bgColor: note.bgColor || '#FFFFFF',
+      banner: note.banner || '',
+      noteType: NoteType.NOTE,
+      type: LabelType.PERSONAL,
+      entityType: user?.type?.toUpperCase(),
+    } as Note;
+
+    try {
+      const response = await axiosInstance.post('/notes', newNote);
+      if (response?.data) {
+        const updatedNotes = [response.data, ...notes];
+        setNotes(updatedNotes);
+        toast({
+          title: 'Note Created',
+          description: 'Your note was successfully created.',
+          duration: 5000,
+        });
+
+        fetchNotes();
+      }
+    } catch (error) {
+      console.error('Failed to create note:', error);
+      toast({
+        title: 'Failed to create note',
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -52,17 +83,33 @@ const Notes = () => {
       />
       {/* Main content area */}
       <div className="ml-12">
-        <NotesHeader isTrash={false} setNotes={setNotes} notes={notes} onNoteCreate={handleCreateNote} />
+        <NotesHeader
+          isTrash={false}
+          setNotes={setNotes}
+          notes={notes}
+          onNoteCreate={handleCreateNote}
+        />
         <div className="p-6">
-          <div>
-            {notes.length > 0 ? (
-              <NotesRender notes={notes} setNotes={setNotes} isArchive={false} />
-            ) : (
-              <div className='flex justify-center items-center h-[40vh] w-full'>
-                <p>No notes available. Start adding some!</p>
-              </div>
-            )}
-          </div>
+          {isLoading ? (
+            <div className="flex justify-center items-center h-[40vh]">
+              <Loader2 className="my-4 h-8 w-8 animate-spin" />
+            </div>
+          ) : (
+            <div>
+              {notes?.length > 0 ? (
+                <NotesRender
+                  fetchNotes={fetchNotes}
+                  notes={notes}
+                  setNotes={setNotes}
+                  isArchive={false}
+                />
+              ) : (
+                <div className="flex justify-center items-center h-[40vh] w-full">
+                  <p>No notes available. Start adding some!</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>

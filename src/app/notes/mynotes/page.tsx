@@ -12,18 +12,18 @@ import {
 } from '@/config/menuItems/business/dashboardMenuItems';
 import { notesMenu } from '@/config/menuItems/admin/dashboardMenuItems';
 import NotesHeader from '@/components/business/header/NotesHeader';
-import NotesRender from '@/components/shared/NotesRender';
+// import NotesRender from '@/components/shared/NotesRender';
+import MyNotesRender from '@/components/shared/myNotesRender';
 import { axiosInstance } from '@/lib/axiosinstance'; // Adjust the import as per your project structure
 import { LabelType, Note, NoteType } from '@/utils/types/note';
 import { toast } from '@/components/ui/use-toast';
 import useFetchNotes from '@/hooks/useFetchNotes';
 
-const Notes = () => {
+const MyNotes = () => {
   // Get userId from Redux
   const user = useSelector((state: any) => state.user);
   const userId = user.uid;
   const { notes, isLoading, fetchNotes, setNotes } = useFetchNotes(userId);
-
   useEffect(() => {
     if (userId) {
       fetchNotes();
@@ -75,12 +75,12 @@ const Notes = () => {
       <SidebarMenu
         menuItemsTop={notesMenu}
         menuItemsBottom={menuItemsBottom}
-        active="Trash"
+        active="MyNotes"
       />
       <CollapsibleSidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Trash"
+        active="MyNotes"
       />
       {/* Main content area */}
       <div className="ml-12">
@@ -98,7 +98,7 @@ const Notes = () => {
           ) : (
             <div>
               {notes?.length > 0 ? (
-                <NotesRender
+                <MyNotesRender
                   fetchNotes={fetchNotes}
                   notes={notes}
                   setNotes={setNotes}
@@ -117,4 +117,4 @@ const Notes = () => {
   );
 };
 
-export default Notes;
+export default MyNotes;

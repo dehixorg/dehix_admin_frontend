@@ -130,4 +130,9 @@ export const notesMenu: MenuItem[] = [
     icon: <Trash2 className="h-5 w-5" />,
     label: 'Trash'
   },
+  {
+    href: '/notes/mynotes',
+    icon: <NotebookPen className="h-5 w-5" />,
+    label: 'MyNotes'
+  }
 ];
