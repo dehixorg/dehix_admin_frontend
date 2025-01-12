@@ -11,7 +11,7 @@ type Params = {
 export const SearchComponent = ({ searchValue, setSearchValue }: Params) => {
   const [search, setSearch] = useState<string>(searchValue)
   return (
-    <div className="relative w-full">
+    <form className="relative w-full" action={() => setSearchValue(search)}>
       <Input
       value={search}
       onChange={(e) => setSearch(e.target.value)}
@@ -23,10 +23,10 @@ export const SearchComponent = ({ searchValue, setSearchValue }: Params) => {
         variant="link"
         className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
         aria-label="Search"
-        onClick={() => setSearchValue(search)}
+        type="submit"
       >
         <Search className="h-5 w-5" />
       </Button>
-    </div>
+    </form>
   );
 };
