@@ -1,20 +1,23 @@
 import Link from "next/link";
 import { DeleteButtonIcon } from "../ui/deleteButton";
-import { Actions, Currency, FieldComponentProps, FieldType } from "./FieldTypes";
+import {
+  Actions,
+  Currency,
+  FieldComponentProps,
+  FieldType,
+} from "./FieldTypes";
 import { useState } from "react";
 import { Switch } from "../ui/switch";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ArrowRight } from "lucide-react";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
 import { twMerge } from "tailwind-merge";
+import { ToolTip } from "../ToolTip";
 
 export const DateTimeField = ({ value }: FieldComponentProps<string>) => {
   const date = new Date(value);
@@ -79,18 +82,22 @@ export const ArrayValueField = ({
     <div className="relative group cursor-pointer">
       {value.length > 0 ? (
         <>
-          <span>{value[0][fieldData.arrayName!]} </span>
-          <span className="text-xs text-gray-500">
-            {value.length > 1 && `+${value.length - 1} more`}
-          </span>
-          <span
-            className={` absolute bottom-[-25px] left-2 bg-gray-300 text-xs p-1 rounded transition-all text-gray-700 group-hover:block hidden`}
-          >
-            {value.map((val: any) => `${val[fieldData.arrayName!]} `)}
-          </span>
+          <ToolTip
+            trigger={
+              <div>
+                <span>{value[0][fieldData.arrayName!]} </span>
+                <span className="text-xs text-gray-500">
+                  {value.length > 1 && `+${value.length - 1} more`}
+                </span>
+              </div>
+            }
+            content={
+              value.map((val: any) => `${val[fieldData.arrayName!]}`).join(', ')
+            }
+          />
         </>
       ) : (
-        <span>/</span>
+        <span className="text-xs text-gray-500">/</span>
       )}
     </div>
   );
@@ -156,10 +163,13 @@ const numberFormat = (value: string, currency: Currency = Currency.INR) =>
   new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: currency,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(Number(value));
 
-export const CurrencyField = ({ fieldData, value }: FieldComponentProps<string>) => {
+export const CurrencyField = ({
+  fieldData,
+  value,
+}: FieldComponentProps<string>) => {
   return <span>{numberFormat(value, fieldData.currency)}</span>;
 };
 
@@ -180,7 +190,7 @@ export const mapTypeToComponent = (type: FieldType) => {
     case FieldType.ACTION:
       return ActionField;
     case FieldType.CURRENCY:
-      return CurrencyField
+      return CurrencyField;
     default:
       return TextField;
   }

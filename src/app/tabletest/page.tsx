@@ -33,6 +33,8 @@ const FreelancerTable: React.FC = () => {
             textValue: "Phone No.",
             type: FieldType.TEXT,
             sortable: false,
+            tooltip: true,
+            tooltipContent: "Personal Phone Number"
           },
           {
             fieldName: "dob",

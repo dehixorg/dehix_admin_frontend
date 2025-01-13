@@ -17,6 +17,7 @@ import { FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
 import FilterTable from "./FilterTable";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
+import { ToolTip } from "../ToolTip";
 
 export const CustomTable = ({
   fields,
@@ -77,7 +78,9 @@ export const CustomTable = ({
                 <TableRow>
                   {fields.map((field, index) => (
                     <TableHead key={field.fieldName}>
-                      {field.textValue}
+                      {field.tooltip ?
+                        <ToolTip trigger={field.textValue} content={field.tooltipContent || ""} />
+                      :field.textValue}
                     </TableHead>
                   ))}
                 </TableRow>
