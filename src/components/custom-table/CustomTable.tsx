@@ -18,6 +18,8 @@ import { CustomTableCell } from "./FieldComponents";
 import FilterTable from "./FilterTable";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ToolTip } from "../ToolTip";
+import { TablePagination } from "./Pagination";
+import { TableSelect } from "./TableSelect";
 
 export const CustomTable = ({
   fields,
@@ -26,32 +28,37 @@ export const CustomTable = ({
   uniqueId,
   tableHeaderActions,
   mainTableActions,
-  searchColumn
+  searchColumn,
 }: Params) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>([])
-  const [search, setSearch] = useState<string>("")
+  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
+    []
+  );
+  const [search, setSearch] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(20);
 
   useEffect(() => {
     (async () => {
       try {
         setLoading(true);
-        let filters: Record<string, any> = {
-          filters: ''
-        }
+        window.scrollTo(0, 0)
+        let params: Record<string, any> = {
+          filters: "",
+          page: page
+        };
         selectedFilters.map((filter) => {
-          filters['filters'] += [`filter[${filter.fieldName}],`]
-        })
+          params["filters"] += [`filter[${filter.fieldName}],`];
+        });
         selectedFilters.map((filter) => {
-          filters[`filter[${filter.fieldName}]`] = filter.value
-        })
-        if(search != '') {
-          filters['filter[search][value]'] = search
-          filters['filter[search][columns]'] = searchColumn?.join(',')
+          params[`filter[${filter.fieldName}]`] = filter.value;
+        });
+        if (search != "") {
+          params["filter[search][value]"] = search;
+          params["filter[search][columns]"] = searchColumn?.join(",");
         }
-        console.log(filters)
-        const response = await apiHelperService.fetchData(api, filters);
+        const response = await apiHelperService.fetchData(api, params);
         setData(response.data.data);
       } catch (error) {
         console.log(error);
@@ -59,28 +66,54 @@ export const CustomTable = ({
         setLoading(false);
       }
     })();
+  }, [selectedFilters, search, page, limit]);
 
-  }, [selectedFilters, search]);
+  const setFiltersUtils = (filters: FiltersArrayElem[]) => {
+    setSelectedFilters(filters);
+  };
 
-  const setFilters = (filters: FiltersArrayElem[]) => {
-    setSelectedFilters(filters)
+  const setPageUtils = (page: number) => {
+    setPage(page)
+  }
+
+  const setLimitUtils = (limit: number) => {
+    setLimit(limit)
   }
 
   return (
     <div className="px-4">
+      <div className="w-full flex items-center justify-between">
       <HeaderActionComponent headerActions={mainTableActions} />
+      <TableSelect
+        currValue={limit}
+        label="Items Per Page"
+        values={[10, 15, 20, 25]}
+        setCurrValue={setLimitUtils}
+      />
+      </div>
       <div className="mb-8 mt-4">
         <Card>
-          <FilterTable filterData={filterData} filters={selectedFilters} tableHeaderActions={tableHeaderActions} setFilters={setFilters} search={search} setSearch={setSearch} />
+          <FilterTable
+            filterData={filterData}
+            tableHeaderActions={tableHeaderActions}
+            setFilters={setFiltersUtils}
+            search={search}
+            setSearch={setSearch}
+          />
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
                   {fields.map((field, index) => (
                     <TableHead key={field.fieldName}>
-                      {field.tooltip ?
-                        <ToolTip trigger={field.textValue} content={field.tooltipContent || ""} />
-                      :field.textValue}
+                      {field.tooltip ? (
+                        <ToolTip
+                          trigger={field.textValue}
+                          content={field.tooltipContent || ""}
+                        />
+                      ) : (
+                        field.textValue
+                      )}
                     </TableHead>
                   ))}
                 </TableRow>
@@ -142,6 +175,7 @@ export const CustomTable = ({
             </Table>
           </div>
         </Card>
+        <TablePagination page={page} setPage={setPageUtils} isNextAvailable={data?.length >= 20 || true} />
       </div>
     </div>
   );

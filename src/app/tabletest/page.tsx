@@ -112,7 +112,7 @@ const FreelancerTable: React.FC = () => {
             options: [
               { label: "Frontend Developer", value: "Frontend" },
               { label: "Backend Developer", value: "Backend" },
-              { label: "Full STack Developer", value: "Fullstack" },
+              { label: "Full Stack Developer", value: "Fullstack" },
             ]
           },
           {

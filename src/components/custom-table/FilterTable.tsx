@@ -16,8 +16,8 @@ import {
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { twMerge } from "tailwind-merge";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 type Params = {
   filterData?: Array<{
@@ -29,40 +29,36 @@ type Params = {
       label: string;
     }>;
   }>;
-  filters: FiltersArrayElem[];
   setFilters: (filters: FiltersArrayElem[]) => void;
   tableHeaderActions?: HeaderActions[];
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
 };
 
-const displayValue = (val: string) => {
-  return `${val[0].toUpperCase()}${val.slice(1).replaceAll("_", " ")}`;
-};
-
 export const FilterTable = ({
   filterData,
-  filters,
   setFilters,
   tableHeaderActions,
   search,
   setSearch
 }: Params) => {
+  
+  const initializeFiltersArray = () => {
+    let filtersArray: FiltersArrayElem[] = [];
+    filterData?.forEach((filter) =>
+      filtersArray.push({
+        fieldName: filter.name,
+        textValue: filter.textValue,
+        value: "",
+      })
+    );
+    return filtersArray;
+  }
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
-    () => {
-      if (filters.length > 0) return filters;
-      let filtersArray: FiltersArrayElem[] = [];
-      filterData?.forEach((filter) =>
-        filtersArray.push({
-          fieldName: filter.name,
-          textValue: filter.textValue,
-          value: "",
-        })
-      );
-      return filtersArray;
-    }
+    () => initializeFiltersArray()
   );
 
   useEffect(() => {
@@ -142,15 +138,6 @@ export const FilterTable = ({
                         </Label>
                       </div>
                     ))}
-                    <div className="flex items-center cursor-pointer space-x-2">
-                      <RadioGroupItem value={""} id={"all"} />
-                      <Label
-                        className="font-normal cursor-pointer"
-                        htmlFor={"all"}
-                      >
-                        {"All"}
-                      </Label>
-                    </div>
                   </RadioGroup>
                 ) : (
                   <div className="space-y-2">
@@ -204,6 +191,15 @@ export const FilterTable = ({
             >
               Apply Filters
             </button>
+            <span
+            className="text-blue-500 hover:underline text-xs cursor-pointer"
+            onClick={() => {
+              setIsOpen(false)
+              setSelectedFilters(initializeFiltersArray())
+              setFilters(initializeFiltersArray())
+            }}>
+              <ReloadIcon className="inline" /> Reset Filters
+            </span>
           </SheetContent>
         </Sheet>
       </div>
