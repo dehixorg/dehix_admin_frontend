@@ -160,6 +160,7 @@ const FreelancerTable: React.FC = () => {
           },
         ]}
         searchColumn={['username', 'skills']}
+        isDownload={true}
       />
     </div>
   );

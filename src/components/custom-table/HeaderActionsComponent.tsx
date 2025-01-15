@@ -7,7 +7,7 @@ export const HeaderActionComponent = ({
   headerActions?: HeaderActions[];
 }) => {
   return (
-    <div className="flex gap-3 mr-4 flex-wrap">
+    <div className="flex gap-3 mr-4 flex-wrap flex-grow">
       {headerActions?.map((actions, index) => (
         <div
           key={index}
