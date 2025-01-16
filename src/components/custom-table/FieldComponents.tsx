@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { DeleteButtonIcon } from "../ui/deleteButton";
 import {
   Actions,
   Currency,
@@ -19,31 +18,21 @@ import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
 import { ToolTip } from "../ToolTip";
 
-export const DateTimeField = ({ value }: FieldComponentProps<string>) => {
+const DateTimeField = ({ value }: FieldComponentProps<string>) => {
+  const date = new Date(value);
+  return <>{date.toUTCString()}</>;
+};
+
+const DateField = ({ value }: FieldComponentProps<string>) => {
   const date = new Date(value);
   return <>{date.toLocaleDateString()}</>;
 };
 
-export const TextField = ({ value }: FieldComponentProps<string>) => {
+const TextField = ({ value }: FieldComponentProps<string>) => {
   return <span>{value}</span>;
 };
 
-export const DeleteButton = ({
-  fieldData,
-  id,
-}: FieldComponentProps<string>) => {
-  return (
-    <DeleteButtonIcon
-      // onClick={() => fieldData.deleteAction?.(id)}
-      className=""
-    />
-  );
-};
-
-export const LinkField = ({
-  value,
-  fieldData,
-}: FieldComponentProps<string>) => {
+const LinkField = ({ value, fieldData }: FieldComponentProps<string>) => {
   return (
     <Link
       href={value}
@@ -55,7 +44,7 @@ export const LinkField = ({
   );
 };
 
-export const ToggleField = ({
+const ToggleField = ({
   fieldData,
   value,
   id,
@@ -74,7 +63,7 @@ export const ToggleField = ({
   );
 };
 
-export const ArrayValueField = ({
+const ArrayValueField = ({
   value,
   fieldData,
 }: FieldComponentProps<Array<Record<string, any>>>) => {
@@ -91,9 +80,9 @@ export const ArrayValueField = ({
                 </span>
               </div>
             }
-            content={
-              value.map((val: any) => `${val[fieldData.arrayName!]}`).join(', ')
-            }
+            content={value
+              .map((val: any) => `${val[fieldData.arrayName!]}`)
+              .join(", ")}
           />
         </>
       ) : (
@@ -103,10 +92,7 @@ export const ArrayValueField = ({
   );
 };
 
-export const ActionField = ({
-  id,
-  fieldData,
-}: FieldComponentProps<Actions>) => {
+const ActionField = ({ id, fieldData }: FieldComponentProps<Actions>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-sm text-gray-600 hover:bg-gray-200 p-1 rounded transition duration-300">
@@ -166,21 +152,40 @@ const numberFormat = (value: string, currency: Currency = Currency.INR) =>
     maximumFractionDigits: 0,
   }).format(Number(value));
 
-export const CurrencyField = ({
-  fieldData,
-  value,
-}: FieldComponentProps<string>) => {
+const CurrencyField = ({ fieldData, value }: FieldComponentProps<string>) => {
   return <span>{numberFormat(value, fieldData.currency)}</span>;
+};
+
+const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
+  const statusMetaData = fieldData.statusFormats?.find(
+    (status) => status.value.toLowerCase() === value.toLowerCase()
+  );
+
+  if (!statusMetaData) return <span>{value}</span>;
+
+  const { bgColor, textColor, isUppercase } = statusMetaData;
+  return (
+    <span
+      style={{
+        backgroundColor: bgColor,
+        color: textColor,
+        textTransform: isUppercase ? "uppercase" : "none",
+      }}
+      className=" rounded-sm px-2 py-1 text-center"
+    >
+      {value}
+    </span>
+  );
 };
 
 export const mapTypeToComponent = (type: FieldType) => {
   switch (type) {
     case FieldType.DATETIME:
       return DateTimeField;
+    case FieldType.DATE:
+      return DateField;
     case FieldType.TEXT:
       return TextField;
-    case FieldType.DELETE:
-      return DeleteButton;
     case FieldType.LINK:
       return LinkField;
     case FieldType.ARRAY_VALUE:
@@ -191,6 +196,8 @@ export const mapTypeToComponent = (type: FieldType) => {
       return ActionField;
     case FieldType.CURRENCY:
       return CurrencyField;
+    case FieldType.STATUS:
+      return StatusField;
     default:
       return TextField;
   }

@@ -54,7 +54,11 @@ export const CustomTable = ({
           params["filters"] += [`filter[${filter.fieldName}],`];
         });
         selectedFilters.map((filter) => {
-          params[`filter[${filter.fieldName}]`] = filter.value;
+          if(filter.arrayName) {
+            params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
+          } else {
+            params[`filter[${filter.fieldName}]`] = filter.value;
+          }
         });
         if (search != "") {
           params["filter[search][value]"] = search;
@@ -231,7 +235,7 @@ export const CustomTable = ({
         <TablePagination
           page={page}
           setPage={setPageUtils}
-          isNextAvailable={data?.length >= 20 || true}
+          isNextAvailable={data.length >= 20}
         />
       </div>
     </div>

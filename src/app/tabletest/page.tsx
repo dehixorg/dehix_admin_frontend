@@ -48,6 +48,23 @@ const FreelancerTable: React.FC = () => {
             type: FieldType.ARRAY_VALUE,
             arrayName: "name",
           },
+          {
+            fieldName: "status",
+            textValue: "Status",
+            type: FieldType.STATUS,
+            statusFormats: [
+              {
+                value: "pending",
+                bgColor: "yellow",
+                textColor: "black"
+              },
+              {
+                value: "active",
+                bgColor: "green",
+                textColor: "black"
+              }
+            ]
+          },
           // {
           //   // fieldName: "skills",
           //   textValue: "Salary",
@@ -97,6 +114,7 @@ const FreelancerTable: React.FC = () => {
             name: "skills",
             textValue: "Skills",
             type: FilterDataType.MULTI,
+            arrayName: "name",
             options: [
               {label: "React", value: "React"},
               {label: "Vue", value: "Vue"},
@@ -108,6 +126,7 @@ const FreelancerTable: React.FC = () => {
           {
             name: "domain",
             textValue: "Domain",
+            arrayName: "name",
             type: FilterDataType.SINGLE,
             options: [
               { label: "Frontend Developer", value: "Frontend" },
@@ -123,7 +142,7 @@ const FreelancerTable: React.FC = () => {
               { label: "Backend Developer", value: "Backend Developer" },
               { label: "Freelancer", value: "freelancer" },
             ]
-          },
+          }
           // {
           //   name: "Salary",
           //   textValue: "Salary",
@@ -159,7 +178,7 @@ const FreelancerTable: React.FC = () => {
             handler: () => { console.log("hogya") },
           },
         ]}
-        searchColumn={['username', 'skills']}
+        searchColumn={['skills.name', 'email']}
         isDownload={true}
       />
     </div>

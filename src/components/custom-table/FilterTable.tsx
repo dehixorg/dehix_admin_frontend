@@ -28,6 +28,7 @@ type Params = {
       value: string;
       label: string;
     }>;
+    arrayName?: string;
   }>;
   setFilters: (filters: FiltersArrayElem[]) => void;
   tableHeaderActions?: HeaderActions[];
@@ -50,6 +51,7 @@ export const FilterTable = ({
         fieldName: filter.name,
         textValue: filter.textValue,
         value: "",
+        arrayName: filter.arrayName,
       })
     );
     return filtersArray;

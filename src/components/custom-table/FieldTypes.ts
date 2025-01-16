@@ -17,7 +17,6 @@ export enum FieldType {
   ARRAY_VALUE = "ArrayValue",
   STATUS = "Status",
   TOGGLE = "Toggle",
-  DELETE = "Delete",
 }
 
 export interface Actions {
@@ -50,15 +49,21 @@ export interface Field {
   className?: string; // custom tailwind classes to be added to the table cell
   arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than  array of strings
   onToggle?: (value: boolean, id: string) => void;
-  actions?: Actions;
-  currency?: Currency;
+  actions?: Actions; // if type === FieldType.ACTIONS then this parameter will contain your actions metadata
+  currency?: Currency; // if type === FieldType.CURRENCY then this parameter will be the currency type, default is INR
+  statusFormats?: Array<{
+    bgColor?: string; // HEX or RGB or pre defined css colors
+    textColor?: string;
+    isUppercase?: boolean;
+    value: string;
+  }>; // if type === FieldType.STATUS then this parameter will the formating options like color and all for the different statuses
 }
 
 export interface HeaderActions {
   name: string;
   icon: React.ReactNode;
   handler: () => void;
-  className?: string
+  className?: string;
 }
 
 export interface Params {
@@ -71,11 +76,12 @@ export interface Params {
       value: string;
       label: string;
     }>;
+    arrayName?: string;
   }>;
   fields: Array<Field>;
   api: string;
   params?: Record<string, any>;
-  searchColumn?: Array<string>
+  searchColumn?: Array<string>;
   isFilter?: boolean;
   isDownload?: boolean;
   tableHeaderActions?: Array<HeaderActions>;
@@ -92,4 +98,5 @@ export interface FiltersArrayElem {
   fieldName: string;
   textValue: string;
   value: string;
+  arrayName?: string;
 }
