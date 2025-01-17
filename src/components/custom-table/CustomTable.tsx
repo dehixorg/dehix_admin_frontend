@@ -29,6 +29,7 @@ export const CustomTable = ({
   tableHeaderActions,
   mainTableActions,
   searchColumn,
+  sortBy,
   isFilter = true,
   isDownload = false,
 }: Params) => {
@@ -37,6 +38,9 @@ export const CustomTable = ({
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
   );
+  // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
+  const [sortByValue, setSortByValue] = useState<string>("createdAt");
+  const [sortOrder, setSortOrder] = useState<1 | -1>(1);
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
@@ -46,7 +50,7 @@ export const CustomTable = ({
       try {
         setLoading(true);
         window.scrollTo(0, 0);
-        let params: Record<string, any> = {
+        const params: Record<string, any> = {
           filters: "",
           page: page,
         };
@@ -54,8 +58,9 @@ export const CustomTable = ({
           params["filters"] += [`filter[${filter.fieldName}],`];
         });
         selectedFilters.map((filter) => {
-          if(filter.arrayName) {
-            params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
+          if (filter.arrayName) {
+            params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
+              filter.value;
           } else {
             params[`filter[${filter.fieldName}]`] = filter.value;
           }
@@ -64,6 +69,10 @@ export const CustomTable = ({
           params["filter[search][value]"] = search;
           params["filter[search][columns]"] = searchColumn?.join(",");
         }
+
+        params["filter[sortBy]"] = sortByValue;
+        params["filter[sortOrder]"] = sortOrder;
+
         const response = await apiHelperService.fetchData(api, params);
         setData(response.data.data);
       } catch (error) {
@@ -72,7 +81,11 @@ export const CustomTable = ({
         setLoading(false);
       }
     })();
-  }, [selectedFilters, search, page, limit]);
+  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [selectedFilters, search, limit]);
 
   const setFiltersUtils = (filters: FiltersArrayElem[]) => {
     setSelectedFilters(filters);
@@ -89,14 +102,14 @@ export const CustomTable = ({
   const handleDownload = () => {
     let content = "";
 
-    let headings: string[] = [];
+    const headings: string[] = [];
     fields.forEach((field) => {
       if (field.type !== FieldType.ACTION) headings.push(field.textValue);
     });
     content += headings.join(",") + "\n";
 
     data.forEach((elem) => {
-      let fieldValues: string[] = [];
+      const fieldValues: string[] = [];
       fields.forEach((field) => {
         if (field.fieldName && field.type !== FieldType.ACTION) {
           if (field.type === FieldType.ARRAY_VALUE)
@@ -112,15 +125,15 @@ export const CustomTable = ({
     });
     console.log(content);
 
-    const blob = new Blob([content], { type: 'text/csv' });
-    
+    const blob = new Blob([content], { type: "text/csv" });
+
     // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
-    
+
+    const a = document.createElement("a");
+
     a.href = url;
-    a.download = 'data.csv';
+    a.download = "data.csv";
 
     a.click();
   };
@@ -155,6 +168,9 @@ export const CustomTable = ({
               setFilters={setFiltersUtils}
               search={search}
               setSearch={setSearch}
+              sortByArr={sortBy || []}
+              setSortByValue={setSortByValue}
+              setSortOrder={setSortOrder}
             />
           )}
           <div className="lg:overflow-x-auto">

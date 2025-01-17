@@ -73,7 +73,7 @@ const ArrayValueField = ({
         <>
           <ToolTip
             trigger={
-              <div>
+              <div className="">
                 <span>{value[0][fieldData.arrayName!]} </span>
                 <span className="text-xs text-gray-500">
                   {value.length > 1 && `+${value.length - 1} more`}
@@ -86,7 +86,7 @@ const ArrayValueField = ({
           />
         </>
       ) : (
-        <span className="text-xs text-gray-500">/</span>
+        <span className="text-xs text-gray-500">-</span>
       )}
     </div>
   );
@@ -178,6 +178,13 @@ const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
   );
 };
 
+export const TooltipField = ({
+  value,
+  fieldData,
+}: FieldComponentProps<string>) => {
+  return <ToolTip trigger={value} content={fieldData.tooltipContent || ""} />;
+};
+
 export const mapTypeToComponent = (type: FieldType) => {
   switch (type) {
     case FieldType.DATETIME:
@@ -198,6 +205,10 @@ export const mapTypeToComponent = (type: FieldType) => {
       return CurrencyField;
     case FieldType.STATUS:
       return StatusField;
+    case FieldType.CRYPTO:
+      return CurrencyField;
+    case FieldType.TOOLTIP:
+      return TooltipField;
     default:
       return TextField;
   }

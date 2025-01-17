@@ -34,6 +34,9 @@ type Params = {
   tableHeaderActions?: HeaderActions[];
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
+  sortByArr: Array<{ label: string; fieldName: string }>;
+  setSortByValue: (val: string) => void;
+  setSortOrder: (val: 1 | -1) => void;
 };
 
 export const FilterTable = ({
@@ -41,11 +44,13 @@ export const FilterTable = ({
   setFilters,
   tableHeaderActions,
   search,
-  setSearch
+  setSearch,
+  sortByArr,
+  setSortByValue,
+  setSortOrder,
 }: Params) => {
-  
   const initializeFiltersArray = () => {
-    let filtersArray: FiltersArrayElem[] = [];
+    const filtersArray: FiltersArrayElem[] = [];
     filterData?.forEach((filter) =>
       filtersArray.push({
         fieldName: filter.name,
@@ -55,13 +60,18 @@ export const FilterTable = ({
       })
     );
     return filtersArray;
-  }
+  };
 
   const [isOpen, setIsOpen] = useState(false);
 
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     () => initializeFiltersArray()
   );
+  // const [sortByValue, setSortByValue] = useState<string>("createdAt")
+  const [sortChildState, setSortChildState] = useState<{
+    value: string;
+    order: 1 | -1;
+  }>({ value: "createdAt", order: 1 });
 
   useEffect(() => {
     return () => {
@@ -91,7 +101,7 @@ export const FilterTable = ({
           {/* Sliding Filter Panel */}
           <SheetContent
             side="right"
-            className="w-80 p-4 bg-white dark:bg-gray-900 space-y-4"
+            className="w-80 p-4 bg-white dark:bg-gray-900 space-y-4 overflow-y-scroll"
           >
             <div>
               <SheetTitle className="text-lg font-medium mb-0 text-gray-800 dark:text-gray-200">
@@ -183,23 +193,90 @@ export const FilterTable = ({
               </div>
             ))}
 
+            {sortByArr.length && (
+              <div className="w-full px-4 flex flex-col items-start justify-start gap-4">
+                <span>Sort By</span>
+                <RadioGroup
+                  value={sortChildState.value}
+                  onValueChange={(value) => {
+                    setSortChildState({ ...sortChildState, value });
+                  }}
+                  defaultValue="createdAt"
+                  className="flex flex-col text-gray-600 text-sm items-start justify-start gap-3"
+                >
+                  {sortByArr.map((sortVal, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center cursor-pointer space-x-2"
+                    >
+                      <RadioGroupItem
+                        value={sortVal.fieldName}
+                        id={sortVal.fieldName}
+                      />
+                      <Label
+                        className="font-normal cursor-pointer"
+                        htmlFor={sortVal.fieldName}
+                      >
+                        {sortVal.label}
+                      </Label>
+                    </div>
+                  ))}
+                  <div className="flex items-center cursor-pointer space-x-2">
+                    <RadioGroupItem value={"createdAt"} id={"createdAt"} />
+                    <Label
+                      className="font-normal cursor-pointer"
+                      htmlFor={"createdAt"}
+                    >
+                      {"Most Recent"}
+                    </Label>
+                  </div>
+                </RadioGroup>
+                <RadioGroup
+                  value={sortChildState.order.toString()}
+                  onValueChange={(value) => {
+                    setSortChildState({
+                      ...sortChildState,
+                      order: value === "1" ? 1 : -1,
+                    });
+                  }}
+                  defaultValue="createdAt"
+                  className="flex flex-row text-gray-600 text-sm items-start justify-start gap-3"
+                >
+                  {["1", "-1"].map((order) => (
+                    <div key={order} className="flex items-center cursor-pointer space-x-2">
+                      <RadioGroupItem value={order} id={order} />
+                      <Label
+                        className="font-normal cursor-pointer"
+                        htmlFor={order}
+                      >
+                        {order == "-1" ? "Newest First" : "Oldest First"}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </div>
+            )}
+
             {/* Apply Filters Button */}
             <button
               className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none"
               onClick={() => {
                 setIsOpen(false);
                 setFilters(selectedFilters);
+                setSortByValue(sortChildState.value);
+                setSortOrder(sortChildState.order);
               }}
             >
               Apply Filters
             </button>
             <span
-            className="text-blue-500 hover:underline text-xs cursor-pointer"
-            onClick={() => {
-              setIsOpen(false)
-              setSelectedFilters(initializeFiltersArray())
-              setFilters(initializeFiltersArray())
-            }}>
+              className="text-blue-500 hover:underline text-xs cursor-pointer"
+              onClick={() => {
+                setIsOpen(false);
+                setSelectedFilters(initializeFiltersArray());
+                setFilters(initializeFiltersArray());
+              }}
+            >
               <ReloadIcon className="inline" /> Reset Filters
             </span>
           </SheetContent>

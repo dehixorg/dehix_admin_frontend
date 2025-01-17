@@ -17,6 +17,7 @@ export enum FieldType {
   ARRAY_VALUE = "ArrayValue",
   STATUS = "Status",
   TOGGLE = "Toggle",
+  TOOLTIP = "Tooltip",
 }
 
 export interface Actions {
@@ -86,6 +87,10 @@ export interface Params {
   isDownload?: boolean;
   tableHeaderActions?: Array<HeaderActions>;
   mainTableActions?: Array<HeaderActions>;
+  sortBy?: Array<{
+    label: string;
+    fieldName: string;
+  }>;
 }
 
 export interface FieldComponentProps<T> {

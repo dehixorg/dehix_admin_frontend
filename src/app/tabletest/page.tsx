@@ -180,6 +180,7 @@ const FreelancerTable: React.FC = () => {
         ]}
         searchColumn={['skills.name', 'email']}
         isDownload={true}
+        sortBy={[{fieldName: "dob", label: "Date Of Birth"}]}
       />
     </div>
   );
