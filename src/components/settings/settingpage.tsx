@@ -134,11 +134,14 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
           description: 'User Name already taken',
         });
       }
+      else
+      {
       toast({
         variant: 'destructive',
         title: 'Error',
         description: 'Failed to update profile. Please try again later.',
       });
+    }
     } finally {
       setLoading(false); // Always reset loading state
     }
