@@ -71,26 +71,25 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
   });
   const [updating, setUpdating] = useState<boolean>(false);
 
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        setLoading(true);
-        const response = await apiHelperService.getAdminInfo(user_id);
-        const userData = response?.data.data || null;
+  const fetchUserDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await apiHelperService.getAdminInfo(user_id);
+      const userData = response?.data?.data || null;
 
-        if (userData) {
-          setUser(userData);
-          
-        } else {
-          throw new Error("User details not found");
-        }
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch user details");
-      } finally {
-        setLoading(false);
+      if (!userData) {
+        throw new Error("User details not found");
       }
-    };
 
+      setUser(userData);
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch user details");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUserDetails();
   }, []);
 
