@@ -21,6 +21,8 @@ import { ToolTip } from "../ToolTip";
 import { TablePagination } from "./Pagination";
 import { TableSelect } from "./TableSelect";
 import { twMerge } from "tailwind-merge";
+import { useToast } from "../ui/use-toast";
+import { Messages } from "@/utils/common/enum";
 
 export const CustomTable = ({
   title,
@@ -46,6 +48,8 @@ export const CustomTable = ({
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
+  const { toast } = useToast();
+
 
   useEffect(() => {
     (async () => {
@@ -79,6 +83,11 @@ export const CustomTable = ({
         setData(response.data.data);
       } catch (error) {
         console.log(error);
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR(title || ""),
+          variant: "destructive", // Red error message
+        });
       } finally {
         setLoading(false);
       }
@@ -254,7 +263,7 @@ export const CustomTable = ({
         <TablePagination
           page={page}
           setPage={setPageUtils}
-          isNextAvailable={data.length >= 20}
+          isNextAvailable={data?.length >= 20}
         />
       </div>
     </div>
