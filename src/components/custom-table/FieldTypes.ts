@@ -41,7 +41,6 @@ export interface Field {
   fieldName?: string; // name of the key for the field in the api response
   textValue: string; // text to be displayed in the table header
   type: FieldType; // type of the field
-  sortable?: boolean;
   width?: number;
   formating?: object;
   link?: string; // the placeholder link to be displayed if type === FieldType.LINK
@@ -68,6 +67,7 @@ export interface HeaderActions {
 }
 
 export interface Params {
+  title?: string;
   uniqueId: string;
   filterData?: Array<{
     type: FilterDataType;

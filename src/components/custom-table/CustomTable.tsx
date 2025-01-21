@@ -20,8 +20,10 @@ import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ToolTip } from "../ToolTip";
 import { TablePagination } from "./Pagination";
 import { TableSelect } from "./TableSelect";
+import { twMerge } from "tailwind-merge";
 
 export const CustomTable = ({
+  title,
   fields,
   filterData,
   api,
@@ -141,6 +143,7 @@ export const CustomTable = ({
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-gray-800 tracking-wider">{title}</h1>
         <HeaderActionComponent headerActions={mainTableActions} />
         <TableSelect
           currValue={limit}
@@ -210,7 +213,7 @@ export const CustomTable = ({
                       {fields.map((field, index) => (
                         <TableCell
                           key={field.fieldName}
-                          className={field.className}
+                          className={twMerge("text-gray-900", field.className)}
                           width={field.width}
                         >
                           <CustomTableCell

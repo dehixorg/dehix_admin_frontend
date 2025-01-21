@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
@@ -10,9 +8,17 @@ import {
   menuItemsBottom,
   menuItemsTop,
 } from "@/config/menuItems/admin/dashboardMenuItems";
-import FreelancerTable from "@/components/freelancer/table/FreelancerTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  FieldType,
+  FilterDataType,
+} from "@/components/custom-table/FieldTypes";
+import { ChevronRight, Info } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function Talent() {
+  const router = useRouter();
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -34,17 +40,92 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <FreelancerTable />
+          <CustomTable
+            title="Freelancers"
+            uniqueId="_id"
+            api="/freelancer"
+            fields={[
+              {
+                fieldName: "firstName",
+                textValue: "Name",
+                type: FieldType.TEXT,
+              },
+              {
+                fieldName: "email",
+                textValue: "Email ID",
+                type: FieldType.TEXT,
+              },
+              {
+                fieldName: "phone",
+                textValue: "Phone No.",
+                type: FieldType.TEXT,
+                tooltip: true,
+                tooltipContent: "Personal Phone Number",
+              },
+              {
+                fieldName: "skills",
+                textValue: "Skills",
+                type: FieldType.ARRAY_VALUE,
+                arrayName: "name",
+              },
+              {
+                fieldName: "domain",
+                textValue: "Domains",
+                type: FieldType.ARRAY_VALUE,
+                arrayName: "name",
+              },
+              {
+                textValue: "",
+                type: FieldType.ACTION,
+                actions: {
+                  icon: <ChevronRight className="w-4 h-4" />,
+                  options: [
+                    {
+                      actionName: "View",
+                      actionIcon: <Info className="text-gray-500 w-4 h-4" />,
+                      type: "Button",
+                      handler: (id) => {
+                        router.push(`/freelancer/tabs?id=${id}`);
+                      },
+                    },
+                  ],
+                },
+              },
+            ]}
+            filterData={[
+              {
+                name: "skills",
+                textValue: "Skills",
+                type: FilterDataType.MULTI,
+                arrayName: "name",
+                options: [
+                  { label: "React", value: "React" },
+                  { label: "Vue", value: "Vue" },
+                  { label: "Django", value: "Django" },
+                  { label: "Angular", value: "Angular" },
+                  { label: "Node JS", value: "Nodejs" },
+                ],
+              },
+              {
+                name: "domain",
+                textValue: "Domain",
+                arrayName: "name",
+                type: FilterDataType.SINGLE,
+                options: [
+                  { label: "Frontend Developer", value: "Frontend" },
+                  { label: "Backend Developer", value: "Backend" },
+                  { label: "Full Stack Developer", value: "Fullstack" },
+                ],
+              },
+            ]}
+            searchColumn={["skills.name", "email"]}
+            isDownload={true}
+            sortBy={[{ fieldName: "dob", label: "Date Of Birth" }]}
+          />
         </main>
       </div>
     </div>
