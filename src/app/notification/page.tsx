@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -11,6 +9,11 @@ import {
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import NotifyTable from "@/components/Notification/notifyTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import { FieldType } from "@/components/custom-table/FieldTypes";
+import { useState } from "react";
+import { CustomDialog } from "@/components/CustomDialog";
+import Image from "next/image";
 
 export default function Talent() {
   return (
@@ -34,17 +37,144 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <NotifyTable />
+          {/* <NotifyTable /> */}
+          <CustomTable
+            api="/ads"
+            uniqueId="_id"
+            fields={[
+              {
+                textValue: "Type",
+                type: FieldType.STATUS,
+                fieldName: "type",
+                statusFormats: [
+                  {
+                    value: "FREELANCER",
+                    bgColor: "#7c82f2",
+                    textColor: "#03085e",
+                    textValue: "Freelancer",
+                  },
+                  {
+                    value: "BUSINESS",
+                    bgColor: "yellow",
+                    textColor: "#525002",
+                    textValue: "Business",
+                  },
+                  {
+                    value: "BOTH",
+                    bgColor: "#57fa70",
+                    textColor: "#024d0d",
+                    textValue: "Both",
+                  },
+                ],
+              },
+              {
+                fieldName: "heading",
+                textValue: "Heading",
+                type: FieldType.TEXT,
+              },
+              {
+                fieldName: "description",
+                textValue: "Description",
+                type: FieldType.LONGTEXT,
+                width: 500,
+                wordsCnt: 50,
+              },
+              {
+                textValue: "Status",
+                type: FieldType.STATUS,
+                fieldName: "status",
+                statusFormats: [
+                  {
+                    value: "INACTIVE",
+                    bgColor: "yellow",
+                    textColor: "#525002",
+                    textValue: "Inactive",
+                  },
+                  {
+                    value: "ACTIVE",
+                    bgColor: "#57fa70",
+                    textColor: "#024d0d",
+                    textValue: "Active",
+                  },
+                ],
+              },
+              {
+                textValue: "",
+                type: FieldType.CUSTOM,
+                CustomComponent: ({ id, data }) => {
+                  return (
+                    data && (
+                      <CustomDialog
+                        title={"Notification Details"}
+                        description={
+                          "Detailed information about the Notification."
+                        }
+                        content={
+                          <>
+                            <div className="flex flex-col items-start justify-start gap-0">
+                              <h1 className="text-3xl w-full text-center font-medium text-neutral-900">
+                                {data.heading}
+                              </h1>
+                              <p className="text-sm text-gray-500 mb-2">
+                                {data.type}
+                              </p>
+                              <p className=" mb-2">{data.description}</p>
+                              {data.background_img !== "" && (
+                                <Image
+                                  src={data.background_img}
+                                  alt="notification"
+                                  width={2000}
+                                  height={2000}
+                                  className="w-full h-fit"
+                                />
+                              )}
+                              <p>
+                                <strong>URL Count:</strong>
+                                {data.importantUrl.length}
+                              </p>
+                              <ul className="list-inside">
+                                {data.importantUrl.length > 0 ? (
+                                  data.importantUrl.map(
+                                    (url: any, urlIndex: number) => (
+                                      <li key={urlIndex}>
+                                        <p>
+                                          <strong>URL Name:</strong>{" "}
+                                          {url.urlName}
+                                        </p>
+                                        <p>
+                                          <strong>URL:</strong>
+                                          <a
+                                            href={url.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 underline"
+                                          >
+                                            {url.url}
+                                          </a>
+                                        </p>
+                                      </li>
+                                    )
+                                  )
+                                ) : (
+                                  <li className="text-gray-500">
+                                    No URLs available
+                                  </li>
+                                )}
+                              </ul>
+                            </div>
+                          </>
+                        }
+                      />
+                    )
+                  );
+                },
+              },
+            ]}
+          />
         </main>
       </div>
     </div>

@@ -32,6 +32,7 @@ type Params = {
   }>;
   setFilters: (filters: FiltersArrayElem[]) => void;
   tableHeaderActions?: HeaderActions[];
+  isSearch: boolean;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
   sortByArr: Array<{ label: string; fieldName: string }>;
@@ -48,6 +49,7 @@ export const FilterTable = ({
   sortByArr,
   setSortByValue,
   setSortOrder,
+  isSearch,
 }: Params) => {
   const initializeFiltersArray = () => {
     const filtersArray: FiltersArrayElem[] = [];
@@ -83,7 +85,9 @@ export const FilterTable = ({
     <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white text-black dark:bg-black dark:text-white rounded-lg">
       {/* Search Bar */}
       <div className="w-1/3 mr-4">
-        <SearchComponent searchValue={search} setSearchValue={setSearch} />
+        {isSearch && (
+          <SearchComponent searchValue={search} setSearchValue={setSearch} />
+        )}
       </div>
 
       {/* Filters */}
@@ -243,7 +247,10 @@ export const FilterTable = ({
                   className="flex flex-row text-gray-600 text-sm items-start justify-start gap-3"
                 >
                   {["1", "-1"].map((order) => (
-                    <div key={order} className="flex items-center cursor-pointer space-x-2">
+                    <div
+                      key={order}
+                      className="flex items-center cursor-pointer space-x-2"
+                    >
                       <RadioGroupItem value={order} id={order} />
                       <Label
                         className="font-normal cursor-pointer"

@@ -173,7 +173,7 @@ export const CustomTable = ({
       </div>
       <div className="mb-8 mt-4">
         <Card>
-          {isFilter && (
+          {isFilter && filterData && filterData.length > 0 && (
             <FilterTable
               filterData={filterData}
               tableHeaderActions={tableHeaderActions}
@@ -183,6 +183,7 @@ export const CustomTable = ({
               sortByArr={sortBy || []}
               setSortByValue={setSortByValue}
               setSortOrder={setSortOrder}
+              isSearch={searchColumn ? searchColumn.length > 0 : false}
             />
           )}
           <div className="lg:overflow-x-auto">
@@ -230,7 +231,8 @@ export const CustomTable = ({
                             value={
                               field.fieldName
                                 ? elem[field.fieldName]
-                                : undefined
+                                : field.type === FieldType.CUSTOM ?
+                                elem : undefined
                             }
                             id={elem[uniqueId]}
                           />

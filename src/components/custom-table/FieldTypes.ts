@@ -18,6 +18,8 @@ export enum FieldType {
   STATUS = "Status",
   TOGGLE = "Toggle",
   TOOLTIP = "Tooltip",
+  LONGTEXT = "LongText",
+  CUSTOM = "Custom",
 }
 
 export interface Actions {
@@ -56,7 +58,10 @@ export interface Field {
     textColor?: string;
     isUppercase?: boolean;
     value: string;
+    textValue: string;
   }>; // if type === FieldType.STATUS then this parameter will the formating options like color and all for the different statuses
+  wordsCnt?: number; // If type === FieldType.LongText then this parameter will decide how many words to show and if the value exceeds this, the element will become a tooltip to show remaining text
+  CustomComponent?: ({ id, data }: {id: string, data: Record<string, any>}) => React.JSX.Element;
 }
 
 export interface HeaderActions {

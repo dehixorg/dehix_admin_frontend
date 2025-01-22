@@ -5,7 +5,7 @@ import {
   FieldComponentProps,
   FieldType,
 } from "./FieldTypes";
-import { useState } from "react";
+import { createElement, useState } from "react";
 import { Switch } from "../ui/switch";
 import {
   DropdownMenu,
@@ -173,7 +173,7 @@ const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
       }}
       className=" rounded-sm px-2 py-1 text-center"
     >
-      {value}
+      {statusMetaData.textValue}
     </span>
   );
 };
@@ -183,6 +183,36 @@ export const TooltipField = ({
   fieldData,
 }: FieldComponentProps<string>) => {
   return <ToolTip trigger={value} content={fieldData.tooltipContent || ""} />;
+};
+
+const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
+  if (fieldData.wordsCnt && value.length <= fieldData.wordsCnt)
+    return <span>{value}</span>;
+
+  if (fieldData.wordsCnt)
+    return (
+      <ToolTip
+        trigger={
+          <span className=" line-clamp-1">
+            {value.slice(0, fieldData.wordsCnt)}...
+          </span>
+        }
+        content={value || ""}
+      />
+    );
+
+  return (
+    <ToolTip
+      trigger={<span className=" line-clamp-1">{value}</span>}
+      content={value || ""}
+    />
+  );
+};
+
+const CustomComponent = ({ fieldData, id, value }: FieldComponentProps<any>) => {
+  if(!fieldData.CustomComponent) return <div>{id}</div>
+  const Component = fieldData.CustomComponent
+  return <Component id={id} data={value} />
 };
 
 export const mapTypeToComponent = (type: FieldType) => {
@@ -209,6 +239,10 @@ export const mapTypeToComponent = (type: FieldType) => {
       return CurrencyField;
     case FieldType.TOOLTIP:
       return TooltipField;
+    case FieldType.LONGTEXT:
+      return LongTextField;
+    case FieldType.CUSTOM:
+      return CustomComponent;
     default:
       return TextField;
   }
