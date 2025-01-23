@@ -83,7 +83,7 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
 
       setUser(userData);
     } catch (err: any) {
-      setError(err.message || "Failed to fetch user details");
+      setError(err.message || "Failed to the fetch user details");
     } finally {
       setLoading(false);
     }
