@@ -1,6 +1,4 @@
 "use client";
-import { useSelector } from "react-redux";
-import { RootState } from "@/lib/store";
 import { axiosInstance } from "@/lib/axiosinstance";
 import { toast } from '../ui/use-toast';
 import * as React from "react";
