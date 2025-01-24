@@ -48,11 +48,10 @@ export const CustomTable = ({
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
+
   const { toast } = useToast();
 
-
-  useEffect(() => {
-    (async () => {
+  const fetchData = async () => {
       try {
         setLoading(true);
         window.scrollTo(0, 0);
@@ -91,7 +90,10 @@ export const CustomTable = ({
       } finally {
         setLoading(false);
       }
-    })();
+  }
+
+  useEffect(() => {
+    fetchData()
   }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
 
   useEffect(() => {
@@ -149,11 +151,15 @@ export const CustomTable = ({
     a.click();
   };
 
+  const refetch = () => {
+    fetchData()
+  }
+
   return (
     <div className="px-4">
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800 tracking-wider">{title}</h1>
-        <HeaderActionComponent headerActions={mainTableActions} />
+        <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
         <TableSelect
           currValue={limit}
           label="Items Per Page"
@@ -173,7 +179,7 @@ export const CustomTable = ({
       </div>
       <div className="mb-8 mt-4">
         <Card>
-          {isFilter && filterData && filterData.length > 0 && (
+          {isFilter && (
             <FilterTable
               filterData={filterData}
               tableHeaderActions={tableHeaderActions}
@@ -184,6 +190,7 @@ export const CustomTable = ({
               setSortByValue={setSortByValue}
               setSortOrder={setSortOrder}
               isSearch={searchColumn ? searchColumn.length > 0 : false}
+              refetch={refetch}
             />
           )}
           <div className="lg:overflow-x-auto">

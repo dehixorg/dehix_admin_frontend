@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { ButtonIcon } from "./ui/arrowButton";
 import {
   Dialog,
@@ -11,21 +12,27 @@ import {
 type Params = {
   title: string | React.JSX.Element;
   description: string | React.JSX.Element;
-  content: string | React.JSX.Element
-}
+  content: string | React.JSX.Element;
+  triggerContent?: string | React.JSX.Element;
+  triggerState?: boolean;
+  setTriggerState?: Dispatch<SetStateAction<boolean>>;
+};
 
-export function CustomDialog({ title, description, content }: Params) {
+export function CustomDialog({
+  title,
+  description,
+  content,
+  triggerState,
+  setTriggerState,
+  triggerContent,
+}: Params) {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <ButtonIcon />
-      </DialogTrigger>
+    <Dialog open={triggerState} onOpenChange={setTriggerState}>
+      {<DialogTrigger asChild>{triggerContent || <ButtonIcon />}</DialogTrigger>}
       <DialogContent className="p-4 max-h-[80%] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>
-            {description}
-          </DialogDescription>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         {content}
       </DialogContent>

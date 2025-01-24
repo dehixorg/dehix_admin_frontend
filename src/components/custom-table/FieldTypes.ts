@@ -90,8 +90,8 @@ export interface Params {
   searchColumn?: Array<string>;
   isFilter?: boolean;
   isDownload?: boolean;
-  tableHeaderActions?: Array<HeaderActions>;
-  mainTableActions?: Array<HeaderActions>;
+  tableHeaderActions?: Array<HeaderActions | React.FC<CustomTableHeaderComponentsProps>>;
+  mainTableActions?: Array<HeaderActions | React.FC<CustomTableHeaderComponentsProps>>;
   sortBy?: Array<{
     label: string;
     fieldName: string;
@@ -109,4 +109,8 @@ export interface FiltersArrayElem {
   textValue: string;
   value: string;
   arrayName?: string;
+}
+
+export interface CustomTableHeaderComponentsProps {
+  refetch?: () => void;
 }

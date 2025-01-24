@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { Filter } from "lucide-react";
 import {
+  CustomTableHeaderComponentsProps,
   FilterDataType,
   FiltersArrayElem,
   HeaderActions,
@@ -19,7 +20,7 @@ import { Checkbox } from "../ui/checkbox";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
-type Params = {
+interface Params extends CustomTableHeaderComponentsProps {
   filterData?: Array<{
     type: FilterDataType;
     name: string;
@@ -31,7 +32,7 @@ type Params = {
     arrayName?: string;
   }>;
   setFilters: (filters: FiltersArrayElem[]) => void;
-  tableHeaderActions?: HeaderActions[];
+  tableHeaderActions?: Array<HeaderActions | React.FC>;
   isSearch: boolean;
   search: string;
   setSearch: Dispatch<SetStateAction<string>>;
@@ -50,6 +51,7 @@ export const FilterTable = ({
   setSortByValue,
   setSortOrder,
   isSearch,
+  refetch
 }: Params) => {
   const initializeFiltersArray = () => {
     const filtersArray: FiltersArrayElem[] = [];
@@ -69,7 +71,6 @@ export const FilterTable = ({
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     () => initializeFiltersArray()
   );
-  // const [sortByValue, setSortByValue] = useState<string>("createdAt")
   const [sortChildState, setSortChildState] = useState<{
     value: string;
     order: 1 | -1;
@@ -84,18 +85,20 @@ export const FilterTable = ({
   return (
     <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white text-black dark:bg-black dark:text-white rounded-lg">
       {/* Search Bar */}
-      <div className="w-1/3 mr-4">
-        {isSearch && (
+      {isSearch && (
+        <div className="w-1/3 mr-4">
           <SearchComponent searchValue={search} setSearchValue={setSearch} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Filters */}
-      <div className="w-2/3 flex items-center justify-between gap-4">
-        <HeaderActionComponent headerActions={tableHeaderActions} />
+      <div className="w-2/3 flex flex-grow items-center justify-between gap-4">
+        <HeaderActionComponent headerActions={tableHeaderActions} refetch={refetch} />
 
         {/* Filter Button */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        {
+          filterData && filterData.length > 0 &&
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
             <button className="p-2 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700">
               <Filter className="w-5 h-5 text-gray-800 dark:text-gray-200" />
@@ -288,6 +291,7 @@ export const FilterTable = ({
             </span>
           </SheetContent>
         </Sheet>
+        }
       </div>
     </div>
   );

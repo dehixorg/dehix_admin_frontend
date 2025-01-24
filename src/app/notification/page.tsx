@@ -11,9 +11,10 @@ import DropdownProfile from "@/components/shared/DropdownProfile";
 import NotifyTable from "@/components/Notification/notifyTable";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType } from "@/components/custom-table/FieldTypes";
-import { useState } from "react";
+// import { useState } from "react";
 import { CustomDialog } from "@/components/CustomDialog";
 import Image from "next/image";
+import AddNotify from "@/components/Notification/addNotify";
 
 export default function Talent() {
   return (
@@ -173,6 +174,12 @@ export default function Talent() {
                   );
                 },
               },
+            ]}
+            isDownload={true}
+            title="Notifications"
+            tableHeaderActions={[
+              // ({ refetch }) => <AddNotify refetch={refetch} />
+              AddNotify
             ]}
           />
         </main>
