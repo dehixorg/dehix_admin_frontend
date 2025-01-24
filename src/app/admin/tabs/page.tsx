@@ -1,37 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Eye, EyeOff } from "lucide-react";
-import { RootState } from '@/lib/store';
-import {useSelector } from 'react-redux';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import { apiHelperService } from "@/services/admin";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { AdminAccountStatus, AdminType, AdminPasswordStatus, Messages } from "@/utils/common/enum";
-import { Badge } from "@/components/ui/badge";
-import { getStatusBadge } from "@/utils/common/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+
 import CurrentUserDetails from "@/components/Admin/adminview";
 
 const AdminTabs = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id") || "";
+  const user_id = searchParams.get("id") || "";
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu menuItemsTop={menuItemsTop} menuItemsBottom={menuItemsBottom} active="Admin" />
@@ -42,7 +24,7 @@ const AdminTabs = () => {
             items={[
               { label: "Dashboard", link: "" },
               { label: "Admin", link: "/admin" },
-              { label: id, link: "#" },
+              { label: user_id, link: "#" },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
@@ -53,7 +35,7 @@ const AdminTabs = () => {
         </header>
 
         <main className="ml-5 mr-5 mt-6">
-            <CurrentUserDetails id={id}/>
+            <CurrentUserDetails id={user_id}/>
           </main>
       </div>
     </div>

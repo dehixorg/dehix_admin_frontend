@@ -45,7 +45,7 @@ interface CurrentUserDetailsProps {
     id: string;
   }
 
-const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ id }) => {
+  const CurrentUserDetails = ({ id }: CurrentUserDetailsProps) => {
 const user = useSelector((state: RootState) => state.user);
 const [newPassword, setNewPassword] = useState("");
 const [confirmPassword, setConfirmPassword] = useState("");
@@ -102,7 +102,6 @@ const handleResetPassword = async () => {
       };
   
       const payload = {
-          "firstName":"AA",
         "password": newPassword,
        "resetRequest": false,
         "changePasswordRequests": updatedRequests,
