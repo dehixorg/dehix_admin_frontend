@@ -215,6 +215,10 @@ const CustomComponent = ({ fieldData, id, value, refetch }: FieldComponentProps<
   return <Component id={id} data={value} refetch={refetch} />
 };
 
+const LengthField = ({ value }: FieldComponentProps<Record<string, any>[]>) => {
+  return <span>{value.length}</span>
+}
+
 export const mapTypeToComponent = (type: FieldType) => {
   switch (type) {
     case FieldType.DATETIME:
@@ -243,6 +247,8 @@ export const mapTypeToComponent = (type: FieldType) => {
       return LongTextField;
     case FieldType.CUSTOM:
       return CustomComponent;
+    case FieldType.LENGTH:
+      return LengthField;
     default:
       return TextField;
   }

@@ -20,6 +20,7 @@ export enum FieldType {
   TOOLTIP = "Tooltip",
   LONGTEXT = "LongText",
   CUSTOM = "Custom",
+  LENGTH = "Length",
 }
 
 interface ActionHandler extends CustomTableChildComponentsProps {
