@@ -5,7 +5,7 @@ import {
   FieldComponentProps,
   FieldType,
 } from "./FieldTypes";
-import { createElement, useState } from "react";
+import { useState } from "react";
 import { Switch } from "../ui/switch";
 import {
   DropdownMenu,
@@ -92,7 +92,7 @@ const ArrayValueField = ({
   );
 };
 
-const ActionField = ({ id, fieldData }: FieldComponentProps<Actions>) => {
+const ActionField = ({ id, fieldData, refetch }: FieldComponentProps<Actions>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-sm text-gray-600 hover:bg-gray-200 p-1 rounded transition duration-300">
@@ -116,7 +116,7 @@ const ActionField = ({ id, fieldData }: FieldComponentProps<Actions>) => {
             >
               {type == "Button" ? (
                 <div
-                  onClick={() => handler?.(id)}
+                  onClick={() => handler?.({id, refetch})}
                   className={twMerge(
                     "text-sm w-full py-2 px-3 flex items-center justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className
@@ -209,10 +209,10 @@ const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
   );
 };
 
-const CustomComponent = ({ fieldData, id, value }: FieldComponentProps<any>) => {
+const CustomComponent = ({ fieldData, id, value, refetch }: FieldComponentProps<any>) => {
   if(!fieldData.CustomComponent) return <div>{id}</div>
   const Component = fieldData.CustomComponent
-  return <Component id={id} data={value} />
+  return <Component id={id} data={value} refetch={refetch} />
 };
 
 export const mapTypeToComponent = (type: FieldType) => {
@@ -252,7 +252,8 @@ export const CustomTableCell = ({
   value,
   fieldData,
   id,
+  refetch
 }: FieldComponentProps<any>) => {
   const FieldComponentToRender = mapTypeToComponent(fieldData.type);
-  return <FieldComponentToRender fieldData={fieldData} value={value} id={id} />;
+  return <FieldComponentToRender fieldData={fieldData} value={value} id={id} refetch={refetch} />;
 };

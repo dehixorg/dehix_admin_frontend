@@ -23,7 +23,7 @@ import {
 } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/notification";
 import { CustomDialog } from "../CustomDialog";
-import { CustomTableHeaderComponentsProps } from "../custom-table/FieldTypes";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -62,7 +62,7 @@ const allowedImageFormats = [
 ];
 const maxImageSize = imageSize.maxImageSize; // 1MB
 
-const AddNotify: React.FC<CustomTableHeaderComponentsProps> = ({ refetch }) => {
+const AddNotify: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const [selectedPicture, setSelectedPicture] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

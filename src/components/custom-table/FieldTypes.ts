@@ -22,6 +22,10 @@ export enum FieldType {
   CUSTOM = "Custom",
 }
 
+interface ActionHandler extends CustomTableChildComponentsProps {
+  id: string;
+}
+
 export interface Actions {
   icon?: React.ReactNode;
   options: Array<{
@@ -29,7 +33,7 @@ export interface Actions {
     actionIcon: React.JSX.Element;
     type: "Button" | "Link";
     href?: string;
-    handler?: (id: string) => void;
+    handler?: ({ id, refetch }: ActionHandler) => void;
     className?: string;
   }>;
 }
@@ -37,6 +41,11 @@ export interface Actions {
 export enum Currency {
   INR = "INR",
   USD = "USD",
+}
+
+interface CustomComponentProps extends CustomTableChildComponentsProps {
+  id: string;
+  data: Record<string, any>;
 }
 
 export interface Field {
@@ -61,7 +70,11 @@ export interface Field {
     textValue: string;
   }>; // if type === FieldType.STATUS then this parameter will the formating options like color and all for the different statuses
   wordsCnt?: number; // If type === FieldType.LongText then this parameter will decide how many words to show and if the value exceeds this, the element will become a tooltip to show remaining text
-  CustomComponent?: ({ id, data }: {id: string, data: Record<string, any>}) => React.JSX.Element;
+  CustomComponent?: ({
+    id,
+    data,
+    refetch,
+  }: CustomComponentProps) => React.JSX.Element;
 }
 
 export interface HeaderActions {
@@ -90,15 +103,20 @@ export interface Params {
   searchColumn?: Array<string>;
   isFilter?: boolean;
   isDownload?: boolean;
-  tableHeaderActions?: Array<HeaderActions | React.FC<CustomTableHeaderComponentsProps>>;
-  mainTableActions?: Array<HeaderActions | React.FC<CustomTableHeaderComponentsProps>>;
+  tableHeaderActions?: Array<
+    HeaderActions | React.FC<CustomTableChildComponentsProps>
+  >;
+  mainTableActions?: Array<
+    HeaderActions | React.FC<CustomTableChildComponentsProps>
+  >;
   sortBy?: Array<{
     label: string;
     fieldName: string;
   }>;
 }
 
-export interface FieldComponentProps<T> {
+export interface FieldComponentProps<T>
+  extends CustomTableChildComponentsProps {
   value: T;
   fieldData: Field;
   id: string;
@@ -111,6 +129,6 @@ export interface FiltersArrayElem {
   arrayName?: string;
 }
 
-export interface CustomTableHeaderComponentsProps {
+export interface CustomTableChildComponentsProps {
   refetch?: () => void;
 }

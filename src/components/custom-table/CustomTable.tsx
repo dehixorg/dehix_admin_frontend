@@ -58,6 +58,7 @@ export const CustomTable = ({
         const params: Record<string, any> = {
           filters: "",
           page: page,
+          limit: limit
         };
         selectedFilters.map((filter) => {
           params["filters"] += [`filter[${filter.fieldName}],`];
@@ -242,6 +243,8 @@ export const CustomTable = ({
                                 elem : undefined
                             }
                             id={elem[uniqueId]}
+                            refetch={refetch}
+                            key={index}
                           />
                         </TableCell>
                       ))}

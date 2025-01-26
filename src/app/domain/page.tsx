@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -10,9 +8,58 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import DomainTable from "@/components/Domain/domainTable";
+import { CustomTable } from "../../components/custom-table/CustomTable";
+import {
+  FieldType,
+  FilterDataType,
+} from "../../components/custom-table/FieldTypes";
+import { Trash2Icon } from "lucide-react";
+import { useToast } from "../../components/ui/use-toast";
+import { Messages } from "../../utils/common/enum";
+import { apiHelperService } from "../../services/domain";
+import AddDomain from "../../components/Domain/addDomain";
+import { CustomDialog } from "../../components/CustomDialog";
+import { useState } from "react";
+import { Button } from "../../components/ui/button";
+import EditDomainDescription from "../../components/Domain/editDomaindesc";
 
 export default function Talent() {
+
+  const { toast } = useToast();
+
+  const handleDelete = async (
+    domainId: string,
+    refetch: (() => void) | undefined
+  ) => {
+    try {
+      await apiHelperService.deleteDomain(domainId);
+      refetch?.();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("domain"),
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUpdateDescription = async (newDescription: string, id: string, refetch: (() => void) | undefined) => {
+    try {
+      await apiHelperService.updateDomainDesc(id, newDescription)
+      toast({
+        title: "Success",
+        description: Messages.UPDATE_SUCCESS("domain")
+      })
+      refetch?.()
+    } catch (error) {
+      console.log(error)
+      toast({
+        title: "Error",
+        description: Messages.UPDATE_ERROR("domain")
+      })
+    }
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -34,17 +81,125 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <DomainTable />
+          {/* <DomainTable /> */}
+          <CustomTable
+            api="/domain"
+            uniqueId="_id"
+            fields={[
+              {
+                fieldName: "_id",
+                textValue: "Domain ID",
+                type: FieldType.LONGTEXT,
+                wordsCnt: 20,
+              },
+              {
+                fieldName: "label",
+                textValue: "Domain Name",
+                type: FieldType.TEXT,
+              },
+              {
+                fieldName: "createdAt",
+                textValue: "Created At",
+                type: FieldType.DATETIME,
+              },
+              {
+                fieldName: "status",
+                textValue: "Status",
+                type: FieldType.STATUS,
+                statusFormats: [
+                  { textValue: "Active", value: "active", bgColor: "green" },
+                  { textValue: "Inactive", value: "inactive", bgColor: "red" },
+                ],
+              },
+              {
+                textValue: "",
+                type: FieldType.ACTION,
+                actions: {
+                  options: [
+                    {
+                      actionIcon: <Trash2Icon />,
+                      actionName: "Delete",
+                      type: "Button",
+                      handler: ({ id, refetch }) => handleDelete(id, refetch),
+                      className:
+                        "bg-red-50 text-red-500 hover:bg-red-100 transition",
+                    },
+                  ],
+                },
+              },
+              {
+                textValue: "",
+                type: FieldType.CUSTOM,
+                CustomComponent: ({ id, data, refetch }) => {
+                  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+                  return (
+                    data &&
+                    <>
+                      <CustomDialog
+                        title={"Domain Details"}
+                        description={""}
+                        content={
+                          <>
+                              <div>
+                                <p>
+                                  <strong>Name:</strong> {data.label}
+                                </p>
+                                <p>
+                                  <strong>Description:</strong>{" "}
+                                  {data.description ||
+                                    "No description available"}
+                                </p>
+                                <Button
+                                  variant="outline"
+                                  onClick={() => {
+                                    setIsEditDialogOpen(true);
+                                  }}
+                                >
+                                  Edit Description
+                                </Button>
+                              </div>
+                          </>
+                        }
+                      />
+                      {isEditDialogOpen && (
+                        <EditDomainDescription
+                          isDialogopen={isEditDialogOpen}
+                          setIsDialogOpen={() => setIsEditDialogOpen(false)}
+                          domainId={data._id}
+                          currentDescription={data.description || ""}
+                          onDescriptionUpdate={(newDescription) => handleUpdateDescription(newDescription, id, refetch)}
+                        />
+                      )}
+                    </>
+                  );
+                },
+              },
+            ]}
+            isDownload={true}
+            isFilter={true}
+            title="Domains"
+            filterData={[
+              {
+                name: "label",
+                textValue: "Domains",
+                type: FilterDataType.MULTI,
+                options: [
+                  { label: "Frontend Development", value: "Frontend" },
+                  { label: "Game Development", value: "Game Development" },
+                  { label: "DevOps", value: "DevOps" },
+                  { label: "Database", value: "Database" },
+                  { label: "Cybersecurity", value: "Cybersecurity" },
+                  { label: "Networking", value: "Networking" },
+                ],
+              },
+            ]}
+            searchColumn={["label"]}
+            tableHeaderActions={[AddDomain]}
+          />
         </main>
       </div>
     </div>

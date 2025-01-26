@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { Filter } from "lucide-react";
 import {
-  CustomTableHeaderComponentsProps,
+  CustomTableChildComponentsProps,
   FilterDataType,
   FiltersArrayElem,
   HeaderActions,
@@ -20,7 +20,7 @@ import { Checkbox } from "../ui/checkbox";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
-interface Params extends CustomTableHeaderComponentsProps {
+interface Params extends CustomTableChildComponentsProps {
   filterData?: Array<{
     type: FilterDataType;
     name: string;
@@ -200,7 +200,7 @@ export const FilterTable = ({
               </div>
             ))}
 
-            {sortByArr.length && (
+            {sortByArr.length > 0 && (
               <div className="w-full px-4 flex flex-col items-start justify-start gap-4">
                 <span>Sort By</span>
                 <RadioGroup
