@@ -8,10 +8,9 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import FaqTable from "@/components/Faq/faqTable";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
-import { CustomDialog } from "../../components/CustomDialog";
+import { CustomComponentProps, FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
+import { CustomDialog } from "@/components/CustomDialog";
 import AddFaq from "@/components/Faq/addFaq";
 
 export default function Talent() {
@@ -101,7 +100,7 @@ export default function Talent() {
               {
                 textValue: "",
                 type: FieldType.CUSTOM,
-                CustomComponent: ({ id, data }) => {
+                CustomComponent: ({ id, data }: CustomComponentProps) => {
                     return (
                       <CustomDialog
                         title={"Faq Details"}

@@ -10,9 +10,10 @@ import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "../../components/custom-table/CustomTable";
 import {
+  CustomComponentProps,
   FieldType,
   FilterDataType,
-} from "../../components/custom-table/FieldTypes";
+} from "@/components/custom-table/FieldTypes";
 import { Trash2Icon } from "lucide-react";
 import { useToast } from "../../components/ui/use-toast";
 import { Messages } from "../../utils/common/enum";
@@ -24,7 +25,6 @@ import { Button } from "../../components/ui/button";
 import EditDomainDescription from "../../components/Domain/editDomaindesc";
 
 export default function Talent() {
-
   const { toast } = useToast();
 
   const handleDelete = async (
@@ -43,22 +43,26 @@ export default function Talent() {
     }
   };
 
-  const handleUpdateDescription = async (newDescription: string, id: string, refetch: (() => void) | undefined) => {
+  const handleUpdateDescription = async (
+    newDescription: string,
+    id: string,
+    refetch: (() => void) | undefined
+  ) => {
     try {
-      await apiHelperService.updateDomainDesc(id, newDescription)
+      await apiHelperService.updateDomainDesc(id, newDescription);
       toast({
         title: "Success",
-        description: Messages.UPDATE_SUCCESS("domain")
-      })
-      refetch?.()
+        description: Messages.UPDATE_SUCCESS("domain"),
+      });
+      refetch?.();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       toast({
         title: "Error",
-        description: Messages.UPDATE_ERROR("domain")
-      })
+        description: Messages.UPDATE_ERROR("domain"),
+      });
     }
-  }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -134,16 +138,17 @@ export default function Talent() {
               {
                 textValue: "",
                 type: FieldType.CUSTOM,
-                CustomComponent: ({ id, data, refetch }) => {
-                  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+                CustomComponent: ({ id, data, refetch }: CustomComponentProps) => {
+                  const [isEditDialogOpen, setIsEditDialogOpen] =
+                    useState(false);
                   return (
-                    data &&
-                    <>
-                      <CustomDialog
-                        title={"Domain Details"}
-                        description={""}
-                        content={
-                          <>
+                    data && (
+                      <>
+                        <CustomDialog
+                          title={"Domain Details"}
+                          description={""}
+                          content={
+                            <>
                               <div>
                                 <p>
                                   <strong>Name:</strong> {data.label}
@@ -162,19 +167,26 @@ export default function Talent() {
                                   Edit Description
                                 </Button>
                               </div>
-                          </>
-                        }
-                      />
-                      {isEditDialogOpen && (
-                        <EditDomainDescription
-                          isDialogopen={isEditDialogOpen}
-                          setIsDialogOpen={() => setIsEditDialogOpen(false)}
-                          domainId={data._id}
-                          currentDescription={data.description || ""}
-                          onDescriptionUpdate={(newDescription) => handleUpdateDescription(newDescription, id, refetch)}
+                            </>
+                          }
                         />
-                      )}
-                    </>
+                        {isEditDialogOpen && (
+                          <EditDomainDescription
+                            isDialogopen={isEditDialogOpen}
+                            setIsDialogOpen={() => setIsEditDialogOpen(false)}
+                            domainId={data._id}
+                            currentDescription={data.description || ""}
+                            onDescriptionUpdate={(newDescription) =>
+                              handleUpdateDescription(
+                                newDescription,
+                                id,
+                                refetch
+                              )
+                            }
+                          />
+                        )}
+                      </>
+                    )
                   );
                 },
               },

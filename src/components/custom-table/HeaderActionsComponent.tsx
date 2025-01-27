@@ -13,7 +13,7 @@ export const HeaderActionComponent = ({
   return (
     <div className="flex gap-3 mr-4 flex-wrap flex-grow flex-row-reverse">
       {headerActions?.map((Actions, index) => (
-        typeof Actions === 'function' ? <Actions refetch={refetch} /> :
+        typeof Actions === 'function' ? <Actions refetch={refetch} key={index} /> :
         <div
           key={index}
           className={twMerge(

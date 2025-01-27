@@ -44,7 +44,7 @@ export enum Currency {
   USD = "USD",
 }
 
-interface CustomComponentProps extends CustomTableChildComponentsProps {
+export interface CustomComponentProps extends CustomTableChildComponentsProps {
   id: string;
   data: Record<string, any>;
 }

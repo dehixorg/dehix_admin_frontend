@@ -9,7 +9,7 @@ import {
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType } from "@/components/custom-table/FieldTypes";
+import { CustomComponentProps, FieldType } from "@/components/custom-table/FieldTypes";
 import { CustomDialog } from "@/components/CustomDialog";
 import Image from "next/image";
 import AddNotify from "@/components/Notification/addNotify";
@@ -104,7 +104,7 @@ export default function Talent() {
               {
                 textValue: "",
                 type: FieldType.CUSTOM,
-                CustomComponent: ({ id, data }) => {
+                CustomComponent: ({ id, data }: CustomComponentProps) => {
                   return (
                     data && (
                       <CustomDialog

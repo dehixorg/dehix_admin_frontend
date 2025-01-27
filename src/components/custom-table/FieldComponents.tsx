@@ -92,7 +92,11 @@ const ArrayValueField = ({
   );
 };
 
-const ActionField = ({ id, fieldData, refetch }: FieldComponentProps<Actions>) => {
+const ActionField = ({
+  id,
+  fieldData,
+  refetch,
+}: FieldComponentProps<Actions>) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-sm text-gray-600 hover:bg-gray-200 p-1 rounded transition duration-300">
@@ -114,9 +118,9 @@ const ActionField = ({ id, fieldData, refetch }: FieldComponentProps<Actions>) =
               key={index}
               className={`w-${fieldData.width || "32"} px-0 py-0 my-1`}
             >
-              {type == "Button" ? (
+              {type === "Button" && (
                 <div
-                  onClick={() => handler?.({id, refetch})}
+                  onClick={() => handler?.({ id, refetch })}
                   className={twMerge(
                     "text-sm w-full py-2 px-3 flex items-center justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className
@@ -125,7 +129,8 @@ const ActionField = ({ id, fieldData, refetch }: FieldComponentProps<Actions>) =
                   {actionIcon}
                   <span>{actionName}</span>
                 </div>
-              ) : (
+              )}
+              {type === "Link" && (
                 <Link
                   href={href || "#"}
                   className={twMerge(
@@ -209,15 +214,20 @@ const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
   );
 };
 
-const CustomComponent = ({ fieldData, id, value, refetch }: FieldComponentProps<any>) => {
-  if(!fieldData.CustomComponent) return <div>{id}</div>
-  const Component = fieldData.CustomComponent
-  return <Component id={id} data={value} refetch={refetch} />
+const CustomComponent = ({
+  fieldData,
+  id,
+  value,
+  refetch,
+}: FieldComponentProps<any>) => {
+  if (!fieldData.CustomComponent) return <div>{id}</div>;
+  const Component = fieldData.CustomComponent;
+  return <Component id={id} data={value} refetch={refetch} />;
 };
 
 const LengthField = ({ value }: FieldComponentProps<Record<string, any>[]>) => {
-  return <span>{value.length}</span>
-}
+  return <span>{value.length}</span>;
+};
 
 export const mapTypeToComponent = (type: FieldType) => {
   switch (type) {
@@ -258,8 +268,15 @@ export const CustomTableCell = ({
   value,
   fieldData,
   id,
-  refetch
+  refetch,
 }: FieldComponentProps<any>) => {
   const FieldComponentToRender = mapTypeToComponent(fieldData.type);
-  return <FieldComponentToRender fieldData={fieldData} value={value} id={id} refetch={refetch} />;
+  return (
+    <FieldComponentToRender
+      fieldData={fieldData}
+      value={value}
+      id={id}
+      refetch={refetch}
+    />
+  );
 };
