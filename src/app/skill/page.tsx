@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -10,7 +8,16 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import SkillTable from "@/components/skill/skillTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  CustomComponentProps,
+  FieldType,
+  FilterDataType,
+} from "@/components/custom-table/FieldTypes";
+import { CustomDialog } from "../../components/CustomDialog";
+import { useState } from "react";
+import EditSkillDescription from "@/components/skill/editSkilldesc";
+import AddSkill from "@/components/skill/addskill";
 
 export default function Talent() {
   return (
@@ -34,17 +41,113 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <SkillTable />
+          <CustomTable
+            api="/skills"
+            uniqueId="_id"
+            fields={[
+              {
+                fieldName: "_id",
+                textValue: "Skill ID",
+                type: FieldType.LONGTEXT,
+                wordsCnt: 20,
+              },
+              {
+                fieldName: "label",
+                textValue: "Skill",
+                type: FieldType.TEXT,
+              },
+              {
+                fieldName: "description",
+                textValue: "Description",
+                type: FieldType.LONGTEXT,
+                wordsCnt: 50,
+              },
+              {
+                fieldName: "status",
+                textValue: "Status",
+                type: FieldType.STATUS,
+                statusFormats: [
+                  {
+                    textValue: "Active",
+                    value: "active",
+                    bgColor: "#57fa70",
+                    textColor: "#024d0d",
+                  },
+                  {
+                    value: "inactive",
+                    bgColor: "yellow",
+                    textColor: "#525002",
+                    textValue: "Inactive",
+                  },
+                ],
+              },
+              {
+                textValue: "",
+                type: FieldType.CUSTOM,
+                CustomComponent: ({
+                  id,
+                  data,
+                  refetch,
+                }: CustomComponentProps) => {
+                  const [open, setOpen] = useState(false);
+                  return (
+                    <CustomDialog
+                      title={"Skill Details"}
+                      triggerState={open}
+                      setTriggerState={setOpen}
+                      description={""}
+                      content={
+                        <>
+                          <div>
+                            <div>
+                              <p>
+                                <strong>Name:</strong> {data.label}
+                              </p>
+                              <p>
+                                <strong>Description:</strong>
+                                {data.description
+                                  ? data.description
+                                  : "No description available"}
+                              </p>
+                              <EditSkillDescription
+                                skillId={id}
+                                currentDescription={data.description || ""}
+                                onUpdateSuccess={() => {
+                                  setOpen(false)
+                                  refetch?.()
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </>
+                      }
+                    />
+                  );
+                },
+              },
+            ]}
+            searchColumn={["label"]}
+            filterData={[
+              {
+                name: "status",
+                textValue: "Status",
+                type: FilterDataType.SINGLE,
+                options: [
+                  { label: "Active", value: "active" },
+                  { label: "Inactive", value: "inactive" },
+                ]
+              },
+            ]}
+            isDownload={true}
+            title="Skills"
+            tableHeaderActions={[
+              AddSkill
+            ]}
+          />
         </main>
       </div>
     </div>

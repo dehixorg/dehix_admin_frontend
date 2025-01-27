@@ -4,6 +4,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -13,6 +14,7 @@ type Params = {
   title: string | React.JSX.Element;
   description: string | React.JSX.Element;
   content: string | React.JSX.Element;
+  footer?: string | React.JSX.Element;
   triggerContent?: string | React.JSX.Element;
   triggerState?: boolean;
   setTriggerState?: Dispatch<SetStateAction<boolean>>;
@@ -22,6 +24,7 @@ export function CustomDialog({
   title,
   description,
   content,
+  footer,
   triggerState,
   setTriggerState,
   triggerContent,
@@ -35,6 +38,9 @@ export function CustomDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         {content}
+        <DialogFooter>
+          {footer}
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
