@@ -14,12 +14,12 @@ export const Admin_Schema_Prompt_Messages = {
   PHONE_REQUIRED: "Please enter the phone number",
 };
 export enum AdminType {
-  ADMIN = "Admin",
-  SUPER_ADMIN = "Super_Admin",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
 }
 export const Admin_Schema_Selecter = [
-  { value: "Admin", label: "Admin" },
-  { value: "Super_Admin", label: "Super Admin" },
+  { value: "ADMIN", label: "Admin" },
+  { value: "SUPER_ADMIN", label: "Super Admin" },
 ];
 export enum statusType {
   active = "ACTIVE",
@@ -134,8 +134,8 @@ export enum TicketStatus {
 };
 
 export enum StatusEnum {
-  PENDING = 'Pending',
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
-  COMPLETED ='Completed',
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  COMPLETED ='COMPLETED',
 };
