@@ -74,14 +74,14 @@ const ArrayValueField = ({
           <ToolTip
             trigger={
               <div className="">
-                <span>{value[0][fieldData.arrayName!]} </span>
+                <span>{fieldData.arrayName ? value[0][fieldData.arrayName] : value[0]} </span>
                 <span className="text-xs text-gray-500">
                   {value.length > 1 && `+${value.length - 1} more`}
                 </span>
               </div>
             }
             content={value
-              .map((val: any) => `${val[fieldData.arrayName!]}`)
+              .map((val: any) => fieldData.arrayName ? `${val[fieldData.arrayName!]}` : `${val}`)
               .join(", ")}
           />
         </>
