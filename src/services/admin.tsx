@@ -34,6 +34,21 @@ export const apiHelperService = {
       endpoint: `/admin/${itemId}`,
     });
   },
+  updateAdmin: async (adminId: string, changes: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/${adminId}`,
+      body: {
+        changes,
+      },
+    });
+  },
+  getAdminInfo: async (itemId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/admin/${itemId}`,
+    });
+  },
   updateAdminPassword: async (adminId: string, changes: any) => {
     return apiService({
       method: Api_Methods.PUT,
