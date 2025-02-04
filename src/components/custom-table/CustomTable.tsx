@@ -275,7 +275,7 @@ export const CustomTable = ({
         <TablePagination
           page={page}
           setPage={setPageUtils}
-          isNextAvailable={data?.length >= 20}
+          isNextAvailable={data?.length >= limit}
         />
       </div>
     </div>

@@ -191,6 +191,7 @@ export const TooltipField = ({
 };
 
 const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
+  if(!value) return <span>-</span>
   if (fieldData.wordsCnt && value.length <= fieldData.wordsCnt)
     return <span>{value}</span>;
 
