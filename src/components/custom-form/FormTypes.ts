@@ -1,4 +1,5 @@
-import { Control } from "react-hook-form";
+import { Control, UseFormSetValue } from "react-hook-form";
+import { z, ZodSchema } from "zod";
 
 // Define TypeScript interfaces for the JSON structure
 export enum FormFieldType {
@@ -26,10 +27,12 @@ export interface Field {
   className?: string;
   description?: string;
   otpLength?: number;
+  defaultValue?: string;
 }
 
 export interface FormFieldProps extends Field {
   control: Control<Record<string, any>>;
+  setValue: UseFormSetValue<Record<string, any>>
 }
 
 export interface FormData {
@@ -39,4 +42,6 @@ export interface FormData {
   numberOfColumns: number;
   fields: Field[];
   defaultValues?: Record<string, any>;
+  schema: ZodSchema;
+  submitHandler: (data: any) => void;
 }

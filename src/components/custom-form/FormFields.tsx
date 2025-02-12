@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-import { Field, FormFieldProps, FormFieldType } from "./FormTypes";
+import { FormFieldProps, FormFieldType } from "./FormTypes";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
@@ -45,16 +45,17 @@ const InputField = ({
   description,
   placeholder,
   className,
+  defaultValue,
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       disabled={!editable}
-      rules={{ required }}
+      defaultValue={defaultValue}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Input placeholder={placeholder} {...field} />
           </FormControl>
@@ -83,7 +84,7 @@ const DropdownField = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <Select
             required={required}
             disabled={!editable}
@@ -128,7 +129,7 @@ const TextareaField = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Textarea
               disabled={!editable}
@@ -164,7 +165,7 @@ const DateField = ({
       name={name}
       render={({ field }) => (
         <FormItem className={twMerge("flex flex-col", className)}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
@@ -244,6 +245,7 @@ const ComboBox = ({
   required,
   options,
   description,
+  setValue,
 }: FormFieldProps) => {
   return (
     <FormField
@@ -251,7 +253,7 @@ const ComboBox = ({
       name={name}
       render={({ field }) => (
         <FormItem className={twMerge("flex flex-col", className)}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
               <FormControl>
@@ -279,14 +281,14 @@ const ComboBox = ({
                   required={required}
                 />
                 <CommandList>
-                  <CommandEmpty>No framework found.</CommandEmpty>
+                  <CommandEmpty>{placeholder}</CommandEmpty>
                   <CommandGroup>
                     {options?.map((opt) => (
                       <CommandItem
                         value={opt.value}
                         key={opt.value}
                         onSelect={() => {
-                          field.value = opt.value;
+                          setValue(name, opt.value);
                         }}
                       >
                         {opt.label}
@@ -330,7 +332,7 @@ const FormInputOTP = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <InputOTP
               maxLength={otpLength!}
@@ -370,7 +372,7 @@ const FormRadio = ({
       name={name}
       render={({ field }) => (
         <FormItem className="space-y-3">
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <RadioGroup
               onValueChange={field.onChange}
@@ -413,7 +415,7 @@ const FormSelect = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel required={required}>{label}</FormLabel>
           <Select
             disabled={!editable}
             required={required}
@@ -455,13 +457,17 @@ const FormCheckboxField = ({
       render={({ field }) => (
         <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
           <FormControl>
-            <Checkbox className={className} disabled={!editable} required={required} checked={field.value} onCheckedChange={field.onChange} />
+            <Checkbox
+              className={className}
+              disabled={!editable}
+              required={required}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
           </FormControl>
           <div className="space-y-1 leading-none">
-            <FormLabel>{label}</FormLabel>
-            <FormDescription>
-              {description}
-            </FormDescription>
+            <FormLabel required={required}>{label}</FormLabel>
+            <FormDescription>{description}</FormDescription>
           </div>
         </FormItem>
       )}
@@ -490,7 +496,7 @@ const mapComponentsToFields = (type: FormFieldType) => {
     case FormFieldType.SELECT:
       return FormSelect;
     case FormFieldType.CHECKBOX:
-      return FormCheckboxField
+      return FormCheckboxField;
 
     default:
       return InputField;
@@ -507,6 +513,8 @@ export function CustomFormField(formFieldProps: FormFieldProps) {
     formFieldProps = { ...formFieldProps, required: false };
   if (formFieldProps.otpLength == undefined)
     formFieldProps = { ...formFieldProps, otpLength: 6 };
+  if (formFieldProps.defaultValue == undefined)
+    formFieldProps = { ...formFieldProps, defaultValue: "" };
 
   return <FieldToRender {...formFieldProps} />;
 }

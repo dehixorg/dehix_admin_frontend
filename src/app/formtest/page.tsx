@@ -3,6 +3,15 @@
 import React from "react";
 import Form from "@/components/custom-form/Form";
 import { FormData, FormFieldType } from "@/components/custom-form/FormTypes";
+import { z } from "zod";
+
+const schema = z.object({
+  fullName: z.string(),
+  lang: z.string(),
+  bio: z.string(),
+  dob: z.date(),
+  language: z.string(),
+})
 
 const tempFormData: FormData = {
   editable: true,
@@ -14,7 +23,7 @@ const tempFormData: FormData = {
       type: FormFieldType.INPUT,
       name: "fullName",
       label: "Full Name",
-      required: true,
+      required: false,
       editable: true,
       fullWidth: true,
       placeholder: "John Smith"
@@ -70,6 +79,10 @@ const tempFormData: FormData = {
       ]
     },
   ],
+  schema: schema,
+  submitHandler: (data: z.infer<typeof schema>) => {
+      console.log(data)
+  },
 };
 
 const TestPage: React.FC = () => {
