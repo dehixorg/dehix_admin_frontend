@@ -1,4 +1,4 @@
-import { Control, UseControllerProps } from "react-hook-form";
+import { Control } from "react-hook-form";
 
 // Define TypeScript interfaces for the JSON structure
 export enum FormFieldType {
@@ -7,6 +7,11 @@ export enum FormFieldType {
   DATE,
   DROPDOWN,
   IMAGE,
+  COMBOBOX,
+  INPUT_OTP,
+  SELECT,
+  RADIO,
+  CHECKBOX
 }
 
 export interface Field {
@@ -14,13 +19,13 @@ export interface Field {
   name: string;
   label: string;
   required?: boolean;
-  data?: any;
-  options?: Array<{ name: string; value: string }>;
+  options?: Array<{ label: string; value: string }>; // Options for some form fields like combobox, select, etc..
   editable?: boolean;
   fullWidth?: boolean;
   placeholder?: string;
   className?: string;
   description?: string;
+  otpLength?: number;
 }
 
 export interface FormFieldProps extends Field {
