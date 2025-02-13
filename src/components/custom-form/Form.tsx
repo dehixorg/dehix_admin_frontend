@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { twMerge } from "tailwind-merge";
 
 // Main Form Component
-const CustomForm = ({
+export const CustomForm = ({
   title,
   subtitle,
   editable,
@@ -53,5 +53,3 @@ const CustomForm = ({
     </Card>
   );
 };
-
-export default CustomForm;

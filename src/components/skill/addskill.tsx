@@ -2,8 +2,6 @@
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { RootState } from "@/lib/store";
@@ -18,17 +16,10 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectItem,
-  SelectValue,
-  SelectContent,
-} from "@/components/ui/select";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
+import { CustomForm } from "../custom-form/Form";
+import { FormFieldType } from "../custom-form/FormTypes";
 interface SkillData {
   _id: string;
   label: string;
@@ -47,7 +38,7 @@ interface AddSkillProps {
 const SkillSchema = z.object({
   label: z.string().nonempty("Please enter a Skill name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum([statusType.active]).default(statusType.active),
+  status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
 });
 
 const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
@@ -58,19 +49,6 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
   const { toast } = useToast();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<SkillData>({
-    resolver: zodResolver(SkillSchema),
-    defaultValues: {
-      label: "",
-      description: "",
-      status: statusType.active,
-    },
-  });
 
   // Handle form submission to add a new Skill
   const onSubmit = async (data: SkillData) => {
@@ -85,7 +63,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
     }
 
     try {
-      const skillDataWithUser = { ...data, createdBy: currentUserId };
+      const skillDataWithUser = { ...data, createdBy: currentUser.type.toUpperCase(), createdById: currentUserId };
       // Post the new Skill to the backend
       const response = await apiHelperService.createSkill(skillDataWithUser);
             
@@ -95,7 +73,7 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
         // Pass the new Skill to the parent component
         onAddSkill();
         setSuccessMessage("Skill added successfully!");
-        reset();
+        // reset();
         setErrorMessage(null); // Clear any previous error message
 
         // Close the dialog after a short delay
@@ -128,66 +106,37 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
         </Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add Skill</DialogTitle>
-          <DialogDescription>Enter the Skill details below.</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="label"
-              render={({ field }) => (
-                <Input
-                  placeholder="Enter Skill name"
-                  {...field}
-                  className="border p-2 rounded w-full"
-                />
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <Textarea
-                  placeholder="Description"
-                  {...field}
-                  className="border p-2 rounded mt-2 w-full h-[130px]"
-                />
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <Select {...field} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={statusType.active}>Active</SelectItem>
-                    <SelectItem value={statusType.inactive}>
-                      InActive
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-          {errorMessage && (
-            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
-          )}
-          {successMessage && (
-            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
-          )}
-          <DialogFooter>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
-        </form>
+        <CustomForm
+          editable={true}
+          numberOfColumns={1}
+          schema={SkillSchema}
+          submitHandler={onSubmit}
+          title="Add Skill"
+          subtitle={"Enter the Skill details below."}
+          fields={[
+            {
+              type: FormFieldType.INPUT,
+              label: "Label",
+              name: "label"
+            },
+            {
+              type: FormFieldType.TEXTAREA,
+              label: "Description",
+              name: "description"
+            },
+            {
+              type: FormFieldType.RADIO,
+              label: "Status",
+              name: "status",
+              options: [
+                { label: "Active", value: "ACTIVE" },
+                { label: "Inactive", value: "INACTIVE" },
+              ],
+              defaultValue: "active"
+            }
+          ]}
+          className="border-0"
+        />
       </DialogContent>
     </Dialog>
   );

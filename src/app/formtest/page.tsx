@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react";
-import Form from "@/components/custom-form/Form";
+import { CustomForm } from "@/components/custom-form/Form";
 import { FormData, FormFieldType } from "@/components/custom-form/FormTypes";
 import { z } from "zod";
 
@@ -100,7 +100,7 @@ const TestPage: React.FC = () => {
   return (
     <div className="w-full min-h-[100vh] h-auto flex items-center justify-center">
       {/* <h1>Freelancer Profile Form</h1> */}
-      <Form {...tempFormData} className="w-[50%]" />
+      <CustomForm {...tempFormData} className="w-[50%]" />
     </div>
   );
 };
