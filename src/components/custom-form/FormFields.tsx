@@ -34,6 +34,9 @@ import {
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Checkbox } from "../ui/checkbox";
+import { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
 
 const InputField = ({
   name,
@@ -53,14 +56,14 @@ const InputField = ({
       name={name}
       disabled={!editable}
       defaultValue={defaultValue}
-      render={({ field }) => (
-        <FormItem className={`${fullWidth && 'col-span-full'} `+className}>
+      render={({ field, fieldState }) => (
+        <FormItem className={`${fullWidth && "col-span-full"} ` + className}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Input placeholder={placeholder} {...field} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
-          <FormMessage />
+          <FormMessage />{fieldState.error?.message}
         </FormItem>
       )}
     />
@@ -77,14 +80,16 @@ const DropdownField = ({
   description,
   placeholder,
   options,
-  className
+  className,
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, className)}>
+        <FormItem
+          className={twMerge(`${fullWidth && "col-span-full"} `, className)}
+        >
           <FormLabel required={required}>{label}</FormLabel>
           <Select
             required={required}
@@ -129,7 +134,7 @@ const TextareaField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={`${fullWidth && 'col-span-full'} `}>
+        <FormItem className={`${fullWidth && "col-span-full"} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Textarea
@@ -165,7 +170,13 @@ const DateField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-col", className)}>
+        <FormItem
+          className={twMerge(
+            `${fullWidth && "col-span-full"} `,
+            "flex flex-col",
+            className
+          )}
+        >
           <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -212,27 +223,75 @@ const ImageUploadField = ({
   label,
   required,
   editable,
+  fullWidth,
+  control,
+  description,
+  className,
+  defaultValue,
+  setValue,
+  multipleFiles,
+  pdf,
 }: FormFieldProps) => {
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-  };
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log(acceptedFiles);
+    if(multipleFiles) setValue(name, acceptedFiles)
+    else setValue(name, acceptedFiles[0]);
+  }, []);
+
+  let accept: any = {
+    "image/*": [],
+  }
+
+  if(pdf) {
+    accept = {...accept, "pdf/": []}
+  }
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: multipleFiles,
+    accept
+  });
 
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <label htmlFor={name}>
-        {label}
-        {required && "*"}
-      </label>
-      <input
-        type="file"
-        id={name}
-        name={name}
-        disabled={!editable}
-        accept="image/*"
-        style={{ width: "100%", padding: "8px", boxSizing: "border-box" }}
-        onChange={handleImageChange}
-      />
-    </div>
+    <FormField
+      control={control}
+      name={name}
+      disabled={!editable}
+      defaultValue={defaultValue}
+      render={({ field }) => (
+        <FormItem className={`${fullWidth && "col-span-full"} ` + className}>
+          <FormLabel required={required}>{label}</FormLabel>
+          <FormControl>
+            <div
+              {...getRootProps()}
+              className="bg-gray-100 cursor-pointer w-full min-h-40 flex items-center justify-center rounded-md border-2 border-gray-500 border-dotted"
+            >
+              <input {...getInputProps()} />
+
+              <div className="flex flex-col items-center justify-center gap-2 p-3">
+                <Image
+                  width={70}
+                  height={70}
+                  alt="image"
+                  src={"file.svg"}
+                  className=" text-gray-900"
+                />
+                {isDragActive ? (
+                  <p>Drop the files here ...</p>
+                ) : (
+                  <p className="text-sm text-gray-400 text-center">
+                    Drag 'n' drop some files here, <br />
+                    or click to select files
+                  </p>
+                )}
+              </div>
+            </div>
+          </FormControl>
+          <FormDescription>{description}</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };
 
@@ -254,7 +313,13 @@ const ComboBox = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-col", className)}>
+        <FormItem
+          className={twMerge(
+            `${fullWidth && "col-span-full"} `,
+            "flex flex-col",
+            className
+          )}
+        >
           <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -328,7 +393,7 @@ const FormInputOTP = ({
   required,
   description,
   otpLength,
-  fullWidth
+  fullWidth,
 }: FormFieldProps) => {
   return (
     <FormField
@@ -336,7 +401,12 @@ const FormInputOTP = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className={`${fullWidth && 'col-span-full'} `} required={required}>{label}</FormLabel>
+          <FormLabel
+            className={`${fullWidth && "col-span-full"} `}
+            required={required}
+          >
+            {label}
+          </FormLabel>
           <FormControl>
             <InputOTP
               maxLength={otpLength!}
@@ -369,14 +439,14 @@ const FormRadio = ({
   required,
   description,
   options,
-  fullWidth
+  fullWidth,
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={`${fullWidth && 'col-span-full'} space-y-3`}>
+        <FormItem className={`${fullWidth && "col-span-full"} space-y-3`}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <RadioGroup
@@ -413,14 +483,14 @@ const FormSelect = ({
   required,
   description,
   options,
-  fullWidth
+  fullWidth,
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={`${fullWidth && 'col-span-full'} `}>
+        <FormItem className={`${fullWidth && "col-span-full"} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <Select
             disabled={!editable}
@@ -455,14 +525,19 @@ const FormCheckboxField = ({
   editable,
   required,
   description,
-  fullWidth
+  fullWidth,
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow")}>
+        <FormItem
+          className={twMerge(
+            `${fullWidth && "col-span-full"} `,
+            "flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow"
+          )}
+        >
           <FormControl>
             <Checkbox
               className={className}

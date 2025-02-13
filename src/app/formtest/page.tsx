@@ -6,11 +6,12 @@ import { FormData, FormFieldType } from "@/components/custom-form/FormTypes";
 import { z } from "zod";
 
 const schema = z.object({
-  fullName: z.string(),
+  fullName: z.string().min(3, {message: "invalid"}),
   lang: z.string(),
   bio: z.string(),
   dob: z.date(),
   language: z.string(),
+  img: z.array(z.instanceof(File)).or(z.instanceof(File))
 })
 
 const tempFormData: FormData = {
@@ -25,7 +26,6 @@ const tempFormData: FormData = {
       label: "Full Name",
       required: false,
       editable: true,
-      // fullWidth: true,
       placeholder: "John Smith"
     },
     {
@@ -33,7 +33,6 @@ const tempFormData: FormData = {
       name: "lang",
       label: "Programming Language",
       placeholder: "Select a programming language",
-      // fullWidth: true,
       required: true,
       options: [
         { label: "CPP", value: "cpp" },
@@ -64,7 +63,7 @@ const tempFormData: FormData = {
       name: "language",
       label: "Languages",
       required: true,
-      editable: false,
+      editable: true,
       placeholder: "Select your language",
       options: [
         { label: "English", value: "en" },
@@ -78,6 +77,12 @@ const tempFormData: FormData = {
         { label: "Chinese", value: "zh" },
       ]
     },
+    {
+      type: FormFieldType.IMAGE,
+      name: "img",
+      label: "Image",
+      multipleFiles: true
+    }
   ],
   schema: schema,
   submitHandler: (data: z.infer<typeof schema>) => {

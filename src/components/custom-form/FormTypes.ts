@@ -28,6 +28,8 @@ export interface Field {
   description?: string;
   otpLength?: number;
   defaultValue?: string;
+  multipleFiles?: boolean;
+  pdf?: boolean;
 }
 
 export interface FormFieldProps extends Field {
