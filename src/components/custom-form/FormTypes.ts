@@ -43,5 +43,6 @@ export interface FormData {
   fields: Field[];
   defaultValues?: Record<string, any>;
   schema: ZodSchema;
+  className?: string;
   submitHandler: (data: any) => void;
 }

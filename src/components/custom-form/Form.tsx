@@ -8,6 +8,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { twMerge } from "tailwind-merge";
 
 // Main Form Component
 const CustomForm = ({
@@ -15,27 +16,36 @@ const CustomForm = ({
   subtitle,
   editable,
   fields,
-  numberOfColumns,
+  numberOfColumns = 1,
   defaultValues,
   submitHandler,
-  schema
+  schema,
+  className,
 }: FormData) => {
   const form = useForm<z.infer<typeof schema>>({
     defaultValues,
     resolver: zodResolver(schema),
-    mode: "onChange"
+    mode: "onChange",
   });
 
   return (
-    <Card>
+    <Card className={twMerge("px-8 py-4 border-2 w-full", className)}>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
       <Form {...form} formState={{ ...form.formState, disabled: !editable }}>
-        <form onSubmit={form.handleSubmit(submitHandler)}>
+        <form
+          onSubmit={form.handleSubmit(submitHandler)}
+          className={`grid gap-4 grid-cols-${numberOfColumns}`}
+        >
           {fields.map((field, index) => (
-            <CustomFormField key={index} {...field} control={form.control} setValue={form.setValue} />
+            <CustomFormField
+              key={index}
+              {...field}
+              control={form.control}
+              setValue={form.setValue}
+            />
           ))}
           <Button type="submit">Submit</Button>
         </form>

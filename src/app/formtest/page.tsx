@@ -25,7 +25,7 @@ const tempFormData: FormData = {
       label: "Full Name",
       required: false,
       editable: true,
-      fullWidth: true,
+      // fullWidth: true,
       placeholder: "John Smith"
     },
     {
@@ -33,6 +33,7 @@ const tempFormData: FormData = {
       name: "lang",
       label: "Programming Language",
       placeholder: "Select a programming language",
+      // fullWidth: true,
       required: true,
       options: [
         { label: "CPP", value: "cpp" },
@@ -46,7 +47,7 @@ const tempFormData: FormData = {
       label: "Bio",
       required: true,
       editable: true,
-      fullWidth: true,
+      // fullWidth: true,
       placeholder: ""
     },
     {
@@ -55,7 +56,7 @@ const tempFormData: FormData = {
       label: "Date Of Birth",
       required: true,
       editable: true,
-      fullWidth: true,
+      // fullWidth: true,
       placeholder: "Select your birth date"
     },
     {
@@ -63,8 +64,7 @@ const tempFormData: FormData = {
       name: "language",
       label: "Languages",
       required: true,
-      editable: true,
-      fullWidth: true,
+      editable: false,
       placeholder: "Select your language",
       options: [
         { label: "English", value: "en" },
@@ -87,9 +87,9 @@ const tempFormData: FormData = {
 
 const TestPage: React.FC = () => {
   return (
-    <div>
+    <div className="w-full h-[100vh] flex items-center justify-center">
       {/* <h1>Freelancer Profile Form</h1> */}
-      <Form {...tempFormData} />
+      <Form {...tempFormData} className="w-[50%]" />
     </div>
   );
 };

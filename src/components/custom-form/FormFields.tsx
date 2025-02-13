@@ -54,7 +54,7 @@ const InputField = ({
       disabled={!editable}
       defaultValue={defaultValue}
       render={({ field }) => (
-        <FormItem className={className}>
+        <FormItem className={`${fullWidth && 'col-span-full'} `+className}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Input placeholder={placeholder} {...field} />
@@ -77,13 +77,14 @@ const DropdownField = ({
   description,
   placeholder,
   options,
+  className
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, className)}>
           <FormLabel required={required}>{label}</FormLabel>
           <Select
             required={required}
@@ -128,7 +129,7 @@ const TextareaField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={`${fullWidth && 'col-span-full'} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <Textarea
@@ -164,7 +165,7 @@ const DateField = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge("flex flex-col", className)}>
+        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-col", className)}>
           <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -172,7 +173,7 @@ const DateField = ({
                 <Button
                   variant={"outline"}
                   className={cn(
-                    "w-[240px] pl-3 text-left font-normal",
+                    "min-w-[240px] pl-3 text-left font-normal",
                     !field.value && "text-muted-foreground"
                   )}
                 >
@@ -245,6 +246,7 @@ const ComboBox = ({
   required,
   options,
   description,
+  fullWidth,
   setValue,
 }: FormFieldProps) => {
   return (
@@ -252,7 +254,7 @@ const ComboBox = ({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={twMerge("flex flex-col", className)}>
+        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-col", className)}>
           <FormLabel required={required}>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -260,8 +262,9 @@ const ComboBox = ({
                 <Button
                   variant="outline"
                   role="combobox"
+                  disabled={!editable}
                   className={cn(
-                    "w-[200px] justify-between",
+                    "min-w-[200px] justify-between",
                     !field.value && "text-muted-foreground"
                   )}
                 >
@@ -272,7 +275,7 @@ const ComboBox = ({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className="min-w-[200px] p-0">
               <Command>
                 <CommandInput
                   placeholder="Search framework..."
@@ -325,6 +328,7 @@ const FormInputOTP = ({
   required,
   description,
   otpLength,
+  fullWidth
 }: FormFieldProps) => {
   return (
     <FormField
@@ -332,7 +336,7 @@ const FormInputOTP = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel required={required}>{label}</FormLabel>
+          <FormLabel className={`${fullWidth && 'col-span-full'} `} required={required}>{label}</FormLabel>
           <FormControl>
             <InputOTP
               maxLength={otpLength!}
@@ -365,13 +369,14 @@ const FormRadio = ({
   required,
   description,
   options,
+  fullWidth
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="space-y-3">
+        <FormItem className={`${fullWidth && 'col-span-full'} space-y-3`}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
             <RadioGroup
@@ -408,13 +413,14 @@ const FormSelect = ({
   required,
   description,
   options,
+  fullWidth
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={`${fullWidth && 'col-span-full'} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <Select
             disabled={!editable}
@@ -449,13 +455,14 @@ const FormCheckboxField = ({
   editable,
   required,
   description,
+  fullWidth
 }: FormFieldProps) => {
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+        <FormItem className={twMerge(`${fullWidth && 'col-span-full'} `, "flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow")}>
           <FormControl>
             <Checkbox
               className={className}
