@@ -288,7 +288,7 @@ const ImageUploadField = ({
                   <p>Drop the files here ...</p>
                 ) : (
                   <p className="text-sm text-gray-400 text-center">
-                    Drag 'n' drop some files here, <br />
+                    Drag &apos;n&apos; drop some files here, <br />
                     or click to select files
                   </p>
                 )}
@@ -427,7 +427,7 @@ const FormInputOTP = ({
             >
               <InputOTPGroup className={className}>
                 {Array.from({ length: otpLength! }).map((_, index) => (
-                  <InputOTPSlot index={index} />
+                  <InputOTPSlot index={index} key={index} />
                 ))}
               </InputOTPGroup>
             </InputOTP>
@@ -468,7 +468,7 @@ const FormRadio = ({
               disabled={!editable}
             >
               {options?.map((opt) => (
-                <FormItem className="flex items-center space-x-3 space-y-0">
+                <FormItem className="flex items-center space-x-3 space-y-0" key={opt.value}>
                   <FormControl key={opt.value}>
                     <RadioGroupItem value={opt.value} />
                   </FormControl>
@@ -517,7 +517,7 @@ const FormSelect = ({
             </FormControl>
             <SelectContent className={className}>
               {options?.map((opt) => (
-                <SelectItem value={opt.value}>{opt.label}</SelectItem>
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
