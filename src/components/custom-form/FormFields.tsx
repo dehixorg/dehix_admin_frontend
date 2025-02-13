@@ -37,6 +37,11 @@ import { Checkbox } from "../ui/checkbox";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
+import { FieldError } from "react-hook-form";
+
+const ErrorMessage = ({ error }: { error?: FieldError }) => {
+  return error && <p className="text-red-500 text-sm">{error.message}</p>;
+};
 
 const InputField = ({
   name,
@@ -63,7 +68,8 @@ const InputField = ({
             <Input placeholder={placeholder} {...field} />
           </FormControl>
           <FormDescription>{description}</FormDescription>
-          <FormMessage />{fieldState.error?.message}
+          <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -86,7 +92,7 @@ const DropdownField = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem
           className={twMerge(`${fullWidth && "col-span-full"} `, className)}
         >
@@ -112,6 +118,7 @@ const DropdownField = ({
           </Select>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -133,7 +140,7 @@ const TextareaField = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={`${fullWidth && "col-span-full"} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
@@ -147,6 +154,7 @@ const TextareaField = ({
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -169,7 +177,7 @@ const DateField = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem
           className={twMerge(
             `${fullWidth && "col-span-full"} `,
@@ -210,6 +218,7 @@ const DateField = ({
           </Popover>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -217,7 +226,6 @@ const DateField = ({
 };
 
 // Image Upload Field Component
-// TODO
 const ImageUploadField = ({
   name,
   label,
@@ -234,22 +242,22 @@ const ImageUploadField = ({
 }: FormFieldProps) => {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log(acceptedFiles);
-    if(multipleFiles) setValue(name, acceptedFiles)
+    if (multipleFiles) setValue(name, acceptedFiles);
     else setValue(name, acceptedFiles[0]);
   }, []);
 
   let accept: any = {
     "image/*": [],
-  }
+  };
 
-  if(pdf) {
-    accept = {...accept, "pdf/": []}
+  if (pdf) {
+    accept = { ...accept, "pdf/": [] };
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: multipleFiles,
-    accept
+    accept,
   });
 
   return (
@@ -289,6 +297,7 @@ const ImageUploadField = ({
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          {/* <ErrorMessage error={fieldState.error} /> */}
         </FormItem>
       )}
     />
@@ -312,7 +321,7 @@ const ComboBox = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem
           className={twMerge(
             `${fullWidth && "col-span-full"} `,
@@ -377,6 +386,7 @@ const ComboBox = ({
           </Popover>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -399,7 +409,7 @@ const FormInputOTP = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem>
           <FormLabel
             className={`${fullWidth && "col-span-full"} `}
@@ -424,6 +434,7 @@ const FormInputOTP = ({
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -445,7 +456,7 @@ const FormRadio = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={`${fullWidth && "col-span-full"} space-y-3`}>
           <FormLabel required={required}>{label}</FormLabel>
           <FormControl>
@@ -468,6 +479,7 @@ const FormRadio = ({
           </FormControl>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -489,7 +501,7 @@ const FormSelect = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem className={`${fullWidth && "col-span-full"} `}>
           <FormLabel required={required}>{label}</FormLabel>
           <Select
@@ -511,6 +523,7 @@ const FormSelect = ({
           </Select>
           <FormDescription>{description}</FormDescription>
           <FormMessage />
+          <ErrorMessage error={fieldState.error} />
         </FormItem>
       )}
     />
@@ -531,7 +544,7 @@ const FormCheckboxField = ({
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem
           className={twMerge(
             `${fullWidth && "col-span-full"} `,
@@ -550,6 +563,7 @@ const FormCheckboxField = ({
           <div className="space-y-1 leading-none">
             <FormLabel required={required}>{label}</FormLabel>
             <FormDescription>{description}</FormDescription>
+            <ErrorMessage error={fieldState.error} />
           </div>
         </FormItem>
       )}
