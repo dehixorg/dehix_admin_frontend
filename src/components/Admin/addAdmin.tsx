@@ -53,6 +53,7 @@ interface UserData {
   status: StatusEnum;
   createdAt: string;
   updatedAt: string;
+  resetRequest:boolean;
 }
 interface AddAdminProps {
   onAddAdmin: (newAdmin: UserData) => void;
