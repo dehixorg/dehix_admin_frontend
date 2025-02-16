@@ -5,7 +5,7 @@ import { MenuItem } from "@/components/menu/sidebarMenu";
 export const menuItemsTop: MenuItem[] = [
   {
     href: "#",
-    icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
+    icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110"/>,
     label: "Dehix",
   },
   {
@@ -32,3 +32,4 @@ export const menuItemsBottom: MenuItem[] = [
     label: "Settings",
   },
 ];
+
