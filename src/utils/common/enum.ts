@@ -139,3 +139,12 @@ export enum StatusEnum {
   REJECTED = 'REJECTED',
   COMPLETED ='COMPLETED',
 };
+export enum AdminPasswordStatus {
+  COMPLETED = "COMPLETED",
+  PENDING = "PENDING",
+};
+export enum AdminAccountStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+};
