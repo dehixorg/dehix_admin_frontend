@@ -47,7 +47,7 @@ interface AddDomainProps {
 const domainSchema = z.object({
   label: z.string().nonempty("Please enter a domain name"),
   description: z.string().nonempty("Please enter a description"),
-  status: z.enum([statusType.active]).default(statusType.active),
+  status: z.enum([statusType.ACTIVE]).default(statusType.ACTIVE),
 });
 
 const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
@@ -67,7 +67,7 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
     defaultValues: {
       label: "",
       description: "",
-      status: statusType.active,
+      status: statusType.ACTIVE,
     },
   });
 
@@ -168,8 +168,8 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={statusType.active}>Active</SelectItem>
-                    <SelectItem value={statusType.inactive}>
+                    <SelectItem value={statusType.ACTIVE}>Active</SelectItem>
+                    <SelectItem value={statusType.INACTIVE}>
                       InActive
                     </SelectItem>
                   </SelectContent>
