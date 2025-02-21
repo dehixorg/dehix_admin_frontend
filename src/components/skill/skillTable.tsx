@@ -116,19 +116,19 @@ const SkillTable: React.FC = () => {
         const updatedSkillData = [...prevSkillData];
 
         updatedSkillData[index].status = checked
-          ? statusType.active
-          : statusType.inactive;
+          ? statusType.ACTIVE
+          : statusType.INACTIVE;
 
         // Return the updated array
         return updatedSkillData;
       });
       await apiHelperService.updateSkillStatus(
         labelId,
-        checked ? statusType.active : statusType.inactive,
+        checked ? statusType.ACTIVE : statusType.INACTIVE,
       );
       toast({
         title: "Success",
-        description: `Skill status updated to ${checked ? statusType.active : statusType.inactive}`,
+        description: `Skill status updated to ${checked ? statusType.ACTIVE : statusType.INACTIVE}`,
         variant: "default",
       });
     } catch (error) {
@@ -138,8 +138,8 @@ const SkillTable: React.FC = () => {
         const updatedSkillData = [...prevSkillData];
 
         updatedSkillData[index].status = checked
-          ? statusType.inactive
-          : statusType.active;
+          ? statusType.INACTIVE
+          : statusType.ACTIVE;
 
         // Return the updated array
         return updatedSkillData;
@@ -248,7 +248,7 @@ const SkillTable: React.FC = () => {
 
                       <TableCell>
                         <Switch
-                          checked={Skill.status === statusType.active}
+                          checked={Skill.status === statusType.ACTIVE}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(Skill._id, checked, index)
                           }

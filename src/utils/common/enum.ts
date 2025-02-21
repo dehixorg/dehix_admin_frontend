@@ -22,8 +22,8 @@ export const Admin_Schema_Selecter = [
   { value: "Super_Admin", label: "Super Admin" },
 ];
 export enum statusType {
-  active = "active",
-  inactive = "inactive",
+  ACTIVE = "ACTIVE",
+  INACTIVE = "INACTIVE",
 }
 
 export enum Api_Methods {
@@ -70,22 +70,22 @@ export const formatID = (id: string): string => {
 
 
 export enum HireDehixTalentStatusEnum {
-  ADDED = 'Added',
-  APPROVED = 'Approved',
-  CLOSED = 'Closed',
-  COMPLETED = 'Completed',
+  ADDED = 'ADDED',
+  APPROVED = 'APPROVED',
+  CLOSED = 'CLOSED',
+  COMPLETED = 'COMPLETED',
 };
 
 export enum BusinessStatusEnum {
-  ACTIVE = 'Active',
-  IN_ACTIVE = 'Inactive',
-  NOT_VERIFIED = 'Not Verified',
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'IN_ACTIVE',
+  NOT_VERIFIED = 'NOT_VERIFIED',
 };
 
 export enum NotificationTypeEnum {
-  BUSINESS = 'Business',
-  FREELANCER = 'Freelancer',
-  BOTH = 'Both',
+  BUSINESS = 'BUSINESS',
+  FREELANCER = 'FREELANCER',
+  BOTH = 'BOTH',
 };
 export enum NotificationStatusEnum {
   ACTIVE = 'ACTIVE',
@@ -94,50 +94,50 @@ export enum NotificationStatusEnum {
 
 // Enum for Oracle Status
 export enum OracleStatusEnum {
-  NOT_APPLICABLE = 'Not Applicaple',
-  APPLICABLE = 'Applicable',
-  STOPPED = 'Stopped',
+  NOT_APPLICABLE = 'NOT_APPLICABLE',
+  APPLICABLE = 'APPLICABLE',
+  STOPPED = 'STOPPED',
 };
 
 // Enum for Bid Status
 export enum BidstatusEnum {
-  PENDING = 'Pending',
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
-  PANEL = 'Panel',
-  INTERVIEW = 'Interview',
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  PANEL = 'PANEL',
+  INTERVIEW = 'INTERVIEW',
 };
 
 export enum DomainStatus {
-  ACTIVE = 'ActiveE',
-  INACTIVE = 'Inactive',
-  ARCHIVED = 'Archieved',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  ARCHIVED = 'ARCHIVED',
 };
 
 export enum FreelancerStatusEnum {
-  ACTIVE = 'Active',
-  PENDING = 'Pending',
-  INACTIVE = 'Inactive',
-  CLOSED = 'Closed',
+  ACTIVE = 'ACTIVE',
+  PENDING = 'PENDING',
+  INACTIVE = 'INACTIVE',
+  CLOSED = 'CLOSED',
 };
 
 export enum Type {
-  FREELANCER = 'freelancer',
-  ADMIN = 'Admin',
-  BUSINESS = 'business',
+  FREELANCER = 'FREELANCER',
+  ADMIN = 'ADMIN',
+  BUSINESS = 'BUSINESS',
 };
 
 export enum TicketStatus {
-  CREATED = 'Created',
-  CLOSED = 'Closed',
-  ACTIVE = 'Active',
+  CREATED = 'CREATED',
+  CLOSED = 'CLOSED',
+  ACTIVE = 'ACTIVE',
 };
 
 export enum StatusEnum {
-  PENDING = 'Pending',
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
-  COMPLETED ='Completed',
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  COMPLETED ='COMPLETED',
 };
 export enum AdminPasswordStatus {
   COMPLETED = "COMPLETED",

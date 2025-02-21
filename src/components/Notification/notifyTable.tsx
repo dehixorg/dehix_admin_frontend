@@ -102,18 +102,18 @@ const NotifyTable: React.FC = () => {
       setUserData((prevUserData) => {
         const updatedUserData = [...prevUserData];
         updatedUserData[index].status = checked
-          ? statusType.active
-          : statusType.inactive;
+          ? statusType.ACTIVE
+          : statusType.INACTIVE;
         return updatedUserData;
       });
       await apiHelperService.updateNotificationStatus(
         labelId,
-        checked ? statusType.active : statusType.inactive
+        checked ? statusType.ACTIVE : statusType.INACTIVE
       );
       toast({
         title: "Success",
         description: `Notification status updated to ${
-          checked ? statusType.active : statusType.inactive
+          checked ? statusType.ACTIVE : statusType.INACTIVE
         }`,
         variant: "default",
       });
@@ -121,8 +121,8 @@ const NotifyTable: React.FC = () => {
       setUserData((prevUserData) => {
         const updatedUserData = [...prevUserData];
         updatedUserData[index].status = checked
-          ? statusType.inactive
-          : statusType.active;
+          ? statusType.INACTIVE
+          : statusType.ACTIVE;
         return updatedUserData;
       });
       toast({
@@ -191,7 +191,7 @@ const NotifyTable: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={user.status === "active"}
+                          checked={user.status === "ACTIVE"}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(user._id, checked, index)
                           }
