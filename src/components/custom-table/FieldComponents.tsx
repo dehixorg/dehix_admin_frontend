@@ -99,7 +99,7 @@ const ActionField = ({
 }: FieldComponentProps<Actions>) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="text-sm text-gray-600 hover:bg-gray-200 p-1 rounded transition duration-300">
+      <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
         {fieldData.actions?.icon ? (
           fieldData.actions.icon
         ) : fieldData.actions?.options.length == 1 ? (
@@ -122,7 +122,7 @@ const ActionField = ({
                 <div
                   onClick={() => handler?.({ id, refetch })}
                   className={twMerge(
-                    "text-sm w-full py-2 px-3 flex items-center justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
+                    "text-sm w-full py-2 px-3 flex items-center dark:text-gray-300 justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className
                   )}
                 >

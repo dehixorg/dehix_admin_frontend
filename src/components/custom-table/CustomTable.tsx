@@ -159,7 +159,7 @@ export const CustomTable = ({
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 tracking-wider">{title}</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">{title}</h1>
         <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
         <TableSelect
           currValue={limit}
@@ -173,7 +173,7 @@ export const CustomTable = ({
             className="w-fit text-sm text-gray-600 mx-4 bg-gray-100 border-gray-400 cursor-pointer hover:bg-gray-200 transition-colors shadow-sm py-2.5 px-3 rounded-sm"
             onClick={handleDownload}
           >
-            <DownloadIcon className="inline mr-1 size-4" />
+            <DownloadIcon className="inline mr-1 size-4 dark:text-gray-900" />
             Download
           </span>
         )}
@@ -231,7 +231,7 @@ export const CustomTable = ({
                       {fields.map((field, index) => (
                         <TableCell
                           key={field.fieldName}
-                          className={twMerge("text-gray-900", field.className)}
+                          className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
                           width={field.width}
                         >
                           <CustomTableCell
