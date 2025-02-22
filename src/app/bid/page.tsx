@@ -9,7 +9,62 @@ import {
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType } from "@/components/custom-table/FieldTypes";
+import { FieldType, Params as TableProps } from "@/components/custom-table/FieldTypes";
+
+const customTableProps: TableProps = {
+  api: "bid",
+  uniqueId: "_id",
+  fields: [
+    {
+      textValue: "Project ID",
+      fieldName: "project_id",
+      type: FieldType.LONGTEXT,
+      wordsCnt: 20,
+    },
+    {
+      textValue: "Bidder ID",
+      fieldName: "bidder_id",
+      type: FieldType.LONGTEXT,
+      wordsCnt: 10,
+    },
+    {
+      textValue: "Current Price",
+      fieldName: "current_price",
+      type: FieldType.CURRENCY,
+    },
+    {
+      textValue: "Description",
+      fieldName: "description",
+      type: FieldType.LONGTEXT,
+    },
+    {
+      textValue: "Status",
+      fieldName: "bid_status",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Accepted",
+          value: "ACCEPTED",
+          bgColor: "#57fa70",
+          textColor: "#024d0d",
+        },
+        {
+          textValue: "Pending",
+          value: "PENDING",
+          bgColor: "yellow",
+          textColor: "#525002",
+        },
+        {
+          textValue: "Rejected",
+          value: "REJECTED",
+          bgColor: "red",
+          textColor: "black",
+        },
+      ],
+    },
+  ],
+  isDownload: true,
+};
 
 export default function Talent() {
   return (
@@ -37,60 +92,7 @@ export default function Talent() {
           </div>
         </header>
         <main className="ml-5">
-          <CustomTable
-            api="bid"
-            uniqueId="_id"
-            fields={[
-              {
-                textValue: "Project ID",
-                fieldName: "project_id",
-                type: FieldType.LONGTEXT,
-                wordsCnt: 20
-              },
-              {
-                textValue: "Bidder ID",
-                fieldName: "bidder_id",
-                type: FieldType.LONGTEXT,
-                wordsCnt: 10
-              },
-              {
-                textValue: "Current Price",
-                fieldName: "current_price",
-                type: FieldType.CURRENCY,
-              },
-              {
-                textValue: "Description",
-                fieldName: "description",
-                type: FieldType.LONGTEXT,
-              },
-              {
-                textValue: "Status",
-                fieldName: "bid_status",
-                type: FieldType.STATUS,
-                statusFormats: [
-                  {
-                    textValue: "Accepted",
-                    value: "ACCEPTED",
-                    bgColor: "#57fa70",
-                    textColor: "#024d0d",
-                  },
-                  {
-                    textValue: "Pending",
-                    value: "PENDING",
-                    bgColor: "yellow",
-                    textColor: "#525002",
-                  },
-                  {
-                    textValue: "Rejected",
-                    value: "REJECTED",
-                    bgColor: "red",
-                    textColor: "black",
-                  }
-                ]
-              },
-            ]}
-            isDownload={true}
-          />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

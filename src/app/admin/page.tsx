@@ -13,9 +13,112 @@ import {
   CustomComponentProps,
   FieldType,
   FilterDataType,
+  Params as TableProps,
 } from "@/components/custom-table/FieldTypes";
 import AddAdmin from "@/components/Admin/addAdmin";
 import { CustomDialog } from "@/components/CustomDialog";
+import { AdminDetails } from "@/components/Admin/AdminDetails";
+
+const customTableProps: TableProps = {
+  api: "/admin",
+  uniqueId: "_id",
+  fields: [
+    {
+      textValue: "Type",
+      fieldName: "type",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Admin",
+          value: "ADMIN",
+          bgColor: "#5bbcfc",
+          textColor: "#031f5c",
+        },
+        {
+          textValue: "Super Admin",
+          value: "SUPER_ADMIN",
+          bgColor: "#fc88c0",
+          textColor: "#5c0328",
+        },
+      ],
+    },
+    {
+      textValue: "Name",
+      type: FieldType.CUSTOM,
+      CustomComponent: ({ data }: CustomComponentProps) => {
+        return (
+          <span>
+            {data.firstName} {data.lastName}
+          </span>
+        );
+      },
+    },
+    {
+      fieldName: "userName",
+      textValue: "Username",
+      type: FieldType.TEXT,
+    },
+    {
+      fieldName: "email",
+      textValue: "Email",
+      type: FieldType.TEXT,
+    },
+    {
+      fieldName: "phone",
+      textValue: "Phone Number",
+      type: FieldType.TEXT,
+    },
+    {
+      textValue: "Status",
+      fieldName: "status",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Accepted",
+          value: "ACCEPTED",
+          bgColor: "#2dfc2d",
+          textColor: "#014d01",
+        },
+        {
+          textValue: "Pending",
+          value: "PENDING",
+          bgColor: "#eaf04d",
+          textColor: "#717501",
+        },
+      ],
+    },
+    {
+      textValue: "",
+      type: FieldType.CUSTOM,
+      CustomComponent: ({ data }: CustomComponentProps) => {
+        return (
+          <CustomDialog
+            title={"Admin Details"}
+            description={"Detailed information about the Admin."}
+            content={
+              <AdminDetails data={data} />
+            }
+          />
+        );
+      },
+    },
+  ],
+  tableHeaderActions: [AddAdmin],
+  isDownload: true,
+  searchColumn: ["firstName", "lastName", "userName", "email", "phone"],
+  title: "Admins",
+  filterData: [
+    {
+      name: "status",
+      textValue: "Status",
+      type: FilterDataType.SINGLE,
+      options: [
+        { label: "Accepted", value: "ACCEPTED" },
+        { label: "Pending", value: "PENDING" },
+      ],
+    },
+  ],
+};
 
 export default function Talent() {
   return (
@@ -43,136 +146,7 @@ export default function Talent() {
           </div>
         </header>
         <main className="ml-5 mr-3">
-          <CustomTable
-            api="/admin"
-            uniqueId="_id"
-            fields={[
-              {
-                textValue: "Type",
-                fieldName: "type",
-                type: FieldType.STATUS,
-                statusFormats: [
-                  {
-                    textValue: "Admin",
-                    value: "ADMIN",
-                    bgColor: "#5bbcfc",
-                    textColor: "#031f5c",
-                  },
-                  {
-                    textValue: "Super Admin",
-                    value: "SUPER_ADMIN",
-                    bgColor: "#fc88c0",
-                    textColor: "#5c0328",
-                  },
-                ],
-              },
-              {
-                textValue: "Name",
-                type: FieldType.CUSTOM,
-                CustomComponent: ({ data }: CustomComponentProps) => {
-                  return (
-                    <span>
-                      {data.firstName} {data.lastName}
-                    </span>
-                  );
-                },
-              },
-              {
-                fieldName: "userName",
-                textValue: "Username",
-                type: FieldType.TEXT,
-              },
-              {
-                fieldName: "email",
-                textValue: "Email",
-                type: FieldType.TEXT,
-              },
-              {
-                fieldName: "phone",
-                textValue: "Phone Number",
-                type: FieldType.TEXT,
-              },
-              {
-                textValue: "Status",
-                fieldName: "status",
-                type: FieldType.STATUS,
-                statusFormats: [
-                  {
-                    textValue: "Accepted",
-                    value: "ACCEPTED",
-                    bgColor: "#2dfc2d",
-                    textColor: "#014d01",
-                  },
-                  {
-                    textValue: "Pending",
-                    value: "PENDING",
-                    bgColor: "#eaf04d",
-                    textColor: "#717501",
-                  },
-                ],
-              },
-              {
-                textValue: "",
-                type: FieldType.CUSTOM,
-                CustomComponent: ({ data }: CustomComponentProps) => {
-                  return (
-                    <CustomDialog
-                      title={"Admin Details"}
-                      description={"Detailed information about the Admin."}
-                      content={
-                        <>
-                          <div>
-                            <p>
-                              <strong>First Name:</strong> {data.firstName}
-                            </p>
-                            <p>
-                              <strong>Last Name:</strong> {data.lastName}
-                            </p>
-                            <p>
-                              <strong>Username:</strong> {data.userName}
-                            </p>
-                            <p>
-                              <strong>Email ID:</strong> {data.email}
-                            </p>
-                            <p>
-                              <strong>Phone No.:</strong> {data.phone}
-                            </p>
-                            <p>
-                              <strong>Type:</strong> {data.type}
-                            </p>
-                            <p>
-                              <strong>Status:</strong> {data.status}
-                            </p>
-                          </div>
-                        </>
-                      }
-                    />
-                  );
-                },
-              },
-            ]}
-            tableHeaderActions={[AddAdmin]}
-            isDownload={true}
-            searchColumn={[
-              "firstName",
-              "lastName",
-              "userName",
-              "email",
-              "phone",
-            ]}
-            title="Admins"
-            filterData={[
-              {
-                name: "status",
-                textValue: "Status",
-                type: FilterDataType.SINGLE,
-                options: [
-                  { label: "Accepted", value: "ACCEPTED" },
-                  { label: "Pending", value: "PENDING" },
-                ],
-              },
-            ]}
-          />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

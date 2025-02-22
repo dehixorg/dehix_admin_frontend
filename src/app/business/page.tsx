@@ -9,12 +9,95 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import { FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
+import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { useRouter } from "next/navigation";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 
 export default function Talent() {
   const router = useRouter()
+
+  const customTableProps: TableProps = {
+    title: "Businesses",
+              uniqueId: "_id",
+              api: "/business",
+              fields: [
+                {
+                  fieldName: "firstName",
+                  textValue: "Name",
+                  type: FieldType.TEXT,
+                },
+                {
+                  fieldName: "email",
+                  textValue: "Email ID",
+                  type: FieldType.TEXT,
+                },
+                {
+                  fieldName: "phone",
+                  textValue: "Phone No.",
+                  type: FieldType.TEXT,
+                  tooltip: true,
+                  tooltipContent: "Personal Phone Number",
+                },
+                {
+                  fieldName: "companyName",
+                  textValue: "Company",
+                  type: FieldType.TEXT,
+                },
+                {
+                  fieldName: "status",
+                  textValue: "Status",
+                  type: FieldType.STATUS,
+                },
+                {
+                  textValue: "",
+                  type: FieldType.ACTION,
+                  actions: {
+                    icon: <ChevronRight className="w-4 h-4" />,
+                    options: [
+                      {
+                        actionName: "View",
+                        actionIcon: <Info className="text-gray-500 w-4 h-4" />,
+                        type: "Button",
+                        handler: (id) => {
+                          router.push(`/business/tabs?id=${id}`);
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+              filterData: [
+                {
+                  name: "skills",
+                  textValue: "Skills",
+                  type: FilterDataType.MULTI,
+                  arrayName: "name",
+                  options: [
+                    { label: "React", value: "React" },
+                    { label: "Vue", value: "Vue" },
+                    { label: "Django", value: "Django" },
+                    { label: "Angular", value: "Angular" },
+                    { label: "Node JS", value: "Nodejs" },
+                  ],
+                },
+                {
+                  name: "domain",
+                  textValue: "Domain",
+                  arrayName: "name",
+                  type: FilterDataType.SINGLE,
+                  options: [
+                    { label: "Frontend Developer", value: "Frontend" },
+                    { label: "Backend Developer", value: "Backend" },
+                    { label: "Full Stack Developer", value: "Fullstack" },
+                  ],
+                },
+              ],
+              searchColumn: ["skills.name", "email"],
+              isDownload: true,
+              sortBy: [{ fieldName: "dob", label: "Date Of Birth" }]
+  }
+  
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -41,90 +124,7 @@ export default function Talent() {
         </header>
         <main className="ml-5">
           <CustomTable
-            title="Businesses"
-            uniqueId="_id"
-            api="/business"
-            fields={[
-              {
-                fieldName: "firstName",
-                textValue: "Name",
-                type: FieldType.TEXT,
-              },
-              {
-                fieldName: "email",
-                textValue: "Email ID",
-                type: FieldType.TEXT,
-              },
-              {
-                fieldName: "phone",
-                textValue: "Phone No.",
-                type: FieldType.TEXT,
-                tooltip: true,
-                tooltipContent: "Personal Phone Number",
-              },
-              {
-                fieldName: "companyName",
-                textValue: "Company",
-                type: FieldType.TEXT,
-              },
-              {
-                fieldName: "status",
-                textValue: "Status",
-                type: FieldType.STATUS,
-                // statusFormats: [
-                //   {
-                //     value: "NOT_VERIFIED",
-                //     bgColor
-                //   }
-                // ]
-              },
-              {
-                textValue: "",
-                type: FieldType.ACTION,
-                actions: {
-                  icon: <ChevronRight className="w-4 h-4" />,
-                  options: [
-                    {
-                      actionName: "View",
-                      actionIcon: <Info className="text-gray-500 w-4 h-4" />,
-                      type: "Button",
-                      handler: (id) => {
-                        router.push(`/business/tabs?id=${id}`);
-                      },
-                    },
-                  ],
-                },
-              },
-            ]}
-            filterData={[
-              {
-                name: "skills",
-                textValue: "Skills",
-                type: FilterDataType.MULTI,
-                arrayName: "name",
-                options: [
-                  { label: "React", value: "React" },
-                  { label: "Vue", value: "Vue" },
-                  { label: "Django", value: "Django" },
-                  { label: "Angular", value: "Angular" },
-                  { label: "Node JS", value: "Nodejs" },
-                ],
-              },
-              {
-                name: "domain",
-                textValue: "Domain",
-                arrayName: "name",
-                type: FilterDataType.SINGLE,
-                options: [
-                  { label: "Frontend Developer", value: "Frontend" },
-                  { label: "Backend Developer", value: "Backend" },
-                  { label: "Full Stack Developer", value: "Fullstack" },
-                ],
-              },
-            ]}
-            searchColumn={["skills.name", "email"]}
-            isDownload={true}
-            sortBy={[{ fieldName: "dob", label: "Date Of Birth" }]}
+            {...customTableProps}
           />
         </main>
       </div>

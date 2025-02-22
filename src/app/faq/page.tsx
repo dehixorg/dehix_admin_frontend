@@ -9,9 +9,101 @@ import {
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { CustomComponentProps, FieldType, FilterDataType } from "@/components/custom-table/FieldTypes";
-import { CustomDialog } from "@/components/CustomDialog";
+import {
+  FieldType,
+  FilterDataType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
 import AddFaq from "@/components/Faq/addFaq";
+import { FaqDetails } from "@/components/Faq/FaqDetails";
+
+const customTableProps: TableProps = {
+  api: "/faq",
+  uniqueId: "_id",
+  fields: [
+    {
+      fieldName: "type",
+      textValue: "Type",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          value: "FREELANCER",
+          bgColor: "#7c82f2",
+          textColor: "#03085e",
+          textValue: "Freelancer",
+        },
+        {
+          value: "BUSINESS",
+          bgColor: "yellow",
+          textColor: "#525002",
+          textValue: "Business",
+        },
+      ],
+    },
+    {
+      fieldName: "status",
+      textValue: "Status",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          value: "INACTIVE",
+          bgColor: "yellow",
+          textColor: "#525002",
+          textValue: "Inactive",
+        },
+        {
+          value: "ACTIVE",
+          bgColor: "#57fa70",
+          textColor: "#024d0d",
+          textValue: "Active",
+        },
+      ],
+    },
+    {
+      fieldName: "question",
+      textValue: "Question",
+      type: FieldType.LONGTEXT,
+    },
+    {
+      fieldName: "answer",
+      textValue: "Answer",
+      type: FieldType.LONGTEXT,
+    },
+    {
+      fieldName: "importantUrl",
+      textValue: "URL Count",
+      type: FieldType.LENGTH,
+    },
+    {
+      textValue: "",
+      type: FieldType.CUSTOM,
+      CustomComponent: FaqDetails
+    },
+  ],
+  searchColumn: ["question", "answer"],
+  tableHeaderActions: [AddFaq],
+  filterData: [
+    {
+      name: "status",
+      textValue: "Status",
+      type: FilterDataType.SINGLE,
+      options: [
+        { label: "Active", value: "ACTIVE" },
+        { label: "Inactive", value: "INACTIVE" },
+      ],
+    },
+    {
+      name: "type",
+      textValue: "Type",
+      type: FilterDataType.SINGLE,
+      options: [
+        { label: "Freelancer", value: "FREELANCER" },
+        { label: "Business", value: "BUSINESS" },
+      ],
+    },
+  ],
+  title: "Faqs",
+};
 
 export default function Talent() {
   return (
@@ -40,148 +132,7 @@ export default function Talent() {
         </header>
         <main className="ml-5 mr-3">
           {/* <FaqTable /> */}
-          <CustomTable
-            api="/faq"
-            uniqueId="_id"
-            fields={[
-              {
-                fieldName: "type",
-                textValue: "Type",
-                type: FieldType.STATUS,
-                statusFormats: [
-                  {
-                    value: "FREELANCER",
-                    bgColor: "#7c82f2",
-                    textColor: "#03085e",
-                    textValue: "Freelancer",
-                  },
-                  {
-                    value: "BUSINESS",
-                    bgColor: "yellow",
-                    textColor: "#525002",
-                    textValue: "Business",
-                  }
-                ],
-              },
-              {
-                fieldName: "status",
-                textValue: "Status",
-                type: FieldType.STATUS,
-                statusFormats: [
-                  {
-                    value: "INACTIVE",
-                    bgColor: "yellow",
-                    textColor: "#525002",
-                    textValue: "Inactive",
-                  },
-                  {
-                    value: "ACTIVE",
-                    bgColor: "#57fa70",
-                    textColor: "#024d0d",
-                    textValue: "Active",
-                  },
-                ],
-              },
-              {
-                fieldName: "question",
-                textValue: "Question",
-                type: FieldType.LONGTEXT,
-              },
-              {
-                fieldName: "answer",
-                textValue: "Answer",
-                type: FieldType.LONGTEXT,
-              },
-              {
-                fieldName: "importantUrl",
-                textValue: "URL Count",
-                type: FieldType.LENGTH,
-              },
-              {
-                textValue: "",
-                type: FieldType.CUSTOM,
-                CustomComponent: ({ id, data }: CustomComponentProps) => {
-                    return (
-                      <CustomDialog
-                        title={"Faq Details"}
-                        description={"Detailed information about the faq."}
-                        content={<>
-                        <div>
-                              <p>
-                                <strong>Type:</strong> {data.type}
-                              </p>
-                              <p>
-                                <strong>Status:</strong> {data.status}
-                              </p>
-                              <p>
-                                <strong>Question:</strong> {data.question}
-                              </p>
-                              <p>
-                                <strong>Answer:</strong> {data.answer}
-                              </p>
-                              <p>
-                                <strong>URL Count:</strong>
-                                {data.importantUrl.length}
-                              </p>
-                              <ul className="list-disc list-inside">
-                                {data.importantUrl.length > 0 ? (
-                                  data.importantUrl.map((url: any, urlIndex: number) => (
-                                    <li key={urlIndex}>
-                                      <p>
-                                        <strong>URL Name:</strong> {url.urlName}
-                                      </p>
-                                      <p>
-                                        <strong>URL:</strong>
-                                        <a
-                                          href={url.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="text-blue-500 underline"
-                                        >
-                                          {url.url}
-                                        </a>
-                                      </p>
-                                    </li>
-                                  ))
-                                ) : (
-                                  <li className="text-gray-500">
-                                    No URLs available
-                                  </li>
-                                )}
-                              </ul>
-                            </div>
-                        </>}
-                      />
-                    )
-                },
-              }
-            ]}
-            searchColumn={["question", "answer"]}
-            tableHeaderActions={[
-              AddFaq
-            ]}
-            filterData={[
-              {
-                name: "status",
-                textValue: "Status",
-                type: FilterDataType.SINGLE,
-                options: [
-                  { label: "Active", value: "ACTIVE" },
-                  { label: "Inactive", value: "INACTIVE" },
-                ]
-              },
-              {
-                name: "type",
-                textValue: "Type",
-                type: FilterDataType.SINGLE,
-                options: [
-                  { label: "Freelancer", value: "FREELANCER" },
-                  { label: "Business", value: "BUSINESS" },
-                ]
-              }
-            ]}
-            title="Faqs"
-          />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>
