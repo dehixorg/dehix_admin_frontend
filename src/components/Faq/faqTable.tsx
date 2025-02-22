@@ -97,20 +97,20 @@ const FaqTable: React.FC = () => {
         const updatedUserData = [...prevUserData];
 
         updatedUserData[index].status = checked
-          ? statusType.active
-          : statusType.inactive;
+          ? statusType.ACTIVE
+          : statusType.INACTIVE;
 
         // Return the updated array
         return updatedUserData;
       });
       await apiHelperService.updateFaqStatus(
       labelId,
-      checked ? statusType.active : statusType.inactive,
+      checked ? statusType.ACTIVE : statusType.INACTIVE,
       );
 
       toast({
         title: "Success",
-        description: `Faq status updated to ${checked ? statusType.active : statusType.inactive}`,
+        description: `Faq status updated to ${checked ? statusType.ACTIVE : statusType.INACTIVE}`,
         variant: "default",
       });
     } catch (error) {
@@ -120,8 +120,8 @@ const FaqTable: React.FC = () => {
         const updatedUserData = [...prevUserData];
 
         updatedUserData[index].status = checked
-          ? statusType.inactive
-          : statusType.active;
+          ? statusType.INACTIVE
+          : statusType.ACTIVE;
 
         // Return the updated array
         return updatedUserData;

@@ -98,18 +98,18 @@ const ProjectDomainTable: React.FC = () => {
       const updatedDomainData = [...prevDomainData];
 
       updatedDomainData[index].status = checked
-        ? statusType.active
-        : statusType.inactive;
+        ? statusType.ACTIVE
+        : statusType.INACTIVE;
 
       // Return the updated array
       return updatedDomainData;
     });
     try {
-      await apiHelperService.updateProjectomainStatus(labelId,checked?statusType.active:statusType.inactive);
+      await apiHelperService.updateProjectomainStatus(labelId,checked?statusType.ACTIVE:statusType.INACTIVE);
       toast({
         title: "Success",
         description: `Domain status updated to ${
-          checked ? statusType.active : statusType.inactive
+          checked ? statusType.ACTIVE : statusType.INACTIVE
         }`,
         variant: "default",
       });
@@ -120,8 +120,8 @@ const ProjectDomainTable: React.FC = () => {
         const updatedDomainData = [...prevDomainData];
 
         updatedDomainData[index].status = checked
-          ? statusType.inactive
-          : statusType.active;
+          ? statusType.INACTIVE
+          : statusType.ACTIVE;
 
         // Return the updated array
         return updatedDomainData;
@@ -226,7 +226,7 @@ const ProjectDomainTable: React.FC = () => {
 
                       <TableCell>
                         <Switch
-                          checked={domain.status === statusType.active}
+                          checked={domain.status === statusType.ACTIVE}
                           onCheckedChange={(checked) =>
                             handleSwitchChange(domain._id, checked, index)
                           }
