@@ -43,7 +43,7 @@ interface DomainData {
 const domainSchema = z.object({
   label: z.string().min(1, "Please enter a domain name"),
   description: z.string().min(1, "Please enter a description"),
-  status: z.enum([statusType.active, statusType.inactive]).default(statusType.active),
+  status: z.enum([statusType.ACTIVE, statusType.INACTIVE]).default(statusType.ACTIVE),
 });
 
 const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
@@ -65,7 +65,7 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
     defaultValues: {
       label: "",
       description: "",
-      status: statusType.active,
+      status: statusType.ACTIVE,
     },
   });
 
@@ -155,8 +155,8 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={statusType.active}>Active</SelectItem>
-                    <SelectItem value={statusType.inactive}>
+                    <SelectItem value={statusType.ACTIVE}>Active</SelectItem>
+                    <SelectItem value={statusType.INACTIVE}>
                       InActive
                     </SelectItem>
                   </SelectContent>

@@ -106,26 +106,19 @@ const DomainTable: React.FC = () => {
     try {
       setDomainData((prevDomainData) => {
         const updatedDomainData = [...prevDomainData];
-        updatedDomainData[index].status = checked
-          ? statusType.active
-          : statusType.inactive;
+        updatedDomainData[index].status = checked ? statusType.ACTIVE : statusType.INACTIVE;
         return updatedDomainData;
       });
-      await apiHelperService.updateDomainStatus(
-        labelId,
-        checked ? statusType.active : statusType.inactive
-      );
+      await apiHelperService.updateDomainStatus(labelId, checked ? statusType.ACTIVE : statusType.INACTIVE);
       toast({
         title: "Success",
-        description: `Domain status updated to ${checked ? statusType.active : statusType.inactive}`,
+        description: `Domain status updated to ${checked ? statusType.ACTIVE : statusType.INACTIVE}`,
         variant: "default",
       });
     } catch (error) {
       setDomainData((prevDomainData) => {
         const updatedDomainData = [...prevDomainData];
-        updatedDomainData[index].status = checked
-          ? statusType.inactive
-          : statusType.active;
+        updatedDomainData[index].status = checked ? statusType.INACTIVE : statusType.ACTIVE;
         return updatedDomainData;
       });
       toast({
@@ -227,15 +220,8 @@ const DomainTable: React.FC = () => {
                       </TableCell>
                       <TableCell>
                         <Switch
-                          checked={domain.status === statusType.active}
-                          onCheckedChange={(checked) =>
-                            handleSwitchChange(domain._id, checked, index)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <DeleteButtonIcon
-                          onClick={() => handleDelete(domain._id)}
+                          checked={domain.status === statusType.ACTIVE}
+                          onCheckedChange={(checked) => handleSwitchChange(domain._id, checked, index)}
                         />
                       </TableCell>
                       <TableCell className="flex justify-end">
