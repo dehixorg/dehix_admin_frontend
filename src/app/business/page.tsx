@@ -19,7 +19,7 @@ export default function Talent() {
   const customTableProps: TableProps = {
     title: "Businesses",
               uniqueId: "_id",
-              api: "/business",
+              api: "/business/all",
               fields: [
                 {
                   fieldName: "firstName",
