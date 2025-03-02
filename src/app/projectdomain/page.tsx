@@ -1,5 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
+import { Search, Trash2Icon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
@@ -10,9 +10,115 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import ProjectDomainTable from "@/components/ProjectDomain/projectdomainTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  FieldType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
+import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
+import { apiHelperService } from "@/services/projectdomain";
+import { useToast } from "@/components/ui/use-toast";
+import { Messages } from "@/utils/common/enum";
 
 export default function Talent() {
+  const { toast } = useToast();
+
+  const handleDelete = async (domainId: string) => {
+    try {
+      await apiHelperService.deleteProjectdomain(domainId);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("domain"),
+        variant: "destructive", // Red error message
+      });
+    }
+  };
+
+  const customTableProps: TableProps = {
+    api: "/projectdomain",
+    uniqueId: "_id",
+    fields: [
+      {
+        textValue: "Domain",
+        type: FieldType.TEXT,
+        fieldName: "label",
+      },
+      {
+        textValue: "Description",
+        fieldName: "description",
+        type: FieldType.LONGTEXT,
+        wordsCnt: 60,
+      },
+      {
+        textValue: "Status",
+        type: FieldType.STATUS,
+        fieldName: "status",
+        statusFormats: [
+          {
+            textValue: "Active",
+            value: "ACTIVE",
+            bgColor: "#57fa70",
+            textColor: "#024d0d",
+          },
+          {
+            textValue: "In Active",
+            value: "INACTIVE",
+            bgColor: "yellow",
+            textColor: "#525002",
+          },
+        ],
+      },
+      {
+        textValue: "Created By",
+        type: FieldType.STATUS,
+        fieldName: "createdBy",
+        statusFormats: [
+          {
+            textValue: "Admin",
+            value: "ADMIN",
+            bgColor: "#5bbcfc",
+            textColor: "#031f5c",
+          },
+          {
+            textValue: "Freelancer",
+            value: "FREELANCER",
+            bgColor: "#fc88c0",
+            textColor: "#5c0328",
+          },
+        ],
+      },
+      {
+        textValue: "",
+        type: FieldType.ACTION,
+        actions: {
+          options: [
+            {
+              actionIcon: <Trash2Icon />,
+              actionName: "Delete",
+              type: "Button",
+              handler: async ({ id, refetch }) => {
+                try {
+                  console.log(id);
+                  await apiHelperService.deleteProjectdomain(id);
+                  refetch?.();
+                } catch (error: any) {
+                  toast({
+                    title: "Error",
+                    description: Messages.DELETE_ERROR("domain"),
+                    variant: "destructive", // Red error message
+                  });
+                }
+              },
+            },
+          ],
+        },
+      },
+    ],
+    tableHeaderActions: [AddProjectDomain],
+    searchColumn: ["label"],
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -44,7 +150,8 @@ export default function Talent() {
           <DropdownProfile />
         </header>
         <main className="ml-5">
-          <ProjectDomainTable />
+          {/* <ProjectDomainTable /> */}
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

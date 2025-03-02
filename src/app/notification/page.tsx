@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -10,9 +8,86 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import NotifyTable from "@/components/Notification/notifyTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  FieldType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
+import AddNotify from "@/components/Notification/addNotify";
+import { NotificationDetails } from "@/components/Notification/NotificationDetails";
 
 export default function Talent() {
+  const customTableProps: TableProps = {
+    api: "/ads",
+    uniqueId: "_id",
+    fields: [
+      {
+        textValue: "Type",
+        type: FieldType.STATUS,
+        fieldName: "type",
+        statusFormats: [
+          {
+            value: "FREELANCER",
+            bgColor: "#7c82f2",
+            textColor: "#03085e",
+            textValue: "Freelancer",
+          },
+          {
+            value: "BUSINESS",
+            bgColor: "yellow",
+            textColor: "#525002",
+            textValue: "Business",
+          },
+          {
+            value: "BOTH",
+            bgColor: "#57fa70",
+            textColor: "#024d0d",
+            textValue: "Both",
+          },
+        ],
+      },
+      {
+        fieldName: "heading",
+        textValue: "Heading",
+        type: FieldType.TEXT,
+      },
+      {
+        fieldName: "description",
+        textValue: "Description",
+        type: FieldType.LONGTEXT,
+        width: 500,
+        wordsCnt: 50,
+      },
+      {
+        textValue: "Status",
+        type: FieldType.STATUS,
+        fieldName: "status",
+        statusFormats: [
+          {
+            value: "INACTIVE",
+            bgColor: "yellow",
+            textColor: "#525002",
+            textValue: "Inactive",
+          },
+          {
+            value: "ACTIVE",
+            bgColor: "#57fa70",
+            textColor: "#024d0d",
+            textValue: "Active",
+          },
+        ],
+      },
+      {
+        textValue: "",
+        type: FieldType.CUSTOM,
+        CustomComponent: NotificationDetails
+      },
+    ],
+    isDownload: true,
+    title: "Notifications",
+    tableHeaderActions: [AddNotify],
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -34,17 +109,12 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <NotifyTable />
+          {/* <NotifyTable /> */}
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

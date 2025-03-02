@@ -11,7 +11,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ButtonIcon } from "@/components/ui/arrowButton";
+import { InfoButton } from "@/components/ui/InfoButton";
+
 import {
   Tooltip,
   TooltipTrigger,
@@ -179,7 +180,7 @@ const InterviewTable: React.FC = () => {
                       <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
-                            <ButtonIcon />
+                            <InfoButton />
                           </DialogTrigger>
                           <DialogContent className="p-4">
                             <DialogHeader>
