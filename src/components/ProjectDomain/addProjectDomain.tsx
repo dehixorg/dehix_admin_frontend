@@ -29,6 +29,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import { apiHelperService } from "@/services/projectdomain";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 interface DomainData {
   _id: string;
   label: string;
@@ -38,21 +39,15 @@ interface DomainData {
   status?: string;
 }
 
-interface AddDomainProps {
-  onAddProjectDomain: () => void; // Prop to pass the new domain
-  domainData: DomainData[];
-}
-
 // Zod schema for form validation
 const domainSchema = z.object({
-  label: z.string().nonempty("Please enter a domain name"),
-  description: z.string().nonempty("Please enter a description"),
-  status: z.enum([statusType.active]).default(statusType.active),
+  label: z.string().min(1, "Please enter a domain name"),
+  description: z.string().min(1, "Please enter a description"),
+  status: z.enum([statusType.ACTIVE, statusType.INACTIVE]).default(statusType.ACTIVE),
 });
 
-const AddProjectDomain: React.FC<AddDomainProps> = ({
-  onAddProjectDomain,
-  domainData,
+const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
+  refetch
 }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -70,30 +65,20 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
     defaultValues: {
       label: "",
       description: "",
-      status: statusType.active,
+      status: statusType.ACTIVE,
     },
   });
 
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
     // Check if domain already exists
-    const isDomainExist = domainData.some(
-      (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
-    );
-    if (isDomainExist) {
-      setErrorMessage(`The domain "${data.label}" already exists.`);
-      return;
-    }
-
     try {
-      const domainDataWithUser = { ...data, createdBy: currentUserId };
+      const domainDataWithUser = { ...data, createdById: currentUserId, createdBy: currentUser.type.toUpperCase() };
       // Post the new domain to the backend
       const response =
         await apiHelperService.createProjectdomain(domainDataWithUser);
-      const newDomain = response.data.data;
-      if (newDomain) {
+      if (response.success) {
         // Pass the new domain to the parent component
-        onAddProjectDomain(); // Ensure this function handles the new domain correctly
         setSuccessMessage("Domain added successfully!");
         reset();
         setErrorMessage(null); // Clear any previous error message
@@ -103,6 +88,7 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
           setOpen(false);
           setSuccessMessage(null);
         }, 500);
+        refetch?.()
       } else {
         toast({
           title: "Error",
@@ -169,8 +155,8 @@ const AddProjectDomain: React.FC<AddDomainProps> = ({
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={statusType.active}>Active</SelectItem>
-                    <SelectItem value={statusType.inactive}>
+                    <SelectItem value={statusType.ACTIVE}>Active</SelectItem>
+                    <SelectItem value={statusType.INACTIVE}>
                       InActive
                     </SelectItem>
                   </SelectContent>

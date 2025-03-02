@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -10,9 +8,83 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import SkillTable from "@/components/skill/skillTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  CustomComponentProps,
+  FieldType,
+  FilterDataType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
+import { CustomDialog } from "../../components/CustomDialog";
+import { useState } from "react";
+import EditSkillDescription from "@/components/skill/editSkilldesc";
+import AddSkill from "@/components/skill/addskill";
+import { SkillDetails } from "@/components/skill/SkillDetail";
 
 export default function Talent() {
+  const customTableProps: TableProps = {
+    api: "/skills",
+    uniqueId: "_id",
+    fields: [
+      {
+        fieldName: "_id",
+        textValue: "Skill ID",
+        type: FieldType.LONGTEXT,
+        wordsCnt: 20,
+      },
+      {
+        fieldName: "label",
+        textValue: "Skill",
+        type: FieldType.TEXT,
+      },
+      {
+        fieldName: "description",
+        textValue: "Description",
+        type: FieldType.LONGTEXT,
+        wordsCnt: 50,
+      },
+      {
+        fieldName: "status",
+        textValue: "Status",
+        type: FieldType.STATUS,
+        statusFormats: [
+          {
+            textValue: "Active",
+            value: "active",
+            bgColor: "#57fa70",
+            textColor: "#024d0d",
+          },
+          {
+            value: "inactive",
+            bgColor: "yellow",
+            textColor: "#525002",
+            textValue: "Inactive",
+          },
+        ],
+      },
+      {
+        textValue: "",
+        type: FieldType.CUSTOM,
+        CustomComponent: SkillDetails
+      },
+    ],
+    searchColumn: ["label"],
+    filterData: [
+      {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Active", value: "active" },
+          { label: "Inactive", value: "inactive" },
+        ],
+      },
+    ],
+    isDownload: true,
+    title: "Skills",
+    tableHeaderActions: [AddSkill],
+  };
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -34,17 +106,11 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <SkillTable />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

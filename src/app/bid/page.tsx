@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -9,8 +7,64 @@ import {
   menuItemsTop,
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
-import BidsTable from "@/components/bid/bidtable";
 import DropdownProfile from "@/components/shared/DropdownProfile";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import { FieldType, Params as TableProps } from "@/components/custom-table/FieldTypes";
+
+const customTableProps: TableProps = {
+  api: "bid",
+  uniqueId: "_id",
+  fields: [
+    {
+      textValue: "Project ID",
+      fieldName: "project_id",
+      type: FieldType.LONGTEXT,
+      wordsCnt: 20,
+    },
+    {
+      textValue: "Bidder ID",
+      fieldName: "bidder_id",
+      type: FieldType.LONGTEXT,
+      wordsCnt: 10,
+    },
+    {
+      textValue: "Current Price",
+      fieldName: "current_price",
+      type: FieldType.CURRENCY,
+    },
+    {
+      textValue: "Description",
+      fieldName: "description",
+      type: FieldType.LONGTEXT,
+    },
+    {
+      textValue: "Status",
+      fieldName: "bid_status",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Accepted",
+          value: "ACCEPTED",
+          bgColor: "#57fa70",
+          textColor: "#024d0d",
+        },
+        {
+          textValue: "Pending",
+          value: "PENDING",
+          bgColor: "yellow",
+          textColor: "#525002",
+        },
+        {
+          textValue: "Rejected",
+          value: "REJECTED",
+          bgColor: "red",
+          textColor: "black",
+        },
+      ],
+    },
+  ],
+  isDownload: true,
+};
 
 export default function Talent() {
   return (
@@ -34,17 +88,11 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5">
-          <BidsTable />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

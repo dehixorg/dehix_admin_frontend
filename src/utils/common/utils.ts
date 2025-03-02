@@ -31,6 +31,8 @@ export const getStatusBadge = (status: string | undefined) => {
             return "bg-red-800 text-white border border-red-800 hover:bg-red-600";
         case "cancel":
             return "bg-gray-999 text-white border border-gray-999 hover:bg-gray-800";
+        case "confirm":
+            return "bg-yellow-500 text-white border border-yellow-500 hover:bg-yellow-400";
         
     }
   };
@@ -51,3 +53,19 @@ export const getStatusBadge = (status: string | undefined) => {
         return null;
     }
   };
+
+  export const toTitleCase = (text:string) => {
+    if (!text) return "";
+    
+    const exceptions = ["a", "and", "the", "of", "in", "on", "at", "to", "for"]; 
+    return text
+      .toLowerCase()
+      .split(/[\s_]+/)
+      .map((word, index) =>
+        exceptions.includes(word) && index !== 0
+          ? word 
+          : word.charAt(0).toUpperCase() + word.slice(1)
+      )
+      .join(" ");
+  };
+  

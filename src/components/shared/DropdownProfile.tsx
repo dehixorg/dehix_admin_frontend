@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { RootState } from "@/lib/store";
-import { clearUser } from "@/lib/userSlice";
+import { handleLogout } from "@/lib/utils";
 
 export default function DropdownProfile() {
   const user = useSelector((state: RootState) => state.user);
@@ -36,11 +36,12 @@ export default function DropdownProfile() {
     }
   }, [user]);
 
-  const handleLogout = () => {
-    dispatch(clearUser());
-    Cookies.remove("userType");
-    Cookies.remove("token");
-    router.replace("/auth/login");
+  const onLogoutClick = async () => {
+    try {
+      await handleLogout(dispatch, router); 
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   return (
@@ -79,7 +80,7 @@ export default function DropdownProfile() {
           <DropdownMenuItem>Support</DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>
+        <DropdownMenuItem onClick={onLogoutClick}>
           <LogOut size={18} className="mr-2" />
           Logout
         </DropdownMenuItem>

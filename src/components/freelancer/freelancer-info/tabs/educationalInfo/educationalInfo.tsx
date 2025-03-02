@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { getStatusIcon } from "@/utils/common/utils";
+
 interface Education {
   __id: string;
   degree: string;
@@ -23,54 +24,50 @@ interface Education {
   comments: string;
 }
 
-type EducationCardProps = React.ComponentProps<typeof Card> & {
-  education: Education;
+type EducationCardProps = {
+  data: Education; // Updated to match the generic `renderDataSection`
 };
 
-export function educationCard({
-  className,
-  education,
-  ...props
-}: EducationCardProps) {
-  return  (
-    <Card className={cn("flex flex-col", className)} {...props}>
-    <CardHeader>
-      <div className="flex items-center justify-between">
-      <CardTitle >{education.degree}</CardTitle>
-        <Tooltip>
-          <TooltipTrigger>
-            <span>{getStatusIcon(education.verificationStatus)}</span>
-          </TooltipTrigger>
-          <TooltipContent>
-            <span >{education.verificationStatus}</span>
-          </TooltipContent>
-        </Tooltip>
+export function educationCard({ data }: EducationCardProps) {
+  return (
+    <Card className={cn("flex flex-col")}>
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <CardTitle>{data.degree}</CardTitle>
+          <Tooltip>
+            <TooltipTrigger>
+              <span>{getStatusIcon(data.verificationStatus)}</span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <span>{data.verificationStatus}</span>
+            </TooltipContent>
+          </Tooltip>
         </div>
-        <CardDescription>{education.universityName}</CardDescription>
+        <CardDescription>{data.universityName}</CardDescription>
       </CardHeader>
       <CardContent>
         <p>
-          <strong>Field of Study:</strong> {education.fieldOfStudy}
+          <strong>Field of Study:</strong> {data.fieldOfStudy}
         </p>
         <p>
           <strong>Start Date:</strong>{" "}
-          {new Date(education.startDate).toLocaleDateString()}
+          {new Date(data.startDate).toLocaleDateString()}
         </p>
         <p>
           <strong>End Date:</strong>{" "}
-          {new Date(education.endDate).toLocaleDateString()}
+          {new Date(data.endDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>Grade:</strong> {education.grade||"No Data Available"}
+          <strong>Grade:</strong> {data.grade || "No Data Available"}
         </p>
         <p>
-          <strong>Comments:</strong> {education.comments||"No Data Available"}
+          <strong>Comments:</strong> {data.comments || "No Data Available"}
         </p>
       </CardContent>
       <CardFooter>
         <p>
           Updated on:{" "}
-          {new Date(education.verificationUpdateTime).toLocaleDateString()}
+          {new Date(data.verificationUpdateTime).toLocaleDateString()}
         </p>
       </CardFooter>
     </Card>

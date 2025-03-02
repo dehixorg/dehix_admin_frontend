@@ -42,4 +42,13 @@ export const apiHelperService = {
       },
     });
   },
+  updateSkillDesc: async (labelId: string, description: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/skills/${labelId}`,
+      body: {
+        description,
+      },
+    });
+  },
 };
