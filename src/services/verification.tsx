@@ -13,5 +13,11 @@ export const apiHelperService = {
       params,
     });
   },
- 
+  updateVerification: async (params: { document_id: string, doc_type: string, verification_id: string, verifier_id: string }, body: { verification_status:  "PENDING" | "APPROVED" | "DENIED", comments: string }) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/${params.document_id}/${params.verification_id}/${params.verifier_id}/oracle?doc_type=${params.doc_type}`,
+      body: body
+    })
+  }
 };

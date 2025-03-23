@@ -36,13 +36,14 @@ export const CustomTable = ({
   sortBy,
   isFilter = true,
   isDownload = false,
+  params: otherParams
 }: Params) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
   );
-  // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
+
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<1 | -1>(1);
   const [search, setSearch] = useState<string>("");
@@ -58,7 +59,7 @@ export const CustomTable = ({
         const params: Record<string, any> = {
           filters: "",
           page: page,
-          limit: limit
+          limit: limit,
         };
         selectedFilters.map((filter) => {
           params["filters"] += [`filter[${filter.fieldName}],`];
@@ -78,6 +79,10 @@ export const CustomTable = ({
 
         params["filter[sortBy]"] = sortByValue;
         params["filter[sortOrder]"] = sortOrder;
+
+        for(const otherParam of Object.keys(otherParams || {})) {
+          params[`filter[${otherParam}]`] = otherParams?.[otherParam]
+        }
 
         const response = await apiHelperService.fetchData(api, params);
         setData(response.data.data);
@@ -137,7 +142,6 @@ export const CustomTable = ({
       });
       content += fieldValues.join(",") + "\n";
     });
-    console.log(content);
 
     const blob = new Blob([content], { type: "text/csv" });
 

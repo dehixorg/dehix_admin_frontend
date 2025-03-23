@@ -19,11 +19,13 @@ import { twMerge } from "tailwind-merge";
 import { ToolTip } from "../ToolTip";
 
 const DateTimeField = ({ value }: FieldComponentProps<string>) => {
+  if(!value || value === "") return <>-</>
   const date = new Date(value);
   return <>{date.toUTCString()}</>;
 };
 
 const DateField = ({ value }: FieldComponentProps<string>) => {
+  if(!value || value === "") return <>-</>
   const date = new Date(value);
   return <>{date.toLocaleDateString()}</>;
 };
