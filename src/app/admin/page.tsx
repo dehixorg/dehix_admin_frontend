@@ -1,7 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -10,7 +8,117 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import AdminTable from "@/components/Admin/adminTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
+import {
+  CustomComponentProps,
+  FieldType,
+  FilterDataType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
+import AddAdmin from "@/components/Admin/addAdmin";
+import { CustomDialog } from "@/components/CustomDialog";
+import { AdminDetails } from "@/components/Admin/AdminDetails";
+
+const customTableProps: TableProps = {
+  api: "/admin",
+  uniqueId: "_id",
+  fields: [
+    {
+      textValue: "Type",
+      fieldName: "type",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Admin",
+          value: "ADMIN",
+          bgColor: "#5bbcfc",
+          textColor: "#031f5c",
+        },
+        {
+          textValue: "Super Admin",
+          value: "SUPER_ADMIN",
+          bgColor: "#fc88c0",
+          textColor: "#5c0328",
+        },
+      ],
+    },
+    {
+      textValue: "Name",
+      type: FieldType.CUSTOM,
+      CustomComponent: ({ data }: CustomComponentProps) => {
+        return (
+          <span>
+            {data.firstName} {data.lastName}
+          </span>
+        );
+      },
+    },
+    {
+      fieldName: "userName",
+      textValue: "Username",
+      type: FieldType.TEXT,
+    },
+    {
+      fieldName: "email",
+      textValue: "Email",
+      type: FieldType.TEXT,
+    },
+    {
+      fieldName: "phone",
+      textValue: "Phone Number",
+      type: FieldType.TEXT,
+    },
+    {
+      textValue: "Status",
+      fieldName: "status",
+      type: FieldType.STATUS,
+      statusFormats: [
+        {
+          textValue: "Accepted",
+          value: "ACCEPTED",
+          bgColor: "#2dfc2d",
+          textColor: "#014d01",
+        },
+        {
+          textValue: "Pending",
+          value: "PENDING",
+          bgColor: "#eaf04d",
+          textColor: "#717501",
+        },
+      ],
+    },
+    {
+      textValue: "",
+      type: FieldType.CUSTOM,
+      CustomComponent: ({ data }: CustomComponentProps) => {
+        return (
+          <CustomDialog
+            title={"Admin Details"}
+            description={"Detailed information about the Admin."}
+            content={
+              <AdminDetails data={data} />
+            }
+          />
+        );
+      },
+    },
+  ],
+  tableHeaderActions: [AddAdmin],
+  isDownload: true,
+  searchColumn: ["firstName", "lastName", "userName", "email", "phone"],
+  title: "Admins",
+  filterData: [
+    {
+      name: "status",
+      textValue: "Status",
+      type: FilterDataType.SINGLE,
+      options: [
+        { label: "Accepted", value: "ACCEPTED" },
+        { label: "Pending", value: "PENDING" },
+      ],
+    },
+  ],
+};
 
 export default function Talent() {
   return (
@@ -34,17 +142,11 @@ export default function Talent() {
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
+            <DropdownProfile />
           </div>
-          <DropdownProfile />
         </header>
         <main className="ml-5 mr-3">
-          <AdminTable />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

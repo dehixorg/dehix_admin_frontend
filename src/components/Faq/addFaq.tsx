@@ -26,6 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { apiHelperService } from "@/services/faq";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 interface ImportantUrl {
   urlName: string;
   url: string;
@@ -40,21 +41,21 @@ interface FAQData {
 }
 
 const faqSchema = z.object({
-  question: z.string().nonempty("Please enter a question"),
-  answer: z.string().nonempty("Please enter an answer"),
-  type: z.enum(["business", "freelancer"]).default("business"),
-  status: z.enum(["active"]).default("active"),
+  question: z.string().min(1, "Please enter a question"),
+  answer: z.string().min(1, "Please enter an answer"),
+  type: z.enum(["BUSINESS", "FREELANCER"]).default("BUSINESS"),
+  status: z.enum(["ACTIVE", "INACTIVE"]).default("ACTIVE"),
   importantUrl: z
     .array(
       z.object({
-        urlName: z.string().nonempty("Please enter the URL name"),
+        urlName: z.string().min(1, "Please enter the URL name"),
         url: z.string().url("Please enter a valid URL"),
       }),
     )
-    .nonempty({ message: "Please add at least one URL" }),
+    .min(1, { message: "Please add at least one URL" }),
 });
 
-const AddFaq: React.FC = () => {
+const AddFaq: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const {
@@ -67,8 +68,8 @@ const AddFaq: React.FC = () => {
     defaultValues: {
       question: "",
       answer: "",
-      type: "business",
-      status: "active",
+      type: "BUSINESS",
+      status: "ACTIVE",
       importantUrl: [{ urlName: "", url: "" }],
     },
   });
@@ -80,17 +81,27 @@ const AddFaq: React.FC = () => {
 
   const onSubmit = async (data: FAQData) => {
     try {
-      //TODO: replace this with actual faq api service after creation
-      await apiHelperService.createFaq(data);
-      // await axiosInstance.post(`/faq/createfaq`, data);
-      reset();
-      setOpen(false);
+      const response = await apiHelperService.createFaq(data);
+      if(response.success) {
+        toast({
+          title: "Success",
+          description: Messages.CREATE_SUCCESS("faq"),
+        });
+        refetch?.()
+      }
+      else {
+        console.log(response)
+        throw new Error()
+      }
     } catch (error) {
       toast({
         title: "Error",
         description: Messages.ADD_ERROR("faq"),
         variant: "destructive", // Red error message
       });
+    } finally {
+      reset();
+      setOpen(false);
     }
   };
 
@@ -151,8 +162,8 @@ const AddFaq: React.FC = () => {
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="business">Business</SelectItem>
-                    <SelectItem value="freelancer">Freelancer</SelectItem>
+                    <SelectItem value="BUSINESS">Business</SelectItem>
+                    <SelectItem value="FREELANCER">Freelancer</SelectItem>
                   </SelectContent>
                 </Select>
               )}

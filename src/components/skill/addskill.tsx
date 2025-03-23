@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/skill";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 interface SkillData {
   _id: string;
   label: string;
@@ -50,7 +51,7 @@ const SkillSchema = z.object({
   status: z.enum([statusType.ACTIVE]).default(statusType.ACTIVE),
 });
 
-const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
+const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -61,8 +62,6 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
-    reset,
   } = useForm<SkillData>({
     resolver: zodResolver(SkillSchema),
     defaultValues: {
@@ -74,35 +73,17 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
 
   // Handle form submission to add a new Skill
   const onSubmit = async (data: SkillData) => {
-    // Check if Skill already exists
-    const isSkillExist = skillData.some(
-      (Skill) => Skill.label.toLowerCase() === data.label.toLowerCase(),
-    );
-
-    if (isSkillExist) {
-      setErrorMessage(`The Skill "${data.label}" already exists.`);
-      return;
-    }
 
     try {
-      const skillDataWithUser = { ...data, createdBy: currentUserId };
-      // Post the new Skill to the backend
+      const skillDataWithUser = { ...data, createdBy: currentUser.type.toUpperCase(), createdById: currentUserId };
       const response = await apiHelperService.createSkill(skillDataWithUser);
-            
-       
-      const newSkill = response.data.data;
-      if (newSkill) {
-        // Pass the new Skill to the parent component
-        onAddSkill();
-        setSuccessMessage("Skill added successfully!");
-        reset();
-        setErrorMessage(null); // Clear any previous error message
-
-        // Close the dialog after a short delay
-        setTimeout(() => {
-          setOpen(false);
-          setSuccessMessage(null);
-        }, 500);
+      if(response.success) {
+        toast({
+          title: "Success",
+          description: Messages.CREATE_SUCCESS("skill"),
+        });
+        setOpen(false)
+        refetch?.()
       } else {
         toast({
           title: "Error",
@@ -111,9 +92,10 @@ const AddSkill: React.FC<AddSkillProps> = ({ onAddSkill, skillData }) => {
         });
       }
     } catch (error) {
+      console.log(error)
       toast({
         title: "Error",
-        description: Messages.ADD_ERROR("skill"),
+        description: "Server Error",
         variant: "destructive", // Red error message
       });
     }

@@ -8,15 +8,7 @@ import { z } from "zod";
 
 import { RootState } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Messages, statusType } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/domain";
+import { CustomDialog } from "../CustomDialog";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 interface DomainData {
   _id: string;
   label: string;
@@ -38,24 +32,17 @@ interface DomainData {
   status?: string;
 }
 
-interface AddDomainProps {
-  onAddDomain: () => void; // Prop to pass the new domain
-  domainData: DomainData[];
-}
-
 // Zod schema for form validation
 const domainSchema = z.object({
-  label: z.string().nonempty("Please enter a domain name"),
-  description: z.string().nonempty("Please enter a description"),
-  status: z.enum([statusType.ACTIVE]).default(statusType.ACTIVE),
+  label: z.string().min(1, "Please enter a domain name"),
+  description: z.string().min(1, "Please enter a description"),
+  status: z.enum([statusType.ACTIVE, statusType.INACTIVE]).default(statusType.ACTIVE),
 });
 
-const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
+const AddDomain: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const currentUser = useSelector((state: RootState) => state.user);
-  const currentUserId = currentUser.uid;
+
   const { toast } = useToast();
   const {
     control,
@@ -72,44 +59,29 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
   });
 
   // Fetch the list of domains from the backend
-
   // Handle form submission to add a new domain
   const onSubmit = async (data: DomainData) => {
-    // Check if domain already exists
-    const isDomainExist = domainData.some(
-      (domain) => domain.label.toLowerCase() === data.label.toLowerCase(),
-    );
-
-    if (isDomainExist) {
-      setErrorMessage(`The domain "${data.label}" already exists.`);
-      return;
-    }
-
     try {
-      const domainDataWithUser = { ...data, createdBy: currentUserId };
+      const domainDataWithUser = {
+        ...data,
+        createdBy: currentUser.type.toUpperCase(),
+        createdById: currentUser.uid,
+      };
       // Post the new domain to the backend
       const response = await apiHelperService.createDomain(domainDataWithUser);
       const newDomain = response.data.data;
-      if (newDomain) {
-        // Pass the new domain to the parent component
-        onAddDomain();
-        setSuccessMessage("Domain added successfully!");
-        reset();
-        setErrorMessage(null); // Clear any previous error message
-
-        // Close the dialog after a short delay
-        setTimeout(() => {
-          setOpen(false);
-          setSuccessMessage(null);
-        }, 500);
-      } else {
-        toast({
-          title: "Error",
-          description: Messages.ADD_ERROR("domain"),
-          variant: "destructive", // Red error message
-        });
-      }
+      refetch?.();
+      reset();
+      toast({
+        title: "Success",
+        description: Messages.CREATE_SUCCESS(newDomain),
+      });
+      // Close the dialog after a short delay
+      setTimeout(() => {
+        setOpen(false);
+      }, 500);
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error",
         description: Messages.ADD_ERROR("domain"),
@@ -119,76 +91,72 @@ const AddDomain: React.FC<AddDomainProps> = ({ onAddDomain, domainData }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <CustomDialog
+      title={"Add Domain"}
+      description={"Enter the domain details below."}
+      content={
+        <>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="mb-3">
+              <Controller
+                control={control}
+                name="label"
+                render={({ field }) => (
+                  <Input
+                    placeholder="Enter domain name"
+                    {...field}
+                    className="border p-2 rounded w-full"
+                  />
+                )}
+              />
+            </div>
+            <div className="mb-3">
+              <Controller
+                control={control}
+                name="description"
+                render={({ field }) => (
+                  <Textarea
+                    placeholder="Description"
+                    {...field}
+                    className="border p-2 rounded mt-2 w-full h-[130px]"
+                  />
+                )}
+              />
+            </div>
+            <div className="mb-3">
+              <Controller
+                control={control}
+                name="status"
+                render={({ field }) => (
+                  <Select {...field} onValueChange={field.onChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={statusType.ACTIVE}>Active</SelectItem>
+                      <SelectItem value={statusType.INACTIVE}>
+                        InActive
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit">Save</Button>
+            </DialogFooter>
+          </form>
+        </>
+      }
+      triggerContent={
         <Button onClick={() => setOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="h-4 w-4" />
           Add Domain
         </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Add Domain</DialogTitle>
-          <DialogDescription>Enter the domain details below.</DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="label"
-              render={({ field }) => (
-                <Input
-                  placeholder="Enter domain name"
-                  {...field}
-                  className="border p-2 rounded w-full"
-                />
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="description"
-              render={({ field }) => (
-                <Textarea
-                  placeholder="Description"
-                  {...field}
-                  className="border p-2 rounded mt-2 w-full h-[130px]"
-                />
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <Controller
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <Select {...field} onValueChange={field.onChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value={statusType.ACTIVE}>Active</SelectItem>
-                    <SelectItem value={statusType.INACTIVE}>
-                      InActive
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              )}
-            />
-          </div>
-          {errorMessage && (
-            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
-          )}
-          {successMessage && (
-            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
-          )}
-          <DialogFooter>
-            <Button type="submit">Save</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+      }
+      triggerState={open}
+      setTriggerState={setOpen}
+    />
   );
 };
 

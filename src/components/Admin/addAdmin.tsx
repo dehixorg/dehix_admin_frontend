@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/select";
 import { ToastAction } from "@/components/ui/toast";
 import { apiHelperService } from "@/services/admin";
+import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 
 interface AdminData {
   firstName: string;
@@ -39,7 +40,7 @@ interface AdminData {
   userName: string;
   email: string;
   phone: string;
-  type: "Admin" | "Super_Admin";
+  type: AdminType;
   status: StatusEnum.PENDING; // status is fixed to "Pending"
 }
 interface UserData {
@@ -61,21 +62,19 @@ interface AddAdminProps {
 const adminSchema = z.object({
   firstName: z
     .string()
-    .nonempty(Admin_Schema_Prompt_Messages.FIRST_NAME_REQUIRED),
-  lastName: z
-    .string()
-    .nonempty(Admin_Schema_Prompt_Messages.LAST_NAME_REQUIRED),
-  userName: z.string().nonempty(Admin_Schema_Prompt_Messages.USERNAME_REQUIRED),
+    .min(1, Admin_Schema_Prompt_Messages.FIRST_NAME_REQUIRED),
+  lastName: z.string().min(1, Admin_Schema_Prompt_Messages.LAST_NAME_REQUIRED),
+  userName: z.string().min(1, Admin_Schema_Prompt_Messages.USERNAME_REQUIRED),
   email: z
     .string()
     .email(Admin_Schema_Prompt_Messages.VALID_MAIL)
-    .nonempty(Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
-  phone: z.string().nonempty(Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
+    .min(1, Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
+  phone: z.string().min(1, Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
   type: z.nativeEnum(AdminType).default(AdminType.ADMIN),
   status: z.literal(StatusEnum.PENDING), // status is always "Pending"
 });
 
-const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
+const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const {
@@ -99,14 +98,15 @@ const AddAdmin: React.FC<AddAdminProps> = ({ onAddAdmin }) => {
   const onSubmit = async (data: AdminData) => {
     try {
       const response = await apiHelperService.createAdmin(data);
-      const newAdmin = response.data.data ? response.data.data.data : null;
-      onAddAdmin(newAdmin);
-      reset();
-      setOpen(false);
-      toast({
-        title: "Admin Added",
-        description: "The Admin has been successfully added.",
-      });
+      if (response.success) {
+        reset();
+        setOpen(false);
+        toast({
+          title: "Admin Added",
+          description: "The Admin has been successfully added.",
+        });
+        refetch?.()
+      } else throw new Error("Error")
     } catch (error) {
       // Use a type guard to check if the error is an AxiosError
       let errorMessage =
