@@ -80,6 +80,7 @@ export const CustomTable = ({
         params["filter[sortOrder]"] = sortOrder;
 
         const response = await apiHelperService.fetchData(api, params);
+
         setData(response.data.data);
       } catch (error) {
         console.log(error);
