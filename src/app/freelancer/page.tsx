@@ -85,7 +85,6 @@ export default function Talent() {
           { label: "Angular", value: "Angular" },
 
           { label: "Node JS", value: "Node.js" }
-          { label: "Node JS", value: "Nodejs" },
 
         ],
       },
