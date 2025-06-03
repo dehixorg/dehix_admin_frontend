@@ -83,7 +83,6 @@ export default function Talent() {
           { label: "Vue", value: "Vue" },
           { label: "Django", value: "Django" },
           { label: "Angular", value: "Angular" },
-
           { label: "Node JS", value: "Node.js" }
 
         ],
