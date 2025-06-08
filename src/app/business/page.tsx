@@ -12,6 +12,8 @@ import DropdownProfile from "@/components/shared/DropdownProfile";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { useRouter } from "next/navigation";
 import { CustomTable } from "@/components/custom-table/CustomTable";
+import { Flag } from "lucide-react"; // or wherever your icons come from
+
 
 export default function Talent() {
   const router = useRouter()
@@ -62,6 +64,18 @@ export default function Talent() {
                           router.push(`/business/tabs?id=${id}`);
                         },
                       },
+                       {
+                          actionName: "Report",
+                          actionIcon: <Flag className="text-red-500 w-4 h-4" />,
+                          type: "Button",
+                          handler: (row) => {
+                            const params = new URLSearchParams({
+                              id: row.id,
+                              role: "Business",
+                            });
+                            router.push(`/reportscreen?${params.toString()}`);
+                          }
+                        },
                     ],
                   },
                 },

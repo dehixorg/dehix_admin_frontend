@@ -16,6 +16,7 @@ import {
 } from "@/components/custom-table/FieldTypes";
 import { ChevronRight, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Flag } from "lucide-react"; // or wherever your icons come from
 
 export default function Talent() {
   const router = useRouter();
@@ -65,9 +66,23 @@ export default function Talent() {
               actionIcon: <Info className="text-gray-500 w-4 h-4" />,
               type: "Button",
               handler: (id) => {
+                console.log("Id",id)
                 router.push(`/freelancer/tabs?id=${id}`);
               },
             },
+            {
+              actionName: "Report",
+              actionIcon: <Flag className="text-red-500 w-4 h-4" />,
+              type: "Button",
+           handler: (row) => {
+                const params = new URLSearchParams({
+                  id: row.id,
+                  role: "Freelancer",
+                });
+                router.push(`/reportscreen?${params.toString()}`);
+              }
+            },
+
           ],
         },
       },
