@@ -31,10 +31,6 @@ export default function Login() {
     try {
       const userCredential: UserCredential = await loginUser(email, pass);
       const { user, claims } = await getUserData(userCredential);
-      if (claims.type !== 'admin' && claims.type !=='super admin') {
-        setError("You are not admin");
-        return;
-    }
       dispatch(
         setUser({
           ...user,
