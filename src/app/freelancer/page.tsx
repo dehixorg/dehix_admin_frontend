@@ -70,19 +70,6 @@ export default function Talent() {
                 router.push(`/freelancer/tabs?id=${id}`);
               },
             },
-            {
-              actionName: "Report",
-              actionIcon: <Flag className="text-red-500 w-4 h-4" />,
-              type: "Button",
-           handler: (row) => {
-                const params = new URLSearchParams({
-                  id: row.id,
-                  role: "Freelancer",
-                });
-                router.push(`/reportscreen?${params.toString()}`);
-              }
-            },
-
           ],
         },
       },

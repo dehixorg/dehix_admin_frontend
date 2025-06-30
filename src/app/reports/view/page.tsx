@@ -24,6 +24,11 @@ interface Message {
   text: string;
   timestamp: string;
 }
+interface ImageMeta {
+  Location: string;
+  Key: string;
+  Bucket: string;
+}
 
 interface ReportType {
   _id: string;
@@ -34,6 +39,9 @@ interface ReportType {
   createdAt: string;
   updatedAt?: string;
   messages: Message[];
+  imageMeta?: ImageMeta[]; // ✅ Now an array
+  report_role:string;
+  reportedById:string;
 }
 
 const ViewReportPage = () => {
@@ -44,6 +52,7 @@ const ViewReportPage = () => {
   const [report, setReport] = useState<ReportType | null>(null);
   const [replyMessage, setReplyMessage] = useState("");
   const [loading, setLoading] = useState(true);
+const [activeImage, setActiveImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -219,8 +228,8 @@ const ViewReportPage = () => {
               <p className="text-lg">{report.subject}</p>
             </div>
             <div className="bg-white rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground">ID</h2>
-              <p className="text-lg">{report._id}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground">{report.report_role} ID</h2>
+              <p className="text-lg">{report.reportedById}</p>
             </div>
             <div className="bg-white rounded-md shadow p-4">
               <h2 className="font-semibold mb-1 text-muted-foreground">Status</h2>
@@ -234,7 +243,7 @@ const ViewReportPage = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => updateStatus("OPEN")}>OPEN</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus("IN_PROGRESS")}>IN_PROGRESS</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateStatus("IN_PROGRESS")}>Enable Chat</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>CLOSED</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -244,7 +253,42 @@ const ViewReportPage = () => {
               <h2 className="font-semibold mb-1 text-muted-foreground">Description</h2>
               <p className="whitespace-pre-wrap">{report.description}</p>
             </div>
+           {(report?.imageMeta ?? []).length > 0 && (
+  <div className="bg-white rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
+    <h2 className="font-semibold mb-1 text-muted-foreground">Attached Screenshots</h2>
+    <div className="flex flex-wrap gap-4">
+      {(report?.imageMeta ?? []).map((img, index) => (
+        <button
+          key={index}
+          onClick={() => setActiveImage(img.Location)}
+          className="block w-[180px] h-[120px] overflow-hidden rounded-lg shadow-sm border hover:scale-105 transition-transform duration-200"
+        >
+          <img
+            src={img.Location}
+            alt={`Screenshot ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
+
           </section>
+          {activeImage && (
+  <div
+    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
+    onClick={() => setActiveImage(null)}
+  >
+    <img
+      src={activeImage}
+      alt="Full view"
+      className="max-w-full max-h-full rounded shadow-lg"
+    />
+  </div>
+)}
+
 
           {/* CHAT SECTION */}
           <section className="bg-white rounded-md shadow p-6 max-w-3xl mx-auto w-full">
@@ -293,6 +337,7 @@ const ViewReportPage = () => {
         </main>
       </div>
     </div>
+    
   );
 };
 

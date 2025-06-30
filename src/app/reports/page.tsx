@@ -72,6 +72,11 @@ export default function AllReportsPage() {
                 textValue: "Report Type",
                 type: FieldType.TEXT,
               },
+               {
+                fieldName: "report_role",
+                textValue: "Role",
+                type: FieldType.TEXT,
+              },
               {
                 fieldName: "status",
                 textValue: "Status",
@@ -112,9 +117,9 @@ export default function AllReportsPage() {
                 textValue: "Status",
                 type: FilterDataType.SINGLE,
                 options: [
-                  { label: "Pending", value: "pending" },
-                  { label: "Resolved", value: "resolved" },
-                  { label: "Dismissed", value: "dismissed" },
+                  { label: "Open", value: "OPEN" },
+                  { label: "Closed", value: "CLOSED" },
+                  
                 ],
               },
             ]}
