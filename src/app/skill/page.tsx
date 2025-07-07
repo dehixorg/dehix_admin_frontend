@@ -75,7 +75,7 @@ export default function Talent() {
         textValue: "Status",
         type: FilterDataType.SINGLE,
         options: [
-          { label: "Active", value: "active" },
+          { label: "Active", value: "active,Active,ACTIVE" },
           { label: "Inactive", value: "inactive" },
         ],
       },
