@@ -77,7 +77,7 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
     if (id) {
       fetchUserData();
     }
-  }, [id]);
+  }, [id,toast]);
 
   return (
     <div className="">

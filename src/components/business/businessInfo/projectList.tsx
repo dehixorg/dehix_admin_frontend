@@ -74,7 +74,7 @@ function ProjectList({ id }: { id: string }) {
     };
 
     fetchProjects();
-  }, [id]);
+  }, [id,toast]);
   const handleProject = (id: string) => {
     router.push(`/project/tabs?id=${id}`); // Pass the ID as a query parameter
   }; 
