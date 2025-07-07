@@ -96,7 +96,7 @@ export const CustomTable = ({
 
   useEffect(() => {
     fetchData()
-  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
+  }, [fetchData,selectedFilters, search, page, limit, sortByValue, sortOrder]);
 
   useEffect(() => {
     setPage(1);
