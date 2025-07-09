@@ -76,7 +76,7 @@ const DomainTable: React.FC = () => {
 
   useEffect(() => {
     fetchDomainData();
-  }, []);
+  }, [fetchDomainData]);
 
   const handleDelete = async (domainId: string) => {
     try {

@@ -65,7 +65,7 @@ const InterviewTable: React.FC = () => {
 
   useEffect(() => {
     fetchInterviewData();
-  }, []);
+  }, [fetchInterviewData]);
 
   return (
     <div className="px-4">

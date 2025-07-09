@@ -89,7 +89,7 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
 
   useEffect(() => {
     fetchUserDetails();
-  }, []);
+  }, [fetchUserDetails]);
 
   useEffect(() => {
     form.reset({
@@ -99,7 +99,7 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
       phone: user?.phone || '',
       userName: user?.userName||'',
     });
-  }, [user]);
+  }, [user,form]);
 
   async function onSubmit(data: ProfileFormValues) {
     setLoading(true);
