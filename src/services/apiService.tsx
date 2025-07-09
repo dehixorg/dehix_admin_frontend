@@ -16,6 +16,7 @@ export const apiService = async ({
   endpoint,
   body = null,
   params = {},
+
 }: ApiRequest): Promise<{ success: boolean; data: any }> => {
   try {
     let response;

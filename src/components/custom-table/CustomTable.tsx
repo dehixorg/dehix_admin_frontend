@@ -234,6 +234,7 @@ export const CustomTable = ({
                           key={field.fieldName}
                           className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
                           width={field.width}
+                          
                         >
                           <CustomTableCell
                             fieldData={field}
