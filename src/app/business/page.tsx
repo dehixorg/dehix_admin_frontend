@@ -62,6 +62,7 @@ export default function Talent() {
                           router.push(`/business/tabs?id=${id}`);
                         },
                       },
+                     
                     ],
                   },
                 },

@@ -65,6 +65,7 @@ export default function Talent() {
               actionIcon: <Info className="text-gray-500 w-4 h-4" />,
               type: "Button",
               handler: (id) => {
+                console.log("Id",id)
                 router.push(`/freelancer/tabs?id=${id}`);
               },
             },
@@ -83,7 +84,8 @@ export default function Talent() {
           { label: "Vue", value: "Vue" },
           { label: "Django", value: "Django" },
           { label: "Angular", value: "Angular" },
-          { label: "Node JS", value: "Nodejs" },
+          { label: "Node JS", value: "Node.js" }
+
         ],
       },
       {

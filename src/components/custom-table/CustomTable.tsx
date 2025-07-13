@@ -80,6 +80,7 @@ export const CustomTable = ({
         params["filter[sortOrder]"] = sortOrder;
 
         const response = await apiHelperService.fetchData(api, params);
+
         setData(response.data.data);
       } catch (error) {
         console.log(error);
@@ -95,7 +96,7 @@ export const CustomTable = ({
 
   useEffect(() => {
     fetchData()
-  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
+  }, [fetchData,selectedFilters, search, page, limit, sortByValue, sortOrder]);
 
   useEffect(() => {
     setPage(1);
@@ -233,6 +234,7 @@ export const CustomTable = ({
                           key={field.fieldName}
                           className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
                           width={field.width}
+                          
                         >
                           <CustomTableCell
                             fieldData={field}

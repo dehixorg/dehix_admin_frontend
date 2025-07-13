@@ -16,7 +16,8 @@ import {
   StickyNote,
   Home,
   Archive,
-  Trash2
+  Trash2,
+  FileWarning
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -93,6 +94,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
     label:"Notes",
+  },
+   {
+    href: "/reports",
+    icon: <FileWarning className="h-5 w-5" />,
+    label:"Reports",
   }
 ];
 

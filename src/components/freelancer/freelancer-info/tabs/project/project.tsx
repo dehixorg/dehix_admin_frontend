@@ -66,7 +66,7 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
     if (id) {
       fetchUserData();
     }
-  }, [id]); // Depend on id
+  }, [id,toast]); // Depend on id
 
   return (
     <div className="px-">
