@@ -46,6 +46,7 @@ export default function ReportPage() {
 
         <div className="px-4 sm:px-6">
           <h1 className="text-2xl font-semibold mb-6">Report an Issue</h1>
+          {/* TO BE IMPLEMENTED */}
           {/* <ReportForm initialData={reportData} /> */}
         </div>
       </div>
