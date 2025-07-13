@@ -12,8 +12,6 @@ import DropdownProfile from "@/components/shared/DropdownProfile";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { useRouter } from "next/navigation";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { Flag } from "lucide-react"; // or wherever your icons come from
-
 
 export default function Talent() {
   const router = useRouter()

@@ -13,19 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { v4 as uuidv4 } from 'uuid';
 
-const newMessage: Message = {
-  id: uuidv4(), // Generates a unique UUID v4
-  content: "Hello world",
-  sender: "User",
-  timestamp: Date.now(),
-};
-
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 interface Message {
   id: string;
@@ -86,7 +80,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
   useEffect(() => {
  if (!id || report?.status === "CLOSED") return;
 
-  const interval = setInterval(() => {
+  const interval = setInterval(async () => {
     if (document.visibilityState === "visible") 
     try {
       const res = await apiHelperService.getSingleReport(id);
@@ -273,7 +267,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
           onClick={() => setActiveImage(img.Location)}
           className="block w-[180px] h-[120px] overflow-hidden rounded-lg shadow-sm border hover:scale-105 transition-transform duration-200"
         >
-          <img
+          <Image
             src={img.Location}
             alt={`Screenshot ${index + 1}`}
             className="w-full h-full object-cover"
@@ -291,7 +285,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
     className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
     onClick={() => setActiveImage(null)}
   >
-    <img
+    <Image
       src={activeImage}
       alt="Full view"
       className="max-w-full max-h-full rounded shadow-lg"

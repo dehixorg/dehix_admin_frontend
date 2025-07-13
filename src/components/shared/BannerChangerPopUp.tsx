@@ -1,6 +1,7 @@
 import React from 'react';
 import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'; 
 import { Palette } from 'lucide-react';
+import Image from 'next/image';
 
 interface BannerChangerPopoverProps {
   handleChangeBanner: (banner: string) => void;
@@ -36,7 +37,7 @@ const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChang
               onClick={() => handleChangeBanner(banner)}
               className="cursor-pointer p-1  rounded"
             >
-              <img
+              <Image
                 src={banner}
                 alt={`Banner ${index + 1}`}
                 className="w-7 h-auto rounded-md hover:scale-110 transition-transform"
