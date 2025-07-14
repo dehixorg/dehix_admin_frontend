@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { ReportForm } from "@/components/form/ReportForm";
+// import { ReportForm } from "@/components/form/ReportForm";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
@@ -46,7 +46,8 @@ export default function ReportPage() {
 
         <div className="px-4 sm:px-6">
           <h1 className="text-2xl font-semibold mb-6">Report an Issue</h1>
-          <ReportForm initialData={reportData} />
+          {/* TO BE IMPLEMENTED */}
+          {/* <ReportForm initialData={reportData} /> */}
         </div>
       </div>
     </div>
