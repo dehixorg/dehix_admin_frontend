@@ -13,12 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { v4 as uuidv4 } from 'uuid';
 
-const newMessage: Message = {
-  id: uuidv4(), // Generates a unique UUID v4
-  content: "Hello world",
-  sender: "User",
-  timestamp: Date.now(),
-};
 
 import {
   DropdownMenu,
@@ -86,8 +80,8 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
   useEffect(() => {
  if (!id || report?.status === "CLOSED") return;
 
-  const interval = setInterval(() => {
-    if (document.visibilityState === "visible") 
+  const interval = setInterval(async() => {
+  //  if (document.visibilityState === "visible") 
     try {
       const res = await apiHelperService.getSingleReport(id);
       const newMessages = res.data?.data?.messages || [];

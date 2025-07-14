@@ -16,6 +16,7 @@ import { apiHelperService } from "@/services/freelancer";
 
 interface OracleProjectProps {
   id: string; // Added id prop
+  profile:any;
 }
 
 interface OracleProject {
@@ -32,7 +33,7 @@ interface UserData {
   oracleProject: OracleProject[];
 }
 
-const OracleProject: React.FC<OracleProjectProps> = ({ id }) => {
+const OracleProject: React.FC<OracleProjectProps> = ({ id,profile }) => {
   // Use id prop
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
