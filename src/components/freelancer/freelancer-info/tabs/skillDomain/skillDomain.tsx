@@ -50,8 +50,9 @@ interface UserData {
 
 interface SkillDomainProps {
   id: string;
+  profile:any;
 }
-const SkillDomain: React.FC<SkillDomainProps> = ({ id }) => {
+const SkillDomain: React.FC<SkillDomainProps> = ({ id,profile }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();

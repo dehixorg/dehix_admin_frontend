@@ -66,7 +66,7 @@ export default function Talent() {
               type: "Button",
               handler: (id) => {
                 console.log("Id",id)
-                router.push(`/freelancer/tabs?id=${id}`);
+                router.push(`/freelancer/tabs?id=${id.id}`);
               },
             },
           ],
