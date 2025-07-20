@@ -2,8 +2,12 @@
 import { PackageOpen } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
-import { educationCard as EducationCard } from "../educationalInfo/educationalInfo";
-import { projectsCard as ProjectsCard } from "../professionalProjects/professionalProjects";
+import {
+  educationCard as EducationCard,
+} from "../educationalInfo/educationalInfo";
+import {
+  projectsCard as ProjectsCard,
+} from "../professionalProjects/professionalProjects";
 import { UserProfilePage } from "../personalinfoCards/personalinfoCards";
 import { ProfessionalCard } from "../professionalInfo/professionalinfoCard";
 import { Talentcard } from "../talent/talentCards";
@@ -12,123 +16,118 @@ import { ConsultantCards } from "../consultant/ConsultantCards";
 import { Separator } from "@/components/ui/separator";
 import { apiHelperService } from "@/services/freelancer";
 
-const fetchUserProfile = async (id: string) => {
-  try {
-    const response = await apiHelperService.getAllFreelancerPersonalInfo(id);
-    const educationData = Object.values(response.data.education || {});
-    const projectsData = Object.values(response.data.projects || {});
-    const professionalData = Object.values(
-      response.data.professionalInfo || {}
-    );
-    const talent = Object.values(response.data.dehixTalent || {});
-    const consultant = Object.values(response.data.consultant || {});
-    const profileData = response.data;
+/* ---------- helpers ---------- */
 
-    return {
-      educationData,
-      projectsData,
-      profileData,
-      professionalData,
-      talent,
-      consultant,
-    };
-  } catch (error) {
-    console.error("Failed to fetch user profile:", error);
-    return {
-      educationData: [],
-      projectsData: [],
-      professionalData: [],
-      talent: [],
-      consultant: [],
-    };
-  }
+const fetchUserProfile = async (id: string) => {
+  console.log(id)
+  const { data } = await apiHelperService.getAllFreelancerPersonalInfo(id);
+  console.log(data.data)
+  return {
+    profile: data.data, // full object from API
+    education: Object.values(data.data.education ?? {}),
+    projects: Object.values(data.data.projects ?? {}),
+    professional: Object.values(data.data.professionalInfo ?? {}),
+    talent: Object.values(data.data.dehixTalent ?? {}),
+    consultant: Object.values(data.consultant ?? {}),
+  };
 };
+
+/* ---------- component ---------- */
 
 interface PersonalInfoProps {
   id?: string;
+  /** Profile passed down from parent */
   profile?: any;
 }
 
-interface RenderDataSectionProps<T> {
-  title: string;
-  data: T[];
-  CardComponent: React.ComponentType<{ data: T }>;
-  fallbackMessage: string;
-  showAll: boolean;
-  toggleShowAll: () => void;
-}
+const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
+  /* one set for the PARENT profile… */
+  const [parentProfile, setParentProfile] = useState<any>(null);
+  const [parentEducation, setParentEducation] = useState<any[]>([]);
+  const [parentProjects, setParentProjects] = useState<any[]>([]);
+  const [parentProfessional, setParentProfessional] = useState<any[]>([]);
+  const [parentTalent, setParentTalent] = useState<any[]>([]);
+  const [parentConsultant, setParentConsultant] = useState<any[]>([]);
 
-const PersonalInfo: React.FC<PersonalInfoProps> = ({ id,profile }) => {
-  const [educationData, setEducationData] = useState<any[]>([]);
-  const [projectsData, setProjectsData] = useState<any[]>([]);
-  const [professionalData, setProfessionalData] = useState<any[]>([]);
-  const [profileData, setProfileData] = useState<any>(null);
-  const [talentData, settalent] = useState<any[]>([]);
-  const [consultantData, setconsultant] = useState<any[]>([]);
-  const [showAllSections, setShowAllSections] = useState<Record<string, boolean>>({});
+  /* …and one set for the API profile */
+  const [apiProfile, setApiProfile] = useState<any>(null);
+  const [apiEducation, setApiEducation] = useState<any[]>([]);
+  const [apiProjects, setApiProjects] = useState<any[]>([]);
+  const [apiProfessional, setApiProfessional] = useState<any[]>([]);
+  const [apiTalent, setApiTalent] = useState<any[]>([]);
+  const [apiConsultant, setApiConsultant] = useState<any[]>([]);
 
-  const toggleShowAll = (section: string) => {
-    setShowAllSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
-  };
+  /* flags for “Show More / Show Less” */
+  const [showAll, setShowAll] = useState<Record<string, boolean>>({});
+  const toggleShowAll = (key: string) =>
+    setShowAll((p) => ({ ...p, [key]: !p[key] }));
 
+  /* ---------- 1️⃣ react to the parent‑supplied profile ---------- */
   useEffect(() => {
-  const loadData = async () => {
-    if (profile) {
-      const educationData = Object.values(profile.education || {});
-      const projectsData = Object.values(profile.projects || {});
-      const professionalData = Object.values(profile.professionalInfo || {});
-      const talent = Object.values(profile.dehixTalent || {});
-      const consultant = Object.values(profile.consultant || {});
+    if (!profile) return;
+    setParentProfile(profile);
+    setParentEducation(Object.values(profile.education ?? {}));
+    setParentProjects(Object.values(profile.projects ?? {}));
+    setParentProfessional(Object.values(profile.professionalInfo ?? {}));
+    setParentTalent(Object.values(profile.dehixTalent ?? {}));
+    setParentConsultant(Object.values(profile.consultant ?? {}));
+  }, [profile]);
 
-      setEducationData(educationData);
-      setProjectsData(projectsData);
-      setProfessionalData(professionalData);
-      settalent(talent);
-      setconsultant(consultant);
-      setProfileData(profile);
-    } else if (id) {
-      const userProfileData = await fetchUserProfile(id);
-      setEducationData(userProfileData.educationData);
-      setProjectsData(userProfileData.projectsData);
-      setProfileData(userProfileData.profileData);
-      settalent(userProfileData.talent);
-      setconsultant(userProfileData.consultant);
-      setProfessionalData(userProfileData.professionalData);
-    }
-  };
+  /* ---------- 2️⃣ react to the `id` → fetch from API ---------- */
+  useEffect(() => {
+    if (!id) return;
 
-  loadData();
-}, [id, profile]);
+    (async () => {
+      try {
+        const {
+          profile: p,
+          education,
+          projects,
+          professional,
+          talent,
+          consultant,
+        } = await fetchUserProfile(id);
 
+        setApiProfile(p);
+        setApiEducation(education);
+        setApiProjects(projects);
+        setApiProfessional(professional);
+        setApiTalent(talent);
+        setApiConsultant(consultant);
+        console.log(apiProfile)
+      } catch (e) {
+        console.error("Failed to fetch profile:", e);
+      }
+    })();
+  }, [id]);
 
-  const renderDataSection = <T,>({
+  /* ---------- helper for rendering each data block ---------- */
+  const renderSection = <T,>({
     title,
     data,
-    CardComponent,
-    fallbackMessage,
-    showAll,
-    toggleShowAll,
-  }: RenderDataSectionProps<T>) => {
-    const visibleData = showAll ? data : data.slice(0, 3);
+    Card,
+    sectionKey,
+    fallback,
+  }: {
+    title: string;
+    data: T[];
+    Card: React.ComponentType<{ data: T }>;
+    sectionKey: string;
+    fallback: string;
+  }) => {
+    const visible = showAll[sectionKey] ? data : data.slice(0, 3);
 
     return (
       <div>
-        <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-          {title}
-        </h2>
+        <h2 className="text-3xl font-semibold pb-6 tracking-tight">{title}</h2>
 
         <div className="grid gap-4 pb-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {visibleData.length > 0 ? (
-            visibleData.map((item, index) => (
-              <CardComponent key={index} data={item} />
-            ))
+          {visible.length ? (
+            visible.map((d, i) => <Card key={i} data={d} />)
           ) : (
             <div className="text-center py-10 w-full">
-              <PackageOpen className="mx-auto text-gray-500" size="100" />
-              <p className="text-gray-500">{fallbackMessage}</p>
+              <PackageOpen className="mx-auto text-gray-500" size={100} />
+              <p className="text-gray-500">{fallback}</p>
             </div>
           )}
         </div>
@@ -136,10 +135,10 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id,profile }) => {
         {data.length > 3 && (
           <div className="text-center mt-4">
             <button
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              onClick={toggleShowAll}
+              onClick={() => toggleShowAll(sectionKey)}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
             >
-              {showAll ? "Show Less" : "Show More"}
+              {showAll[sectionKey] ? "Show Less" : "Show More"}
             </button>
           </div>
         )}
@@ -149,66 +148,68 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id,profile }) => {
     );
   };
 
+  /* ---------- choose which profile to display (or both) ---------- */
+  const profileToShow = apiProfile ?? parentProfile; // ← pick one
+  // If you literally want to show both, render two <UserProfilePage … />
+
   return (
-    <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-      <h2 className="scroll-m-20 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-        Personal Information
-      </h2>
-      <div>
-        {profileData ? (
-          <UserProfilePage profile={profileData} />
-        ) : (
-          <div className="text-center py-10 w-[100%]">
-            <PackageOpen className="mx-auto text-gray-500" size="100" />
-            <p className="text-gray-500">No data available.</p>
-          </div>
-        )}
-      </div>
+    <div className="grid auto-rows-max gap-4 md:gap-8">
+      <h2 className="text-3xl font-semibold pl-4 pt-1 tracking-tight">Personal Information</h2>
+
+      {profileToShow ? (
+        <UserProfilePage profile={profileToShow} />
+      ) : (
+        <div className="text-center py-10">
+          <PackageOpen className="mx-auto text-gray-500" size={100} />
+          <p className="text-gray-500">No data available.</p>
+        </div>
+      )}
+
       <Separator className="my-1" />
+      
+      {apiProfile && (
+        <>
+          {renderSection({
+            title: "Education",
+            data: apiEducation,
+            Card: EducationCard,
+            sectionKey: "educationApi",
+            fallback: "No education data (API).",
+          })}
 
-      {renderDataSection({
-        title: "Education Info",
-        data: educationData,
-        CardComponent: EducationCard,
-        fallbackMessage: "No education information available.",
-        showAll: showAllSections["education"] || false,
-        toggleShowAll: () => toggleShowAll("education"),
-      })}
+          {renderSection({
+            title: "Projects",
+            data: apiProjects,
+            Card: ProjectsCard,
+            sectionKey: "projectsApi",
+            fallback: "No project data.",
+          })}
+        </>
+      )}
 
-      {renderDataSection({
-        title: "Projects Info",
-        data: projectsData,
-        CardComponent: ProjectsCard,
-        fallbackMessage: "No project information available.",
-        showAll: showAllSections["projects"] || false,
-        toggleShowAll: () => toggleShowAll("projects"),
-      })}
-
-      {renderDataSection({
+      {/* common sections (if you only want ONE combined list, merge arrays first) */}
+      {renderSection({
         title: "Professional Info",
-        data: professionalData,
-        CardComponent: ProfessionalCard,
-        fallbackMessage: "No professional information available.",
-        showAll: showAllSections["professional"] || false,
-        toggleShowAll: () => toggleShowAll("professional"),
+        data: [...parentProfessional, ...apiProfessional],
+        Card: ProfessionalCard,
+        sectionKey: "professional",
+        fallback: "No professional information available.",
       })}
 
-      {renderDataSection({
+      {renderSection({
         title: "Dehix Talent",
-        data: talentData,
-        CardComponent: Talentcard,
-        fallbackMessage: "No talent information available.",
-        showAll: showAllSections["talent"] || false,
-        toggleShowAll: () => toggleShowAll("talent"),
+        data: [...parentTalent, ...apiTalent],
+        Card: Talentcard,
+        sectionKey: "talent",
+        fallback: "No talent information available.",
       })}
 
-      {renderDataSection({
+      {renderSection({
         title: "Consultant",
-        data: consultantData,
-        CardComponent:ConsultantCards,
-        fallbackMessage: "No consultant information available.",
-        showAll: showAllSections["consultant"] || false,
-        toggleShowAll: () => toggleShowAll("consultant"),
+        data: [...parentConsultant, ...apiConsultant],
+        Card: ConsultantCards,
+        sectionKey: "consultant",
+        fallback: "No consultant information available.",
       })}
     </div>
   );

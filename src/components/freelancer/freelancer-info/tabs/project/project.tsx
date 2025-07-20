@@ -49,8 +49,12 @@ const Project: React.FC<ProjectProps> = ({id,profile}) => {
       try {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
-        const { pendingProject, rejectedProject, acceptedProject } =
-          response.data;
+       const {
+  pendingProject = [],
+  rejectedProject = [],
+  acceptedProject = [],
+} = response.data.data || {};
+
 
         setUserData({ pendingProject, rejectedProject, acceptedProject });
       } catch (error) {
@@ -90,26 +94,47 @@ const Project: React.FC<ProjectProps> = ({id,profile}) => {
                   </TableRow>
                 ) : userData ? (
                   <>
-                    {userData.pendingProject.map((pending) => (
-                      <TableRow key={pending._id}>
-                        <TableCell>Skill</TableCell>
-                        <TableCell>{pending._id}</TableCell>
-                        <TableCell>Pending</TableCell>
-                      </TableRow>
-                    ))}
-                    {userData.rejectedProject.map((rejected) => (
-                      <TableRow key={rejected._id}>
-                        <TableCell>Domain</TableCell>
-                        <TableCell>{rejected._id}</TableCell>
-                        <TableCell>Rejected</TableCell>
-                      </TableRow>
-                    ))}
-                    {userData.acceptedProject.map((accepted) => (
-                      <TableRow key={accepted._id}>
-                        <TableCell>{accepted._id}</TableCell>
-                        <TableCell>Accepted</TableCell>
-                      </TableRow>
-                    ))}
+                    <>
+  {userData.pendingProject.length === 0 &&
+  userData.rejectedProject.length === 0 &&
+  userData.acceptedProject.length === 0 ? (
+    <TableRow>
+      <TableCell colSpan={3} className="text-center">
+        <div className="text-center py-10 w-full mt-10">
+          <PackageOpen className="mx-auto text-gray-500" size="100" />
+          <p className="text-gray-500">
+            No projects found.
+            <br /> You haven't been assigned or applied to any projects yet.
+          </p>
+        </div>
+      </TableCell>
+    </TableRow>
+  ) : (
+    <>
+      {userData.pendingProject.map((pending) => (
+        <TableRow key={pending._id}>
+          <TableCell>Skill</TableCell>
+          <TableCell>{pending._id}</TableCell>
+          <TableCell>Pending</TableCell>
+        </TableRow>
+      ))}
+      {userData.rejectedProject.map((rejected) => (
+        <TableRow key={rejected._id}>
+          <TableCell>Domain</TableCell>
+          <TableCell>{rejected._id}</TableCell>
+          <TableCell>Rejected</TableCell>
+        </TableRow>
+      ))}
+      {userData.acceptedProject.map((accepted) => (
+        <TableRow key={accepted._id}>
+          <TableCell>{accepted._id}</TableCell>
+          <TableCell colSpan={2}>Accepted</TableCell>
+        </TableRow>
+      ))}
+    </>
+  )}
+</>
+
                   </>
                 ) : (
                   <TableRow>

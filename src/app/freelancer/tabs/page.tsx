@@ -33,7 +33,6 @@ const FreelancerPage = () => {
       (async () => {
         try {
           const res = await apiHelperService.getFreelancerProfileById(id);
-          console.log(res.data)
           setProfile(res.data?.data); // based on your backend response structure
         } catch (err) {
           console.error("Error fetching freelancer profile:", err);

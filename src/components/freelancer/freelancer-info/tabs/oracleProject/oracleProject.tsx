@@ -43,7 +43,7 @@ const OracleProject: React.FC<OracleProjectProps> = ({ id,profile }) => {
       try {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
-        const { oracleProject } = response.data;
+        const { oracleProject } = response.data.data;
         setUserData({ oracleProject });
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -74,46 +74,56 @@ const OracleProject: React.FC<OracleProjectProps> = ({ id,profile }) => {
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {loading ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center">
-                      Loading...
-                    </TableCell>
-                  </TableRow>
-                ) : userData ? (
-                  <>
-                    {userData.oracleProject.map((oracle) => (
-                      <TableRow key={oracle._id}>
-                        <TableCell>{oracle._id}</TableCell>
-                        <TableCell>{oracle.verifier_id}</TableCell>
-                        <TableCell>{oracle.verifier_username}</TableCell>
-                        <TableCell>{oracle.requester_id}</TableCell>
-                        <TableCell>{oracle.document_id}</TableCell>
-                        <TableCell>{oracle.doc_type}</TableCell>
-                        <TableCell>{oracle.verification_status}</TableCell>
-                      </TableRow>
-                    ))}
-                  </>
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                          <br />
-                          Here you can get directly hired for different roles.
-                        </p>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
+             <TableBody>
+  {loading ? (
+    <TableRow>
+      <TableCell colSpan={8} className="text-center">
+        Loading...
+      </TableCell>
+    </TableRow>
+  ) : userData ? (
+    userData.oracleProject.length === 0 ? (
+      <TableRow>
+        <TableCell colSpan={8} className="text-center">
+          <div className="text-center py-10 w-full mt-10">
+            <PackageOpen className="mx-auto text-gray-500" size="100" />
+            <p className="text-gray-500">
+              No verification projects available.
+              <br /> Once available, they will appear here.
+            </p>
+          </div>
+        </TableCell>
+      </TableRow>
+    ) : (
+      <>
+        {userData.oracleProject.map((oracle) => (
+          <TableRow key={oracle._id}>
+            <TableCell>{oracle._id}</TableCell>
+            <TableCell>{oracle.verifier_id}</TableCell>
+            <TableCell>{oracle.verifier_username}</TableCell>
+            <TableCell>{oracle.requester_id}</TableCell>
+            <TableCell>{oracle.document_id}</TableCell>
+            <TableCell>{oracle.doc_type}</TableCell>
+            <TableCell>{oracle.verification_status}</TableCell>
+          </TableRow>
+        ))}
+      </>
+    )
+  ) : (
+    <TableRow>
+      <TableCell colSpan={8} className="text-center">
+        <div className="text-center py-10 w-full mt-10">
+          <PackageOpen className="mx-auto text-gray-500" size="100" />
+          <p className="text-gray-500">
+            No data available.
+            <br /> This feature will be available soon.
+          </p>
+        </div>
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
             </Table>
           </div>
         </Card>

@@ -25,8 +25,8 @@ import InterviewTableSkeleton from "@/utils/common/skeleton"; // Import the new 
 
 interface InterviewData {
   _id: string;
-  interviewer: string;
-  interviewee: string;
+  interviewerId: string;
+  intervieweeId: string;
   skill: string;
   interviewDate: string; // ISO date string
   rating: number;
@@ -46,6 +46,7 @@ const InterviewTable: React.FC = () => {
     setNoData(false);
     try {
       const response = await apiHelperService.getAllInterview();
+      console.log(response.data.data)
       if (!response.data || response.data.length === 0) {
         setNoData(true);
       } else {
@@ -65,7 +66,7 @@ const InterviewTable: React.FC = () => {
 
   useEffect(() => {
     fetchInterviewData();
-  }, [fetchInterviewData]);
+  },[]);
 
   return (
     <div className="px-4">
@@ -124,19 +125,19 @@ const InterviewTable: React.FC = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            {interview.interviewer ? (
+                            {interview.interviewerId ? (
                                 <div className="flex items-center space-x-2">
                                   <Tooltip>
                                     <TooltipTrigger>
                                 <span>
-                                  {formatID(interview.interviewer || "")}
+                                  {formatID(interview.interviewerId || "")}
                                 </span>
                                     </TooltipTrigger>
 
-                                    <CopyButton id={interview.interviewer || ""}/>
+                                    <CopyButton id={interview.interviewerId || ""}/>
 
                                     <TooltipContent>
-                                      {interview.interviewer || "No Data Available"}
+                                      {interview.interviewerId || "No Data Available"}
                                     </TooltipContent>
                                   </Tooltip>
                                 </div>
@@ -145,19 +146,19 @@ const InterviewTable: React.FC = () => {
                             )}
                           </TableCell>
                           <TableCell>
-                            {interview.interviewee ? (
+                            {interview.intervieweeId ? (
                                 <div className="flex items-center space-x-2">
                                   <Tooltip>
                                     <TooltipTrigger>
                                 <span>
-                                  {formatID(interview.interviewee || "")}
+                                  {formatID(interview.intervieweeId || "")}
                                 </span>
                                     </TooltipTrigger>
 
-                                    <CopyButton id={interview.interviewee || ""}/>
+                                    <CopyButton id={interview.intervieweeId || ""}/>
 
                               <TooltipContent>
-                                {interview.interviewee || "No Data Available"}
+                                {interview.intervieweeId || "No Data Available"}
                               </TooltipContent>
                             </Tooltip>
                           </div>
@@ -193,11 +194,11 @@ const InterviewTable: React.FC = () => {
                               </p>
                               <p>
                                 <strong>Interviewer:</strong>{" "}
-                                {interview.interviewer || "No Data Available"}
+                                {interview.interviewerId || "No Data Available"}
                               </p>
                               <p>
                                 <strong>Interviewee:</strong>{" "}
-                                {interview.interviewee || "No Data Available"}
+                                {interview.intervieweeId || "No Data Available"}
                               </p>
                               <p>
                                 <strong>Skill:</strong>{" "}

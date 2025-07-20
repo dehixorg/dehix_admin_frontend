@@ -62,7 +62,7 @@ const SkillDomain: React.FC<SkillDomainProps> = ({ id,profile }) => {
       try {
         const response =
           await apiHelperService.getAllFreelancerPersonalInfo(id);
-        const { skills, domain } = response.data;
+        const { skills, domain } = response.data.data;
         setUserData({ skills, domain });
       } catch (error) {
         toast({
