@@ -32,6 +32,8 @@ interface BusinessProjectData {
   skillId?: string;
   skillName?: string;
   description: string;
+  domainId?:string;
+  domainName?:string;
   experience: string;
   status: string;
   visible: boolean;
@@ -171,7 +173,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                 <TableCell className="py-2">{projectIndex + 1}</TableCell>
                 <TableCell className="py-2">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-blue-700">{project.skillName || 'N/A'}</span>
+                    <span className="font-semibold text-blue-700">{project.skillName || project.domainName}</span>
                     <span className="text-sm text-gray-600">ID: {project._id} <CopyButton id={project._id} /></span>
                     <span className="text-sm text-gray-600">Status: {project.status}</span>
                   </div>
