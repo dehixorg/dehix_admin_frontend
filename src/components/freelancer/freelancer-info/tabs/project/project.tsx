@@ -36,9 +36,10 @@ interface UserData {
 
 interface ProjectProps {
   id: string; // Added id prop
+  profile:any;
 }
 
-const Project: React.FC<ProjectProps> = ({ id }) => {
+const Project: React.FC<ProjectProps> = ({id,profile}) => {
   // Use id prop
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);

@@ -45,7 +45,8 @@ const fetchUserProfile = async (id: string) => {
 };
 
 interface PersonalInfoProps {
-  id: string;
+  id?: string;
+  profile?: any;
 }
 
 interface RenderDataSectionProps<T> {
@@ -57,7 +58,7 @@ interface RenderDataSectionProps<T> {
   toggleShowAll: () => void;
 }
 
-const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
+const PersonalInfo: React.FC<PersonalInfoProps> = ({ id,profile }) => {
   const [educationData, setEducationData] = useState<any[]>([]);
   const [projectsData, setProjectsData] = useState<any[]>([]);
   const [professionalData, setProfessionalData] = useState<any[]>([]);
@@ -74,7 +75,21 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+  const loadData = async () => {
+    if (profile) {
+      const educationData = Object.values(profile.education || {});
+      const projectsData = Object.values(profile.projects || {});
+      const professionalData = Object.values(profile.professionalInfo || {});
+      const talent = Object.values(profile.dehixTalent || {});
+      const consultant = Object.values(profile.consultant || {});
+
+      setEducationData(educationData);
+      setProjectsData(projectsData);
+      setProfessionalData(professionalData);
+      settalent(talent);
+      setconsultant(consultant);
+      setProfileData(profile);
+    } else if (id) {
       const userProfileData = await fetchUserProfile(id);
       setEducationData(userProfileData.educationData);
       setProjectsData(userProfileData.projectsData);
@@ -82,12 +97,12 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
       settalent(userProfileData.talent);
       setconsultant(userProfileData.consultant);
       setProfessionalData(userProfileData.professionalData);
-    };
-
-    if (id) {
-      fetchData();
     }
-  }, [id]);
+  };
+
+  loadData();
+}, [id, profile]);
+
 
   const renderDataSection = <T,>({
     title,

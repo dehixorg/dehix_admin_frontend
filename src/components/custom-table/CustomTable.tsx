@@ -78,9 +78,9 @@ export const CustomTable = ({
 
         params["filter[sortBy]"] = sortByValue;
         params["filter[sortOrder]"] = sortOrder;
-
+        console.log(api)
         const response = await apiHelperService.fetchData(api, params);
-
+        console.log(response.data)
         setData(response.data.data);
       } catch (error) {
         console.log(error);
@@ -96,7 +96,7 @@ export const CustomTable = ({
 
   useEffect(() => {
     fetchData()
-  }, [fetchData,selectedFilters, search, page, limit, sortByValue, sortOrder]);
+  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
 
   useEffect(() => {
     setPage(1);
