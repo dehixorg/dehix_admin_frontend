@@ -20,6 +20,7 @@ import { apiHelperService } from "@/services/freelancer";
 
 const fetchUserProfile = async (id: string) => {
   console.log(id)
+  const user=localStorage.getItem("user")
   const { data } = await apiHelperService.getAllFreelancerPersonalInfo(id);
   console.log(data.data)
   return {

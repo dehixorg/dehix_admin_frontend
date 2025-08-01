@@ -51,4 +51,11 @@ export const apiHelperService = {
       },
     });
   },
+  getSkillbyId: async (Id: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/skills/${Id}`,
+      
+    });
+  }
 };

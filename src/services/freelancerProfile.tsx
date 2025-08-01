@@ -10,4 +10,10 @@ export const apiHelperService = {
       endpoint: `/freelancer/profile/${profileId}`,
     });
   },
+  getAllFreelancerPersonalInfo: async (itemId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/freelancer/${itemId}`,
+    });
+  },
 };

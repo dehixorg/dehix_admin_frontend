@@ -12,76 +12,122 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import { apiHelperService } from "@/services/freelancer";
+import { apiHelperService } from "@/services/freelancer"; // Assuming this service will also have getProjectById
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 
-interface RejectedProject {
-  _id: string;
+// Define the interface for a single project detail
+interface ProjectDetail {
+  _id: string; // Assuming the ID from the backend is _id
+  projectName: string;
+  status:string;
+  // Add other fields you want to display from your project document
+  // e.g., description: string;
+  // e.g., startDate: string;
 }
 
-interface AcceptedProject {
-  _id: string;
-}
-
-interface PendingProject {
-  _id: string;
-}
-
+// Update UserData to hold arrays of ProjectDetail
 interface UserData {
-  pendingProject: PendingProject[];
-  rejectedProject: RejectedProject[];
-  acceptedProject: AcceptedProject[];
+  pendingProject: ProjectDetail[];
+  rejectedProject: ProjectDetail[];
+  acceptedProject: ProjectDetail[];
 }
 
 interface ProjectProps {
-  id: string; // Added id prop
-  profile:any;
+  id: string;
+  profile: any; // Consider making this more specific if possible
 }
 
-const Project: React.FC<ProjectProps> = ({id,profile}) => {
-  // Use id prop
+const Project: React.FC<ProjectProps> = ({ id }) => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchAllData = async () => {
+      setLoading(true); // Ensure loading state is true at the start of each fetch
       try {
-        const response =
-          await apiHelperService.getAllFreelancerPersonalInfo(id);
-       const {
-  pendingProject = [],
-  rejectedProject = [],
-  acceptedProject = [],
-} = response.data.data || {};
+        const response = await apiHelperService.getAllFreelancerPersonalInfo(id);
+        const freelancer = response?.data?.data;
+          console.log(freelancer)
+        if (!freelancer) {
+          throw new Error("No freelancer data found");
+        }
 
+        // Destructure only the arrays of IDs
+        const {
+          pendingProject: pendingProjectIds = [],
+          rejectedProject: rejectedProjectIds = [],
+          acceptedProject: acceptedProjectIds = [],
+        } = freelancer;
 
-        setUserData({ pendingProject, rejectedProject, acceptedProject });
+        // Function to fetch details for a list of project IDs
+        const fetchProjectDetails = async (projectIds: string[]): Promise<ProjectDetail[]> => {
+          
+          if (projectIds.length === 0) {
+            return [];
+          }
+          // Use Promise.all to fetch all projects concurrently
+          const projectPromises = projectIds.map(projectId =>
+            apiHelperService.getProjectbyId(projectId).then(res => res.data.data)
+          );
+          const projects = await Promise.all(projectPromises);
+          console.log(projects)
+          return projects;
+        };
+
+        // Fetch details for each category of projects
+        const detailedPendingProjects = await fetchProjectDetails(pendingProjectIds);
+        const detailedRejectedProjects = await fetchProjectDetails(rejectedProjectIds);
+        const detailedAcceptedProjects = await fetchProjectDetails(acceptedProjectIds);
+
+        setUserData({
+          pendingProject: detailedPendingProjects,
+          rejectedProject: detailedRejectedProjects,
+          acceptedProject: detailedAcceptedProjects,
+        });
+
       } catch (error) {
+        console.error("Failed to fetch project data:", error); // Log error for debugging
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR("project"),
-          variant: "destructive", // Red error message
+          variant: "destructive",
         });
+        setUserData({ pendingProject: [], rejectedProject: [], acceptedProject: [] }); // Set to empty arrays on error
       } finally {
         setLoading(false);
       }
     };
 
     if (id) {
-      fetchUserData();
+      fetchAllData();
     }
-  }, [id,toast]); // Depend on id
+  }, [id, toast]);
+
+  // Helper function to render project rows
+  const renderProjectRows = (projects: ProjectDetail[], status: string) => {
+  if (!projects) return null; // Handle case where the array itself might be null/undefined
+
+  return projects
+    .filter(project => project != null && project.projectName) // Filter out null/undefined entries and those without a name
+    .map((project) => (
+      <TableRow key={project._id}>
+        <TableCell>{project.projectName}</TableCell>
+        <TableCell>{status}</TableCell>
+      </TableRow>
+    ));
+};
 
   return (
-    <div className="px-">
+    <div className="px-4">
       <div className="mb-8 mt-4">
         <Card>
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Id</TableHead>
+                  <TableHead>Project Name</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -89,66 +135,23 @@ const Project: React.FC<ProjectProps> = ({id,profile}) => {
                 {loading ? (
                   <TableRow>
                     <TableCell colSpan={2} className="text-center">
-                      Loading...
+                      Loading projects...
                     </TableCell>
                   </TableRow>
-                ) : userData ? (
+                ) : userData && (userData.pendingProject.length > 0 || userData.rejectedProject.length > 0 || userData.acceptedProject.length > 0) ? (
                   <>
-                    <>
-  {userData.pendingProject.length === 0 &&
-  userData.rejectedProject.length === 0 &&
-  userData.acceptedProject.length === 0 ? (
-    <TableRow>
-      <TableCell colSpan={3} className="text-center">
-        <div className="text-center py-10 w-full mt-10">
-          <PackageOpen className="mx-auto text-gray-500" size="100" />
-          <p className="text-gray-500">
-            No projects found.
-            <br /> You haven't been assigned or applied to any projects yet.
-          </p>
-        </div>
-      </TableCell>
-    </TableRow>
-  ) : (
-    <>
-      {userData.pendingProject.map((pending) => (
-        <TableRow key={pending._id}>
-          <TableCell>Skill</TableCell>
-          <TableCell>{pending._id}</TableCell>
-          <TableCell>Pending</TableCell>
-        </TableRow>
-      ))}
-      {userData.rejectedProject.map((rejected) => (
-        <TableRow key={rejected._id}>
-          <TableCell>Domain</TableCell>
-          <TableCell>{rejected._id}</TableCell>
-          <TableCell>Rejected</TableCell>
-        </TableRow>
-      ))}
-      {userData.acceptedProject.map((accepted) => (
-        <TableRow key={accepted._id}>
-          <TableCell>{accepted._id}</TableCell>
-          <TableCell colSpan={2}>Accepted</TableCell>
-        </TableRow>
-      ))}
-    </>
-  )}
-</>
-
+                    {renderProjectRows(userData.pendingProject, "Pending")}
+                    {renderProjectRows(userData.rejectedProject, "Rejected")}
+                    {renderProjectRows(userData.acceptedProject, "Accepted")}
                   </>
                 ) : (
                   <TableRow>
                     <TableCell colSpan={2} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
+                        <PackageOpen className="mx-auto text-gray-500" size={100} />
                         <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                          <br />
-                          Here you can get directly hired for different roles.
+                          No projects found.
+                          <br /> You haven't been assigned or applied to any projects yet.
                         </p>
                       </div>
                     </TableCell>
