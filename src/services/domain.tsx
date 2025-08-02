@@ -52,4 +52,11 @@ export const apiHelperService = {
       },
     });
   },
+  getDomainbyId: async (Id: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/domain/${Id}`,
+      
+    });
+  }
 };

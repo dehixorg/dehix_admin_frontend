@@ -44,4 +44,48 @@ export const apiHelperService = {
       },
     });
   },
+  getBusinessHireProjects: async (businessId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/hire-dehixtalent/${businessId}`, // Constructing the endpoint
+    });
+  },
+
+   // Endpoint to get invited freelancers for a specific project
+  getProjectInvitedFreelancers: async (projectId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/hire-dehixtalent/${projectId}/invited`,
+    });
+  },
+
+  // Endpoint to get selected freelancers for a specific project
+  getProjectSelectedFreelancers: async (projectId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/hire-dehixtalent/${projectId}/selected`,
+    });
+  },
+
+  // Endpoint to get freelancers in lobby for a specific project
+  getProjectLobbyFreelancers: async (projectId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/hire-dehixtalent/${projectId}/in-lobby`, // Assuming '/lobby' is the correct segment
+    });
+  },
+
+  // Endpoint to get rejected freelancers for a specific project
+  getProjectRejectedFreelancers: async (projectId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/business/hire-dehixtalent/${projectId}/rejected`,
+    });
+  },
+   getAllFreelancerPersonalInfo: async (itemId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/freelancer/${itemId}`,
+    });
+  },
 };

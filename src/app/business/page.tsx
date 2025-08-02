@@ -59,7 +59,7 @@ export default function Talent() {
                         actionIcon: <Info className="text-gray-500 w-4 h-4" />,
                         type: "Button",
                         handler: (id) => {
-                          router.push(`/business/tabs?id=${id}`);
+                          router.push(`/business/tabs?id=${id.id}`);
                         },
                       },
                      
@@ -69,31 +69,18 @@ export default function Talent() {
               ],
               filterData: [
                 {
-                  name: "skills",
-                  textValue: "Skills",
-                  type: FilterDataType.MULTI,
-                  arrayName: "name",
-                  options: [
-                    { label: "React", value: "React" },
-                    { label: "Vue", value: "Vue" },
-                    { label: "Django", value: "Django" },
-                    { label: "Angular", value: "Angular" },
-                    { label: "Node JS", value: "Nodejs" },
-                  ],
-                },
-                {
-                  name: "domain",
-                  textValue: "Domain",
-                  arrayName: "name",
+                  name: "status",
+                  textValue: "Status",
                   type: FilterDataType.SINGLE,
+                  
                   options: [
-                    { label: "Frontend Developer", value: "Frontend" },
-                    { label: "Backend Developer", value: "Backend" },
-                    { label: "Full Stack Developer", value: "Fullstack" },
+                    { label: "ACTIVE", value: "ACTIVE" },
+                    { label: "NOT VERIFIED", value: "Not_Verified,Notverified,NOT_VERIFIED" },
                   ],
                 },
+                
               ],
-              searchColumn: ["skills.name", "email"],
+              searchColumn: ["firstName", "email", "companyName"],
               isDownload: true,
               sortBy: [{ fieldName: "dob", label: "Date Of Birth" }]
   }

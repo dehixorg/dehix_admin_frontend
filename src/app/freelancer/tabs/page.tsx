@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
@@ -13,41 +12,14 @@ import {
   menuItemsBottom,
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
 import SkillDomain from "@/components/freelancer/freelancer-info/tabs/skillDomain/skillDomain";
 import Project from "@/components/freelancer/freelancer-info/tabs/project/project";
 import OracleProject from "@/components/freelancer/freelancer-info/tabs/oracleProject/oracleProject";
 
-import { apiHelperService } from "@/services/freelancerProfile";
-
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-
-  const [profile, setProfile] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (id) {
-      (async () => {
-        try {
-          const res = await apiHelperService.getFreelancerProfileById(id);
-          console.log(res.data)
-          setProfile(res.data?.data); // based on your backend response structure
-        } catch (err) {
-          console.error("Error fetching freelancer profile:", err);
-        } finally {
-          setLoading(false);
-        }
-      })();
-    }
-  }, [id]);
-
-  if (loading) return <div className="p-4">Loading...</div>;
-
-  if (!profile) return <div className="p-4 text-red-500">Profile not found</div>;
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -90,19 +62,17 @@ const FreelancerPage = () => {
               <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
               <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
             </TabsList>
-
-            {/* Pass the full profile to each tab */}
             <TabsContent value="Personal-Info">
-              <PersonalInfo profile={profile}id={id as string} />
+              <PersonalInfo id={id || ""} />
             </TabsContent>
             <TabsContent value="Project">
-              <Project profile={profile} id={id as string} />
+              <Project profile id={id || ""} />
             </TabsContent>
             <TabsContent value="Oracle-Project">
-              <OracleProject profile={profile} id={id as string}/>
+              <OracleProject  profile id={id || ""} />
             </TabsContent>
             <TabsContent value="Skill-Domain">
-              <SkillDomain profile={profile} id={id as string}/>
+              <SkillDomain  profile id={id || ""} />
             </TabsContent>
           </Tabs>
         </main>
@@ -110,5 +80,4 @@ const FreelancerPage = () => {
     </div>
   );
 };
-
 export default FreelancerPage;

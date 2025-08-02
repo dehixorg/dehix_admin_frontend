@@ -100,7 +100,7 @@ export default function Talent() {
         ],
       },
     ],
-    searchColumn: ["skills.name", "email"],
+    searchColumn: ["firstName","skills.name", "email"],
     isDownload: true,
     sortBy: [{ fieldName: "dob", label: "Date Of Birth" }]
   }

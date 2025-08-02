@@ -93,8 +93,6 @@ const BusinessTabs = () => {
   }, [id]);
 
 
-
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <SidebarMenu
@@ -145,12 +143,6 @@ const BusinessTabs = () => {
                 Project List
               </TabsTrigger>
               <TabsTrigger
-                value="Appliedcandidates"
-                className="flex-1 text-center"
-              >
-                Applied Candidates
-              </TabsTrigger>
-              <TabsTrigger
                 value="hirefreelancer"
                 className="flex-1 text-center"
               >
@@ -166,11 +158,8 @@ const BusinessTabs = () => {
             <TabsContent value="ProjectList">
               <ProjectList id={id || ""} />
             </TabsContent>
-            <TabsContent value="Appliedcandidates">
-              <Appliedcandidates AppliedCandidateData={appliedcandidateinfo} />
-            </TabsContent>
             <TabsContent value="hirefreelancer">
-              <Hirefreelancer hirefreelancerData={hirefreelancerinfo} />
+              <Hirefreelancer businessId={id} />
             </TabsContent>
           </Tabs>
         </main>
