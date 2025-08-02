@@ -270,6 +270,8 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
           <Image
             src={img.Location}
             alt={`Screenshot ${index + 1}`}
+            width={10}
+            height={10}
             className="w-full h-full object-cover"
           />
         </button>

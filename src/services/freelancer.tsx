@@ -20,4 +20,21 @@ export const apiHelperService = {
       endpoint: `/freelancer/${itemId}`,
     });
   },
+    getProjectbyId:async (Id: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/project/${Id}`,
+    
+    });
+  },
+   getProjectsByStatus: async (id: string, status: string) => {
+  return apiService({
+    method: Api_Methods.GET, // Or Api_Methods.GET
+    endpoint: `/freelancer/${id}/project`,
+    // For GET requests, pass data in a 'params' object, not 'body'.
+    params: {
+      status: status,
+    },
+  });
+},
 };
