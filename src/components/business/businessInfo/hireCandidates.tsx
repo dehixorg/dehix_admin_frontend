@@ -190,13 +190,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
                               // --- MODIFIED CLICKABLE NAME ---
-                              <a
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-                              </a>
+                              </button>
                               // --- END MODIFIED ---
                             ) : (
                               <span className="text-gray-500">Unknown Freelancer</span>
@@ -219,13 +219,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
                               // --- MODIFIED CLICKABLE NAME ---
-                              <a
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-                              </a>
+                              </button>
                               // --- END MODIFIED ---
                             ) : (
                               <span className="text-gray-500">Unknown Freelancer</span>
@@ -249,13 +249,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
                               // --- MODIFIED CLICKABLE NAME ---
-                              <a
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-                              </a>
+                              </button>
                               // --- END MODIFIED ---
                             ) : (
                               <span className="text-gray-500">Unknown Freelancer</span>
