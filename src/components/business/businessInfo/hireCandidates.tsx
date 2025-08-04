@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { PackageOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,7 +16,6 @@ import CopyButton from "@/components/copybutton";
 import { Messages } from "@/utils/common/enum";
 import { apiHelperService } from "@/services/business";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation"; // <--- IMPORT useRouter from next/navigation (or next/router for Pages Router)
 
 // --- INTERFACES (as per your previous definitions) ---
 interface FreelancerDetail {
@@ -23,7 +23,6 @@ interface FreelancerDetail {
   firstName: string;
   lastName: string;
   email: string;
-  // ... other properties from your freelancer detail API
 }
 
 interface BusinessProjectData {
@@ -32,8 +31,8 @@ interface BusinessProjectData {
   skillId?: string;
   skillName?: string;
   description: string;
-  domainId?:string;
-  domainName?:string;
+  domainId?: string;
+  domainName?: string;
   experience: string;
   status: string;
   visible: boolean;
@@ -57,7 +56,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
   const [loading, setLoading] = useState<boolean>(true);
   const [freelancerDetailsMap, setFreelancerDetailsMap] = useState<Map<string, FreelancerDetail>>(new Map());
   const { toast } = useToast();
-  const router = useRouter(); // <--- INITIALIZE useRouter
+  const router = useRouter();
 
   useEffect(() => {
     const fetchFreelancerInfo = async () => {
@@ -96,7 +95,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
               if (freelancerResponse?.data?.data) {
                 newFreelancerDetails.set(id, freelancerResponse.data.data);
               } else {
-                 console.warn(`Freelancer detail not found for ID: ${id}.`);
+                console.warn(`Freelancer detail not found for ID: ${id}.`);
               }
             } catch (error) {
               console.error(`Error fetching freelancer detail for ID ${id}:`, error);
@@ -131,7 +130,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
   if (loading) {
     return (
       <div className="text-center py-10">
-        <p className="text-gray-500">Loading freelancer data...</p>
+        <p className="text-gray-500 dark:text-gray-400">Loading freelancer data...</p>
       </div>
     );
   }
@@ -139,13 +138,12 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
   if (!projectData || projectData.length === 0) {
     return (
       <div className="text-center py-10">
-        <PackageOpen className="mx-auto text-gray-500" size={100} />
-        <p className="text-gray-500">No projects or freelancer data found for this business.</p>
+        <PackageOpen className="mx-auto text-gray-500 dark:text-gray-400" size={100} />
+        <p className="text-gray-500 dark:text-gray-400">No projects or freelancer data found for this business.</p>
       </div>
     );
   }
 
-  // --- HANDLER FUNCTION FOR NAVIGATION ---
   const handleFreelancerClick = (freelancerId: string) => {
     router.push(`/freelancer/tabs?id=${freelancerId}`);
   };
@@ -156,7 +154,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
         <CardTitle>Project-Based Freelancer Overview</CardTitle>
       </CardHeader>
       <CardContent>
-        <Table className="w-full text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Serial No.</TableHead>
@@ -169,96 +167,90 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
           </TableHeader>
           <TableBody>
             {projectData.map((project, projectIndex) => (
-              <TableRow key={project._id} className="border-b border-gray-300 hover:bg-gray-50">
+              <TableRow key={project._id}>
                 <TableCell className="py-2">{projectIndex + 1}</TableCell>
                 <TableCell className="py-2">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-blue-700">{project.skillName || project.domainName}</span>
-                    <span className="text-sm text-gray-600">ID: {project._id} <CopyButton id={project._id} /></span>
-                    <span className="text-sm text-gray-600">Status: {project.status}</span>
+                    <span className="font-semibold text-blue-700 dark:text-blue-400">{project.skillName || project.domainName}</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">ID: {project._id} <CopyButton id={project._id} /></span>
+                    <span className="text-sm text-gray-600 dark:text-gray-400">Status: {project.status}</span>
                   </div>
                 </TableCell>
-                <TableCell className="py-2 text-center font-bold text-gray-800">
+                <TableCell className="py-2 text-center font-bold text-gray-800 dark:text-gray-200">
                   {project.freelancerInLobby?.length || 0}
                 </TableCell>
                 <TableCell className="py-2">
                   {project.freelancerSelected && project.freelancerSelected.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-gray-800">
+                    <ul className="list-disc list-inside text-sm text-gray-800 dark:text-gray-200">
                       {project.freelancerSelected.map((f, i) => {
                         const freelancer = freelancerDetailsMap.get(f.freelancerId);
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
-                              // --- MODIFIED CLICKABLE NAME ---
                               <a
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 hover:underline"
+                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
                               </a>
-                              // --- END MODIFIED ---
                             ) : (
-                              <span className="text-gray-500">Unknown Freelancer</span>
+                              <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}
-                            {freelancer && <CopyButton id={freelancer._id} />} {/* Keep CopyButton next to ID */}
+                            {freelancer && <CopyButton id={freelancer._id} />}
                           </li>
                         );
                       })}
                     </ul>
                   ) : (
-                    <span className="text-gray-500">-</span>
+                    <span className="text-gray-500 dark:text-gray-400">-</span>
                   )}
                 </TableCell>
                 <TableCell className="py-2">
                   {project.freelancerInvited && project.freelancerInvited.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-gray-800">
+                    <ul className="list-disc list-inside text-sm text-gray-800 dark:text-gray-200">
                       {project.freelancerInvited.map((f, i) => {
                         const freelancer = freelancerDetailsMap.get(f.freelancerId);
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
-                              // --- MODIFIED CLICKABLE NAME ---
                               <a
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 hover:underline"
+                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
                               </a>
-                              // --- END MODIFIED ---
                             ) : (
-                              <span className="text-gray-500">Unknown Freelancer</span>
+                              <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}
                             {freelancer && <CopyButton id={freelancer._id} />}
-                            {f.status && <span className="ml-1 text-xs text-gray-500">({f.status})</span>}
+                            {f.status && <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">({f.status})</span>}
                           </li>
                         );
                       })}
                     </ul>
                   ) : (
-                    <span className="text-gray-500">-</span>
+                    <span className="text-gray-500 dark:text-gray-400">-</span>
                   )}
                 </TableCell>
                 <TableCell className="py-2">
                   {project.freelancerRejected && project.freelancerRejected.length > 0 ? (
-                    <ul className="list-disc list-inside text-sm text-gray-800">
+                    <ul className="list-disc list-inside text-sm text-gray-800 dark:text-gray-200">
                       {project.freelancerRejected.map((f, i) => {
                         const freelancer = freelancerDetailsMap.get(f.freelancerId);
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
-                              // --- MODIFIED CLICKABLE NAME ---
                               <a
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 hover:underline"
+                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
                               </a>
-                              // --- END MODIFIED ---
                             ) : (
-                              <span className="text-gray-500">Unknown Freelancer</span>
+                              <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}
                             {freelancer && <CopyButton id={freelancer._id} />}
                           </li>
@@ -266,7 +258,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                       })}
                     </ul>
                   ) : (
-                    <span className="text-gray-500">-</span>
+                    <span className="text-gray-500 dark:text-gray-400">-</span>
                   )}
                 </TableCell>
               </TableRow>

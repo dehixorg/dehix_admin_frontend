@@ -10,11 +10,12 @@ import {
 } from "../professionalProjects/professionalProjects";
 import { UserProfilePage } from "../personalinfoCards/personalinfoCards";
 import { ProfessionalCard } from "../professionalInfo/professionalinfoCard";
-import { Talentcard } from "../talent/talentCards";
 import { ConsultantCards } from "../consultant/ConsultantCards";
 
 import { Separator } from "@/components/ui/separator";
 import { apiHelperService } from "@/services/freelancer";
+import SkillCard from "../skilldomaincard/SkillCard";
+import DomainCard from "../skilldomaincard/DomainCard";
 
 /* ---------- helpers ---------- */
 
@@ -28,7 +29,9 @@ const fetchUserProfile = async (id: string) => {
     education: Object.values(data.data.education ?? {}),
     projects: Object.values(data.data.projects ?? {}),
     professional: Object.values(data.data.professionalInfo ?? {}),
-    talent: Object.values(data.data.dehixTalent ?? {}),
+    //talent: Object.values(data.data.skills ?? {}),
+    skills: data.data.skills ?? [],
+    domain: data.data.domain ?? [],
     consultant: Object.values(data.consultant ?? {}),
   };
 };
@@ -47,7 +50,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
   const [parentEducation, setParentEducation] = useState<any[]>([]);
   const [parentProjects, setParentProjects] = useState<any[]>([]);
   const [parentProfessional, setParentProfessional] = useState<any[]>([]);
-  const [parentTalent, setParentTalent] = useState<any[]>([]);
+  const [parentSkills, setParentSkills] = useState<any[]>([]);
+  const [parentDomain, setParentDomain] = useState<any[]>([]);
   const [parentConsultant, setParentConsultant] = useState<any[]>([]);
 
   /* …and one set for the API profile */
@@ -55,7 +59,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
   const [apiEducation, setApiEducation] = useState<any[]>([]);
   const [apiProjects, setApiProjects] = useState<any[]>([]);
   const [apiProfessional, setApiProfessional] = useState<any[]>([]);
-  const [apiTalent, setApiTalent] = useState<any[]>([]);
+  const [apiSkills, setApiSkills] = useState<any[]>([]);
+  const [apiDomain, setApiDomain] = useState<any[]>([]);
   const [apiConsultant, setApiConsultant] = useState<any[]>([]);
 
   /* flags for “Show More / Show Less” */
@@ -70,7 +75,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
     setParentEducation(Object.values(profile.education ?? {}));
     setParentProjects(Object.values(profile.projects ?? {}));
     setParentProfessional(Object.values(profile.professionalInfo ?? {}));
-    setParentTalent(Object.values(profile.dehixTalent ?? {}));
+    setParentSkills(profile.skills ?? []);
+    setParentDomain(profile.domain ?? []);
     setParentConsultant(Object.values(profile.consultant ?? {}));
   }, [profile]);
 
@@ -85,7 +91,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
           education,
           projects,
           professional,
-          talent,
+          skills,
+          domain,
           consultant,
         } = await fetchUserProfile(id);
 
@@ -93,8 +100,8 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
         setApiEducation(education);
         setApiProjects(projects);
         setApiProfessional(professional);
-        setApiTalent(talent);
-        setApiConsultant(consultant);
+        setApiSkills(skills);
+        setApiDomain(domain);
         console.log(apiProfile)
       } catch (e) {
         console.error("Failed to fetch profile:", e);
@@ -198,11 +205,18 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
       })}
 
       {renderSection({
-        title: "Dehix Talent",
-        data: [...parentTalent, ...apiTalent],
-        Card: Talentcard,
-        sectionKey: "talent",
-        fallback: "No talent information available.",
+        title: "Domains",
+        data: [...parentDomain, ...apiDomain],
+        Card: DomainCard,
+        sectionKey: "domain",
+        fallback: "No domain  information available.",
+      })}
+      {renderSection({
+        title: "Skills",
+        data: [...parentSkills, ...apiSkills],
+        Card: SkillCard,
+        sectionKey: "skills",
+        fallback: "No Skill information available.",
       })}
 
       {renderSection({

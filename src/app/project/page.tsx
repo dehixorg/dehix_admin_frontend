@@ -81,9 +81,11 @@ export default function Talent() {
           ],
         },
       },
+      
     ],
     title: "Projects",
     isDownload: true,
+    searchColumn: ["id","projectName", "companyName", "email",],
   };
 
   return (

@@ -88,4 +88,11 @@ export const apiHelperService = {
       endpoint: `/freelancer/${itemId}`,
     });
   },
+
+  getBusinessProjectbyId: async (itemId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `project/project/${itemId}`,
+    });
+  },
 };
