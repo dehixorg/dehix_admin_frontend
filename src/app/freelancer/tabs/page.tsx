@@ -64,10 +64,10 @@ const FreelancerPage = () => {
               <TabsTrigger value="Skill-Domain">Dehix Talent</TabsTrigger>
             </TabsList>
             <TabsContent value="Personal-Info">
-              <PersonalInfo id={id || ""} />
+              <PersonalInfo  id={id || ""} />
             </TabsContent>
             <TabsContent value="Project">
-              <Project profile id={id || ""} />
+              <Project  id={id || ""} />
             </TabsContent>
             <TabsContent value="Oracle-Project">
               <OracleProject  profile id={id || ""} />
