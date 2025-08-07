@@ -13,6 +13,7 @@ import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
+  FilterDataType,
   Params as TableProps,
 } from "@/components/custom-table/FieldTypes";
 import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
@@ -89,6 +90,11 @@ export default function Talent() {
         ],
       },
       {
+        textValue: "Creator Id",
+        type: FieldType.TEXT,
+        fieldName: "createdById",
+      },
+      {
         textValue: "",
         type: FieldType.ACTION,
         actions: {
@@ -115,6 +121,17 @@ export default function Talent() {
         },
       },
     ],
+    filterData: [
+          {
+            name: "status",
+            textValue: "Status",
+            type: FilterDataType.SINGLE,
+            options: [
+              { label: "Active", value: "active,Active,ACTIVE" },
+              { label: "Inactive", value: "inactive,INACTIVE,Inactive" },
+            ],
+          },
+        ],
     tableHeaderActions: [AddProjectDomain],
     searchColumn: ["label"],
   };

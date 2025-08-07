@@ -13,4 +13,11 @@ export const apiHelperService = {
       params,
     });
   },
+
+  getBidByProjectAndProfileId: async ({ projectId, profileId }: { projectId: string; profileId: string }) => {
+  return apiService({
+    method: Api_Methods.GET,
+    endpoint: `bid/project/${projectId}/profile/${profileId}/bid`,
+  });
+},
 };

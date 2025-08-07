@@ -42,9 +42,9 @@ interface ReportType {
   createdAt: string;
   updatedAt?: string;
   messages: Message[];
-  imageMeta?: ImageMeta[]; // ✅ Now an array
-  report_role:string;
-  reportedById:string;
+  imageMeta?: ImageMeta[];
+  report_role: string;
+  reportedById: string;
 }
 
 const ViewReportPage = () => {
@@ -55,7 +55,7 @@ const ViewReportPage = () => {
   const [report, setReport] = useState<ReportType | null>(null);
   const [replyMessage, setReplyMessage] = useState("");
   const [loading, setLoading] = useState(true);
-const [activeImage, setActiveImage] = useState<string | null>(null);
+  const [activeImage, setActiveImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchReport = async () => {
@@ -78,126 +78,125 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
   }, [id, toast]);
 
   useEffect(() => {
- if (!id || report?.status === "CLOSED") return;
+    if (!id || report?.status === "CLOSED") return;
 
-  const interval = setInterval(async () => {
-    if (document.visibilityState === "visible") 
-    try {
-      const res = await apiHelperService.getSingleReport(id);
-      const newMessages = res.data?.data?.messages || [];
+    const interval = setInterval(async () => {
+      if (document.visibilityState === "visible")
+        try {
+          const res = await apiHelperService.getSingleReport(id);
+          const newMessages = res.data?.data?.messages || [];
 
-      setReport((prev) => {
-        if (!prev) return prev;
+          setReport((prev) => {
+            if (!prev) return prev;
 
-        const existingMessages = prev.messages || [];
-        if (newMessages.length !== existingMessages.length) {
-          return { ...prev, messages: newMessages };
+            const existingMessages = prev.messages || [];
+            if (newMessages.length !== existingMessages.length) {
+              return { ...prev, messages: newMessages };
+            }
+            return prev;
+          });
+        } catch (error) {
+          // silent fail: don't show repeated toast every 5s
+          console.error("Polling failed", error);
         }
-        return prev;
-      });
-    } catch (error) {
-      // silent fail: don't show repeated toast every 5s
-      console.error("Polling failed", error);
-    }
-  }, 5000); // poll every 5s
+    }, 5000); // poll every 5s
 
-  return () => clearInterval(interval); // cleanup
-}, [id]);
+    return () => clearInterval(interval); // cleanup
+  }, [id]);
 
 
   const handleReply = async () => {
-  if (!replyMessage.trim()) {
-    toast({ title: "Reply message can't be empty", variant: "destructive" });
-    return;
-  }
-  if (!report?._id) {
-  toast({
-    title: "Error",
-    description: "Report ID is missing.",
-    variant: "destructive",
-  });
-  return;
-}
+    if (!replyMessage.trim()) {
+      toast({ title: "Reply message can't be empty", variant: "destructive" });
+      return;
+    }
+    if (!report?._id) {
+      toast({
+        title: "Error",
+        description: "Report ID is missing.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  try {
-    // Send to API
-    await apiHelperService.sendMessageToReport({
-      reportId: report?._id,
-      sender: "admin",
-      text: replyMessage,
-    });
+    try {
+      // Send to API
+      await apiHelperService.sendMessageToReport({
+        reportId: report?._id,
+        sender: "admin",
+        text: replyMessage,
+      });
 
-    const newMessage: Message = {
-      id: uuidv4(), // You might replace this with API response ID
-      sender: "admin",
-      text: replyMessage,
-      timestamp: new Date().toISOString(),
-    };
+      const newMessage: Message = {
+        id: uuidv4(), // You might replace this with API response ID
+        sender: "admin",
+        text: replyMessage,
+        timestamp: new Date().toISOString(),
+      };
 
-    setReport((prev) =>
-      prev
-        ? { ...prev, messages: [...prev.messages, newMessage] }
-        : prev
-    );
+      setReport((prev) =>
+        prev
+          ? { ...prev, messages: [...prev.messages, newMessage] }
+          : prev
+      );
 
-    toast({ title: "Reply sent", description: replyMessage });
+      toast({ title: "Reply sent", description: replyMessage });
 
-    setReplyMessage("");
+      setReplyMessage("");
 
-    // Optionally update status if desired
-    setReport((prev) =>
-      prev
-        ? { ...prev, status: prev.status === "OPEN" ? "IN_PROGRESS" : prev.status }
-        : prev
-    );
+      // Optionally update status if desired
+      setReport((prev) =>
+        prev
+          ? { ...prev, status: prev.status === "OPEN" ? "IN_PROGRESS" : prev.status }
+          : prev
+      );
 
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: "Failed to send message.",
-      variant: "destructive",
-    });
-  }
-};
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message.",
+        variant: "destructive",
+      });
+    }
+  };
 
- const updateStatus = async (newStatus: string) => {
-  if (!report?._id) {
-    toast({
-      title: "Error",
-      description: "Report ID is missing.",
-      variant: "destructive",
-    });
-    return;
-  }
+  const updateStatus = async (newStatus: string) => {
+    if (!report?._id) {
+      toast({
+        title: "Error",
+        description: "Report ID is missing.",
+        variant: "destructive",
+      });
+      return;
+    }
 
-  try {
-    const res = await apiHelperService.updateReportStatus(report._id, newStatus);
+    try {
+      const res = await apiHelperService.updateReportStatus(report._id, newStatus);
 
-    setReport((prev) =>
-      prev
-        ? { ...prev, status: res.data.data.status, updatedAt: res.data.data.updatedAt }
-        : prev
-    );
+      setReport((prev) =>
+        prev
+          ? { ...prev, status: res.data.data.status, updatedAt: res.data.data.updatedAt }
+          : prev
+      );
 
-    toast({
-      title: "Status updated",
-      description: `New status: ${res.data.data.status}`,
-    });
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: "Failed to update status.",
-      variant: "destructive",
-    });
-  }
-};
-
+      toast({
+        title: "Status updated",
+        description: `New status: ${res.data.data.status}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update status.",
+        variant: "destructive",
+      });
+    }
+  };
 
   if (loading) return <div className="p-6">Loading report...</div>;
   if (!report) return <div className="p-6">No report found.</div>;
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+    <div className="flex min-h-screen w-full flex-col bg-muted/40 dark:bg-zinc-950">
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
@@ -205,7 +204,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
       />
 
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background dark:bg-zinc-950 px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
@@ -224,19 +223,19 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
         </header>
 
         <main className="p-6 space-y-6">
-          <h1 className="text-2xl font-semibold">Report Details</h1>
+          <h1 className="text-2xl font-semibold dark:text-gray-100">Report Details</h1>
 
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground">Subject</h2>
-              <p className="text-lg">{report.subject}</p>
+            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Subject</h2>
+              <p className="text-lg dark:text-gray-100">{report.subject}</p>
             </div>
-            <div className="bg-white rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground">{report.report_role} ID</h2>
-              <p className="text-lg">{report.reportedById}</p>
+            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">{report.report_role} ID</h2>
+              <p className="text-lg dark:text-gray-100">{report.reportedById}</p>
             </div>
-            <div className="bg-white rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground">Status</h2>
+            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Status</h2>
               <div className="flex items-center gap-2">
                 <p className={`text-sm font-medium ${report.status === "OPEN" ? "text-green-600" : "text-red-600"}`}>
                   {report.status}
@@ -245,7 +244,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm">Update</Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="dark:bg-zinc-900">
                     <DropdownMenuItem onClick={() => updateStatus("OPEN")}>OPEN</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => updateStatus("IN_PROGRESS")}>Enable Chat</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>CLOSED</DropdownMenuItem>
@@ -253,77 +252,74 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
                 </DropdownMenu>
               </div>
             </div>
-            <div className="bg-white rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-              <h2 className="font-semibold mb-1 text-muted-foreground">Description</h2>
-              <p className="whitespace-pre-wrap">{report.description}</p>
+            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Description</h2>
+              <p className="whitespace-pre-wrap dark:text-gray-100">{report.description}</p>
             </div>
-           {(report?.imageMeta ?? []).length > 0 && (
-  <div className="bg-white rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-    <h2 className="font-semibold mb-1 text-muted-foreground">Attached Screenshots</h2>
-    <div className="flex flex-wrap gap-4">
-      {(report?.imageMeta ?? []).map((img, index) => (
-        <button
-          key={index}
-          onClick={() => setActiveImage(img.Location)}
-          className="block w-[180px] h-[120px] overflow-hidden rounded-lg shadow-sm border hover:scale-105 transition-transform duration-200"
-        >
-          <Image
-            src={img.Location}
-            alt={`Screenshot ${index + 1}`}
-            width={10}
-            height={10}
-            className="w-full h-full object-cover"
-          />
-        </button>
-      ))}
-    </div>
-  </div>
-)}
-
-
+            {(report?.imageMeta ?? []).length > 0 && (
+              <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
+                <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Attached Screenshots</h2>
+                <div className="flex flex-wrap gap-4">
+                  {(report?.imageMeta ?? []).map((img, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setActiveImage(img.Location)}
+                      className="block w-[180px] h-[120px] overflow-hidden rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:scale-105 transition-transform duration-200"
+                    >
+                      <Image
+                        src={img.Location}
+                        alt={`Screenshot ${index + 1}`}
+                        width={10}
+                        height={10}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
           {activeImage && (
-  <div
-    className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
-    onClick={() => setActiveImage(null)}
-  >
-    <Image
-      src={activeImage}
-      alt="Full view"
-      className="max-w-full max-h-full rounded shadow-lg"
-    />
-  </div>
-)}
-
+            <div
+              className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
+              onClick={() => setActiveImage(null)}
+            >
+              <Image
+                src={activeImage}
+                alt="Full view"
+                className="max-w-full max-h-full rounded shadow-lg"
+              />
+            </div>
+          )}
 
           {/* CHAT SECTION */}
-          <section className="bg-white rounded-md shadow p-6 max-w-3xl mx-auto w-full">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Message Thread</h2>
+          <section className="bg-white dark:bg-zinc-900 rounded-md shadow p-6 max-w-3xl mx-auto w-full">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Message Thread</h2>
 
             <div className="h-[400px] overflow-y-auto space-y-4 px-2">
               {report.messages?.length ? (
-  report.messages.map((msg) => (
-    <div
-      key={msg.id}
-      className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
-    >
-      <div
-        className={`max-w-[70%] px-4 py-2 rounded-lg text-sm shadow-sm ${
-          msg.sender === "admin"
-            ? "bg-blue-100 text-right text-gray-900"
-            : "bg-gray-100 text-left text-gray-900"
-        }`}
-      >
-        <p className="whitespace-pre-wrap">{msg.text}</p>
-        <p className="text-[10px] text-muted-foreground mt-1">
-          {new Date(msg.timestamp).toLocaleString()}
-        </p>
-      </div>
-    </div>
-  ))
-) : (
-  <p className="text-sm text-muted-foreground text-center mt-10">No messages yet.</p>
-)}
+                report.messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div
+                      className={`max-w-[70%] px-4 py-2 rounded-lg text-sm shadow-sm ${
+                        msg.sender === "admin"
+                          ? "bg-blue-100 dark:bg-blue-950 text-right text-gray-900 dark:text-gray-100"
+                          : "bg-gray-100 dark:bg-gray-700 text-left text-gray-900 dark:text-gray-100"
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap">{msg.text}</p>
+                      <p className="text-[10px] text-muted-foreground dark:text-gray-400 mt-1">
+                        {new Date(msg.timestamp).toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No messages yet.</p>
+              )}
 
             </div>
 
@@ -332,7 +328,7 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
                 value={replyMessage}
                 onChange={(e) => setReplyMessage(e.target.value)}
                 placeholder="Write your message..."
-                className="text-sm"
+                className="text-sm bg-background dark:bg-zinc-800 text-foreground dark:text-gray-100"
                 rows={4}
               />
               <div className="flex justify-end">
@@ -343,7 +339,6 @@ const [activeImage, setActiveImage] = useState<string | null>(null);
         </main>
       </div>
     </div>
-    
   );
 };
 

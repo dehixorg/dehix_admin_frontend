@@ -91,6 +91,11 @@ export const menuItemsTop: MenuItem[] = [
     label: "Verification",
   },
   {
+    href: "/adminVerification",
+    icon: <ShieldCheck className="h-5 w-5" />,
+    label: " Admin Verification",
+  },
+  {
     href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
     label:"Notes",
