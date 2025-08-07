@@ -40,7 +40,7 @@ const fetchUserProfile = async (id: string) => {
 
 interface PersonalInfoProps {
   id?: string;
-  /** Profile passed down from parent */
+  /** Profile passed down from parent */
   profile?: any;
 }
 
@@ -63,7 +63,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
   const [apiDomain, setApiDomain] = useState<any[]>([]);
   const [apiConsultant, setApiConsultant] = useState<any[]>([]);
 
-  /* flags for “Show More / Show Less” */
+  /* flags for “Show More / Show Less” */
   const [showAll, setShowAll] = useState<Record<string, boolean>>({});
   const toggleShowAll = (key: string) =>
     setShowAll((p) => ({ ...p, [key]: !p[key] }));
@@ -80,7 +80,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id, profile }) => {
     setParentConsultant(Object.values(profile.consultant ?? {}));
   }, [profile]);
 
-  /* ---------- 2️⃣ react to the `id` → fetch from API ---------- */
+  /* ---------- 2️⃣ react to the `id` → fetch from API ---------- */
   useEffect(() => {
     if (!id) return;
 

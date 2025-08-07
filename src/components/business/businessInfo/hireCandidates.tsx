@@ -188,12 +188,15 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
                               <a
+
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
+
                               </a>
+
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}
@@ -215,12 +218,15 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
                               <a
+
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
+
                               </a>
+
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}
@@ -242,13 +248,16 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
+
                               <a
+
                                 onClick={() => handleFreelancerClick(freelancer._id)}
                                 className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
                               </a>
+
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
                             )}

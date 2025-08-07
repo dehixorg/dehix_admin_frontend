@@ -151,7 +151,7 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
                         <PackageOpen className="mx-auto text-gray-500" size={100} />
                         <p className="text-gray-500">
                           No projects found.
-                          <br /> You haven't been assigned or applied to any projects yet.
+                          <br /> You haven&apos;t been assigned or applied to any projects yet.
                         </p>
                       </div>
                     </TableCell>
