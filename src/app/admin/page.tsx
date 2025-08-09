@@ -82,7 +82,7 @@ const customTableProps: TableProps = {
         {
           textValue: "Pending",
           value: "PENDING",
-          bgColor: "#eaf04d",
+          bgColor: "#eaf001",
           textColor: "#717501",
         },
       ],
@@ -115,6 +115,8 @@ const customTableProps: TableProps = {
       options: [
         { label: "Accepted", value: "ACCEPTED" },
         { label: "Pending", value: "PENDING" },
+    
+
       ],
     },
   ],

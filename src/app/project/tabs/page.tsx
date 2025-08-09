@@ -13,6 +13,7 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import ProjectTabs from "@/components/project/projectTabs/projectTabs";
 import { ProjectCard } from "@/components/project/projectCard/projectCard";
+import { ProjectBids } from "@/components/project/projectbids/projectBids";// Import the new component
 
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
@@ -57,6 +58,8 @@ const FreelancerPage = () => {
             <div>
               <ProjectTabs id={id || ""} />
             </div>
+            {/* New section for displaying bids */}
+            {id && <ProjectBids id={id} />} 
           </div>
         </main>
       </div>
