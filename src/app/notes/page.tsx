@@ -13,7 +13,7 @@ import {
 import { notesMenu } from '@/config/menuItems/admin/dashboardMenuItems';
 import NotesHeader from '@/components/business/header/NotesHeader';
 import NotesRender from '@/components/shared/NotesRender';
-import { axiosInstance } from '@/lib/axiosinstance'; // Adjust the import as per your project structure
+import { axiosInstance } from '@/lib/axiosinstance';
 import { LabelType, Note, NoteType } from '@/utils/types/note';
 import { toast } from '@/components/ui/use-toast';
 import useFetchNotes from '@/hooks/useFetchNotes';
@@ -23,6 +23,10 @@ const Notes = () => {
   const user = useSelector((state: any) => state.user);
   const userId = user.uid;
   const { notes, isLoading, fetchNotes, setNotes } = useFetchNotes(userId);
+
+  // This log will now show a direct array of notes, not a nested object
+  console.log('Notes being passed to NotesRender:', notes);
+
   useEffect(() => {
     if (userId) {
       fetchNotes();
@@ -31,13 +35,14 @@ const Notes = () => {
 
   const handleCreateNote = async (note: Partial<Note>) => {
     // Field validation
-    if (!note.title || !note.content || !userId) {
+    if (!note.title || !note.content) {
       console.error('Missing required fields.');
       return;
     }
 
     const newNote = {
       ...note,
+      adminId: userId,
       userId,
       bgColor: note.bgColor || '#FFFFFF',
       banner: note.banner || '',
@@ -47,8 +52,9 @@ const Notes = () => {
     } as Note;
 
     try {
-      const response = await axiosInstance.post('/notes', newNote);
+      const response = await axiosInstance.post('/adminnotes', newNote);
       if (response?.data) {
+        console.log(newNote);
         const updatedNotes = [response.data, ...notes];
         setNotes(updatedNotes);
         toast({

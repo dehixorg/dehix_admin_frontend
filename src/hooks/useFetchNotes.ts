@@ -3,7 +3,6 @@ import { useCallback, useState } from 'react';
 import { axiosInstance } from '@/lib/axiosinstance';
 import { Note } from '@/utils/types/note';
 
-// this is hook to fetch notes from the server
 const useFetchNotes = (userId: string | undefined) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [archive, setArchive] = useState<Note[]>([]);
@@ -11,22 +10,31 @@ const useFetchNotes = (userId: string | undefined) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchNotes = useCallback(async () => {
-    if (!userId) return;
+    if (!userId) {
+      console.error("userId is not available. Cannot fetch notes.");
+      setIsLoading(false);
+      return;
+    }
 
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/notes', {
+      const response = await axiosInstance.get('/adminnotes', {
         params: { userId },
       });
-      console.log(response);
 
-      if (response?.data?.notes) {
-        setNotes(response.data.notes.notes);
-        setArchive(response.data.notes.archive || []);
-        setTrash(response.data.notes.trash || []);
+      // Correctly handle the API response structure { data: [...] }
+      if (response?.data && Array.isArray(response.data.data)) {
+        setNotes(response.data.data);
+      } else if (response?.data) {
+        // Fallback for cases where the data is a direct array
+        setNotes(response.data);
+      } else {
+        setNotes([]);
       }
+      
     } catch (error) {
       console.error('Failed to fetch notes:', error);
+      setNotes([]);
     } finally {
       setIsLoading(false);
     }

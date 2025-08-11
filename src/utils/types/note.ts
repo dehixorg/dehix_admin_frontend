@@ -26,7 +26,8 @@ export enum NoteType {
 // Updated Note type
 export type Note = {
   _id?: string;
-  userId?: string;
+  adminId?: string;
+  userId:string,
   title: string;
   content: string;
   bgColor?: string; // Optional color for note display
