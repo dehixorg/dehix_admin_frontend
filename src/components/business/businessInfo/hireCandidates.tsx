@@ -187,7 +187,10 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
+<<<<<<< Admin-Final-Fixes-Part-2
 
+=======
+>>>>>>> develop
                               <a
 
                                 onClick={() => handleFreelancerClick(freelancer._id)}
@@ -195,6 +198,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
+
                               </a>
 
                             ) : (
@@ -224,6 +228,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
+
                               </a>
 
                             ) : (
@@ -247,6 +252,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
+
                               <a
 
                                 onClick={() => handleFreelancerClick(freelancer._id)}

@@ -154,6 +154,7 @@ export function ProjectBids({ id, ...props }: ProjectBidsProps) {
   return (
     <div className="mt-8">
       <h2 className="text-3xl font-semibold pb-6 tracking-tight">Profile Bids</h2>
+
       {bids.length > 0 ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {bids.map((bid) => (

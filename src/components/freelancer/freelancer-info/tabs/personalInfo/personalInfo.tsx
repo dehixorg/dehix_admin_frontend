@@ -16,6 +16,7 @@ import DomainCard from "../skilldomaincard/DomainCard";
 /* ---------- NEW: Assuming a ProfileCard component exists ---------- */
 import {ProfileCard}  from "../profileCard/ProfileCard"// You'll need to create this component and provide the correct path.
 
+
 /* ---------- helpers ---------- */
 
 const fetchUserProfile = async (id: string) => {
@@ -25,6 +26,7 @@ const fetchUserProfile = async (id: string) => {
     education: Object.values(data.data.education ?? {}),
     projects: Object.values(data.data.projects ?? {}),
     professional: Object.values(data.data.professionalInfo ?? {}),
+
     skills: data.data.skills ?? [],
     domain: data.data.domain ?? [],
     consultant: Object.values(data.consultant ?? {}),
@@ -94,6 +96,7 @@ useEffect(() => {
 }, [id]);
 
 
+
   /* ---------- 2️⃣ react to the `id` → fetch from API ---------- */
   useEffect(() => {
     if (!id) return;
@@ -117,6 +120,7 @@ useEffect(() => {
         setApiSkills(skills);
         setApiDomain(domain);
         setApiConsultant(consultant);
+
       } catch (e) {
         console.error("Failed to fetch profile:", e);
       }
@@ -234,6 +238,7 @@ useEffect(() => {
       {renderSection({
         title: "Skills",
         data: [ ...apiSkills],
+
         Card: SkillCard,
         sectionKey: "skills",
         fallback: "No Skill information available.",
