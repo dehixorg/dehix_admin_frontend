@@ -97,6 +97,7 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
   const onSubmit = async (data: AdminData) => {
     try {
+      console.log(data)
       const response = await apiHelperService.createAdmin(data);
       if (response.success) {
         reset();

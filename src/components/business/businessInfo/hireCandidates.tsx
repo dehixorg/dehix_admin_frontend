@@ -187,6 +187,10 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
+<<<<<<< Admin-Final-Fixes-Part-2
+
+=======
+>>>>>>> develop
                               <a
 
                                 onClick={() => handleFreelancerClick(freelancer._id)}

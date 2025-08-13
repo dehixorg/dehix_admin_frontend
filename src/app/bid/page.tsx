@@ -9,7 +9,7 @@ import {
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
-import { FieldType, Params as TableProps } from "@/components/custom-table/FieldTypes";
+import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 
 const customTableProps: TableProps = {
   api: "bid",
@@ -64,6 +64,20 @@ const customTableProps: TableProps = {
     },
   ],
   isDownload: true,
+  searchColumn: ["current_price", "description"],
+    title: "Bids",
+     filterData: [
+    {
+      name: "bid_status", // Change 'status' to 'bid_status'
+      textValue: "Status",
+      type: FilterDataType.SINGLE,
+      options: [
+        { label: "Accepted", value: "ACCEPTED" },
+        { label: "Pending", value: "PENDING" },
+        { label: "rejected", value: "REJECTED" },
+      ],
+    },
+  ],
 };
 
 export default function Talent() {
