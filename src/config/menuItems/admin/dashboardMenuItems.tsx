@@ -38,6 +38,11 @@ export const menuItemsTop: MenuItem[] = [
     icon: <User className="h-5 w-5" />,
     label: "Freelancer",
   },
+   {
+    href: "/connects",
+    icon: <User className="h-5 w-5" />,
+    label: "Connects",
+  },
   {
     href: "/skill",
     icon: <FileBadge className="h-5 w-5" />,
@@ -89,6 +94,16 @@ export const menuItemsTop: MenuItem[] = [
     href: "/verification",
     icon: <ShieldCheck className="h-5 w-5" />,
     label: "Verification",
+  },
+  {
+    href: "/adminVerification",
+    icon: <ShieldCheck className="h-5 w-5" />,
+    label: " Admin Verification",
+  },
+   {
+    href: "/transactions",
+    icon: <User className="h-5 w-5" />,
+    label: "Transactions",
   },
   {
     href: "/notes",

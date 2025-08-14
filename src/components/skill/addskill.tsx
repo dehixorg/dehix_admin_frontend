@@ -87,7 +87,7 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
       } else {
         toast({
           title: "Error",
-          description: Messages.ADD_ERROR("skill"),
+          description: response.data.message,
           variant: "destructive", // Red error message
         });
       }
