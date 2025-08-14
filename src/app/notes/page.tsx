@@ -25,7 +25,6 @@ const Notes = () => {
   const { notes, isLoading, fetchNotes, setNotes } = useFetchNotes(userId);
 
   // This log will now show a direct array of notes, not a nested object
-  console.log('Notes being passed to NotesRender:', notes);
 
   useEffect(() => {
     if (userId) {
@@ -54,7 +53,6 @@ const Notes = () => {
     try {
       const response = await axiosInstance.post('/adminnotes', newNote);
       if (response?.data) {
-        console.log(newNote);
         const updatedNotes = [response.data, ...notes];
         setNotes(updatedNotes);
         toast({

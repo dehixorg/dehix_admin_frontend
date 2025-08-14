@@ -105,7 +105,6 @@ export default function Talent() {
               type: "Button",
               handler: async ({ id, refetch }) => {
                 try {
-                  console.log(id);
                   await apiHelperService.deleteProjectdomain(id);
                   refetch?.();
                 } catch (error: any) {

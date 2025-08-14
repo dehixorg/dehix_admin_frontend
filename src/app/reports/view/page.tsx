@@ -60,10 +60,8 @@ const ViewReportPage = () => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        console.log(id)
         const res = await apiHelperService.getSingleReport(id);
         setReport(res.data.data);
-        console.log(res)
       } catch (error) {
         toast({
           title: "Error",
