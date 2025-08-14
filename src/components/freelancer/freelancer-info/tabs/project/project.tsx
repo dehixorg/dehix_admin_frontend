@@ -171,6 +171,7 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
                           No projects found.
                           <br /> You haven't been assigned or applied to any
                           projects yet.
+
                         </p>
                       </div>
                     </TableCell>
