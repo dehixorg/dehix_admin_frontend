@@ -17,7 +17,7 @@ export const apiHelperService = {
   getAllFreelancerPersonalInfo: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/freelancer/${itemId}`,
+      endpoint: `/freelancer/admin/${itemId}`,
     });
   },
     getProjectbyId:async (Id: string) => {
