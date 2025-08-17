@@ -37,7 +37,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
     console.log(note);
 
     try {
-      const response = await axiosInstance.put(`/notes/${note._id}`, {
+      const response = await axiosInstance.put(`/adminnotes/${note._id}`, {
         title: note.title,
         content: note.content,
         bgColor: note.bgColor || '#FFFFFF',
@@ -71,7 +71,8 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      await axiosInstance.delete(`/notes/${noteId}`);
+      console.log(noteId)
+      await axiosInstance.delete(`/adminnotes/${noteId}`);
       showSuccess('Note deleted permanently.');
       fetchNotes();
     } catch (error) {
@@ -91,7 +92,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         banner,
       });
@@ -117,7 +118,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         noteType: type,
       });
@@ -143,7 +144,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         type,
       });

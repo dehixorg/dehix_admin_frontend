@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
-
 import { axiosInstance } from '@/lib/axiosinstance';
-import { Note } from '@/utils/types/note';
+import { Note, NoteType } from '@/utils/types/note';
 
 const useFetchNotes = (userId: string | undefined) => {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -22,19 +21,23 @@ const useFetchNotes = (userId: string | undefined) => {
         params: { userId },
       });
 
-      // Correctly handle the API response structure { data: [...] }
       if (response?.data && Array.isArray(response.data.data)) {
-        setNotes(response.data.data);
-      } else if (response?.data) {
-        // Fallback for cases where the data is a direct array
-        setNotes(response.data);
+        const allNotes = response.data.data;
+        
+        // Filter the notes and set the state variables
+        setNotes(allNotes.filter((note: Note) => note.noteType === NoteType.NOTE));
+      setArchive(allNotes.filter((note: Note) => note.noteType === NoteType.ARCHIVE));
+      setTrash(allNotes.filter((note: Note) => note.noteType === NoteType.TRASH));
       } else {
         setNotes([]);
+        setArchive([]);
+        setTrash([]);
       }
-      
     } catch (error) {
       console.error('Failed to fetch notes:', error);
       setNotes([]);
+      setArchive([]);
+      setTrash([]);
     } finally {
       setIsLoading(false);
     }

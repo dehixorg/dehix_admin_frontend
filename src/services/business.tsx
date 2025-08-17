@@ -25,7 +25,7 @@ export const apiHelperService = {
     return apiService({
       method: Api_Methods.GET,
 
-      endpoint: `/project/business/${itemId}`,
+      endpoint: `/project/admin/business/${itemId}`,
     });
   },
   createProject: async (userId: string, projectData: any) => {
@@ -47,7 +47,7 @@ export const apiHelperService = {
   getBusinessHireProjects: async (businessId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/business/hire-dehixtalent/${businessId}`, // Constructing the endpoint
+      endpoint: `business/hire-dehixtalent/admin/${businessId}`, // Constructing the endpoint
     });
   },
 
@@ -85,7 +85,7 @@ export const apiHelperService = {
    getAllFreelancerPersonalInfo: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/freelancer/${itemId}`,
+      endpoint: `/freelancer/admin/${itemId}`,
     });
   },
 

@@ -45,7 +45,7 @@ const Page = () => {
     } as Note;
 
     try {
-      const response = await axiosInstance.post('/notes', newNote);
+      const response = await axiosInstance.post('/adminnotes', newNote);
       const updatedNotes = [response.data, ...archive];
 
       setArchive(updatedNotes);
