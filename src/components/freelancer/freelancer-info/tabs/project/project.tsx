@@ -169,7 +169,7 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
                         />
                         <p className="text-gray-500">
                           No projects found.
-                          <br /> You haven't been assigned or applied to any
+                          <br /> You haven&apos;t been assigned or applied to any
                           projects yet.
 
                         </p>

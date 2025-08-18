@@ -13,10 +13,9 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
-import SkillDomain from "@/components/freelancer/freelancer-info/tabs/dehixtalent/dehixTalent";
+import DehixTalent from "@/components/freelancer/freelancer-info/tabs/dehixtalent/dehixTalent";
 import Project from "@/components/freelancer/freelancer-info/tabs/project/project";
 import OracleProject from "@/components/freelancer/freelancer-info/tabs/oracleProject/oracleProject";
-import DehixTalent from "@/components/freelancer/freelancer-info/tabs/dehixtalent/dehixTalent";
 
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
