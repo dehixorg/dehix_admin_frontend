@@ -187,19 +187,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
-<<<<<<< Admin-Final-Fixes-Part-2
-
-=======
->>>>>>> develop
-                              <a
-
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
+                                className="text-left text-blue-600 dark:text-blue-300 hover:underline bg-transparent border-none p-0 m-0"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-
-                              </a>
+                              </button>
 
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
@@ -221,15 +215,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                         return (
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
-                              <a
-
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
+                                className="text-left text-blue-600 dark:text-blue-300 hover:underline bg-transparent border-none p-0 m-0"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-
-                              </a>
+                              </button>
 
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
@@ -253,14 +245,13 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
                           <li key={f._id || i} className="flex items-center space-x-1">
                             {freelancer ? (
 
-                              <a
-
+                              <button
                                 onClick={() => handleFreelancerClick(freelancer._id)}
-                                className="cursor-pointer text-blue-600 dark:text-blue-300 hover:underline"
+                                className="text-left text-blue-600 dark:text-blue-300 hover:underline bg-transparent border-none p-0 m-0"
                                 title={`View ${freelancer.firstName} ${freelancer.lastName}'s profile`}
                               >
                                 {`${freelancer.firstName} ${freelancer.lastName}`}
-                              </a>
+                              </button>
 
                             ) : (
                               <span className="text-gray-500 dark:text-gray-400">Unknown Freelancer</span>
