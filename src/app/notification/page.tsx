@@ -85,6 +85,8 @@ export default function Talent() {
     ],
     isDownload: true,
     title: "Notifications",
+    searchColumn: [ "description", "heading",],
+
     tableHeaderActions: [AddNotify],
   };
 

@@ -13,9 +13,10 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PersonalInfo from "@/components/freelancer/freelancer-info/tabs/personalInfo/personalInfo";
-import SkillDomain from "@/components/freelancer/freelancer-info/tabs/skillDomain/skillDomain";
+import SkillDomain from "@/components/freelancer/freelancer-info/tabs/dehixtalent/dehixTalent";
 import Project from "@/components/freelancer/freelancer-info/tabs/project/project";
 import OracleProject from "@/components/freelancer/freelancer-info/tabs/oracleProject/oracleProject";
+import DehixTalent from "@/components/freelancer/freelancer-info/tabs/dehixtalent/dehixTalent";
 
 const FreelancerPage = () => {
   const searchParams = useSearchParams();
@@ -59,20 +60,20 @@ const FreelancerPage = () => {
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="Personal-Info">Personal-Info</TabsTrigger>
               <TabsTrigger value="Project">Projects</TabsTrigger>
-              <TabsTrigger value="Oracle-Project">Oracle-Project</TabsTrigger>
-              <TabsTrigger value="Skill-Domain">Skill/Domain</TabsTrigger>
+              <TabsTrigger value="Oracle-Project">Oracle</TabsTrigger>
+              <TabsTrigger value="Skill-Domain">Dehix Talent</TabsTrigger>
             </TabsList>
             <TabsContent value="Personal-Info">
-              <PersonalInfo id={id || ""} />
+              <PersonalInfo  id={id || ""} />
             </TabsContent>
             <TabsContent value="Project">
-              <Project profile id={id || ""} />
+              <Project  id={id || ""} />
             </TabsContent>
             <TabsContent value="Oracle-Project">
               <OracleProject  profile id={id || ""} />
             </TabsContent>
             <TabsContent value="Skill-Domain">
-              <SkillDomain  profile id={id || ""} />
+              <DehixTalent  profile id={id || ""} />
             </TabsContent>
           </Tabs>
         </main>

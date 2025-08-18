@@ -46,22 +46,31 @@ type ProjectCardProps = React.ComponentProps<typeof Card> & {
 export function ProjectCard({ id, ...props }: ProjectCardProps) {
   const [projectInfo, setProjectInfo] = useState<DehixProjectInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return; // Avoid fetching if id is empty
+    if (!id) {
+      setLoading(false);
+      return;
+    }
 
     const fetchProjectData = async () => {
+      setLoading(true);
+      setError(null);
+      setProjectInfo(null);
       try {
-        const response = await apiHelperService.getAllBusinessProject(id);
-        if (response?.data?.data?.data) {
-          setProjectInfo(response.data.data.data);
+        const response = await apiHelperService.getBusinessProjectbyId(id);
+        console.log(response.data)
+        // Check if the response data array exists and has at least one element
+        if (response?.data?.data && response.data.data.length > 0) {
+          // Set projectInfo to the first object in the array
+          setProjectInfo(response.data.data[0]);
         } else {
-          console.error("Project info data is missing or null");
-          // You can also set a fallback value if needed
-          setProjectInfo(null); // or any default value
+          setError("No project data found for this ID.");
         }
-      } catch (error) {
-        console.error("Error fetching project data:", error);
+      } catch (err) {
+        console.error("Error fetching project data:", err);
+        setError("Failed to fetch project data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -72,6 +81,10 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
 
   if (loading) {
     return <p>Loading project data...</p>;
+  }
+
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
   }
 
   if (!projectInfo) {
@@ -116,6 +129,7 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
           <Layers className="w-5 h-5 text-gray-500 mr-2" />
           <p className="text-md font-semibold">Project Type: </p>
           <p className=" ml-2">{projectInfo.projectType}</p>
+        
         </div>
 
         <div className="flex items-center">
@@ -126,51 +140,56 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
           </span>
         </div>
 
-        <div>
-          <div className="flex items-center">
-            <Code className="w-5 h-5 text-gray-500 mr-2" />
-            <strong>Skills Required:</strong>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {projectInfo.skillsRequired.map((skill, index) => (
-              <Badge key={index} className="px-3 py-1 rounded-full">
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex items-center">
-          <Users className="w-5 h-5 text-gray-500 mr-2" />
-          <p className="text-md font-semibold">Team: </p>
-          <p className=" ml-2">{projectInfo.team.join(", ")}</p>
-        </div>
-
-        <div>
+        {projectInfo.skillsRequired && projectInfo.skillsRequired.length > 0 && (
           <div>
             <div className="flex items-center">
-              <Link className="w-5 h-5 text-gray-500 mr-2" />
-              <strong>URL:</strong>
+              <Code className="w-5 h-5 text-gray-500 mr-2" />
+              <strong>Skills Required:</strong>
             </div>
-            <div className="flex flex-col gap-1 mt-2">
-              {projectInfo.url.map((urlItem) => (
-                <a
-                  key={urlItem._id}
-                  href={urlItem.value}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:text-blue-700 underline"
-                >
-                  {urlItem._id} - {urlItem.value}
-                </a>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {projectInfo.skillsRequired.map((skill, index) => (
+                <Badge key={index} className="px-3 py-1 rounded-full">
+                  {skill}
+                </Badge>
               ))}
             </div>
           </div>
-        </div>
+        )}
+
+        {projectInfo.team && projectInfo.team.length > 0 && (
+          <div className="flex items-center">
+            <Users className="w-5 h-5 text-gray-500 mr-2" />
+            <p className="text-md font-semibold">Team: </p>
+            <p className=" ml-2">{projectInfo.team.join(", ")}</p>
+          </div>
+        )}
+
+        {projectInfo.url && projectInfo.url.length > 0 && (
+          <div>
+            <div>
+              <div className="flex items-center">
+                <Link className="w-5 h-5 text-gray-500 mr-2" />
+                <strong>URL:</strong>
+              </div>
+              <div className="flex flex-col gap-1 mt-2">
+                {projectInfo.url.map((urlItem) => (
+                  <a
+                    key={urlItem._id}
+                    href={urlItem.value}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:text-blue-700 underline"
+                  >
+                    {urlItem.value}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         <Separator className="my-4" />
 
-        {/* Created At and Updated At */}
         <div className="flex justify-between">
           <p>
             <strong>Created At:</strong>{" "}

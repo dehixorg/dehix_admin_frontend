@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // For navigation
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -24,17 +24,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ButtonIcon } from "@/components/ui/arrowButton"; // Icon for the eye button
+import { ButtonIcon } from "@/components/ui/arrowButton";
 import { formatID, Messages, StatusEnum } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";
-import {getStatusBadge} from "@/utils/common/utils"
+import { getStatusBadge } from "@/utils/common/utils";
 import CopyButton from "@/components/copybutton";
 
 interface Project {
   _id: string;
   projectName: string;
   description: string;
-  status: StatusEnum; //use enum
+  status: StatusEnum;
   createdAt: string;
   updatedAt: string;
   skillsRequired: string[];
@@ -77,8 +77,8 @@ function ProjectList({ id }: { id: string }) {
     fetchProjects();
   }, [id, toast]);
 
-  const handleProject = (projectId: string) => { // Renamed 'id' to 'projectId' for clarity
-    router.push(`/project/tabs?id=${projectId}`); // Pass the ID as a query parameter
+  const handleProject = (projectId: string) => {
+    router.push(`/project/tabs?id=${projectId}`);
   };
 
   return (
@@ -87,8 +87,7 @@ function ProjectList({ id }: { id: string }) {
         <CardTitle>Projects</CardTitle>
       </CardHeader>
       <CardContent>
-        {/* MODIFICATION HERE: Change Table className */}
-        <Table className="w-full text-gray-900 bg-white border border-gray-200 rounded-lg shadow-sm">
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Id</TableHead>
@@ -96,31 +95,29 @@ function ProjectList({ id }: { id: string }) {
               <TableHead>Status</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead>Updated At</TableHead>
-              <TableHead className="text-right">Actions</TableHead> {/* Added Actions header */}
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           {loading ? (
-            <TableBody> {/* Wrap loading row in TableBody */}
+            <TableBody>
               <TableRow>
-                {/* MODIFICATION HERE: Change text color for loading */}
-                <TableCell colSpan={6} className="text-gray-700 text-center">
+                <TableCell colSpan={6} className="text-center">
                   Loading...
                 </TableCell>
               </TableRow>
             </TableBody>
           ) : project.length === 0 ? (
-            <TableBody> {/* Wrap no-data row in TableBody */}
+            <TableBody>
               <TableRow>
-                {/* MODIFICATION HERE: Change text color for no data */}
-                <TableCell colSpan={6} className="text-gray-700 text-center">
+                <TableCell colSpan={6} className="text-center">
                   No projects found.
                 </TableCell>
               </TableRow>
             </TableBody>
           ) : (
             <TableBody>
-              {project.map((project1, index) => (
-                <TableRow key={project1._id} className="border-b border-gray-300 hover:bg-gray-50">
+              {project.map((project1) => (
+                <TableRow key={project1._id}>
                   <TableCell>
                     {project1._id ? (
                       <div className="flex items-center space-x-2">
@@ -150,7 +147,7 @@ function ProjectList({ id }: { id: string }) {
                   <TableCell>
                     {new Date(project1.updatedAt).toLocaleString()}
                   </TableCell>
-                  <TableCell className="text-right"> {/* Align button to the right */}
+                  <TableCell className="text-right">
                     <ButtonIcon onClick={() => handleProject(project1._id)} />
                   </TableCell>
                 </TableRow>

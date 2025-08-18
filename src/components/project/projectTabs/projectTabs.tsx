@@ -37,24 +37,39 @@ interface Profile {
   _id: string;
 }
 
+interface UserData {
+  profiles: Profile[];
+}
+
 const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
-  const [userData, setUserData] = useState<{ profiles: Profile[] } | null>(
-    null,
-  );
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    
     const fetchUserData = async () => {
+      setLoading(true);
+      setError(null);
+      setUserData(null);
       try {
-        const response = await apiHelperService.getAllBusinessProject(id);
-        if (response?.data?.data?.data) {
-          setUserData(response.data.data.data);
+        const response = await apiHelperService.getBusinessProjectbyId(id);
+        
+        // Check if the data array exists and has at least one element
+        if (response?.data?.data && response.data.data.length > 0) {
+          // Set userData to the first object in the array
+          setUserData(response.data.data[0]);
         } else {
           console.error("User data is missing or null");
-          setUserData(null); // or handle with a default value
+          setError("No project data found.");
         }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
+      } catch (err) {
+        console.error("Error fetching user data:", err);
+        setError("Failed to fetch project data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -67,7 +82,12 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
     return <p>Loading...</p>;
   }
 
-  if (!userData || userData.profiles.length === 0) {
+  if (error) {
+    return <p className="text-red-500">{error}</p>;
+  }
+
+  // Use a more robust check before rendering
+  if (!userData || !userData.profiles || userData.profiles.length === 0) {
     return <p>No profiles found.</p>;
   }
 
@@ -104,17 +124,20 @@ const ProjectTabs: React.FC<ProjectTabsProps> = ({ id }) => {
                 <strong className="mr-2">Freelancers Required:</strong>{" "}
                 {profile.freelancersRequired}
               </div>
-              <div className="flex items-center">
-                <Code className="mr-2 w-5 h-5 text-gray-500" />
-                <strong className="mr-2">Skills:</strong>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {profile.skills.map((skill, index) => (
-                    <Badge key={index} className="px-3 py-1 rounded-full">
-                      {skill}
-                    </Badge>
-                  ))}
+              {/* Added a check here to prevent an error if skills array is null/empty */}
+              {profile.skills && profile.skills.length > 0 && (
+                <div className="flex items-center">
+                  <Code className="mr-2 w-5 h-5 text-gray-500" />
+                  <strong className="mr-2">Skills:</strong>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {profile.skills.map((skill, index) => (
+                      <Badge key={index} className="px-3 py-1 rounded-full">
+                        {skill}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="flex items-center">
                 <Star className="mr-2 w-5 h-5 text-gray-500" />
                 <strong className="mr-2">Experience (Years):</strong>{" "}

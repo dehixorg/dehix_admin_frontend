@@ -19,6 +19,7 @@ import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ReloadIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
 interface Params extends CustomTableChildComponentsProps {
   filterData?: Array<{
@@ -39,7 +40,7 @@ interface Params extends CustomTableChildComponentsProps {
   sortByArr: Array<{ label: string; fieldName: string }>;
   setSortByValue: (val: string) => void;
   setSortOrder: (val: 1 | -1) => void;
-};
+}
 
 export const FilterTable = ({
   filterData,
@@ -51,7 +52,7 @@ export const FilterTable = ({
   setSortByValue,
   setSortOrder,
   isSearch,
-  refetch
+  refetch,
 }: Params) => {
   const initializeFiltersArray = () => {
     const filtersArray: FiltersArrayElem[] = [];
@@ -83,7 +84,7 @@ export const FilterTable = ({
   }, []);
 
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-white text-black dark:bg-black dark:text-white rounded-lg">
+    <div className="flex items-center justify-between p-4 border-b border-border bg-background text-foreground rounded-lg">
       {/* Search Bar */}
       {isSearch && (
         <div className="w-1/3 mr-4">
@@ -91,207 +92,181 @@ export const FilterTable = ({
         </div>
       )}
 
-      {/* Filters */}
-      <div className="w-2/3 flex flex-grow items-center justify-between gap-4">
-        <HeaderActionComponent headerActions={tableHeaderActions} refetch={refetch} />
+      {/* Filters and Actions */}
+      <div className="flex flex-grow items-center justify-between gap-4">
+        <HeaderActionComponent
+          headerActions={tableHeaderActions}
+          refetch={refetch}
+        />
 
         {/* Filter Button */}
-        {
-          filterData && filterData.length > 0 &&
+        {filterData && filterData.length > 0 && (
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <button className="p-2 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700">
-              <Filter className="w-5 h-5 text-gray-800 dark:text-gray-200" />
-            </button>
-          </SheetTrigger>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Filter className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
 
-          {/* Sliding Filter Panel */}
-          <SheetContent
-            side="right"
-            className="w-80 p-4 bg-white dark:bg-gray-900 space-y-4 overflow-y-scroll"
-          >
-            <div>
-              <SheetTitle className="text-lg font-medium mb-0 text-gray-800 dark:text-gray-200">
-                Filter
-              </SheetTitle>
-              <SheetDescription>Choose your filters</SheetDescription>
-            </div>
-            {filterData?.map((filter, index) => (
-              <div
-                key={index}
-                className="w-full px-4 flex flex-col items-start justify-start gap-4"
-              >
-                <span>{filter.textValue}</span>
-                {filter.type === FilterDataType.SINGLE ? (
-                  <RadioGroup
-                    value={
-                      selectedFilters.find(
-                        ({ fieldName }) => fieldName === filter.name
-                      )?.value
-                    }
-                    onValueChange={(value) => {
-                      const newSelectedFilter = selectedFilters.map(
-                        (filterVal) => {
-                          if (filterVal.fieldName === filter.name) {
-                            return { ...filterVal, value: value };
+            {/* Sliding Filter Panel */}
+            <SheetContent
+              side="right"
+              className="w-80 p-4 space-y-6 overflow-y-scroll"
+            >
+              <div className="pb-4 border-b border-border">
+                <SheetTitle>Filter & Sort</SheetTitle>
+                <SheetDescription>
+                  Filter and sort the data below.
+                </SheetDescription>
+              </div>
+
+              {/* Filters */}
+              {filterData?.map((filter, index) => (
+                <div key={index} className="space-y-4">
+                  <h4 className="text-lg font-semibold">{filter.textValue}</h4>
+                  {filter.type === FilterDataType.SINGLE ? (
+                    <RadioGroup
+                      value={
+                        selectedFilters.find(
+                          ({ fieldName }) => fieldName === filter.name
+                        )?.value
+                      }
+                      onValueChange={(value) => {
+                        const newSelectedFilter = selectedFilters.map(
+                          (filterVal) => {
+                            if (filterVal.fieldName === filter.name) {
+                              return { ...filterVal, value: value };
+                            }
+                            return filterVal;
                           }
-                          return filterVal;
-                        }
-                      );
-                      setSelectedFilters(newSelectedFilter);
+                        );
+                        setSelectedFilters(newSelectedFilter);
+                      }}
+                      className="space-y-2"
+                    >
+                      {filter.options.map((opt, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <RadioGroupItem value={opt.value} id={opt.value} />
+                          <Label htmlFor={opt.value}>{opt.label}</Label>
+                        </div>
+                      ))}
+                    </RadioGroup>
+                  ) : (
+                    <div className="space-y-2">
+                      {filter.options.map((opt, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={opt.value}
+                            checked={selectedFilters
+                              .find(({ fieldName }) => fieldName === filter.name)!
+                              .value.includes(opt.value)}
+                            onClick={(e) => {
+                              const newSelectedFilters = selectedFilters.map(
+                                (filterVal) => {
+                                  if (filterVal.fieldName === filter.name) {
+                                    const newValue = filterVal.value.includes(
+                                      opt.value
+                                    )
+                                      ? filterVal.value.replace(
+                                          `${opt.value},`,
+                                          ""
+                                        )
+                                      : `${filterVal.value}${opt.value},`;
+                                    return { ...filterVal, value: newValue };
+                                  }
+                                  return filterVal;
+                                }
+                              );
+                              setSelectedFilters(newSelectedFilters);
+                            }}
+                          />
+                          <label
+                            htmlFor={opt.value}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {opt.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {/* Sorting */}
+              {sortByArr.length > 0 && (
+                <div className="space-y-4">
+                  <h4 className="text-lg font-semibold">Sort By</h4>
+                  <RadioGroup
+                    value={sortChildState.value}
+                    onValueChange={(value) => {
+                      setSortChildState({ ...sortChildState, value });
                     }}
-                    defaultValue=""
-                    className="flex flex-col text-gray-600 text-sm items-start justify-start gap-3"
+                    className="space-y-2"
                   >
-                    {filter.options.map((opt, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center cursor-pointer space-x-2"
-                      >
-                        <RadioGroupItem value={opt.value} id={opt.value} />
-                        <Label
-                          className="font-normal cursor-pointer"
-                          htmlFor={opt.value}
-                        >
-                          {opt.label}
+                    {sortByArr.map((sortVal, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value={sortVal.fieldName}
+                          id={sortVal.fieldName}
+                        />
+                        <Label htmlFor={sortVal.fieldName}>{sortVal.label}</Label>
+                      </div>
+                    ))}
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value={"createdAt"} id={"createdAt"} />
+                      <Label htmlFor={"createdAt"}>Most Recent</Label>
+                    </div>
+                  </RadioGroup>
+                  <RadioGroup
+                    value={sortChildState.order.toString()}
+                    onValueChange={(value) => {
+                      setSortChildState({
+                        ...sortChildState,
+                        order: value === "1" ? 1 : -1,
+                      });
+                    }}
+                    className="flex space-x-4"
+                  >
+                    {["-1", "1"].map((order) => (
+                      <div key={order} className="flex items-center space-x-2">
+                        <RadioGroupItem value={order} id={order} />
+                        <Label htmlFor={order}>
+                          {order === "-1" ? "Newest First" : "Oldest First"}
                         </Label>
                       </div>
                     ))}
                   </RadioGroup>
-                ) : (
-                  <div className="space-y-2">
-                    {filter.options.map((opt, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={opt.value}
-                          checked={selectedFilters
-                            .find(({ fieldName }) => fieldName === filter.name)!
-                            .value.includes(opt.value)}
-                          onClick={(e) => {
-                            const newSelectedFilters = selectedFilters.map(
-                              (filterVal) => {
-                                if (filterVal.fieldName === filter.name) {
-                                  const newValue = filterVal.value.includes(
-                                    opt.value
-                                  )
-                                    ? filterVal.value.replace(
-                                        `${opt.value},`,
-                                        ""
-                                      )
-                                    : `${filterVal.value}${opt.value},`;
-                                  return { ...filterVal, value: newValue };
-                                }
-                                return filterVal;
-                              }
-                            );
-                            setSelectedFilters(newSelectedFilters);
-                          }}
-                        />
-                        <label
-                          htmlFor={opt.value}
-                          className="text-sm font-normal cursor-pointer text-gray-600 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {opt.label}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                </div>
+              )}
 
-            {sortByArr.length > 0 && (
-              <div className="w-full px-4 flex flex-col items-start justify-start gap-4">
-                <span>Sort By</span>
-                <RadioGroup
-                  value={sortChildState.value}
-                  onValueChange={(value) => {
-                    setSortChildState({ ...sortChildState, value });
+              {/* Action Buttons */}
+              <div className="flex flex-col space-y-4 pt-4 border-t border-border">
+                <Button
+                  onClick={() => {
+                    setIsOpen(false);
+                    setFilters(selectedFilters);
+                    setSortByValue(sortChildState.value);
+                    setSortOrder(sortChildState.order);
                   }}
-                  defaultValue="createdAt"
-                  className="flex flex-col text-gray-600 text-sm items-start justify-start gap-3"
                 >
-                  {sortByArr.map((sortVal, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <RadioGroupItem
-                        value={sortVal.fieldName}
-                        id={sortVal.fieldName}
-                      />
-                      <Label
-                        className="font-normal cursor-pointer"
-                        htmlFor={sortVal.fieldName}
-                      >
-                        {sortVal.label}
-                      </Label>
-                    </div>
-                  ))}
-                  <div className="flex items-center cursor-pointer space-x-2">
-                    <RadioGroupItem value={"createdAt"} id={"createdAt"} />
-                    <Label
-                      className="font-normal cursor-pointer"
-                      htmlFor={"createdAt"}
-                    >
-                      {"Most Recent"}
-                    </Label>
-                  </div>
-                </RadioGroup>
-                <RadioGroup
-                  value={sortChildState.order.toString()}
-                  onValueChange={(value) => {
-                    setSortChildState({
-                      ...sortChildState,
-                      order: value === "1" ? 1 : -1,
-                    });
+                  Apply Filters
+                </Button>
+                <Button
+                  variant="link"
+                  className="text-sm text-muted-foreground"
+                  onClick={() => {
+                    setIsOpen(false);
+                    setSelectedFilters(initializeFiltersArray());
+                    setFilters(initializeFiltersArray());
                   }}
-                  defaultValue="createdAt"
-                  className="flex flex-row text-gray-600 text-sm items-start justify-start gap-3"
                 >
-                  {["1", "-1"].map((order) => (
-                    <div
-                      key={order}
-                      className="flex items-center cursor-pointer space-x-2"
-                    >
-                      <RadioGroupItem value={order} id={order} />
-                      <Label
-                        className="font-normal cursor-pointer"
-                        htmlFor={order}
-                      >
-                        {order == "-1" ? "Newest First" : "Oldest First"}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
+                  <ReloadIcon className="mr-2 h-4 w-4" /> Reset Filters
+                </Button>
               </div>
-            )}
-
-            {/* Apply Filters Button */}
-            <button
-              className="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none"
-              onClick={() => {
-                setIsOpen(false);
-                setFilters(selectedFilters);
-                setSortByValue(sortChildState.value);
-                setSortOrder(sortChildState.order);
-              }}
-            >
-              Apply Filters
-            </button>
-            <span
-              className="text-blue-500 hover:underline text-xs cursor-pointer"
-              onClick={() => {
-                setIsOpen(false);
-                setSelectedFilters(initializeFiltersArray());
-                setFilters(initializeFiltersArray());
-              }}
-            >
-              <ReloadIcon className="inline" /> Reset Filters
-            </span>
-          </SheetContent>
-        </Sheet>
-        }
+            </SheetContent>
+          </Sheet>
+        )}
       </div>
     </div>
   );

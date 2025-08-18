@@ -159,6 +159,7 @@ const BusinessTabs = () => {
                Business
               </TabsTrigger>
               
+              
             </TabsList>
             <TabsContent value="Experience">
               <Verification Data={experience} />
@@ -172,6 +173,7 @@ const BusinessTabs = () => {
             <TabsContent value="Business">
               <Verification Data={business}/>
             </TabsContent>
+           
 
           </Tabs>
         </main>

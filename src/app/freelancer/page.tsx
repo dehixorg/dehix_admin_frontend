@@ -65,7 +65,6 @@ export default function Talent() {
               actionIcon: <Info className="text-gray-500 w-4 h-4" />,
               type: "Button",
               handler: (id) => {
-                console.log("Id",id)
                 router.push(`/freelancer/tabs?id=${id.id}`);
               },
             },

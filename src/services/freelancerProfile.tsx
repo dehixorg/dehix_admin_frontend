@@ -7,13 +7,15 @@ export const apiHelperService = {
   getFreelancerProfileById: async (profileId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/freelancer/profile/${profileId}`,
+      endpoint: `/freelancer/admin/profile/${profileId}`,
     });
   },
+
+  
   getAllFreelancerPersonalInfo: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: `/freelancer/${itemId}`,
+      endpoint: `/freelancer/admin/${itemId}`,
     });
   },
 };
