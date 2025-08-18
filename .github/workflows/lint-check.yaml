@@ -92,12 +92,16 @@ jobs:
           echo "total_errors=$TOTAL_ERRORS" >> $GITHUB_OUTPUT
           echo "total_warnings=$TOTAL_WARNINGS" >> $GITHUB_OUTPUT
 
-          # Fail the step if there are any errors
+          # Fail the step if there are any errors or more than 5 warnings
+          
           if [ "$TOTAL_ERRORS" -gt 0 ]; then
             echo "::error::Lint check failed with $TOTAL_ERRORS error(s) and $TOTAL_WARNINGS warning(s)"
             exit 1
+          elif [ "$TOTAL_WARNINGS" -gt 5 ]; then
+            echo "::error::Too many warnings: $TOTAL_WARNINGS (maximum allowed is 5)"
+            exit 1
           elif [ "$TOTAL_WARNINGS" -gt 0 ]; then
-            echo "::warning::Lint check passed with $TOTAL_WARNINGS warning(s)"
+            echo "::warning::Lint check passed with $TOTAL_WARNINGS warning(s) (5 allowed)"
           else
             echo "✅ Lint check passed with no errors or warnings"
           fi
