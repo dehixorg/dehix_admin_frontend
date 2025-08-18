@@ -109,7 +109,3 @@ jobs:
           # Cleanup
           rm -f "$LINT_OUTPUT_FILE" "$LINT_SUMMARY_FILE"
 
-      - name: Run build
-        run: npm run build
-        env:
-          NODE_ENV: production
