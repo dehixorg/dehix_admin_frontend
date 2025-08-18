@@ -63,7 +63,7 @@ const BusinessTabs = () => {
     
     fetchAdminVerifications();
     
-  }, [userId]); 
+  }, [userId, toast]); 
 
   if (loading) {
     return <div>Loading...</div>;

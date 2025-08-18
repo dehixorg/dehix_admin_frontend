@@ -82,7 +82,7 @@ const fetchAdmin = async () => {
 
 useEffect(() => {
   fetchAdmin();
-}, [id]);
+}, [id, fetchAdmin]);
 
 const handleResetPassword = async () => {
   if (newPassword !== confirmPassword) {

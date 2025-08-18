@@ -3,6 +3,7 @@
 import { DownloadIcon, PackageOpen } from "lucide-react";
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
+import { useCallback , useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -11,11 +12,10 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { useEffect, useState } from "react";
 import { apiHelperService } from "@/services/customTable";
 import { FieldType, FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
-import FilterTable from "./FilterTable";
+import { FilterTable } from "./FilterTable";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ToolTip } from "../ToolTip";
 import { TablePagination } from "./Pagination";
@@ -44,31 +44,36 @@ export const CustomTable = ({
   );
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
-  const [sortOrder, setSortOrder] = useState<1 | -1>(1);
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  
+  // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
+  const handleSortOrderChange = useCallback((val: 1 | -1) => {
+    setSortOrder(val === 1 ? "asc" : "desc");
+  }, []);
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(20);
 
   const { toast } = useToast();
 
-  const fetchData = async () => {
-      try {
-        setLoading(true);
-        window.scrollTo(0, 0);
-        const params: Record<string, any> = {
-          filters: "",
-          page: page,
-          limit: limit
-        };
-        selectedFilters.map((filter) => {
-          params["filters"] += [`filter[${filter.fieldName}],`];
-        });
-        selectedFilters.map((filter) => {
-          if (filter.arrayName) {
-            params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
-              filter.value;
-          } else {
-            params[`filter[${filter.fieldName}]`] = filter.value;
+  const fetchData = useCallback(async () => {
+    try {
+      setLoading(true);
+      window.scrollTo(0, 0);
+      const params: Record<string, any> = {
+        filters: "",
+        page: page,
+        limit: limit
+      };
+      selectedFilters.map((filter) => {
+        params["filters"] += [`filter[${filter.fieldName}],`];
+      });
+      selectedFilters.map((filter) => {
+        if (filter.arrayName) {
+          params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
+            filter.value;
+        } else {
+          params[`filter[${filter.fieldName}]`] = filter.value;
           }
         });
         if (search != "") {
@@ -90,7 +95,7 @@ export const CustomTable = ({
       } finally {
         setLoading(false);
       }
-  }
+  }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title])
 
   useEffect(() => {
     fetchData()
@@ -188,7 +193,7 @@ export const CustomTable = ({
               setSearch={setSearch}
               sortByArr={sortBy || []}
               setSortByValue={setSortByValue}
-              setSortOrder={setSortOrder}
+              setSortOrder={handleSortOrderChange}
               isSearch={searchColumn ? searchColumn.length > 0 : false}
               refetch={refetch}
             />

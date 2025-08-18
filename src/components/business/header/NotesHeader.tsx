@@ -18,17 +18,21 @@ import {
 import { Note } from '@/utils/types/note';
 import { CreateNoteDialog } from '@/components/shared/CreateNoteDialog';
 
+interface NotesHeaderProps {
+  onNoteCreate: (note: Note) => void;
+  notes: Note[];
+  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
+  isTrash: boolean;
+  userId: string;
+}
+
 const NotesHeader = ({
   onNoteCreate,
   notes,
   setNotes,
   isTrash,
-}: {
-  onNoteCreate: (note: Note) => void;
-  notes: Note[];
-  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
-  isTrash: boolean;
-}) => {
+  userId,
+}: NotesHeaderProps) => {
   const [selectedSortOption, setSelectedSortOption] = useState<string>('');
 
   const sortByColor = () => {
@@ -122,7 +126,7 @@ const NotesHeader = ({
               </DropdownMenu>
 
               {/* Create Dialog */}
-              <CreateNoteDialog onNoteCreate={onNoteCreate} />
+              <CreateNoteDialog onNoteCreate={onNoteCreate} userId={userId} />
             </div>
           </div>
         )}

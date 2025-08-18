@@ -17,9 +17,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Note, NoteType } from '@/utils/types/note';
 
-type Props = {
+interface Props {
   onNoteCreate: (note: Note) => void;
-};
+  userId: string;
+}
 
 const banners = [
   '/banner1.svg',
@@ -31,7 +32,7 @@ const banners = [
   '/banner7.svg',
 ];
 
-export function CreateNoteDialog({ onNoteCreate }: Props) {
+export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedColor, setSelectedColor] = useState('#ffffff');
@@ -43,6 +44,7 @@ export function CreateNoteDialog({ onNoteCreate }: Props) {
     if (!title.trim() && !content.trim()) return;
 
     const newNote: Note = {
+      userId,
       title: title.trim(),
       content: content.trim(),
       bgColor: selectedBanner ? undefined : selectedColor,
