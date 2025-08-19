@@ -49,7 +49,6 @@ export default function EducationForm() {
   });
 
   const handleSubmit = (values: FormSchema) => {
-    console.log({ values });
   };
 
   return (

@@ -130,14 +130,15 @@ console.log(userType);
                 console.error('Permission denied: Cannot delete this note.');
               }
             }}
-            onChangeBanner={(noteId: string | undefined) => {
+            // MyNotesContainer.tsx
+            // The prop should be a function that accepts two arguments
+            onChangeBanner={(noteId: string | undefined, newBannerUrl: string) => {
                 if (userType === 'superadmin' || note.userId === uId) {
-                  const banner = note.banner || 'defaultBanner'; // Example logic
-                  handleChangeBanner(noteId, banner);
+                    handleChangeBanner(noteId, newBannerUrl);
                 } else {
-                  console.error('Permission denied: Cannot change banner of this note.');
+                    console.error('Permission denied: Cannot change banner of this note.');
                 }
-              }}
+            }}
               
             navItems={navItems(note)}
             // Pass the note to dynamically filter options

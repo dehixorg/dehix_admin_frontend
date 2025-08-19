@@ -73,12 +73,12 @@ export default function DropdownProfile() {
               <DropdownMenuItem>Settings</DropdownMenuItem>
             </Link>
           ) : (
-            <p>Loading...</p>
+            <p></p>
           )}
         </div>
-        <Link href="/settings/support">
+        {/* <Link href="/settings/support">
           <DropdownMenuItem>Support</DropdownMenuItem>
-        </Link>
+        </Link> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onLogoutClick}>
           <LogOut size={18} className="mr-2" />

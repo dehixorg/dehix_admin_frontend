@@ -14,7 +14,7 @@ const useFetchNotesByAdminId = (adminId: string | undefined) => {
 
     setIsLoading(true);
     try {
-      const response = await axiosInstance.get('/adminnotes', {
+      const response = await axiosInstance.get('/notes', {
         params: { adminId }, // Fetch notes based on adminId
       });
       console.log(response);

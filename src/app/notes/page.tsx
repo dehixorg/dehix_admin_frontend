@@ -51,7 +51,7 @@ const Notes = () => {
     } as Note;
 
     try {
-      const response = await axiosInstance.post('/adminnotes', newNote);
+      const response = await axiosInstance.post('/notes', newNote);
       if (response?.data) {
         const updatedNotes = [response.data, ...notes];
         setNotes(updatedNotes);

@@ -23,7 +23,6 @@ export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps
           });
           refetch?.();
         } catch (error) {
-          console.log(error);
           toast({
             title: "Error",
             description: Messages.UPDATE_ERROR("domain"),

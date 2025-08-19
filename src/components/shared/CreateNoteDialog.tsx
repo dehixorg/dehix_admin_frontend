@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Note, NoteType } from '@/utils/types/note';
+import { useSelector } from 'react-redux';
 
 type Props = {
   onNoteCreate: (note: Note) => void;
@@ -41,10 +42,13 @@ export function CreateNoteDialog({ onNoteCreate }: Props) {
 
   const handleSubmit = () => {
     if (!title.trim() && !content.trim()) return;
+    const user = useSelector((state: any) => state.user);
+    const userid = user.uid;
 
     const newNote: Note = {
       title: title.trim(),
       content: content.trim(),
+      userId:userid,
       bgColor: selectedBanner ? undefined : selectedColor,
       banner: selectedBanner || undefined,
       createdAt: new Date(),
