@@ -100,7 +100,7 @@ const BusinessTabs = () => {
   };
 
   fetchBusiness();
-}, []);
+}, [toast]);
 
 
   return (

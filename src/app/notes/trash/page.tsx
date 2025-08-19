@@ -85,10 +85,11 @@ const Notes = () => {
       {/* Main content area */}
       <div className="ml-12">
         <NotesHeader
-          isTrash={false}
+          isTrash={true}
           setNotes={setNotes}
           notes={notes}
           onNoteCreate={handleCreateNote}
+          userId={userId}
         />
         <div className="p-6">
           {isLoading ? (

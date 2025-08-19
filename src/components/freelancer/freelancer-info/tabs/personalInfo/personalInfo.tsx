@@ -13,7 +13,6 @@ import { apiHelperService } from "@/services/freelancerProfile";
 import SkillCard from "../skilldomaincard/SkillCard";
 import DomainCard from "../skilldomaincard/DomainCard";
 
-/* ---------- NEW: Assuming a ProfileCard component exists ---------- */
 import {ProfileCard}  from "../profileCard/ProfileCard"
 /* ---------- helpers ---------- */
 
@@ -24,6 +23,7 @@ const fetchUserProfile = async (id: string) => {
     education: Object.values(data.data.education ?? {}),
     projects: Object.values(data.data.projects ?? {}),
     professional: Object.values(data.data.professionalInfo ?? {}),
+
     skills: data.data.skills ?? [],
     domain: data.data.domain ?? [],
     consultant: Object.values(data.consultant ?? {}),
@@ -43,6 +43,7 @@ interface PersonalInfoProps {
   id?: string;
   /** Profile passed down from parent */
   
+
 }
 let origprofile;
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
@@ -70,7 +71,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
     setShowAll((p) => ({ ...p, [key]: !p[key] }));
 
   /* ---------- 1️⃣ react to the parent‑supplied profile ---------- */
- /* ---------- 1️⃣ react to the parent‑supplied profile ---------- */
 useEffect(() => {
   if (id) {
     const getProfile = async () => {
@@ -90,6 +90,8 @@ useEffect(() => {
     getProfile();
   }
 }, [id]);
+
+
 
   /* ---------- 2️⃣ react to the `id` → fetch from API ---------- */
   useEffect(() => {
@@ -114,6 +116,7 @@ useEffect(() => {
         setApiSkills(skills);
         setApiDomain(domain);
         setApiConsultant(consultant);
+
       } catch (e) {
         console.error("Failed to fetch profile:", e);
       }
@@ -231,6 +234,7 @@ useEffect(() => {
       {renderSection({
         title: "Skills",
         data: [ ...apiSkills],
+
         Card: SkillCard,
         sectionKey: "skills",
         fallback: "No Skill information available.",
