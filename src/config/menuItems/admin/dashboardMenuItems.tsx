@@ -17,7 +17,13 @@ import {
   Home,
   Archive,
   Trash2,
-  FileWarning
+  FileWarning,
+  Receipt,
+  Banknote,
+  Key,
+  Briefcase
+  
+  
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -25,7 +31,7 @@ import { MenuItem } from "@/components/menu/sidebarMenu";
 export const menuItemsTop: MenuItem[] = [
   {
     href: "#",
-    icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
+    icon: <Boxes className="h-5 w-5 transition-all group-hover:scale-110" />,
     label: "Dehix",
   },
   {
@@ -38,20 +44,41 @@ export const menuItemsTop: MenuItem[] = [
     icon: <User className="h-5 w-5" />,
     label: "Freelancer",
   },
-   {
-    href: "/connects",
-    icon: <User className="h-5 w-5" />,
-    label: "Connects",
+  {
+    // Merged item for Connects and Transactions
+    href: "#",
+    icon: <Briefcase className="h-5 w-5" />,
+    label: "",
+    subItems: [
+      {
+        href: "/connects",
+        icon: <Banknote className="h-5 w-5" />,
+        label: "Connects",
+      },
+      {
+        href: "/transactions",
+        icon: <Receipt className="h-5 w-5" />,
+        label: "Transactions",
+      },
+    ],
   },
   {
-    href: "/skill",
+    // Merged item for Skill and Domain
+    href: "#",
     icon: <FileBadge className="h-5 w-5" />,
-    label: "Skill",
-  },
-  {
-    href: "/domain",
-    icon: <Earth className="h-5 w-5" />,
-    label: "Domain",
+    label: "",
+    subItems: [
+      {
+        href: "/skill",
+        icon: <FileBadge className="h-5 w-5" />,
+        label: "Skill",
+      },
+      {
+        href: "/domain",
+        icon: <Earth className="h-5 w-5" />,
+        label: "Domain",
+      },
+    ],
   },
   {
     href: "/notification",
@@ -78,39 +105,40 @@ export const menuItemsTop: MenuItem[] = [
     icon: <NotebookPen className="h-5 w-5" />,
     label: "Interview",
   },
-
   {
     href: "/bid",
     icon: <Gavel className="h-5 w-5" />,
     label: "Bid",
   },
-
   {
     href: "/projectdomain",
     icon: <UserCheck className="h-5 w-5" />,
     label: "Project Domain",
   },
   {
+    // Merged item for Verification
     href: "/verification",
-    icon: <ShieldCheck className="h-5 w-5" />,
-    label: "Verification",
-  },
-  {
-    href: "/adminVerification",
-    icon: <ShieldCheck className="h-5 w-5" />,
-    label: " Admin Verification",
-  },
-   {
-    href: "/transactions",
-    icon: <User className="h-5 w-5" />,
-    label: "Transactions",
+    icon: <Key className="h-5 w-5" />,
+    label: "",
+    subItems: [
+      {
+        href: "/verification",
+        icon: <ShieldCheck className="h-5 w-5" />,
+        label: "Verification",
+      },
+      {
+        href: "/adminVerification",
+        icon: <ShieldCheck className="h-5 w-5" />,
+        label: " Admin Verification",
+      },
+    ],
   },
   {
     href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
     label:"Notes",
   },
-   {
+  {
     href: "/reports",
     icon: <FileWarning className="h-5 w-5" />,
     label:"Reports",
@@ -128,7 +156,7 @@ export const menuItemsBottom: MenuItem[] = [
 export const notesMenu: MenuItem[] = [
   {
     href: '#',
-    icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
+    icon: <Boxes className="h-5 w-5 transition-all group-hover:scale-110" />,
     label: 'Dehix',
   },
   {

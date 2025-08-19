@@ -48,7 +48,6 @@ export default function AddSkillForm() {
   });
 
   const handleSubmit = (values: FormSchema) => {
-    console.log({ values });
   };
 
   return (

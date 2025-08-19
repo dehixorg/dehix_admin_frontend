@@ -86,7 +86,6 @@ export const CustomTable = ({
         const response = await apiHelperService.fetchData(api, params);
         setData(response.data.data);
       } catch (error) {
-        console.log(error);
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR(title || ""),
@@ -141,7 +140,6 @@ export const CustomTable = ({
       });
       content += fieldValues.join(",") + "\n";
     });
-    console.log(content);
 
     const blob = new Blob([content], { type: "text/csv" });
 

@@ -47,7 +47,6 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
       try {
         const response = await apiHelperService.getAllFreelancerPersonalInfo(id);
         const freelancer = response?.data?.data;
-        console.log(freelancer);
         if (!freelancer) {
           throw new Error("No freelancer data found");
         }
@@ -68,7 +67,6 @@ const Project: React.FC<ProjectProps> = ({ id }) => {
             apiHelperService.getProjectbyId(projectId).then((res) => res.data.data)
           );
           const projects = await Promise.all(projectPromises);
-          console.log(projects);
           return projects;
         };
 

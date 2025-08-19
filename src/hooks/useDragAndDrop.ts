@@ -51,7 +51,7 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
           );
 
           if (response.status === 200) {
-            console.log('Notes order updated successfully:', response.data);
+            console.log("success");
           } else {
             console.error('Failed to update note order:', response.statusText);
           }

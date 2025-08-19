@@ -90,7 +90,6 @@ const AddFaq: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         refetch?.()
       }
       else {
-        console.log(response)
         throw new Error()
       }
     } catch (error) {
