@@ -40,17 +40,16 @@ export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
   const [selectedBanner, setSelectedBanner] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [isHTML, setIsHTML] = useState(false);
+  const user = useSelector((state: any) => state.user);
 
   const handleSubmit = () => {
     if (!title.trim() && !content.trim()) return;
-    const user = useSelector((state: any) => state.user);
     const userid = user.uid;
 
     const newNote: Note = {
-      userId,
+      userId: userid,
       title: title.trim(),
       content: content.trim(),
-      userId:userid,
       bgColor: selectedBanner ? undefined : selectedColor,
       banner: selectedBanner || undefined,
       createdAt: new Date(),

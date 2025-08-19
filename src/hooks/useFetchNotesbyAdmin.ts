@@ -17,7 +17,7 @@ const useFetchNotesByAdminId = (adminId: string | undefined) => {
       const response = await axiosInstance.get('/notes', {
         params: { adminId }, // Fetch notes based on adminId
       });
-      console.log(response);
+      
 
       if (response?.data?.notes) {
         setNotes(response.data.notes.notes);

@@ -13,7 +13,7 @@ import {
 export interface MenuItem {
   href: string;
   icon: React.ReactNode;
-  label?: string;
+  label: string;
   subItems?: MenuItem[];
 }
 

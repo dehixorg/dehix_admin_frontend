@@ -28,10 +28,10 @@ const user: string | null = localStorage.getItem('user');
 const parsedUser = user ? JSON.parse(user) : null;
 
 const uId = parsedUser ? parsedUser.uid : null;
-console.log(uId);
+
 
 const userType = parsedUser ? parsedUser.type : null;
-console.log(userType);
+
 
   const {
     selectedNote,

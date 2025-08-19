@@ -34,7 +34,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       showError('Missing required fields for updating the note.');
       return;
     }
-    console.log(note);
+    
 
     try {
       const response = await axiosInstance.put(`/notes/${note._id}`, {
@@ -103,7 +103,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note banner.`);
-      console.log(error);
+      
     }
   };
 
@@ -129,7 +129,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      console.log(error);
+      
     }
   };
 
@@ -155,7 +155,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      console.log(error);
+      
     }
   };
 
