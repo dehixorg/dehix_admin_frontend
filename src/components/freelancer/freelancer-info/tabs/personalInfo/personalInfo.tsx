@@ -13,10 +13,7 @@ import { apiHelperService } from "@/services/freelancerProfile";
 import SkillCard from "../skilldomaincard/SkillCard";
 import DomainCard from "../skilldomaincard/DomainCard";
 
-/* ---------- NEW: Assuming a ProfileCard component exists ---------- */
-import {ProfileCard}  from "../profileCard/ProfileCard"// You'll need to create this component and provide the correct path.
-
-
+import {ProfileCard}  from "../profileCard/ProfileCard"
 /* ---------- helpers ---------- */
 
 const fetchUserProfile = async (id: string) => {
@@ -79,7 +76,6 @@ useEffect(() => {
     const getProfile = async () => {
       try {
         const pprofile = await fetchProfile(id);
-        console.log(pprofile); // This will now log the resolved data
         // You can now use the resolved data here, e.g., to set a state.
         if(pprofile.data.data)
         {

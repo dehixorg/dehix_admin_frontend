@@ -34,10 +34,10 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       showError('Missing required fields for updating the note.');
       return;
     }
-    console.log(note);
+    
 
     try {
-      const response = await axiosInstance.put(`/adminnotes/${note._id}`, {
+      const response = await axiosInstance.put(`/notes/${note._id}`, {
         title: note.title,
         content: note.content,
         bgColor: note.bgColor || '#FFFFFF',
@@ -72,7 +72,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
     }
     try {
       console.log(noteId)
-      await axiosInstance.delete(`/adminnotes/${noteId}`);
+      await axiosInstance.delete(`/notes/${noteId}`);
       showSuccess('Note deleted permanently.');
       fetchNotes();
     } catch (error) {
@@ -87,12 +87,12 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
   ) => {
     const noteToUpdate = notes.find((note) => note._id === noteId);
 
-    if (!noteToUpdate) {
+    if (!noteToUpdate) {  
       showError('Note not found.');
       return;
     }
     try {
-      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         banner,
       });
@@ -103,7 +103,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note banner.`);
-      console.log(error);
+      
     }
   };
 
@@ -118,7 +118,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         noteType: type,
       });
@@ -129,7 +129,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      console.log(error);
+      
     }
   };
 
@@ -144,7 +144,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      const response = await axiosInstance.put(`/adminnotes/${noteToUpdate._id}`, {
+      const response = await axiosInstance.put(`/notes/${noteToUpdate._id}`, {
         ...noteToUpdate,
         type,
       });
@@ -155,7 +155,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      console.log(error);
+      
     }
   };
 

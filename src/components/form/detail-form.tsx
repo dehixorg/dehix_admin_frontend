@@ -41,7 +41,6 @@ export default function DetailForm() {
   });
 
   const handleSubmit = (values: FormSchema) => {
-    console.log({ values });
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card'; 
+import { HoverCard, HoverCardTrigger, HoverCardContent } from '@/components/ui/hover-card';
 import { Palette } from 'lucide-react';
 import Image from 'next/image';
 
@@ -18,6 +18,8 @@ const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChang
     '/banner7.svg',
   ];
 
+  console.log(banners)
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -35,11 +37,14 @@ const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChang
             <div
               key={index}
               onClick={() => handleChangeBanner(banner)}
-              className="cursor-pointer p-1  rounded"
+              className="cursor-pointer p-1 rounded"
             >
               <Image
                 src={banner}
                 alt={`Banner ${index + 1}`}
+                // Add the required width and height properties here
+                width={28}
+                height={28}
                 className="w-7 h-auto rounded-md hover:scale-110 transition-transform"
               />
             </div>

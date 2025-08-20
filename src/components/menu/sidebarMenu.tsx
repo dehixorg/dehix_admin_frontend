@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 import { ThemeToggle } from "../shared/themeToggle";
+import MergedMenuItem from "./MergesMenuItem"; // Corrected import
 
 import {
   Tooltip,
@@ -9,66 +10,94 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 
-// Define TypeScript types for menu items
 export interface MenuItem {
   href: string;
   icon: React.ReactNode;
   label: string;
+  subItems?: MenuItem[];
 }
 
 type SidebarMenuProps = {
   menuItemsTop: MenuItem[];
   menuItemsBottom: MenuItem[];
   active: string;
-  setActive?: (page: string) => void; // Making setActive optional
+  setActive?: (page: string) => void;
 };
 
 const SidebarMenu: React.FC<SidebarMenuProps> = ({
   menuItemsTop,
   menuItemsBottom,
   active,
-  setActive = () => null, // Defaulting setActive to a no-op function
+  setActive = () => null,
 }) => {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-3 px-2 sm:py-5">
-        {menuItemsTop.map((item, index) => (
-          <Tooltip key={index}>
-            <TooltipTrigger asChild>
-              <Link
-                href={
-                  item.label === active || item.label === "Dehix"
-                    ? "#"
-                    : item.href
-                }
-                onClick={() => setActive(item.label)}
-                className={`flex h-9 w-9 items-center justify-center rounded-lg  ${item.label === active || item.label === "Dehix" ? (item.label === "Dehix" ? "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base" : "flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8") : "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"} transition-colors hover:text-foreground md:h-8 md:w-8`}
-              >
-                {item.icon}
-                <span className="sr-only">{item.label}</span>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">{item.label}</TooltipContent>
-          </Tooltip>
-        ))}
+        {menuItemsTop.map((item, index) => {
+          if (item.subItems) {
+            return (
+              <MergedMenuItem
+                key={index}
+                parentItem={item}
+                subItems={item.subItems}
+                active={active}
+              />
+            );
+          }
+          
+          const isDehix = item.label === "Dehix";
+          const isActive = item.label === active;
+          const linkClasses = `flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 
+            ${
+              isDehix 
+                ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base" 
+                : isActive 
+                ? "bg-accent text-accent-foreground" 
+                : "text-muted-foreground"
+            }`;
+
+          return (
+            <Tooltip key={index}>
+              <TooltipTrigger asChild>
+                <Link
+                  href={isActive || isDehix ? "#" : item.href}
+                  onClick={() => item.label && setActive(item.label)}
+                  className={linkClasses}
+                >
+                  {item.icon}
+                  {item.label && <span className="sr-only">{item.label}</span>}
+                </Link>
+              </TooltipTrigger>
+              {item.label && <TooltipContent side="right">{item.label}</TooltipContent>}
+            </Tooltip>
+          );
+        })}
       </nav>
 
       <div className="mt-auto mx-auto">
         <ThemeToggle />
       </div>
+
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
         {menuItemsBottom.map((item, index) => (
           <Tooltip key={index}>
             <TooltipTrigger asChild>
               <Link
                 href={item.href}
-                className={`flex h-9 w-9 items-center justify-center rounded-lg ${item.label === active || item.label === "Dehix" ? (item.label === "Dehix" ? "group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base" : "flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8") : "flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"} transition-colors hover:text-foreground md:h-8 md:w-8`}
+                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 
+                  ${
+                    item.label === "Dehix" 
+                      ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base" 
+                      : item.label === active 
+                      ? "bg-accent text-accent-foreground" 
+                      : "text-muted-foreground"
+                  }`}
               >
                 {item.icon}
-                <span className="sr-only">{item.label}</span>
+                {item.label && <span className="sr-only">{item.label}</span>}
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right">{item.label}</TooltipContent>
+            {item.label && <TooltipContent side="right">{item.label}</TooltipContent>}
           </Tooltip>
         ))}
       </nav>

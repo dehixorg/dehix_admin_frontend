@@ -81,7 +81,6 @@ const AddDomain: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         setOpen(false);
       }, 500);
     } catch (error) {
-      console.log(error);
       toast({
         title: "Error",
         description: Messages.ADD_ERROR("domain"),
