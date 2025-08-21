@@ -76,7 +76,6 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
     try {
       const skillDataWithUser = { ...data, createdBy: currentUser.type.toUpperCase(), createdById: currentUserId };
-      console.log(skillDataWithUser)
       const response = await apiHelperService.createSkill(skillDataWithUser);
       if(response.success) {
         toast({
@@ -93,7 +92,6 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         });
       }
     } catch (error) {
-      console.log(error)
       toast({
         title: "Error",
         description: "Server Error",

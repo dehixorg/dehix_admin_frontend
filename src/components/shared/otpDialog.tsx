@@ -101,7 +101,6 @@ function OtpLogin({ phoneNumber, isModalOpen, setIsModalOpen }: OtpLoginProps) {
         dispatch(setUser({ ...user, type: claims.type }));
         router.replace(`/dashboard/${claims.type}`);
       } catch (error) {
-        console.log(error);
         setError("Failed to verify OTP. Please check the OTP.");
       }
     });
@@ -129,7 +128,6 @@ function OtpLogin({ phoneNumber, isModalOpen, setIsModalOpen }: OtpLoginProps) {
         setConfirmationResult(confirmationResult);
         setSuccess("OTP sent successfully.");
       } catch (err: any) {
-        console.log(err);
         setResendCountdown(0);
 
         if (err.code === "auth/invalid-phone-number") {

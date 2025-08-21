@@ -18,7 +18,6 @@ const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChang
     '/banner7.svg',
   ];
 
-  console.log(banners)
 
   return (
     <HoverCard>
