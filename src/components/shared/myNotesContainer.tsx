@@ -27,9 +27,11 @@ const MyNotesContainer = ({
   const user: string | null = localStorage.getItem('user');
   const parsedUser = user ? JSON.parse(user) : null;
 
+
   const uId = parsedUser ? parsedUser.uid : null;
 
   const userType = parsedUser ? parsedUser.type : null;
+
 
   const {
     selectedNote,

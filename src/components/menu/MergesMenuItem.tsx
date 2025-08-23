@@ -42,7 +42,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
             }`}
           >
             {React.cloneElement(parentItem.icon as React.ReactElement, {
-              className: "h-6 w-6",
+              className: "h-5 w-5",
             })}
             {parentItem.label && <span className="sr-only">{parentItem.label}</span>}
           </Link>

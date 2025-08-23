@@ -18,9 +18,10 @@ import { Button } from '@/components/ui/button';
 import { Note, NoteType } from '@/utils/types/note';
 import { useSelector } from 'react-redux';
 
-type Props = {
+interface Props {
   onNoteCreate: (note: Note) => void;
-};
+  userId: string;
+}
 
 const banners = [
   '/banner1.svg',
@@ -32,23 +33,23 @@ const banners = [
   '/banner7.svg',
 ];
 
-export function CreateNoteDialog({ onNoteCreate }: Props) {
+export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedColor, setSelectedColor] = useState('#ffffff');
   const [selectedBanner, setSelectedBanner] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [isHTML, setIsHTML] = useState(false);
+  const user = useSelector((state: any) => state.user);
 
   const handleSubmit = () => {
     if (!title.trim() && !content.trim()) return;
-    const user = useSelector((state: any) => state.user);
     const userid = user.uid;
 
     const newNote: Note = {
+      userId: userid,
       title: title.trim(),
       content: content.trim(),
-      userId:userid,
       bgColor: selectedBanner ? undefined : selectedColor,
       banner: selectedBanner || undefined,
       createdAt: new Date(),

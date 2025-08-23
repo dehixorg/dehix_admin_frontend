@@ -18,6 +18,7 @@ const useFetchNotesByAdminId = (adminId: string | undefined) => {
         params: { adminId }, 
       });
 
+
       if (response?.data?.notes) {
         setNotes(response.data.notes.notes);
         setArchive(response.data.notes.archive || []);
