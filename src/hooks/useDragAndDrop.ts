@@ -54,9 +54,14 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
           } else {
             console.error('Failed to update note order:', response.statusText);
           }
-        } catch (error: any) {
-          console.error('Error updating note order:', error.message);
+        } catch (error) {
+          if (error instanceof Error) {
+            console.error('Error updating note order:', error.message);
+          } else {
+            console.error('Unknown error updating note order:', error);
+          }
         }
+
       } else {
         console.error('User ID is missing. Cannot update note order.');
       }
