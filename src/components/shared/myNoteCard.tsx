@@ -68,46 +68,49 @@ const MyNoteCard = ({
       className="relative group"
     >
       <Card
-        className="break-inside-avoid cursor-pointer bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-200 group w-[80vw] mb-3 md:w-[200px] relative"
+        className="break-inside-avoid bg-white border border-gray-300 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 group w-[80vw] mb-6 md:w-[320px] lg:w-[400px] relative"
         style={
           note.banner
             ? {
                 backgroundImage: `url(${note.banner})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                
               }
             : { backgroundColor: note.bgColor || '#ffffff' }
         }
       >
-        <div onClick={() => onEditNote(note)}>
-          <CardHeader>
+        {note.banner && (
+          <div className="absolute inset-0 bg-black/10 rounded-lg" />
+        )}
+        
+        <div onClick={() => onEditNote(note)} className="cursor-pointer relative z-10">
+          <CardHeader className="p-6 pb-2">
             {note.type && (
-              <div className="absolute top-1 left-1">
+              <div className="relative mb-3">
                 <Badge
-                  className={`text-xs py-0.5 ${badgeColors[note.type] || ' '}`}
+                  className={`text-sm py-1 ${badgeColors[note.type] || ' '}`}
                 >
                   {note.type.toLowerCase()}
                 </Badge>
               </div>
             )}
             {note.title && (
-              <CardTitle className="font-semibold text-lg text-black mt-6">
+              <CardTitle className="font-bold text-2xl text-black">
                 {note.title}
               </CardTitle>
             )}
           </CardHeader>
-          <CardContent className="max-h-[320px] overflow-hidden">
-            <CardDescription className="text-sm whitespace-pre-wrap truncate break-words">
+          <CardContent className="p-6 pt-0 min-h-[150px] flex items-center">
+            <CardDescription className="text-base whitespace-pre-wrap break-words">
               {note.isHTML ? (
                 <div
-                  className="text-sm whitespace-pre-wrap break-words"
+                  className="text-base whitespace-pre-wrap break-words"
                   dangerouslySetInnerHTML={{
                     __html: truncateHTMLContent(note.content, 30),
                   }}
                 />
               ) : (
-                <CardDescription className="text-sm font-bold truncate bg-opacity-100 whitespace-pre-wrap break-words text-black">
+                <CardDescription className="text-base font-bold bg-opacity-100 whitespace-pre-wrap break-words text-black">
                   {truncateText(note.content, 30)}
                 </CardDescription>
               )}
@@ -115,49 +118,47 @@ const MyNoteCard = ({
           </CardContent>
         </div>
 
-        <div className="relative">
-          <div className="absolute bottom-2 right-2 hidden group-hover:flex items-center gap-4 justify-center">
-            {(userType === 'superadmin' ||
-              (userType === 'admin' && note.userId === uId)) &&
-              (isTrash ? (
-                <>
-                  <RotateCwIcon
-                    size={15}
-                    className="text-black cursor-pointer"
-                    onClick={() => onUpdateNoteType(note._id, NoteType.NOTE)}
-                  />
-                  <Trash2Icon
-                    size={15}
-                    className="text-black cursor-pointer"
-                    onClick={() => onDeleteClick(note._id)}
-                  />
-                </>
-              ) : !isArchive ? (
-                <ArchiveRestoreIcon
-                  size={15}
-                  className="text-black"
-                  onClick={() => onUpdateNoteType(note._id, NoteType.ARCHIVE)}
-                />
-              ) : (
-                <ArchiveRestoreIcon
-                  size={15}
-                  className="text-black"
+        <div className="absolute bottom-4 right-4 z-20 hidden group-hover:flex items-center gap-3 justify-center bg-white/50 backdrop-blur-sm rounded-full p-2 transition-all duration-200">
+          {(userType === 'superadmin' ||
+            (userType === 'admin' && note.userId === uId)) &&
+            (isTrash ? (
+              <>
+                <RotateCwIcon
+                  size={18}
+                  className="text-black hover:text-gray-600 cursor-pointer"
                   onClick={() => onUpdateNoteType(note._id, NoteType.NOTE)}
                 />
-              ))}
-            <BannerChangerPopover
-              handleChangeBanner={(banner) => onChangeBanner(note._id, banner)}
-            />
-            {!isTrash && (
-              <DropdownNavNotes
-                noteId={note._id}
-                navItems={navItems.map((item) => ({
-                  ...item,
-                  onClick: () => item.onClick(note._id, notes, setNotes),
-                }))}
+                <Trash2Icon
+                  size={18}
+                  className="text-black hover:text-red-500 cursor-pointer"
+                  onClick={() => onDeleteClick(note._id)}
+                />
+              </>
+            ) : !isArchive ? (
+              <ArchiveRestoreIcon
+                size={18}
+                className="text-black hover:text-gray-600 cursor-pointer"
+                onClick={() => onUpdateNoteType(note._id, NoteType.ARCHIVE)}
               />
-            )}
-          </div>
+            ) : (
+              <ArchiveRestoreIcon
+                size={18}
+                className="text-black hover:text-gray-600 cursor-pointer"
+                onClick={() => onUpdateNoteType(note._id, NoteType.NOTE)}
+              />
+            ))}
+          <BannerChangerPopover
+            handleChangeBanner={(banner) => onChangeBanner(note._id, banner)}
+          />
+          {!isTrash && (
+            <DropdownNavNotes
+              noteId={note._id}
+              navItems={navItems.map((item) => ({
+                ...item,
+                onClick: () => item.onClick(note._id, notes, setNotes),
+              }))}
+            />
+          )}
         </div>
       </Card>
     </div>

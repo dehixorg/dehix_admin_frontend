@@ -56,10 +56,9 @@ export const loginUser = async (email: string, password: string) => {
     );
     return userCredential;
   } catch (error: any) {
-    // Handle the error here
-    const errorCode = error.code;
-    const errorMessage = error.message;
     
+    const errorMessage = error.message;
+
     throw new Error(errorMessage);
   }
 };
@@ -140,7 +139,7 @@ export const handleLogout = async (dispatch: any, router: any) => {
 
     // Redirect to login page
     router.replace("/auth/login");
-    
+
   } catch (error) {
     console.error("Error during logout:", error);
     throw error;

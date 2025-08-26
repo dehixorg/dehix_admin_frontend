@@ -163,7 +163,6 @@ const InterviewTable: React.FC = () => {
     try {
       if (talentType === "skill") {
         const response = await skillApiService.getSkillbyId(talentId); // Assuming a getSkillById functio]n
-        console.log(response.data)
         return response?.data?.data || null;
       } else if (talentType === "domain") {
         const response = await domainApiService.getDomainbyId(talentId); // Assuming a getDomainById function
