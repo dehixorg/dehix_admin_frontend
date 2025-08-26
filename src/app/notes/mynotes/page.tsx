@@ -89,6 +89,7 @@ const MyNotes = () => {
           setNotes={setNotes}
           notes={notes}
           onNoteCreate={handleCreateNote}
+          userId={userId}
         />
         <div className="p-6">
           {isLoading ? (

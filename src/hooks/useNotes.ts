@@ -34,6 +34,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
 
+
     try {
       const response = await axiosInstance.put(`/notes/${note._id}`, {
         title: note.title,
@@ -100,6 +101,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note banner.`);
+
     }
   };
 
@@ -125,6 +127,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
+
     }
   };
 
@@ -150,6 +153,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
+
     }
   };
 

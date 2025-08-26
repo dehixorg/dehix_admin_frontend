@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PackageOpen } from "lucide-react";
 
 import { DeleteButtonIcon } from "../ui/deleteButton";
@@ -52,7 +52,7 @@ const DomainTable: React.FC = () => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   // Function to fetch domain data
-  const fetchDomainData = async () => {
+  const fetchDomainData = useCallback(async () => {
     setLoading(true);
     setNoData(false);
     try {
@@ -72,7 +72,7 @@ const DomainTable: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchDomainData();

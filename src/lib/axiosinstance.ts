@@ -7,8 +7,10 @@ let axiosInstance: AxiosInstance = axios.create({
 
 
 
+
 // Function to initialize Axios with Bearer token
 const initializeAxiosWithToken = (token: string | null) => {
+
   axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC__BASE_URL,
     headers: {
@@ -20,6 +22,7 @@ const initializeAxiosWithToken = (token: string | null) => {
 // Request interceptor to add Authorization header
 axiosInstance.interceptors.request.use(
   (config) => {
+
     
     return config;
   },
@@ -33,6 +36,7 @@ axiosInstance.interceptors.request.use(
 // Response interceptor (optional)
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
+
     
     return response;
   },

@@ -100,7 +100,7 @@ const ViewReportPage = () => {
     }, 5000); // poll every 5s
 
     return () => clearInterval(interval); // cleanup
-  }, [id]);
+  }, [id, report?.status]);
 
 
   const handleReply = async () => {

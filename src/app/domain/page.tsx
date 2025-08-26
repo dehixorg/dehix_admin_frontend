@@ -8,7 +8,7 @@ import {
 } from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
-import { CustomTable } from "../../components/custom-table/CustomTable";
+import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
   FilterDataType,
