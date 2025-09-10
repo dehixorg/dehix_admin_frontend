@@ -145,7 +145,6 @@ export function ProjectBids({ id, ...props }: ProjectBidsProps) {
             })
             
           );
-          console.log(fetchedData)
           setProfilesWithBids(fetchedData);
         }
       } catch (err) {

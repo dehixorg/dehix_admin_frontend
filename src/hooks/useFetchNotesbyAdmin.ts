@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { axiosInstance } from '@/lib/axiosinstance';
 import { Note } from '@/utils/types/note';
 
-// Hook to fetch notes by adminId
+
 const useFetchNotesByAdminId = (adminId: string | undefined) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [archive, setArchive] = useState<Note[]>([]);
@@ -10,14 +10,14 @@ const useFetchNotesByAdminId = (adminId: string | undefined) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchNotesByAdminId = useCallback(async () => {
-    if (!adminId) return; // Ensure adminId is provided
+    if (!adminId) return; 
 
     setIsLoading(true);
     try {
       const response = await axiosInstance.get('/notes', {
-        params: { adminId }, // Fetch notes based on adminId
+        params: { adminId }, 
       });
-      
+
 
       if (response?.data?.notes) {
         setNotes(response.data.notes.notes);

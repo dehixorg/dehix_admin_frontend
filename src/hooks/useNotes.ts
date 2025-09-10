@@ -1,4 +1,3 @@
-// hooks/useNotes.ts
 import { useState } from 'react';
 
 import { axiosInstance } from '@/lib/axiosinstance';
@@ -34,7 +33,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       showError('Missing required fields for updating the note.');
       return;
     }
-    
+
 
     try {
       const response = await axiosInstance.put(`/notes/${note._id}`, {
@@ -71,7 +70,6 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
     try {
-      console.log(noteId)
       await axiosInstance.delete(`/notes/${noteId}`);
       showSuccess('Note deleted permanently.');
       fetchNotes();
@@ -103,7 +101,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note banner.`);
-      
+
     }
   };
 
@@ -129,7 +127,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      
+
     }
   };
 
@@ -155,7 +153,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       await fetchNotes();
     } catch (error) {
       showError(`Failed to update the note label.`);
-      
+
     }
   };
 

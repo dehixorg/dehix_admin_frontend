@@ -92,7 +92,6 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         });
       }
     } catch (error) {
-      console.log(error)
       toast({
         title: "Error",
         description: "Server Error",

@@ -1,4 +1,3 @@
-// hooks/useDragAndDrop.ts
 import { useState } from 'react';
 
 import { axiosInstance } from '@/lib/axiosinstance';
@@ -50,9 +49,9 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
             },
           );
 
-          if (response.status === 200) {
-            console.log("success");
-          } else {
+          if (response.status !== 200) 
+           {
+
             console.error('Failed to update note order:', response.statusText);
           }
         } catch (error: any) {

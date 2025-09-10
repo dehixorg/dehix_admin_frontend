@@ -60,7 +60,6 @@ export function ProjectCard({ id, ...props }: ProjectCardProps) {
       setProjectInfo(null);
       try {
         const response = await apiHelperService.getBusinessProjectbyId(id);
-        console.log(response.data)
         // Check if the response data array exists and has at least one element
         if (response?.data?.data && response.data.data.length > 0) {
           // Set projectInfo to the first object in the array

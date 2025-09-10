@@ -24,12 +24,12 @@ const NotesContainer = ({
   isTrash,
   fetchNotes,
 }: NotesContainerProps) => {
-const user: string | null = localStorage.getItem('user');
-const parsedUser = user ? JSON.parse(user) : null;
+  const user: string | null = localStorage.getItem('user');
+  const parsedUser = user ? JSON.parse(user) : null;
 
-const uId = parsedUser ? parsedUser.uid : null;
+  const uId = parsedUser ? parsedUser.uid : null;
 
-const userType = parsedUser ? parsedUser.type : null;
+  const userType = parsedUser ? parsedUser.type : null;
 
   const {
     selectedNote,
@@ -96,7 +96,7 @@ const userType = parsedUser ? parsedUser.type : null;
   
   return (
     <div className="flex justify-center items-center">
-      <div className="columns-1 mt-3 sm:columns-2 md:columns-3 lg:columns-5 gap-6">
+      <div className="flex flex-wrap justify-center gap-6 p-4 w-full">
         {notes.map((note, index) => (
           <MyNoteCard
             key={note._id}
@@ -128,7 +128,7 @@ const userType = parsedUser ? parsedUser.type : null;
                 console.error('Permission denied: Cannot delete this note.');
               }
             }}
-             onChangeBanner={(noteId: string | undefined, newBannerUrl: string) => {
+            onChangeBanner={(noteId: string | undefined, newBannerUrl: string) => {
                 if (userType === 'superadmin' || note.userId === uId) {
                     handleChangeBanner(noteId, newBannerUrl);
                 } else {
@@ -137,7 +137,6 @@ const userType = parsedUser ? parsedUser.type : null;
             }}
               
             navItems={navItems(note)}
-            // Pass the note to dynamically filter options
           />
         ))}
       </div>
@@ -165,4 +164,5 @@ const userType = parsedUser ? parsedUser.type : null;
     </div>
   );
 };
+
 export default NotesContainer;
