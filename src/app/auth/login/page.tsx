@@ -41,7 +41,7 @@ export default function Login() {
           type: claims.type,
         }),
       );
-      router.replace(`/business`);
+      router.replace(`/dashboard`);
     } catch (error: any) {
       setError("Invalid Email or Password ");
       console.error(error.message);
