@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import cookie from "cookie";
+import { parse } from "cookie";
 
 export async function middleware(request: NextRequest) {
   const cookiesHeader = request.headers.get("cookie");
-  const cookies = cookie.parse(cookiesHeader || "");
+  const cookies = parse(cookiesHeader || "");
   const userType = cookies.userType;
   const token = cookies.token;
 
