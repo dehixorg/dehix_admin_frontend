@@ -110,7 +110,6 @@ const BusinessTabs = () => {
 
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "" },
               { label: "Business", link: "/business" },
               { label: id as string, link: "#" },
             ]}

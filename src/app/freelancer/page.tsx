@@ -121,7 +121,6 @@ export default function Talent() {
           />
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "#" },
               { label: "Freelancer", link: "#" },
             ]}
           />
