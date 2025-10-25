@@ -102,7 +102,6 @@ export default function Talent() {
           />
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "/dashboard/" },
               { label: "Business ", link: "#" },
             ]}
           />
