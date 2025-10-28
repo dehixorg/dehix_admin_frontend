@@ -11,21 +11,25 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { apiHelperService } from "@/services/domain";
 import { Messages } from "@/utils/common/enum";
+import ChangeDomainStatus from "@/components/Domain/ChangeDomainStatus";
 interface EditDomainDescriptionProps {
   domainId: string;
   currentDescription: string;
+  currentStatus: string;
   isDialogopen: boolean;
   onDescriptionUpdate: (newDescription: string) => void;
   setIsDialogOpen:(open:boolean)=>void;
-  
+  onStatusUpdate?: () => void;
 }
 
 const EditDomainDescription: React.FC<EditDomainDescriptionProps> = ({
   isDialogopen,
   domainId,
   currentDescription,
+  currentStatus,
   onDescriptionUpdate,
   setIsDialogOpen,
+  onStatusUpdate,
 }) => {
   const [description, setDescription] = useState(currentDescription);
   //const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -78,6 +82,13 @@ const EditDomainDescription: React.FC<EditDomainDescriptionProps> = ({
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
+          <ChangeDomainStatus
+            domainId={domainId}
+            currentStatus={currentStatus}
+            onUpdateSuccess={() => {
+              onStatusUpdate?.();
+            }}
+          />
           <div className="block text-sm font-medium ">
             Description
           </div>

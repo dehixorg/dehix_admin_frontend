@@ -2,6 +2,7 @@ import { useState } from "react";
 import { CustomDialog } from "../CustomDialog";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import EditSkillDescription from "./editSkilldesc";
+import ChangeSkillStatus from "./ChangeSkillStatus";
 
 export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
   const [open, setOpen] = useState(false);
@@ -14,7 +15,7 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
       content={
         <>
           <div>
-            <div>
+            <div className="space-y-4">
               <p>
                 <strong>Name:</strong> {data.label}
               </p>
@@ -24,6 +25,13 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
                   ? data.description
                   : "No description available"}
               </p>
+              <ChangeSkillStatus
+                skillId={id}
+                currentStatus={data.status || "active"}
+                onUpdateSuccess={() => {
+                  refetch?.();
+                }}
+              />
               <EditSkillDescription
                 skillId={id}
                 currentDescription={data.description || ""}
