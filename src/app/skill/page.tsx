@@ -76,7 +76,7 @@ export default function Talent() {
         type: FilterDataType.SINGLE,
         options: [
           { label: "Active", value: "active,Active,ACTIVE" },
-          { label: "Inactive", value: "inactive" },
+          { label: "Inactive", value: "inactive,Inactive,INACTIVE" },
         ],
       },
     ],

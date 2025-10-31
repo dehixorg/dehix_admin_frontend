@@ -83,7 +83,9 @@ export const CustomTable = ({
 
         params["filter[sortBy]"] = sortByValue;
         params["filter[sortOrder]"] = sortOrder;
+        console.log("API Request:", api, "Params:", params);
         const response = await apiHelperService.fetchData(api, params);
+        console.log("API Response:", response);
         setData(response.data.data);
       } catch (error) {
         toast({
