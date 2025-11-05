@@ -21,7 +21,8 @@ import {
   Receipt,
   Banknote,
   Key,
-  Briefcase
+  Briefcase,
+  FileCheck
   
   
 } from "lucide-react";
@@ -142,6 +143,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/reports",
     icon: <FileWarning className="h-5 w-5" />,
     label:"Reports",
+  },
+  {
+    href: "/kyc",
+    icon: <FileCheck className="h-5 w-5" />,
+    label: "KYC",
   }
 ];
 
