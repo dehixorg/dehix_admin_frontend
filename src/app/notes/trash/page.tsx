@@ -90,6 +90,7 @@ const Notes = () => {
           notes={notes}
           onNoteCreate={handleCreateNote}
           userId={userId}
+          pageTitle="Trash"
         />
         <div className="p-6">
           {isLoading ? (
