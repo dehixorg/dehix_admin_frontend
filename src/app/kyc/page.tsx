@@ -196,24 +196,24 @@ export default function KYCPage() {
           { label: "Applied", value: "APPLIED" },
         ],
       },
-      {
-        name: "documentType",
-        textValue: "Document Type",
-        type: FilterDataType.SINGLE,
-        options: [
-          { label: "ID Proof", value: "ID_PROOF" },
-          { label: "Address Proof", value: "ADDRESS_PROOF" },
-          { label: "Business Registration", value: "BUSINESS_REGISTRATION" },
-          { label: "Tax Document", value: "TAX_DOCUMENT" },
-        ],
-      },
+      // {
+      //   name: "documentType",
+      //   textValue: "Document Type",
+      //   type: FilterDataType.SINGLE,
+      //   options: [
+      //     { label: "ID Proof", value: "ID_PROOF" },
+      //     { label: "Address Proof", value: "ADDRESS_PROOF" },
+      //     { label: "Business Registration", value: "BUSINESS_REGISTRATION" },
+      //     { label: "Tax Document", value: "TAX_DOCUMENT" },
+      //   ],
+      // },
     ],
     searchColumn: ["userId", "documentType"],
     isDownload: true,
-    sortBy: [
-      { fieldName: "submittedAt", label: "Submission Date" },
-      { fieldName: "status", label: "Status" },
-    ],
+    // sortBy: [
+    //   { fieldName: "submittedAt", label: "Submission Date" },
+    //   { fieldName: "status", label: "Status" },
+    // ],
   };
 
   return (
