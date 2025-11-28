@@ -67,7 +67,6 @@ export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps
               setIsDialogOpen={() => setIsEditDialogOpen(false)}
               domainId={data._id}
               currentDescription={data.description || ""}
-              currentStatus={data.status || "active"}
               onDescriptionUpdate={(newDescription) =>
                 handleUpdateDescription(
                   newDescription,

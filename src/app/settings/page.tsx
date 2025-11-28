@@ -31,7 +31,7 @@ export default function Settings() {
           />
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "/admin" },
+              { label: "Dashboard", link: "/dashboard/admin" },
               { label: "Settings", link: "#" },
             ]}
           />
