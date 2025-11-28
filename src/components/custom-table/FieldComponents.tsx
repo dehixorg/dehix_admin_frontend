@@ -120,7 +120,10 @@ const ActionField = ({
             >
               {type === "Button" && (
                 <div
-                  onClick={() => handler?.({ id, refetch })}
+                  onClick={async () => {
+                    await handler?.({ id, refetch });
+                    refetch && refetch();
+                  }}
                   className={twMerge(
                     "text-sm w-full py-2 px-3 flex items-center dark:text-gray-300 justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className
