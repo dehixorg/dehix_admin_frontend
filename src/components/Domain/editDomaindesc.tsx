@@ -15,10 +15,10 @@ import ChangeDomainStatus from "@/components/Domain/ChangeDomainStatus";
 interface EditDomainDescriptionProps {
   domainId: string;
   currentDescription: string;
-  currentStatus: string;
+  currentStatus?: string; // Made optional
   isDialogopen: boolean;
   onDescriptionUpdate: (newDescription: string) => void;
-  setIsDialogOpen:(open:boolean)=>void;
+  setIsDialogOpen: (open: boolean) => void;
   onStatusUpdate?: () => void;
 }
 
@@ -26,7 +26,7 @@ const EditDomainDescription: React.FC<EditDomainDescriptionProps> = ({
   isDialogopen,
   domainId,
   currentDescription,
-  currentStatus,
+  currentStatus = 'active', // Default value
   onDescriptionUpdate,
   setIsDialogOpen,
   onStatusUpdate,
