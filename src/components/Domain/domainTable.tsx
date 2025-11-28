@@ -260,6 +260,21 @@ const DomainTable: React.FC = () => {
                                     fetchDomainData();
                                   }}
                                 />
+                                {isEditDialogOpen && selectedIndex !== -1 && (
+                                  <EditDomainDescription
+                                    isDialogOpen={isEditDialogOpen}
+                                    setIsDialogOpen={setIsEditDialogOpen}
+                                    domainId={domainData[selectedIndex]._id}
+                                    currentDescription={
+                                      domainData[selectedIndex].description || ""
+                                    }
+                                    onUpdateSuccess={() => {
+                                      // Refresh the data after successful update
+                                      fetchDomainData();
+                                      setIsEditDialogOpen(false);
+                                    }}
+                                  />
+                                )}
                                 <Button
                                   variant="outline"
                                   onClick={() => {
@@ -275,28 +290,6 @@ const DomainTable: React.FC = () => {
                           </div>
                         </DialogContent>
                       </Dialog>
-                      {isEditDialogOpen && selectedIndex !== -1 && (
-                        <EditDomainDescription
-                          isDialogopen={isEditDialogOpen}
-                          setIsDialogOpen={() => setIsEditDialogOpen(false)}
-                          domainId={domainData[selectedIndex]._id}
-                          currentDescription={
-                            domainData[selectedIndex].description || ""
-                          }
-                          currentStatus={domainData[selectedIndex].status || "active"}
-                          onDescriptionUpdate={(newDescription: string) => {
-                            setDomainData((prevDomainData) => {
-                              const updatedDomainData = [...prevDomainData];
-                              updatedDomainData[selectedIndex].description =
-                                newDescription;
-                              return updatedDomainData;
-                            });
-                          }}
-                          onStatusUpdate={() => {
-                            fetchDomainData();
-                          }}
-                        />
-                      )}
                     </TableRow>
                   ))
                 ) : (

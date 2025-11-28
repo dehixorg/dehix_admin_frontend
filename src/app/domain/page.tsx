@@ -18,10 +18,10 @@ import { Trash2Icon } from "lucide-react";
 import { useToast } from "../../components/ui/use-toast";
 import { Messages } from "../../utils/common/enum";
 import { apiHelperService } from "../../services/domain";
-import AddDomain from "../../components/Domain/addDomain";
 import { CustomTableComponent } from "@/components/Domain/CustomTableComponent";
+import AddDomain from "@/components/Domain/addDomain";
 
-export default function Talent() {
+export default function DomainPage() {
   const { toast } = useToast();
 
   const handleDelete = async (
@@ -56,17 +56,28 @@ export default function Talent() {
         type: FieldType.TEXT,
       },
       {
-        fieldName: "createdAt",
-        textValue: "Created At",
-        type: FieldType.DATETIME,
+        fieldName: "description",
+        textValue: "Description",
+        type: FieldType.LONGTEXT,
+        wordsCnt: 50,
       },
       {
         fieldName: "status",
         textValue: "Status",
         type: FieldType.STATUS,
         statusFormats: [
-          { textValue: "Active", value: "active", bgColor: "green" },
-          { textValue: "Inactive", value: "inactive", bgColor: "red" },
+          {
+            textValue: "Active",
+            value: "active",
+            bgColor: "#57fa70",
+            textColor: "#024d0d",
+          },
+          {
+            value: "inactive",
+            bgColor: "yellow",
+            textColor: "#525002",
+            textValue: "Inactive",
+          },
         ],
       },
       {
@@ -90,10 +101,20 @@ export default function Talent() {
         CustomComponent: CustomTableComponent,
       },
     ],
+    searchColumn: ["label"],
     isDownload: true,
-    isFilter: true,
     title: "Domains",
+    tableHeaderActions: [AddDomain],
     filterData: [
+      {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Active", value: "active,Active,ACTIVE" },
+          { label: "Inactive", value: "inactive,Inactive,INACTIVE" },
+        ],
+      },
       {
         name: "label",
         textValue: "Domains",
@@ -108,8 +129,6 @@ export default function Talent() {
         ],
       },
     ],
-    searchColumn: ["label"],
-    tableHeaderActions: [AddDomain],
   };
 
   return (
