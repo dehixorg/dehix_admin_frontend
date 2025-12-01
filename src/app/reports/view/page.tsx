@@ -285,6 +285,8 @@ const ViewReportPage = () => {
               <Image
                 src={activeImage}
                 alt="Full view"
+                width={800}
+                height={600}
                 className="max-w-full max-h-full rounded shadow-lg"
               />
             </div>

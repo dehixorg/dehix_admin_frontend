@@ -79,11 +79,6 @@ export const menuItemsTop: MenuItem[] = [
         icon: <Earth className="h-5 w-5" />,
         label: "Domain",
       },
-      {
-        href: "/projectdomain",
-        icon: <UserCheck className="h-5 w-5" />,
-        label: "Project Domain",
-      },
     ],
   },
   {
@@ -115,6 +110,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/bid",
     icon: <Gavel className="h-5 w-5" />,
     label: "Bid",
+  },
+  {
+    href: "/projectdomain",
+    icon: <UserCheck className="h-5 w-5" />,
+    label: "Project Domain",
   },
   {
     // Merged item for Verification
