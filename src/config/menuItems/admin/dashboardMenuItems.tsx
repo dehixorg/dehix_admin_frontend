@@ -125,12 +125,12 @@ export const menuItemsTop: MenuItem[] = [
       {
         href: "/verification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: "Verification",
+        label: "Oracle Verification",
       },
       {
         href: "/adminVerification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: " Admin Verification",
+        label: "Admin Oracle Verification",
       },
     ],
   },
