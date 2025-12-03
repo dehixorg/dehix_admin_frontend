@@ -22,7 +22,13 @@ const initializeAxiosWithToken = (token: string | null) => {
 // Request interceptor to add Authorization header
 axiosInstance.interceptors.request.use(
   (config) => {
-
+    // Get token from local storage
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    
+    // If token exists, add it to the headers
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     
     return config;
   },
