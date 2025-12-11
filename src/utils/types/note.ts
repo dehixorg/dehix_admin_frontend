@@ -21,13 +21,15 @@ export enum NoteType {
   NOTE = 'NOTE',
   TRASH = 'TRASH',
   ARCHIVE = 'ARCHIVE',
+  PINNED = 'PINNED',
+  ARCHIVED = 'ARCHIVED'
 }
 
 // Updated Note type
 export type Note = {
   _id?: string;
   adminId?: string;
-  userId:string,
+  userId: string;
   title: string;
   content: string;
   bgColor?: string; // Optional color for note display
@@ -37,7 +39,9 @@ export type Note = {
   entityType?: EntityType; // Type of the entity associated with the note
   type?: LabelType; // Label or type of the note
   noteType: NoteType;
-  createdAt?: Date;
+  isPinned?: boolean; // Whether the note is pinned
+  updatedAt?: Date | string; // Last updated timestamp
+  createdAt?: Date | string; // Creation timestamp
 };
 
 export const badgeColors: { [key: string]: string } = {

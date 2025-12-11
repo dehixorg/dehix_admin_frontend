@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState } from "react";
+import { Search } from "lucide-react";
 
-import Breadcrumb from '@/components/shared/breadcrumbList';
-import DropdownProfile from '@/components/shared/DropdownProfile';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -14,9 +14,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Note } from '@/utils/types/note';
-import { CreateNoteDialog } from '@/components/shared/CreateNoteDialog';
+} from "@/components/ui/dropdown-menu";
+import { Note } from "@/utils/types/note";
+import { CreateNoteDialog } from "@/components/shared/CreateNoteDialog";
 
 interface NotesHeaderProps {
   onNoteCreate: (note: Note) => void;
@@ -24,6 +24,7 @@ interface NotesHeaderProps {
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   isTrash: boolean;
   userId: string;
+  pageTitle: string;
 }
 
 const NotesHeader = ({
@@ -32,12 +33,13 @@ const NotesHeader = ({
   setNotes,
   isTrash,
   userId,
+  pageTitle = "Notes",
 }: NotesHeaderProps) => {
-  const [selectedSortOption, setSelectedSortOption] = useState<string>('');
+  const [selectedSortOption, setSelectedSortOption] = useState<string>("");
 
   const sortByColor = () => {
     const sortedNotes = [...notes].sort((a, b) =>
-      (a.bgColor || '').localeCompare(b.bgColor || ''),
+      (a.bgColor || "").localeCompare(b.bgColor || "")
     );
     setNotes(sortedNotes);
   };
@@ -63,7 +65,7 @@ const NotesHeader = ({
   return (
     <div>
       <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <Breadcrumb items={[{ label: 'Notes', link: '#' }]} />
+        <Breadcrumb items={[{ label: pageTitle, link: "#" }]} />
         <div className="relative ml-auto flex-1 md:grow-0">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -76,11 +78,18 @@ const NotesHeader = ({
       </header>
       <div className="mb-8 ml-6 mt-8 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Notes</h1>
-          <p className="text-gray-400 mt-2 hidden md:block ">
-            Organize your thoughts and ideas. Add, view, and manage your
-            personal notes with ease.
-          </p>
+          <h1 className="text-3xl font-bold">{pageTitle}</h1>
+          {!isTrash ? (
+            <p className="text-gray-400 mt-2 hidden md:block">
+              Organize your thoughts and ideas. Add, view, and manage your
+              personal notes with ease.
+            </p>
+          ) : (
+            <p className="text-gray-400 mt-2 hidden md:block">
+              View and manage your deleted notes. Notes in trash will be
+              permanently deleted after 30 days.
+            </p>
+          )}
         </div>
         {!isTrash && (
           <div className="mt-4">
@@ -96,27 +105,27 @@ const NotesHeader = ({
                   <DropdownMenuLabel className="">Sort Notes</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortOption === 'color'}
+                    checked={selectedSortOption === "color"}
                     onCheckedChange={() => {
-                      setSelectedSortOption('color');
+                      setSelectedSortOption("color");
                       sortByColor();
                     }}
                   >
                     Sort by color
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortOption === 'latest'}
+                    checked={selectedSortOption === "latest"}
                     onCheckedChange={() => {
-                      setSelectedSortOption('latest');
+                      setSelectedSortOption("latest");
                       sortByLatest();
                     }}
                   >
                     Sort by latest
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
-                    checked={selectedSortOption === 'oldest'}
+                    checked={selectedSortOption === "oldest"}
                     onCheckedChange={() => {
-                      setSelectedSortOption('oldest');
+                      setSelectedSortOption("oldest");
                       sortByOldest();
                     }}
                   >

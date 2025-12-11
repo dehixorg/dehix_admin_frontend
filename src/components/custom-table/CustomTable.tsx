@@ -24,6 +24,10 @@ import { twMerge } from "tailwind-merge";
 import { useToast } from "../ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 
+interface TableData {
+  [key: string]: any;
+}
+
 export const CustomTable = ({
   title,
   fields,
@@ -37,7 +41,7 @@ export const CustomTable = ({
   isFilter = true,
   isDownload = false,
 }: Params) => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
@@ -61,32 +65,46 @@ export const CustomTable = ({
       setLoading(true);
       window.scrollTo(0, 0);
       const params: Record<string, any> = {
-        filters: "",
         page: page,
-        limit: limit
+        limit: limit,
+        'filter[sortBy]': sortByValue,
+        'filter[sortOrder]': sortOrder
       };
-      selectedFilters.map((filter) => {
-        params["filters"] += [`filter[${filter.fieldName}],`];
-      });
-      selectedFilters.map((filter) => {
+
+      // Add selected filters
+      selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
-          params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
-            filter.value;
+          params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
         } else {
           params[`filter[${filter.fieldName}]`] = filter.value;
-          }
-        });
-        if (search != "") {
-          params["filter[search][value]"] = search;
-          params["filter[search][columns]"] = searchColumn?.join(",");
         }
+      });
 
-        params["filter[sortBy]"] = sortByValue;
-        params["filter[sortOrder]"] = sortOrder;
-        console.log("API Request:", api, "Params:", params);
-        const response = await apiHelperService.fetchData(api, params);
-        console.log("API Response:", response);
-        setData(response.data.data);
+      // Add search parameters if search term exists
+      if (search) {
+        params["filter[search][value]"] = search;
+        params["filter[search][columns]"] = searchColumn?.join(",");
+      }
+
+      console.log("Sending API request to:", api);
+      console.log("With parameters:", JSON.stringify(params, null, 2));
+      
+      const response = await apiHelperService.fetchData(api, params);
+      console.log("API Response:", response);
+      
+      // Check if the response has a data property, if not use the response directly
+      const responseData = response.data?.data || response.data;
+      console.log("Extracted data:", responseData);
+      
+      if (Array.isArray(responseData)) {
+        setData(responseData);
+      } else if (responseData && typeof responseData === 'object') {
+        // If the response is an object but not an array, try to extract an array from it
+        const dataArray = Object.values(responseData).find(Array.isArray);
+        setData(Array.isArray(dataArray) ? dataArray : []);
+      } else {
+        setData([]);
+      }
       } catch (error) {
         toast({
           title: "Error",
@@ -239,27 +257,33 @@ export const CustomTable = ({
                 ) : data?.length > 0 ? (
                   data.map((elem: any, index: number) => (
                     <TableRow key={elem._id}>
-                      {fields.map((field, index) => (
-                        <TableCell
-                          key={field.fieldName}
-                          className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
-                          width={field.width}
-                          
-                        >
-                          <CustomTableCell
-                            fieldData={field}
-                            value={
-                              field.fieldName
-                                ? elem[field.fieldName]
-                                : field.type === FieldType.CUSTOM ?
-                                elem : undefined
-                            }
-                            id={elem[uniqueId]}
-                            refetch={refetch}
-                            key={index}
-                          />
-                        </TableCell>
-                      ))}
+                      {fields.map((field, index) => {
+                        const value = field.fieldName ? elem[field.fieldName] : elem;
+                        
+                        return (
+                          <TableCell
+                            key={field.fieldName || index}
+                            className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
+                            width={field.width}
+                          >
+                            {field.type === FieldType.CUSTOM && field.component ? (
+                              <field.component 
+                                value={value} 
+                                fieldData={field} 
+                                id={elem[uniqueId]} 
+                              />
+                            ) : (
+                              <CustomTableCell
+                                fieldData={field}
+                                value={value}
+                                id={elem[uniqueId]}
+                                refetch={refetch}
+                                key={index}
+                              />
+                            )}
+                          </TableCell>
+                        );
+                      })}
                     </TableRow>
                   ))
                 ) : (

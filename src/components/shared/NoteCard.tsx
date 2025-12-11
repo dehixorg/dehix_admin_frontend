@@ -139,7 +139,8 @@ const NoteCard = ({
             />
           )}
           <BannerChangerPopover
-            handleChangeBanner={(banner) => onChangeBanner(note._id, banner)}
+            noteId={note._id || ''}
+            onBannerChange={(banner) => onChangeBanner(note._id, banner)}
           />
           {!isTrash && (
             <DropdownNavNotes

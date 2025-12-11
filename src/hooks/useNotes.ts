@@ -5,10 +5,7 @@ import { toast } from '@/components/ui/use-toast';
 import { Note, NoteType, LabelType } from '@/utils/types/note';
 
 const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [selectedDeleteNote, setSelectedDeleteNote] = useState<Note | null>(
-    null,
-  );
+  const [selectedDeleteNote, setSelectedDeleteNote] = useState<Note | null>(null);
   const [selectedTypeNote, setSelectedTypeNote] = useState<Note | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -55,12 +52,10 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       showError('Failed to update the note.');
     } finally {
       await fetchNotes(); // Refresh notes
-      setSelectedNote(null); // Clear selection
     }
   };
 
   const handleDialogClose = () => {
-    setSelectedNote(null);
     setIsDeleting(false);
   };
 
@@ -158,8 +153,6 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
   };
 
   return {
-    selectedNote,
-    setSelectedNote,
     selectedDeleteNote,
     setSelectedDeleteNote,
     selectedTypeNote,

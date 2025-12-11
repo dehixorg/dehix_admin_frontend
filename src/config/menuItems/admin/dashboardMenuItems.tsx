@@ -79,6 +79,11 @@ export const menuItemsTop: MenuItem[] = [
         icon: <Earth className="h-5 w-5" />,
         label: "Domain",
       },
+      {
+        href: "/projectdomain",
+        icon: <UserCheck className="h-5 w-5" />,
+        label: "Project Domain",
+      },
     ],
   },
   {
@@ -112,11 +117,6 @@ export const menuItemsTop: MenuItem[] = [
     label: "Bid",
   },
   {
-    href: "/projectdomain",
-    icon: <UserCheck className="h-5 w-5" />,
-    label: "Project Domain",
-  },
-  {
     // Merged item for Verification
     href: "/verification",
     icon: <Key className="h-5 w-5" />,
@@ -125,12 +125,12 @@ export const menuItemsTop: MenuItem[] = [
       {
         href: "/verification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: "Verification",
+        label: "Oracle Verification",
       },
       {
         href: "/adminVerification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: " Admin Verification",
+        label: "Admin Oracle Verification",
       },
     ],
   },
