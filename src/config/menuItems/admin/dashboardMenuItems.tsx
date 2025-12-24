@@ -22,9 +22,7 @@ import {
   Banknote,
   Key,
   Briefcase,
-  FileCheck
-  
-  
+  Award,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -79,11 +77,6 @@ export const menuItemsTop: MenuItem[] = [
         icon: <Earth className="h-5 w-5" />,
         label: "Domain",
       },
-      {
-        href: "/projectdomain",
-        icon: <UserCheck className="h-5 w-5" />,
-        label: "Project Domain",
-      },
     ],
   },
   {
@@ -107,6 +100,11 @@ export const menuItemsTop: MenuItem[] = [
     label: "Admin",
   },
   {
+    href: "/admin/leaderboard",
+    icon: <Award className="h-5 w-5" />,
+    label: "Leaderboard",
+  },
+  {
     href: "/interview",
     icon: <NotebookPen className="h-5 w-5" />,
     label: "Interview",
@@ -117,6 +115,11 @@ export const menuItemsTop: MenuItem[] = [
     label: "Bid",
   },
   {
+    href: "/projectdomain",
+    icon: <UserCheck className="h-5 w-5" />,
+    label: "Project Domain",
+  },
+  {
     // Merged item for Verification
     href: "/verification",
     icon: <Key className="h-5 w-5" />,
@@ -125,30 +128,25 @@ export const menuItemsTop: MenuItem[] = [
       {
         href: "/verification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: "Oracle Verification",
+        label: "Verification",
       },
       {
         href: "/adminVerification",
         icon: <ShieldCheck className="h-5 w-5" />,
-        label: "Admin Oracle Verification",
+        label: " Admin Verification",
       },
     ],
   },
   {
     href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
-    label:"Notes",
+    label: "Notes",
   },
   {
     href: "/reports",
     icon: <FileWarning className="h-5 w-5" />,
-    label:"Reports",
+    label: "Reports",
   },
-  {
-    href: "/kyc",
-    icon: <FileCheck className="h-5 w-5" />,
-    label: "KYC",
-  }
 ];
 
 export const menuItemsBottom: MenuItem[] = [
@@ -161,33 +159,33 @@ export const menuItemsBottom: MenuItem[] = [
 
 export const notesMenu: MenuItem[] = [
   {
-    href: '#',
+    href: "#",
     icon: <Boxes className="h-5 w-5 transition-all group-hover:scale-110" />,
-    label: 'Dehix',
+    label: "Dehix",
   },
   {
-    href: '/business',
+    href: "/business",
     icon: <Home className="h-5 w-5" />,
-    label: 'Home'
+    label: "Home",
   },
   {
-    href: '/notes',
+    href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
-    label: 'Notes',
+    label: "Notes",
   },
   {
-    href: '/notes/archive',
+    href: "/notes/archive",
     icon: <Archive className="h-5 w-5" />,
-    label: 'Archive'
+    label: "Archive",
   },
   {
-    href: '/notes/trash',
+    href: "/notes/trash",
     icon: <Trash2 className="h-5 w-5" />,
-    label: 'Trash'
+    label: "Trash",
   },
   {
-    href: '/notes/mynotes',
+    href: "/notes/mynotes",
     icon: <NotebookPen className="h-5 w-5" />,
-    label: 'MyNotes'
-  }
+    label: "MyNotes",
+  },
 ];
