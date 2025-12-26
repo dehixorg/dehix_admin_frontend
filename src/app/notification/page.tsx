@@ -15,6 +15,8 @@ import {
 } from "@/components/custom-table/FieldTypes";
 import AddNotify from "@/components/Notification/addNotify";
 import { NotificationDetails } from "@/components/Notification/NotificationDetails";
+import { notificationActions } from "@/components/Notification/notificationActions";
+import { NotificationStatusCell } from "@/components/custom-table/NotificationStatusCell";
 
 export default function Talent() {
   const customTableProps: TableProps = {
@@ -64,9 +66,9 @@ export default function Talent() {
         fieldName: "status",
         statusFormats: [
           {
-            value: "INACTIVE",
-            bgColor: "yellow",
-            textColor: "#525002",
+            value: "IN_ACTIVE",
+            bgColor: "#facc15",
+            textColor: "#92400e",
             textValue: "Inactive",
           },
           {
@@ -80,7 +82,12 @@ export default function Talent() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: NotificationDetails
+        CustomComponent: NotificationDetails,
+      },
+      {
+        textValue: "Actions",
+        type: FieldType.ACTION,
+        actions: notificationActions,
       },
     ],
     isDownload: true,

@@ -90,6 +90,7 @@ const MyNotes = () => {
           notes={notes}
           onNoteCreate={handleCreateNote}
           userId={userId}
+          pageTitle="Notes"
         />
         <div className="p-6">
           {isLoading ? (
