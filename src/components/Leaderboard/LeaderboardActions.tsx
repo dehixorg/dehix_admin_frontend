@@ -8,10 +8,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Info, Calculator, Gift } from "lucide-react";
+import { MoreVertical, Info, Calculator, Gift, Edit } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiHelperService } from "@/services/leaderboard";
 import LeaderboardDetailsDialog from "./LeaderboardDetailsDialog";
+import EditLeaderboardDialog from "./EditLeaderboardDialog";
 
 interface LeaderboardActionsProps {
   data: any;
@@ -26,6 +27,7 @@ export default function LeaderboardActions({
 }: LeaderboardActionsProps) {
   const { toast } = useToast();
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleCalculate = async () => {
@@ -83,6 +85,10 @@ export default function LeaderboardActions({
             <Info className="mr-2 h-4 w-4" />
             View Details
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit
+          </DropdownMenuItem>
           {data.status !== "PUBLISHED" && (
             <DropdownMenuItem onClick={handleCalculate} disabled={loading}>
               <Calculator className="mr-2 h-4 w-4" />
@@ -102,6 +108,13 @@ export default function LeaderboardActions({
         leaderboardId={id}
         open={detailsOpen}
         onOpenChange={setDetailsOpen}
+        refetch={refetch}
+      />
+
+      <EditLeaderboardDialog
+        leaderboardId={id}
+        open={editOpen}
+        onOpenChange={setEditOpen}
         refetch={refetch}
       />
     </>

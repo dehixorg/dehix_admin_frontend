@@ -21,7 +21,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiHelperService } from "@/services/leaderboard";
-import { format, isValid } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 import { Medal } from "lucide-react";
 
 interface LeaderboardDetailsDialogProps {
@@ -53,7 +53,7 @@ export default function LeaderboardDetailsDialog({
       setLoading(true);
       const response = await apiHelperService.getLeaderboardById(leaderboardId);
       if (response?.success) {
-        setLeaderboard(response.data);
+        setLeaderboard(response.data.data || response.data);
       } else {
         console.error("No success in response");
       }
@@ -177,7 +177,7 @@ export default function LeaderboardDetailsDialog({
                     </p>
                     <p className="text-sm">
                       {(() => {
-                        const startDate = new Date(leaderboard.periodStart);
+                        const startDate = parseISO(leaderboard.periodStart);
                         return isValid(startDate)
                           ? format(startDate, "PPP")
                           : "Invalid date";
@@ -190,7 +190,7 @@ export default function LeaderboardDetailsDialog({
                     </p>
                     <p className="text-sm">
                       {(() => {
-                        const endDate = new Date(leaderboard.periodEnd);
+                        const endDate = parseISO(leaderboard.periodEnd);
                         return isValid(endDate)
                           ? format(endDate, "PPP")
                           : "Invalid date";

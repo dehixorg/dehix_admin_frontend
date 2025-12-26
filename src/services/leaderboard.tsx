@@ -18,6 +18,14 @@ export const apiHelperService = {
     });
   },
 
+  updateLeaderboard: async (id: string, body: any) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/leaderboard/update/${id}`,
+      body,
+    });
+  },
+
   getLeaderboardById: async (id: string) => {
     return apiService({
       method: Api_Methods.GET,
