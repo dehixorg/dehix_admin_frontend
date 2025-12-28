@@ -47,6 +47,13 @@ export const apiHelperService = {
     });
   },
 
+  archiveLeaderboard: async (id: string) => {
+    return apiService({
+      method: Api_Methods.POST,
+      endpoint: `/admin/leaderboard/archive/${id}`,
+    });
+  },
+
   getGamificationDefinitions: async () => {
     return apiService({
       method: Api_Methods.GET,

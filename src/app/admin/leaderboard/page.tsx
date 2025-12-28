@@ -53,8 +53,14 @@ export default function LeaderboardPage() {
       type: FieldType.STATUS,
       statusFormats: [
         {
-          value: "CALCULATING",
-          textValue: "Calculating",
+          value: "SCHEDULED",
+          textValue: "Scheduled",
+          bgColor: "#3b82f6",
+          textColor: "#ffffff",
+        },
+        {
+          value: "ACTIVE",
+          textValue: "Active",
           bgColor: "#f59e0b",
           textColor: "#ffffff",
         },

@@ -8,7 +8,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Info, Calculator, Gift, Edit } from "lucide-react";
+import {
+  MoreVertical,
+  Info,
+  Calculator,
+  Gift,
+  Edit,
+  Archive,
+} from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiHelperService } from "@/services/leaderboard";
 import LeaderboardDetailsDialog from "./LeaderboardDetailsDialog";
@@ -72,6 +79,26 @@ export default function LeaderboardActions({
     }
   };
 
+  const handleArchive = async () => {
+    try {
+      setLoading(true);
+      await apiHelperService.archiveLeaderboard(id);
+      toast({
+        title: "Success",
+        description: "Leaderboard archived successfully",
+      });
+      refetch();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.response?.data?.message || "Failed to archive",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -81,24 +108,35 @@ export default function LeaderboardActions({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setDetailsOpen(true)}>
+          <DropdownMenuItem
+            onClick={() => {
+              setDetailsOpen(true);
+            }}
+          >
             <Info className="mr-2 h-4 w-4" />
             View Details
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setEditOpen(true)}>
-            <Edit className="mr-2 h-4 w-4" />
-            Edit
-          </DropdownMenuItem>
-          {data.status !== "PUBLISHED" && (
-            <DropdownMenuItem onClick={handleCalculate} disabled={loading}>
-              <Calculator className="mr-2 h-4 w-4" />
-              Calculate Scores
+
+          {data.status !== "PUBLISHED" && data.status !== "ARCHIVED" && (
+            <DropdownMenuItem onClick={() => setEditOpen(true)}>
+              <Edit className="mr-2 h-4 w-4" />
+              Edit
             </DropdownMenuItem>
           )}
-          {data.status === "CALCULATING" && (
-            <DropdownMenuItem onClick={handleDistribute} disabled={loading}>
-              <Gift className="mr-2 h-4 w-4" />
-              Distribute Rewards
+
+          {(data.status === "SCHEDULED" || data.status === "ACTIVE") && (
+            <DropdownMenuItem onClick={handleCalculate} disabled={loading}>
+              <Calculator className="mr-2 h-4 w-4" />
+              {data.status === "SCHEDULED"
+                ? "Start Leaderboard"
+                : "Calculate Scores"}
+            </DropdownMenuItem>
+          )}
+
+          {data.status !== "ARCHIVED" && (
+            <DropdownMenuItem onClick={handleArchive} disabled={loading}>
+              <Archive className="mr-2 h-4 w-4" />
+              Archive
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

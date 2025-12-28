@@ -22,7 +22,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiHelperService } from "@/services/leaderboard";
 import { format, isValid, parseISO } from "date-fns";
-import { Medal } from "lucide-react";
+import { Medal, Trophy, Award } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LeaderboardDetailsDialogProps {
   leaderboardId: string;
@@ -77,10 +78,12 @@ export default function LeaderboardDetailsDialog({
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case "SCHEDULED":
+        return "bg-blue-500";
+      case "ACTIVE":
+        return "bg-yellow-500";
       case "PUBLISHED":
         return "bg-green-500";
-      case "CALCULATING":
-        return "bg-yellow-500";
       case "ARCHIVED":
         return "bg-gray-500";
       default:
@@ -101,10 +104,44 @@ export default function LeaderboardDetailsDialog({
     }
   };
 
-  const getRankIcon = (rank: number) => {
+  const getRankMedalIcon = (rank: number) => {
     const colors = ["text-yellow-500", "text-gray-400", "text-amber-600"];
     return <Medal className={`h-5 w-5 ${colors[rank - 1]}`} />;
   };
+
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <Trophy className="h-12 w-12 text-yellow-500" />;
+      case 2:
+        return <Medal className="h-12 w-12 text-gray-400" />;
+      case 3:
+        return <Award className="h-12 w-12 text-amber-700" />;
+      default:
+        return null;
+    }
+  };
+
+  const getRankColor = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return "border-yellow-500 bg-yellow-50";
+      case 2:
+        return "border-gray-400 bg-gray-50";
+      case 3:
+        return "border-amber-700 bg-amber-50";
+      default:
+        return "border-gray-200";
+    }
+  };
+
+  const formatDate = (date: string) => {
+    const parsedDate = parseISO(date);
+    return isValid(parsedDate)
+      ? format(parsedDate, "PPP")
+      : "Invalid Date";
+  };
+
 
   if (loading) {
     return (
@@ -128,9 +165,11 @@ export default function LeaderboardDetailsDialog({
     return null;
   }
 
+  const topThree = leaderboard.rankings?.slice(0, 3) || [];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">{leaderboard.name}</DialogTitle>
           <DialogDescription>
@@ -139,10 +178,11 @@ export default function LeaderboardDetailsDialog({
         </DialogHeader>
 
         <Tabs defaultValue="details" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className={`grid w-full ${leaderboard.status === 'PUBLISHED' ? 'grid-cols-4' : 'grid-cols-3'}`}>
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="rewards">Rewards</TabsTrigger>
             <TabsTrigger value="eligibility">Eligibility</TabsTrigger>
+            {leaderboard.status === 'PUBLISHED' && <TabsTrigger value="rankings">Rankings</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="details" className="space-y-4">
@@ -176,12 +216,7 @@ export default function LeaderboardDetailsDialog({
                       Period Start
                     </p>
                     <p className="text-sm">
-                      {(() => {
-                        const startDate = parseISO(leaderboard.periodStart);
-                        return isValid(startDate)
-                          ? format(startDate, "PPP")
-                          : "Invalid date";
-                      })()}
+                      {formatDate(leaderboard.periodStart)}
                     </p>
                   </div>
                   <div>
@@ -189,12 +224,7 @@ export default function LeaderboardDetailsDialog({
                       Period End
                     </p>
                     <p className="text-sm">
-                      {(() => {
-                        const endDate = parseISO(leaderboard.periodEnd);
-                        return isValid(endDate)
-                          ? format(endDate, "PPP")
-                          : "Invalid date";
-                      })()}
+                      {formatDate(leaderboard.periodEnd)}
                     </p>
                   </div>
                 </div>
@@ -222,37 +252,61 @@ export default function LeaderboardDetailsDialog({
                 <CardTitle>Scoring Rules</CardTitle>
               </CardHeader>
               <CardContent>
-                {leaderboard.scoringRules?.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Condition</TableHead>
-                        <TableHead>Minimum</TableHead>
-                        <TableHead>Weight</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {leaderboard.scoringRules.map(
-                        (rule: any, idx: number) => (
-                          <TableRow key={idx}>
-                            <TableCell className="font-medium">
-                              {rule.condition
-                                .replace(/([A-Z])/g, " $1")
-                                .trim()
-                                .split(" ")
-                                .map(
-                                  (word: string) =>
-                                    word.charAt(0).toUpperCase() + word.slice(1)
-                                )
-                                .join(" ")}
-                            </TableCell>
-                            <TableCell>{rule.min}</TableCell>
-                            <TableCell>{rule.weight}</TableCell>
-                          </TableRow>
-                        )
-                      )}
-                    </TableBody>
-                  </Table>
+                {leaderboard.scoringWeights ? (
+                  <>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Condition</TableHead>
+                          <TableHead>Minimum</TableHead>
+                          <TableHead>Weight</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Object.entries(leaderboard.scoringWeights)
+                          .filter(([key]) => !key.includes("Bonus"))
+                          .map(([key, value]: [string, any]) => (
+                            <TableRow key={key}>
+                              <TableCell className="font-medium">
+                                {key
+                                  .replace(/([A-Z])/g, " $1")
+                                  .trim()
+                                  .split(" ")
+                                  .map(
+                                    (word: string) =>
+                                      word.charAt(0).toUpperCase() +
+                                      word.slice(1)
+                                  )
+                                  .join(" ")}
+                              </TableCell>
+                              <TableCell>{value.min}</TableCell>
+                              <TableCell>{value.weight}</TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                    {(leaderboard.scoringWeights.verifiedProfileBonus > 0 ||
+                      leaderboard.scoringWeights.oracleBonus > 0) && (
+                      <div className="mt-4 space-y-2">
+                        <h4 className="text-sm font-semibold">Bonus Scores</h4>
+                        {leaderboard.scoringWeights.verifiedProfileBonus >
+                          0 && (
+                          <p className="text-sm">
+                            <span className="font-medium">
+                              Verified Profile Bonus:
+                            </span>{" "}
+                            {leaderboard.scoringWeights.verifiedProfileBonus}
+                          </p>
+                        )}
+                        {leaderboard.scoringWeights.oracleBonus > 0 && (
+                          <p className="text-sm">
+                            <span className="font-medium">Oracle Bonus:</span>{" "}
+                            {leaderboard.scoringWeights.oracleBonus}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <p className="text-sm text-muted-foreground">
                     No custom scoring rules configured
@@ -284,7 +338,7 @@ export default function LeaderboardDetailsDialog({
                         <TableRow key={reward.rank}>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              {getRankIcon(reward.rank)}
+                              {getRankMedalIcon(reward.rank)}
                               <span className="font-medium">
                                 #{reward.rank}
                               </span>
@@ -360,6 +414,76 @@ export default function LeaderboardDetailsDialog({
               </CardContent>
             </Card>
           </TabsContent>
+          
+          {leaderboard.status === 'PUBLISHED' && (
+            <TabsContent value="rankings">
+               <div className="space-y-6">
+                  {/* Top 3 Winners */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {topThree.map((winner: any) => (
+                      <Card
+                        key={winner.rank}
+                        className={`border-2 ${getRankColor(winner.rank)}`}
+                      >
+                        <CardHeader className="text-center">
+                          <div className="flex justify-center mb-4">
+                            {getRankIcon(winner.rank)}
+                          </div>
+                          <CardTitle className="text-xl">Rank #{winner.rank}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-center space-y-4">
+                          <Avatar className="h-24 w-24 mx-auto">
+                            <AvatarImage
+                              src={winner.profilePic || winner.freelancerId?.profilePic}
+                              alt={winner.name || winner.freelancerId?.name}
+                            />
+                            <AvatarFallback>
+                              {(winner.name || winner.freelancerId?.name || "U")
+                                .charAt(0)
+                                .toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-semibold text-lg">
+                              {winner.name || winner.freelancerId?.name || "Unknown"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Score: {winner.score?.toFixed(2) || 0}
+                            </p>
+                          </div>
+                          {winner.reward?.baseAmount && (
+                            <div className="pt-4 border-t">
+                              <p className="text-sm text-muted-foreground">Reward</p>
+                              <p className="text-2xl font-bold text-green-600">
+                                ${winner.reward.baseAmount}
+                              </p>
+                              {winner.reward.transactionId && (
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  Transaction: {winner.reward.transactionId.slice(0, 8)}
+                                  ...
+                                </p>
+                              )}
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* No Winners Message */}
+                  {topThree.length === 0 && (
+                    <Card>
+                      <CardContent className="text-center py-12">
+                        <p className="text-muted-foreground">
+                          No rankings available for this leaderboard yet.
+                        </p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </div>
+            </TabsContent>
+          )}
+
         </Tabs>
       </DialogContent>
     </Dialog>
