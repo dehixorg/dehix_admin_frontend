@@ -67,6 +67,10 @@ const ArrayValueField = ({
   value,
   fieldData,
 }: FieldComponentProps<Array<Record<string, any>>>) => {
+  if (!value || !Array.isArray(value)) {
+    return <span>-</span>;
+  }
+  
   return (
     <div className="relative group cursor-pointer">
       {value.length > 0 ? (
@@ -102,7 +106,7 @@ const ActionField = ({
       <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
         {fieldData.actions?.icon ? (
           fieldData.actions.icon
-        ) : fieldData.actions?.options.length == 1 ? (
+        ) : fieldData.actions?.options && fieldData.actions.options.length == 1 ? (
           <ArrowRight />
         ) : (
           <DotsVerticalIcon />
@@ -163,7 +167,7 @@ const CurrencyField = ({ fieldData, value }: FieldComponentProps<string>) => {
 
 const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
   const statusMetaData = fieldData.statusFormats?.find(
-    (status) => status.value.toLowerCase() === value.toLowerCase()
+    (status) => status.value.toLowerCase() === String(value).toLowerCase()
   );
 
   if (!statusMetaData) return <span>{value}</span>;
@@ -227,6 +231,7 @@ const CustomComponent = ({
 };
 
 const LengthField = ({ value }: FieldComponentProps<Record<string, any>[]>) => {
+  if (!value || !Array.isArray(value)) return <span>0</span>;
   return <span>{value.length}</span>;
 };
 

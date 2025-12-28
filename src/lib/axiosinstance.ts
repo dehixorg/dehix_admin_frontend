@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 // Create an Axios instance
 let axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC__BASE_URL,
+  baseURL: 'http://localhost:8080',
 });
 
 
@@ -10,19 +10,27 @@ let axiosInstance: AxiosInstance = axios.create({
 
 // Function to initialize Axios with Bearer token
 const initializeAxiosWithToken = (token: string | null) => {
-
+  console.log('Initializing axios with token:', token ? 'Token present' : 'No token');
+  
   axiosInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC__BASE_URL,
+    baseURL: 'http://localhost:8080',
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  
+  console.log('Axios instance created with headers:', axiosInstance.defaults.headers);
 };
 
 // Request interceptor to add Authorization header
 axiosInstance.interceptors.request.use(
   (config) => {
-
+    // Debug: Log the request and authorization header
+    console.log('Axios request:', {
+      url: config.url,
+      method: config.method,
+      headers: config.headers
+    });
     
     return config;
   },

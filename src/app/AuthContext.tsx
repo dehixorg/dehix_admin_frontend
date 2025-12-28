@@ -40,12 +40,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (firebaseUser) {
         const accessToken = await firebaseUser.getIdToken();
         const claims = await firebaseUser.getIdTokenResult();
-        const userData = { ...firebaseUser, type: claims.claims.type };
-        localStorage.setItem("user", JSON.stringify(userData));
+        
+        // Extract only serializable data from Firebase user
+        const serializableUserData = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          emailVerified: firebaseUser.emailVerified,
+          type: claims.claims.type,
+        };
+        
+        localStorage.setItem("user", JSON.stringify(serializableUserData));
         localStorage.setItem("token", accessToken);
-        setUserState(userData);
+        setUserState(firebaseUser);
         initializeAxiosWithToken(accessToken);
-        dispatch(setUser(userData));
+        dispatch(setUser(serializableUserData));
       } else {
         localStorage.removeItem("user");
         localStorage.removeItem("token");

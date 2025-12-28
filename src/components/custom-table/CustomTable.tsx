@@ -37,11 +37,13 @@ export const CustomTable = ({
   isFilter = true,
   isDownload = false,
 }: Params) => {
-  const [data, setData] = useState([]);
+  // Define the data type for table rows
+  type TableData = any; // Consider replacing 'any' with a proper interface for your data
+  
+  const [data, setData] = useState<TableData[]>([]);
+  const [filteredData, setFilteredData] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
-    []
-  );
+  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>([]);
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -56,35 +58,92 @@ export const CustomTable = ({
 
   const { toast } = useToast();
 
+  // Function to sort search results by relevance
+  const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
+    if (!searchTerm || !searchColumn?.length) return [...data];
+    
+    const searchLower = searchTerm.toLowerCase();
+    
+    return [...data].sort((a, b) => {
+      // Check for exact matches first
+      const aExactMatch = searchColumn.some(column => 
+        String(a[column as keyof TableData] || '').toLowerCase() === searchLower
+      );
+      const bExactMatch = searchColumn.some(column => 
+        String(b[column as keyof TableData] || '').toLowerCase() === searchLower
+      );
+      
+      if (aExactMatch && !bExactMatch) return -1;
+      if (!aExactMatch && bExactMatch) return 1;
+      
+      // Then check for partial matches
+      const aPartialMatch = searchColumn.some(column => 
+        String(a[column as keyof TableData] || '').toLowerCase().includes(searchLower)
+      );
+      const bPartialMatch = searchColumn.some(column => 
+        String(b[column as keyof TableData] || '').toLowerCase().includes(searchLower)
+      );
+      
+      if (aPartialMatch && !bPartialMatch) return -1;
+      if (!aPartialMatch && bPartialMatch) return 1;
+      
+      // If both have same match type, maintain their relative order
+      return 0;
+    });
+  };
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       window.scrollTo(0, 0);
       const params: Record<string, any> = {
-        filters: "",
         page: page,
         limit: limit
       };
-      selectedFilters.map((filter) => {
-        params["filters"] += [`filter[${filter.fieldName}],`];
-      });
-      selectedFilters.map((filter) => {
+      
+      // Build filters string only for filters with values
+      const activeFilters = selectedFilters.filter(filter => 
+        filter.value !== undefined && 
+        filter.value !== null && 
+        filter.value !== ''
+      );
+      
+      if (activeFilters.length > 0) {
+        params["filters"] = activeFilters.map(filter => `filter[${filter.fieldName}]`).join(',');
+      }
+      
+      selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
-          params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
-            filter.value;
+          params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
         } else {
-          params[`filter[${filter.fieldName}]`] = filter.value;
+          // Convert isActive filter value to boolean
+          if (filter.fieldName === 'isActive') {
+            params[`filter[${filter.fieldName}]`] = filter.value === 'true';
+          } else {
+            params[`filter[${filter.fieldName}]`] = filter.value;
           }
-        });
-        if (search != "") {
-          params["filter[search][value]"] = search;
-          params["filter[search][columns]"] = searchColumn?.join(",");
         }
+      });
+      
+      if (search) {
+        params["filter[search][value]"] = search;
+        params["filter[search][columns]"] = searchColumn?.join(",");
+      }
 
-        params["filter[sortBy]"] = sortByValue;
-        params["filter[sortOrder]"] = sortOrder;
-        const response = await apiHelperService.fetchData(api, params);
-        setData(response.data.data);
+      params["filter[sortBy]"] = sortByValue;
+      params["filter[sortOrder]"] = sortOrder;
+      
+      const response = await apiHelperService.fetchData(api, params);
+      
+      // Apply client-side search sorting if there's a search term
+      if (search && searchColumn && searchColumn.length > 0) {
+        const sortedData = sortBySearchRelevance(response.data.data, search);
+        setFilteredData(sortedData);
+      } else {
+        setFilteredData(response.data.data);
+      }
+      
+      setData(response.data.data);
       } catch (error) {
         toast({
           title: "Error",
@@ -94,11 +153,21 @@ export const CustomTable = ({
       } finally {
         setLoading(false);
       }
-  }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title])
+  }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title, searchColumn])
+
+  // Update filtered data when search term or data changes
+  useEffect(() => {
+    if (search && searchColumn && searchColumn.length > 0) {
+      const sortedData = sortBySearchRelevance(data, search);
+      setFilteredData(sortedData);
+    } else {
+      setFilteredData([...data]);
+    }
+  }, [search, data, searchColumn]);
 
   useEffect(() => {
-    fetchData()
-  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     setPage(1);
@@ -227,8 +296,8 @@ export const CustomTable = ({
                       </TableRow>
                     ))}
                   </>
-                ) : data?.length > 0 ? (
-                  data.map((elem: any, index: number) => (
+                ) : filteredData?.length > 0 ? (
+                  filteredData.map((elem: any, index: number) => (
                     <TableRow key={elem._id}>
                       {fields.map((field, index) => (
                         <TableCell
