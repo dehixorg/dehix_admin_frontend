@@ -169,6 +169,7 @@ export const CustomTable = ({
     fetchData();
   }, [fetchData]);
 
+  
   useEffect(() => {
     setPage(1);
   }, [selectedFilters, search, limit]);
