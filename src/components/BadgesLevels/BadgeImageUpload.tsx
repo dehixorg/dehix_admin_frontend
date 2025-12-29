@@ -66,18 +66,31 @@ const BadgeImageUpload: React.FC<BadgeImageUploadProps> = ({
     setIsUploading(true);
 
     const formData = new FormData();
-    formData.append('background_img', selectedFile);
+    formData.append('file', selectedFile); // Changed from 'background_img' to 'file' which is more common
+    formData.append('upload_preset', 'badge_levels'); // Add if you're using Cloudinary
 
     try {
-      console.log('Uploading file:', selectedFile.name, 'Size:', selectedFile.size);
-      console.log('FormData contents: background_img file');
+      console.log('Starting file upload...');
+      console.log('File details:', {
+        name: selectedFile.name,
+        size: selectedFile.size,
+        type: selectedFile.type
+      });
 
+      // Try with a more generic endpoint first
       const response = await axiosInstance.post(
-        '/register/upload-image',
+        '/api/upload', // Try this common endpoint
+        // '/admin/upload-image', // Or try this if you have an admin-specific endpoint
         formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data',
+            // Add any required authentication headers here
+            // 'Authorization': `Bearer ${yourAuthToken}`
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total || 1));
+            console.log(`Upload progress: ${percentCompleted}%`);
           },
         },
       );
@@ -85,35 +98,63 @@ const BadgeImageUpload: React.FC<BadgeImageUploadProps> = ({
       console.log('Upload response:', response);
       console.log('Response data:', response.data);
 
-      if (response.data && response.data.data) {
-        const { Location } = response.data.data;
-        console.log('Image URL:', Location);
-        onChange(Location);
-        toast({
-          title: 'Success',
-          description: 'Image uploaded successfully!',
-        });
-      } else {
-        console.error('Invalid response format:', response);
-        throw new Error('Invalid response format');
-      }
-    } catch (error: any) {
-      console.error('Full error object:', error);
-      console.error('Error response:', error.response);
-      console.error('Error status:', error.response?.status);
-      console.error('Error data:', error.response?.data);
+      // Handle different response formats
+      let imageUrl = '';
       
-      // Show detailed error in toast for debugging
-      const errorMessage = error.response?.data?.message || 
-                          error.response?.data?.error || 
-                          error.message || 
-                          'Image upload failed. Please try again.';
+      // Try different response formats
+      if (response.data?.url) {
+        imageUrl = response.data.url; // Common format
+      } else if (response.data?.data?.Location) {
+        imageUrl = response.data.data.Location; // S3 format
+      } else if (response.data?.secure_url) {
+        imageUrl = response.data.secure_url; // Cloudinary format
+      } else if (response.data?.imageUrl) {
+        imageUrl = response.data.imageUrl; // Custom format
+      } else {
+        console.error('Unexpected response format:', response.data);
+        throw new Error('Unexpected response format from server');
+      }
+
+      console.log('Extracted image URL:', imageUrl);
+      onChange(imageUrl);
+      toast({
+        title: 'Success',
+        description: 'Image uploaded successfully!',
+      });
+    } catch (error: any) {
+      console.error('Upload error details:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers,
+        },
+      });
+
+      let errorMessage = 'Failed to upload image';
+      
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        errorMessage = error.response.data?.message || 
+                      error.response.data?.error || 
+                      `Server responded with status ${error.response.status}`;
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = 'No response from server. Please check your connection.';
+      } else {
+        // Something happened in setting up the request
+        errorMessage = error.message || 'Error setting up the upload request';
+      }
       
       const errorStatus = error.response?.status ? ` (${error.response.status})` : '';
       
       toast({
         variant: 'destructive',
-        title: `Upload failed${errorStatus}`,
+        title: 'Upload Error',
         description: errorMessage,
       });
       

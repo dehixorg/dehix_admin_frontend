@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
+import BadgeImageUpload from "./BadgeImageUpload";
 
 interface BadgeLevelData {
   name: string;
@@ -60,7 +61,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
     watch,
   } = useForm<BadgeLevelData>({
@@ -188,11 +189,10 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
               control={control}
               name="imageUrl"
               render={({ field }) => (
-                <Input
-                  type="url"
-                  placeholder="Image URL (optional)"
-                  {...field}
-                  className="border p-2 rounded mt-2 w-full"
+                <BadgeImageUpload
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={isSubmitting}
                 />
               )}
             />
