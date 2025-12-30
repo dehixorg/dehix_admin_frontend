@@ -172,19 +172,21 @@ export const CustomTable = ({
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
-          {title}
-        </h1>
-        <HeaderActionComponent
-          headerActions={mainTableActions}
-          refetch={refetch}
-        />
-        <TableSelect
-          currValue={limit}
-          label="Items Per Page"
-          values={[10, 15, 20, 25]}
-          setCurrValue={setLimitUtils}
-        />
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">{title}</h1>
+        <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
+        <div className="flex items-center gap-2">
+          <TableSelect
+            currValue={limit}
+            label="Items Per Page"
+            values={[10, 25, 50, 100]}
+            setCurrValue={setLimitUtils}
+          />
+          {data.length > 0 && (
+            <span className="text-sm text-gray-500">
+              Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, data.length * page)} of {data.length * page} entries
+            </span>
+          )}
+        </div>
         {/* Download Button */}
         {isDownload && (
           <span
