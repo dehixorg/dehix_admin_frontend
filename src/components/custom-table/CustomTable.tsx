@@ -3,7 +3,8 @@
 import { DownloadIcon, PackageOpen } from "lucide-react";
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-import { useCallback , useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
 import {
   Table,
   TableBody,
@@ -24,10 +25,6 @@ import { twMerge } from "tailwind-merge";
 import { useToast } from "../ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 
-interface TableData {
-  [key: string]: any;
-}
-
 export const CustomTable = ({
   title,
   fields,
@@ -40,8 +37,9 @@ export const CustomTable = ({
   sortBy,
   isFilter = true,
   isDownload = false,
+  emptyStateAction,
 }: Params) => {
-  const [data, setData] = useState<TableData[]>([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
@@ -49,7 +47,7 @@ export const CustomTable = ({
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  
+
   // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
   const handleSortOrderChange = useCallback((val: 1 | -1) => {
     setSortOrder(val === 1 ? "asc" : "desc");
@@ -65,59 +63,52 @@ export const CustomTable = ({
       setLoading(true);
       window.scrollTo(0, 0);
       const params: Record<string, any> = {
+        filters: "",
         page: page,
         limit: limit,
-        'filter[sortBy]': sortByValue,
-        'filter[sortOrder]': sortOrder
       };
-
-      // Add selected filters
-      selectedFilters.forEach((filter) => {
+      selectedFilters.map((filter) => {
+        params["filters"] += [`filter[${filter.fieldName}],`];
+      });
+      selectedFilters.map((filter) => {
         if (filter.arrayName) {
-          params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
+          params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
+            filter.value;
         } else {
           params[`filter[${filter.fieldName}]`] = filter.value;
         }
       });
-
-      // Add search parameters if search term exists
-      if (search) {
+      if (search != "") {
         params["filter[search][value]"] = search;
         params["filter[search][columns]"] = searchColumn?.join(",");
       }
 
-      console.log("Sending API request to:", api);
-      console.log("With parameters:", JSON.stringify(params, null, 2));
-      
+      params["filter[sortBy]"] = sortByValue;
+      params["filter[sortOrder]"] = sortOrder;
       const response = await apiHelperService.fetchData(api, params);
-      console.log("API Response:", response);
-      
-      // Check if the response has a data property, if not use the response directly
-      const responseData = response.data?.data || response.data;
-      console.log("Extracted data:", responseData);
-      
-      if (Array.isArray(responseData)) {
-        setData(responseData);
-      } else if (responseData && typeof responseData === 'object') {
-        // If the response is an object but not an array, try to extract an array from it
-        const dataArray = Object.values(responseData).find(Array.isArray);
-        setData(Array.isArray(dataArray) ? dataArray : []);
-      } else {
-        setData([]);
-      }
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR(title || ""),
-          variant: "destructive", // Red error message
-        });
-      } finally {
-        setLoading(false);
-      }
-  }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title])
+      setData(response.data.data);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR(title || ""),
+        variant: "destructive", // Red error message
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    api,
+    limit,
+    page,
+    search,
+    selectedFilters,
+    sortByValue,
+    sortOrder,
+    title,
+  ]);
 
   useEffect(() => {
-    fetchData()
+    fetchData();
   }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
 
   useEffect(() => {
@@ -175,8 +166,8 @@ export const CustomTable = ({
   };
 
   const refetch = () => {
-    fetchData()
-  }
+    fetchData();
+  };
 
   return (
     <div className="px-4">
@@ -257,50 +248,65 @@ export const CustomTable = ({
                 ) : data?.length > 0 ? (
                   data.map((elem: any, index: number) => (
                     <TableRow key={elem._id}>
-                      {fields.map((field, index) => {
-                        const value = field.fieldName ? elem[field.fieldName] : elem;
-                        
-                        return (
-                          <TableCell
-                            key={field.fieldName || index}
-                            className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
-                            width={field.width}
-                          >
-                            {field.type === FieldType.CUSTOM && field.component ? (
-                              <field.component 
-                                value={value} 
-                                fieldData={field} 
-                                id={elem[uniqueId]} 
-                              />
-                            ) : (
-                              <CustomTableCell
-                                fieldData={field}
-                                value={value}
-                                id={elem[uniqueId]}
-                                refetch={refetch}
-                                key={index}
-                              />
-                            )}
-                          </TableCell>
-                        );
-                      })}
+                      {fields.map((field, index) => (
+                        <TableCell
+                          key={field.fieldName}
+                          className={twMerge(
+                            "text-gray-900 dark:text-gray-300",
+                            field.className
+                          )}
+                          width={field.width}
+                        >
+                          <CustomTableCell
+                            fieldData={field}
+                            value={
+                              field.fieldName
+                                ? elem[field.fieldName]
+                                : field.type === FieldType.CUSTOM
+                                  ? elem
+                                  : undefined
+                            }
+                            id={elem[uniqueId]}
+                            refetch={refetch}
+                            key={index}
+                          />
+                        </TableCell>
+                      ))}
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                          <br />
-                          Here you can get directly hired for different roles.
-                        </p>
-                      </div>
+                      {emptyStateAction ? (
+                        <div className="text-center py-16 w-full">
+                          <PackageOpen
+                            className="mx-auto text-gray-400 mb-4"
+                            size="80"
+                          />
+                          <p className="text-gray-600 mb-6 text-lg font-medium">
+                            No leaderboard contests yet
+                          </p>
+                          <p className="text-gray-500 mb-8">
+                            Create your first leaderboard contest to get started
+                          </p>
+                          {React.createElement(emptyStateAction, {
+                            refetch: fetchData,
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-center py-10 w-full mt-10">
+                          <PackageOpen
+                            className="mx-auto text-gray-500"
+                            size="100"
+                          />
+                          <p className="text-gray-500">
+                            No data available.
+                            <br /> This feature will be available soon.
+                            <br />
+                            Here you can get directly hired for different roles.
+                          </p>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}
