@@ -58,31 +58,129 @@ export const CustomTable = ({
 
   const { toast } = useToast();
 
-  // Function to sort search results by relevance
+  // Function to sort search results by relevance across all content
   const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
-    if (!searchTerm || !searchColumn?.length) return [...data];
+    if (!searchTerm) return [...data];
     
     const searchLower = searchTerm.toLowerCase();
     
     return [...data].sort((a, b) => {
-      // Check for exact matches first
-      const aExactMatch = searchColumn.some(column => 
-        String(a[column as keyof TableData] || '').toLowerCase() === searchLower
-      );
-      const bExactMatch = searchColumn.some(column => 
-        String(b[column as keyof TableData] || '').toLowerCase() === searchLower
-      );
+      // Check for exact matches first - search across ALL fields
+      const aExactMatch = Object.keys(a).some(key => {
+        const value = a[key];
+        if (value === null || value === undefined) return false;
+        
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find(f => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(' ');
+            return arrayValues.toLowerCase() === searchLower;
+          }
+          return value.join(' ').toLowerCase() === searchLower;
+        }
+        
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase() === searchLower;
+        }
+        
+        return String(value).toLowerCase() === searchLower;
+      });
+      
+      const bExactMatch = Object.keys(b).some(key => {
+        const value = b[key];
+        if (value === null || value === undefined) return false;
+        
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find(f => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(' ');
+            return arrayValues.toLowerCase() === searchLower;
+          }
+          return value.join(' ').toLowerCase() === searchLower;
+        }
+        
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase() === searchLower;
+        }
+        
+        return String(value).toLowerCase() === searchLower;
+      });
       
       if (aExactMatch && !bExactMatch) return -1;
       if (!aExactMatch && bExactMatch) return 1;
       
-      // Then check for partial matches
-      const aPartialMatch = searchColumn.some(column => 
-        String(a[column as keyof TableData] || '').toLowerCase().includes(searchLower)
-      );
-      const bPartialMatch = searchColumn.some(column => 
-        String(b[column as keyof TableData] || '').toLowerCase().includes(searchLower)
-      );
+      // Then check for partial matches - search across ALL fields
+      const aPartialMatch = Object.keys(a).some(key => {
+        const value = a[key];
+        if (value === null || value === undefined) return false;
+        
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find(f => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(' ');
+            return arrayValues.toLowerCase().includes(searchLower);
+          }
+          return value.join(' ').toLowerCase().includes(searchLower);
+        }
+        
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase().includes(searchLower);
+        }
+        
+        return String(value).toLowerCase().includes(searchLower);
+      });
+      
+      const bPartialMatch = Object.keys(b).some(key => {
+        const value = b[key];
+        if (value === null || value === undefined) return false;
+        
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find(f => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(' ');
+            return arrayValues.toLowerCase().includes(searchLower);
+          }
+          return value.join(' ').toLowerCase().includes(searchLower);
+        }
+        
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === 'object' && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase().includes(searchLower);
+        }
+        
+        return String(value).toLowerCase().includes(searchLower);
+      });
       
       if (aPartialMatch && !bPartialMatch) return -1;
       if (!aPartialMatch && bPartialMatch) return 1;
@@ -135,15 +233,14 @@ export const CustomTable = ({
       
       const response = await apiHelperService.fetchData(api, params);
       
-      // Apply client-side search sorting if there's a search term
       if (search && searchColumn && searchColumn.length > 0) {
-        const sortedData = sortBySearchRelevance(response.data.data, search);
+        const sortedData = sortBySearchRelevance(response.data.data || [], search);
         setFilteredData(sortedData);
       } else {
-        setFilteredData(response.data.data);
+        setFilteredData(response.data.data || []);
       }
       
-      setData(response.data.data);
+      setData(response.data.data || []);
       } catch (error) {
         toast({
           title: "Error",
@@ -155,15 +252,14 @@ export const CustomTable = ({
       }
   }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title, searchColumn])
 
-  // Update filtered data when search term or data changes
   useEffect(() => {
-    if (search && searchColumn && searchColumn.length > 0) {
-      const sortedData = sortBySearchRelevance(data, search);
+    if (search) {
+      const sortedData = sortBySearchRelevance(data || [], search);
       setFilteredData(sortedData);
     } else {
-      setFilteredData([...data]);
+      setFilteredData([...(data || [])]);
     }
-  }, [search, data, searchColumn]);
+  }, [search, data]);
 
   useEffect(() => {
     fetchData();
@@ -213,7 +309,6 @@ export const CustomTable = ({
 
     const blob = new Blob([content], { type: "text/csv" });
 
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");

@@ -78,7 +78,7 @@ const DeleteBadgeLevel: React.FC<DeleteBadgeLevelProps> = ({ data, refetch, onCl
         <DialogHeader>
           <DialogTitle>Delete Badge/Level</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete "{data?.name || 'this badge/level'}"? This action cannot be undone.
+            Are you sure you want to delete &quot;{data?.name || 'this badge/level'}&quot;? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">

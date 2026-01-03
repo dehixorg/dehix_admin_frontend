@@ -10,6 +10,16 @@ import DeleteBadgeLevel from "./deleteBadgeLevel";
 export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & { refetch?: () => void }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  // Enhanced debug logging for image URL tracking
+  console.log('=== BadgeLevelDetails Image Debug ===');
+  console.log('ID:', id);
+  console.log('Full data object:', data);
+  console.log('Image URL:', data?.imageUrl);
+  console.log('Image URL type:', typeof data?.imageUrl);
+  console.log('Image URL length:', data?.imageUrl?.length);
+  console.log('Has imageUrl property:', 'imageUrl' in (data || {}));
+  console.log('Data keys:', Object.keys(data || {}));
+
   return (
     <CustomDialog
       title={"Badge & Level Details"}
@@ -32,25 +42,48 @@ export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & 
           </div>
 
 
-          {/* Image URL */}
+          {/* Image */}
           {data.imageUrl && (
             <div className="border-b pb-4">
               <h3 className="font-semibold text-lg mb-2">Icon</h3>
-              <div className="flex items-center space-x-4">
+              <div className="flex justify-center">
+                {/* Try Next.js Image first */}
                 <Image
                   src={data.imageUrl}
                   alt={data.name}
-                  width={80}
-                  height={80}
+                  width={200}
+                  height={200}
                   className="object-cover rounded-lg border"
                   onError={(e) => {
-                    e.currentTarget.src = "/placeholder-icon.png";
+                    console.log('Next.js Image failed, trying regular img tag');
+                    console.log('Failed image URL:', data.imageUrl);
+                    // Hide Next.js Image and show regular img
+                    e.currentTarget.style.display = 'none';
+                    const regularImg = e.currentTarget.nextElementSibling as HTMLImageElement;
+                    if (regularImg) {
+                      regularImg.style.display = 'block';
+                    }
+                  }}
+                  onLoad={() => {
+                    console.log('Next.js Image loaded successfully:', data.imageUrl);
                   }}
                 />
-                <div>
-                  <p><strong>Image URL:</strong></p>
-                  <p className="text-sm text-gray-600 break-all">{data.imageUrl}</p>
-                </div>
+                {/* Fallback regular img tag */}
+                <img
+                  src={data.imageUrl}
+                  alt={data.name}
+                  width={200}
+                  height={200}
+                  className="object-cover rounded-lg border"
+                  style={{ display: 'none' }}
+                  onError={(e) => {
+                    console.log('Regular img also failed, using placeholder');
+                    e.currentTarget.src = "/user.png";
+                  }}
+                  onLoad={() => {
+                    console.log('Regular img loaded successfully:', data.imageUrl);
+                  }}
+                />
               </div>
             </div>
           )}

@@ -26,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
-import BadgeImageUpload from "./BadgeImageUpload";
+import { BadgeImageUpload } from './BadgeImageUpload';
 
 interface BadgeLevelData {
   name: string;
@@ -58,8 +58,10 @@ const EditBadgeLevel: React.FC<CustomTableChildComponentsProps & { data: any; on
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   
-  // Add debugging to see what data is being received
-  console.log('EditBadgeLevel received data:', data);
+  // Only log data in development
+  if (process.env.NODE_ENV === 'development') {
+    console.log('EditBadgeLevel received data:', data);
+  }
   
   // Initialize useForm with default values - hooks must be called before any conditional logic
   const {
@@ -74,7 +76,7 @@ const EditBadgeLevel: React.FC<CustomTableChildComponentsProps & { data: any; on
       name: data?.name || "",
       description: data?.description || "",
       type: data?.type || "BADGE",
-      isActive: data?.isActive !== undefined ? true : data?.isActive,
+      isActive: data?.isActive !== undefined ? data?.isActive : true,
       imageUrl: data?.imageUrl || "",
       // Add default values for optional fields
       priority: data?.priority || 0,
@@ -90,10 +92,18 @@ const EditBadgeLevel: React.FC<CustomTableChildComponentsProps & { data: any; on
   }
 
   const onSubmit = async (formData: BadgeLevelData) => {
-    console.log('Edit form submitted with data:', formData);
     try {
-      const response = await axiosInstance.put(`/admin/gamification/definition/${data._id}`, formData);
-      console.log('API response:', response);
+      console.log('Form data being submitted:', formData);
+      
+      const { isActive, ...dataToSubmit } = formData;
+      console.log('Data to submit (without isActive):', dataToSubmit);
+      console.log('imageUrl in dataToSubmit:', dataToSubmit.imageUrl);
+      
+      const response = await axiosInstance.put(`/admin/gamification/definition/${data._id}`, dataToSubmit);
+      
+      if (process.env.NODE_ENV === 'development') {
+        console.log('API response:', response);
+      }
 
       if(response.status === 200) {
         toast({

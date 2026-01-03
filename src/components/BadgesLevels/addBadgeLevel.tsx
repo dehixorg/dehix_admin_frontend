@@ -27,7 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
-import BadgeImageUpload from "./BadgeImageUpload";
+import { BadgeImageUpload } from "./BadgeImageUpload";
 
 interface BadgeLevelData {
   name: string;
@@ -35,10 +35,8 @@ interface BadgeLevelData {
   type: string;
   isActive: boolean;
   imageUrl: string;
-  // LEVEL-specific fields
   priority?: number;
   rewardMultiplier?: number;
-  // Badge-specific fields
   baseReward?: number;
 }
 
@@ -48,13 +46,23 @@ const badgeLevelSchema = z.object({
   type: z.enum(["BADGE", "LEVEL"]).default("BADGE"),
   isActive: z.boolean().default(true),
   imageUrl: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
-  // LEVEL-specific fields
   priority: z.number().optional(),
   rewardMultiplier: z.number().optional(),
-  // Badge-specific fields
   baseReward: z.number().optional(),
-});
-
+}).refine(
+  (data) => {
+    if (data.type === "LEVEL") {
+      return data.priority !== undefined && data.rewardMultiplier !== undefined;
+    }
+    if (data.type === "BADGE") {
+      return data.baseReward !== undefined;
+    }
+    return true;
+  },
+  {
+    message: "Type-specific fields are required",
+  }
+);
 const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
@@ -72,7 +80,6 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
       type: "BADGE",
       isActive: true,
       imageUrl: "",
-      // Add default values for optional fields
       priority: 0,
       rewardMultiplier: 1.0,
       baseReward: 0,
@@ -85,14 +92,12 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
     console.log('Form submitted with data:', data);
     console.log('Form errors:', errors);
     
-    // Check if there are validation errors
     if (Object.keys(errors).length > 0) {
       console.log('Form has validation errors:', errors);
       return;
     }
     
     try {
-      // Make actual API call to backend with authentication
       const response = await axiosInstance.post('/admin/gamification/definition', data);
       console.log('API response:', response);
 
@@ -201,7 +206,6 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
             )}
           </div>
 
-          {/* Type-specific fields */}
           {selectedType === "LEVEL" && (
             <>
               <div className="mb-3">
@@ -212,10 +216,12 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
                     <Input
                       type="number"
                       placeholder="Priority"
-                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
                       className="border p-2 rounded mt-2 w-full"
-                    />
-                  )}
+                    />                  )}
                 />
               </div>
               <div className="mb-3">
@@ -227,13 +233,18 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({ refetch }) =
                       type="number"
                       step="0.1"
                       placeholder="Reward Multiplier"
-                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                      onBlur={field.onBlur}
+                      ref={field.ref}
                       className="border p-2 rounded mt-2 w-full"
                     />
                   )}
                 />
-              </div>
-            </>
+                {errors.rewardMultiplier && (
+                  <p className="text-red-600">{errors.rewardMultiplier.message}</p>
+                )}
+              </div>            </>
           )}
 
           {selectedType === "BADGE" && (

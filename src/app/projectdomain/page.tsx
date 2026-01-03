@@ -132,7 +132,7 @@ export default function Talent() {
           },
         ],
     tableHeaderActions: [AddProjectDomain],
-    searchColumn: ["label"],
+    searchColumn: ["label", "description", "status", "createdBy", "createdById"],
   };
 
   return (

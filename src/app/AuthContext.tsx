@@ -25,8 +25,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
+    // Get user data from cookies (set during login)
+    const getCookie = (name: string) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop()?.split(';').shift();
+      return null;
+    };
+    
+    const storedUser = getCookie("user");
+    const storedToken = getCookie("token");
 
     if (storedUser && storedToken) {
       const parsedUser = JSON.parse(storedUser);

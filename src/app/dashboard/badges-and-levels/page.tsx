@@ -70,17 +70,12 @@ const customTableProps: TableProps = {
       type: FieldType.LONGTEXT,
     },
     {
-      fieldName: "imageUrl",
-      textValue: "Image URL",
-      type: FieldType.LENGTH,
-    },
-    {
       textValue: "",
       type: FieldType.CUSTOM,
       CustomComponent: BadgeLevelDetails
     },
   ],
-  searchColumn: ["name", "description"],
+  searchColumn: ["name", "description", "type", "isActive"],
   tableHeaderActions: [AddBadgeLevel],
   filterData: [
     {

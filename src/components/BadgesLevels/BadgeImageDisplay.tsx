@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 
 interface CustomComponentProps {
@@ -9,11 +9,20 @@ interface CustomComponentProps {
 
 const BadgeImageDisplay = ({ data }: CustomComponentProps): React.JSX.Element => {
   const imageUrl = data?.imageUrl;
+  const [imageError, setImageError] = useState(false);
 
   if (!imageUrl) {
     return (
       <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
         <span className="text-gray-500 text-xs">No Image</span>
+      </div>
+    );
+  }
+
+  if (imageError) {
+    return (
+      <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
+        <span className="text-gray-500 text-xs">Error</span>
       </div>
     );
   }
@@ -25,17 +34,8 @@ const BadgeImageDisplay = ({ data }: CustomComponentProps): React.JSX.Element =>
         alt={data?.name || 'Badge/Level'}
         fill
         className="object-cover"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
-          if (target.nextElementSibling) {
-            (target.nextElementSibling as HTMLElement).classList.remove('hidden');
-          }
-        }}
+        onError={() => setImageError(true)}
       />
-      <div className="hidden w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
-        <span className="text-gray-500 text-xs">Error</span>
-      </div>
     </div>
   );
 };

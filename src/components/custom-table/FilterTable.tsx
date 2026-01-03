@@ -101,7 +101,6 @@ export const FilterTable = ({
   }, [filterData]);
 
   const handleSearchSelect = (value: string) => {
-    // When a search suggestion is selected, you can add additional logic here
     console.log('Selected search option:', value);
   };
 
@@ -191,14 +190,21 @@ export const FilterTable = ({
                               const newSelectedFilters = selectedFilters.map(
                                 (filterVal) => {
                                   if (filterVal.fieldName === filter.name) {
-                                    const newValue = filterVal.value.includes(
-                                      opt.value
-                                    )
-                                      ? filterVal.value.replace(
-                                          `${opt.value},`,
-                                          ""
-                                        )
-                                      : `${filterVal.value}${opt.value},`;
+                                    // Parse existing values
+                                    const currentValues = filterVal.value
+                                      .split(',')
+                                      .filter((v) => v.trim() !== '');
+                                    
+                                    // Toggle the clicked option
+                                    let newValue: string;
+                                    if (currentValues.includes(opt.value)) {
+                                      newValue = currentValues
+                                        .filter((v) => v !== opt.value)
+                                        .join(',');
+                                    } else {
+                                      newValue = [...currentValues, opt.value].join(',');
+                                    }
+                                    
                                     return { ...filterVal, value: newValue };
                                   }
                                   return filterVal;
