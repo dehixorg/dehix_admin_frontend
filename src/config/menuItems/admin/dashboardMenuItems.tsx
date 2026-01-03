@@ -108,6 +108,11 @@ export const menuItemsTop: MenuItem[] = [
     label: "Admin",
   },
   {
+    href: "/admin/leaderboard",
+    icon: <Award className="h-5 w-5" />,
+    label: "Leaderboard",
+  },
+  {
     href: "/interview",
     icon: <NotebookPen className="h-5 w-5" />,
     label: "Interview",
@@ -143,13 +148,13 @@ export const menuItemsTop: MenuItem[] = [
   {
     href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
-    label:"Notes",
+    label: "Notes",
   },
   {
     href: "/reports",
     icon: <FileWarning className="h-5 w-5" />,
-    label:"Reports",
-  }
+    label: "Reports",
+  },
 ];
 
 export const menuItemsBottom: MenuItem[] = [
@@ -162,33 +167,33 @@ export const menuItemsBottom: MenuItem[] = [
 
 export const notesMenu: MenuItem[] = [
   {
-    href: '#',
+    href: "#",
     icon: <Boxes className="h-5 w-5 transition-all group-hover:scale-110" />,
-    label: 'Dehix',
+    label: "Dehix",
   },
   {
-    href: '/business',
+    href: "/business",
     icon: <Home className="h-5 w-5" />,
-    label: 'Home'
+    label: "Home",
   },
   {
-    href: '/notes',
+    href: "/notes",
     icon: <StickyNote className="h-5 w-5" />,
-    label: 'Notes',
+    label: "Notes",
   },
   {
-    href: '/notes/archive',
+    href: "/notes/archive",
     icon: <Archive className="h-5 w-5" />,
-    label: 'Archive'
+    label: "Archive",
   },
   {
-    href: '/notes/trash',
+    href: "/notes/trash",
     icon: <Trash2 className="h-5 w-5" />,
-    label: 'Trash'
+    label: "Trash",
   },
   {
-    href: '/notes/mynotes',
+    href: "/notes/mynotes",
     icon: <NotebookPen className="h-5 w-5" />,
-    label: 'MyNotes'
-  }
+    label: "MyNotes",
+  },
 ];

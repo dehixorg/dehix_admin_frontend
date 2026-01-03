@@ -43,16 +43,60 @@ export default function Talent() {
         tooltipContent: "Personal Phone Number",
       },
       {
-        fieldName: "skills",
+        fieldName: "attributes",
         textValue: "Skills",
-        type: FieldType.ARRAY_VALUE,
-        arrayName: "name",
+        type: FieldType.CUSTOM,
+        component: (props: { value?: Array<{ type: string; name: string }> }) => {
+          // Safely access and filter skills
+          const skills = Array.isArray(props.value) 
+            ? props.value
+                .filter(attr => attr?.type === "SKILL")
+                .map(skill => skill.name)
+                .filter(Boolean) // Remove any undefined/null values
+            : [];
+          
+          return (
+            <div className="flex flex-wrap gap-1">
+              {skills.slice(0, 3).map((skill, index) => (
+                <span key={`skill-${index}`} className="px-2 py-1 text-xs bg-gray-100 rounded-md">
+                  {skill}
+                </span>
+              ))}
+              {skills.length > 3 && (
+                <span className="text-xs text-gray-500">+{skills.length - 3} more</span>
+              )}
+              {skills.length === 0 && <span className="text-xs text-gray-400">No skills</span>}
+            </div>
+          );
+        },
       },
       {
-        fieldName: "domain",
+        fieldName: "attributes",
         textValue: "Domains",
-        type: FieldType.ARRAY_VALUE,
-        arrayName: "name",
+        type: FieldType.CUSTOM,
+        component: (props: { value?: Array<{ type: string; name: string }> }) => {
+          // Safely access and filter domains
+          const domains = Array.isArray(props.value)
+            ? props.value
+                .filter(attr => attr?.type === "DOMAIN")
+                .map(domain => domain.name)
+                .filter(Boolean) // Remove any undefined/null values
+            : [];
+          
+          return (
+            <div className="flex flex-wrap gap-1">
+              {domains.slice(0, 3).map((domain, index) => (
+                <span key={`domain-${index}`} className="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md">
+                  {domain}
+                </span>
+              ))}
+              {domains.length > 3 && (
+                <span className="text-xs text-gray-500">+{domains.length - 3} more</span>
+              )}
+              {domains.length === 0 && <span className="text-xs text-gray-400">No domains</span>}
+            </div>
+          );
+        },
       },
       {
         textValue: "",
@@ -74,6 +118,15 @@ export default function Talent() {
     ],
     filterData: [
       {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "ACTIVE", value: "ACTIVE" },
+          { label: "NOT VERIFIED", value: "Not_Verified,Notverified,NOT_VERIFIED" },
+        ],
+      },
+      {
         name: "skills",
         textValue: "Skills",
         type: FilterDataType.MULTI,
@@ -84,7 +137,6 @@ export default function Talent() {
           { label: "Django", value: "Django" },
           { label: "Angular", value: "Angular" },
           { label: "Node JS", value: "Node.js" }
-
         ],
       },
       {
@@ -99,9 +151,9 @@ export default function Talent() {
         ],
       },
     ],
-    searchColumn: ["firstName","skills.name", "email"],
+    searchColumn: ["firstName", "email"],
     isDownload: true,
-    sortBy: [{ fieldName: "dob", label: "Date Of Birth" }]
+    sortBy: [{ fieldName: "createdAt", label: "Created At" }]
   }
 
 
@@ -121,7 +173,6 @@ export default function Talent() {
           />
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "#" },
               { label: "Freelancer", link: "#" },
             ]}
           />

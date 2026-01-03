@@ -121,7 +121,7 @@ const BusinessTabs = () => {
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "" },
-              { label: "Verification", link: "/verification" },
+              { label: "Oracle Verification", link: "/verification" },
            
             ]}
           />

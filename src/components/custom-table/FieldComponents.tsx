@@ -73,22 +73,21 @@ const ArrayValueField = ({
   
   return (
     <div className="relative group cursor-pointer">
-      {value.length > 0 ? (
-        <>
-          <ToolTip
-            trigger={
-              <div className="">
-                <span>{fieldData.arrayName ? value[0][fieldData.arrayName] : value[0]} </span>
-                <span className="text-xs text-gray-500">
-                  {value.length > 1 && `+${value.length - 1} more`}
-                </span>
-              </div>
-            }
-            content={value
-              .map((val: any) => fieldData.arrayName ? `${val[fieldData.arrayName!]}` : `${val}`)
-              .join(", ")}
-          />
-        </>
+      {safeValue.length > 0 ? (
+        <ToolTip
+          trigger={
+            <div className="">
+              <span>{getDisplayValue(safeValue[0])} </span>
+              <span className="text-xs text-gray-500">
+                {safeValue.length > 1 && `+${safeValue.length - 1} more`}
+              </span>
+            </div>
+          }
+          content={safeValue
+            .map((val) => getDisplayValue(val))
+            .filter(Boolean) // Remove any empty strings
+            .join(", ")}
+        />
       ) : (
         <span className="text-xs text-gray-500">-</span>
       )}
@@ -124,7 +123,10 @@ const ActionField = ({
             >
               {type === "Button" && (
                 <div
-                  onClick={() => handler?.({ id, refetch })}
+                  onClick={async () => {
+                    await handler?.({ id, refetch });
+                    refetch && refetch();
+                  }}
                   className={twMerge(
                     "text-sm w-full py-2 px-3 flex items-center dark:text-gray-300 justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className

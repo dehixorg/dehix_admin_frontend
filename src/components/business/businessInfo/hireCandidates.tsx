@@ -125,7 +125,7 @@ function Hirefreelancer({ businessId }: HirefreelancerProps) {
     };
 
     fetchFreelancerInfo();
-  }, [businessId, toast, freelancerDetailsMap]);
+  }, [businessId, toast]);
 
   if (loading) {
     return (

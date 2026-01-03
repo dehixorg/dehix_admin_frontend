@@ -1,42 +1,47 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Plus } from 'lucide-react';
-import Image from 'next/image';
+import { useState } from "react";
+import { Plus } from "lucide-react";
+import Image from "next/image";
 
-import { ColorPicker } from './ColorPickerForNotes';
+import { ColorPicker } from "./ColorPickerForNotes";
 
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Note, NoteType } from '@/utils/types/note';
-import { useSelector } from 'react-redux';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Note, NoteType } from "@/utils/types/note";
+import { useSelector } from "react-redux";
 
 interface Props {
   onNoteCreate: (note: Note) => void;
   userId: string;
+  isArchive?: boolean;
 }
 
 const banners = [
-  '/banner1.svg',
-  '/banner2.svg',
-  '/banner3.svg',
-  '/banner4.svg',
-  '/banner5.svg',
-  '/banner6.svg',
-  '/banner7.svg',
+  "/banner1.svg",
+  "/banner2.svg",
+  "/banner3.svg",
+  "/banner4.svg",
+  "/banner5.svg",
+  "/banner6.svg",
+  "/banner7.svg",
 ];
 
-export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [selectedColor, setSelectedColor] = useState('#ffffff');
+export function CreateNoteDialog({
+  onNoteCreate,
+  userId,
+  isArchive = false,
+}: Props) {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [selectedColor, setSelectedColor] = useState("#ffffff");
   const [selectedBanner, setSelectedBanner] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [isHTML, setIsHTML] = useState(false);
@@ -58,9 +63,9 @@ export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
     };
 
     onNoteCreate(newNote);
-    setTitle('');
-    setContent('');
-    setSelectedColor('#ffffff');
+    setTitle("");
+    setContent("");
+    setSelectedColor("#ffffff");
     setSelectedBanner(null);
     setOpen(false);
   };
@@ -70,11 +75,13 @@ export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
       <DialogTrigger asChild>
         <Button className="gap-2">
           <Plus className="h-4 w-4" />
-          Add
+          {isArchive ? "Archive" : "Add"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <DialogTitle>Create New Note</DialogTitle>
+        <DialogTitle>
+          {isArchive ? "Archive New Note" : "Create New Note"}
+        </DialogTitle>
         <div className="grid gap-4 py-4">
           <Input
             placeholder="Title"
@@ -113,12 +120,12 @@ export function CreateNoteDialog({ onNoteCreate, userId }: Props) {
                   key={index}
                   onClick={() => {
                     setSelectedBanner(banner);
-                    setSelectedColor('#ffffff'); // Clear color when banner is selected
+                    setSelectedColor("#ffffff"); // Clear color when banner is selected
                   }}
                   className={`cursor-pointer border rounded-full p-1 flex items-center justify-center ${
                     selectedBanner === banner
-                      ? 'border-blue-500'
-                      : 'border-gray-300'
+                      ? "border-blue-500"
+                      : "border-gray-300"
                   }`}
                 >
                   <Image

@@ -44,9 +44,17 @@ export const apiService = async ({
           });
         }
         break;
-      case Api_Methods.PUT:
-        response = await axiosInstance.put(endpoint, body, { params });
+      case Api_Methods.PUT: {
+        // For PUT requests, ensure the endpoint includes the ID if it's in the body
+        let putEndpoint = endpoint;
+        if (body?.ads_id && !endpoint.endsWith(`/${body.ads_id}`)) {
+          putEndpoint = endpoint.endsWith('/') 
+            ? `${endpoint}${body.ads_id}`
+            : `${endpoint}/${body.ads_id}`;
+        }
+        response = await axiosInstance.put(putEndpoint, body, { params });
         break;
+      }
       case Api_Methods.DELETE:
         response = await axiosInstance.delete(endpoint, { params });
         break;

@@ -5,9 +5,6 @@ let axiosInstance: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
-
-
-
 // Function to initialize Axios with Bearer token
 const initializeAxiosWithToken = (token: string | null) => {
   console.log('Initializing axios with token:', token ? 'Token present' : 'No token');
@@ -15,6 +12,7 @@ const initializeAxiosWithToken = (token: string | null) => {
   axiosInstance = axios.create({
     baseURL: 'http://localhost:8080',
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -38,21 +36,19 @@ axiosInstance.interceptors.request.use(
     // Handle request errors
     console.error("Request error:", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 // Response interceptor (optional)
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-
-    
     return response;
   },
   (error) => {
     // Handle errors if needed
     console.error("Response error:", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 export { axiosInstance, initializeAxiosWithToken };

@@ -3,7 +3,8 @@
 import { DownloadIcon, PackageOpen } from "lucide-react";
 import { Card } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
-import { useCallback , useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+
 import {
   Table,
   TableBody,
@@ -36,6 +37,7 @@ export const CustomTable = ({
   sortBy,
   isFilter = true,
   isDownload = false,
+  emptyStateAction,
 }: Params) => {
   // Define the data type for table rows
   type TableData = any; // Consider replacing 'any' with a proper interface for your data
@@ -47,7 +49,7 @@ export const CustomTable = ({
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  
+
   // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
   const handleSortOrderChange = useCallback((val: 1 | -1) => {
     setSortOrder(val === 1 ? "asc" : "desc");
@@ -196,7 +198,7 @@ export const CustomTable = ({
       window.scrollTo(0, 0);
       const params: Record<string, any> = {
         page: page,
-        limit: limit
+        limit: limit,
       };
       
       // Build filters string only for filters with values
@@ -320,20 +322,27 @@ export const CustomTable = ({
   };
 
   const refetch = () => {
-    fetchData()
-  }
+    fetchData();
+  };
 
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">{title}</h1>
         <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
-        <TableSelect
-          currValue={limit}
-          label="Items Per Page"
-          values={[10, 15, 20, 25]}
-          setCurrValue={setLimitUtils}
-        />
+        <div className="flex items-center gap-2">
+          <TableSelect
+            currValue={limit}
+            label="Items Per Page"
+            values={[10, 25, 50, 100]}
+            setCurrValue={setLimitUtils}
+          />
+          {data.length > 0 && (
+            <span className="text-sm text-gray-500">
+              Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, data.length * page)} of {data.length * page} entries
+            </span>
+          )}
+        </div>
         {/* Download Button */}
         {isDownload && (
           <span
@@ -398,17 +407,20 @@ export const CustomTable = ({
                       {fields.map((field, index) => (
                         <TableCell
                           key={field.fieldName}
-                          className={twMerge("text-gray-900 dark:text-gray-300", field.className)}
+                          className={twMerge(
+                            "text-gray-900 dark:text-gray-300",
+                            field.className
+                          )}
                           width={field.width}
-                          
                         >
                           <CustomTableCell
                             fieldData={field}
                             value={
                               field.fieldName
                                 ? elem[field.fieldName]
-                                : field.type === FieldType.CUSTOM ?
-                                elem : undefined
+                                : field.type === FieldType.CUSTOM
+                                  ? elem
+                                  : undefined
                             }
                             id={elem[uniqueId]}
                             refetch={refetch}
@@ -421,18 +433,36 @@ export const CustomTable = ({
                 ) : (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center">
-                      <div className="text-center py-10 w-full mt-10">
-                        <PackageOpen
-                          className="mx-auto text-gray-500"
-                          size="100"
-                        />
-                        <p className="text-gray-500">
-                          No data available.
-                          <br /> This feature will be available soon.
-                          <br />
-                          Here you can get directly hired for different roles.
-                        </p>
-                      </div>
+                      {emptyStateAction ? (
+                        <div className="text-center py-16 w-full">
+                          <PackageOpen
+                            className="mx-auto text-gray-400 mb-4"
+                            size="80"
+                          />
+                          <p className="text-gray-600 mb-6 text-lg font-medium">
+                            No leaderboard contests yet
+                          </p>
+                          <p className="text-gray-500 mb-8">
+                            Create your first leaderboard contest to get started
+                          </p>
+                          {React.createElement(emptyStateAction, {
+                            refetch: fetchData,
+                          })}
+                        </div>
+                      ) : (
+                        <div className="text-center py-10 w-full mt-10">
+                          <PackageOpen
+                            className="mx-auto text-gray-500"
+                            size="100"
+                          />
+                          <p className="text-gray-500">
+                            No data available.
+                            <br /> This feature will be available soon.
+                            <br />
+                            Here you can get directly hired for different roles.
+                          </p>
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}
