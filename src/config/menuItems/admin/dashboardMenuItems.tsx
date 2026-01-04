@@ -23,6 +23,7 @@ import {
   Key,
   Briefcase,
   Award,
+  MessageSquare,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -83,6 +84,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/notification",
     icon: <BellRing className="h-5 w-5" />,
     label: "Notification",
+  },
+  {
+    href: "/admin/feedback",
+    icon: <MessageSquare className="h-5 w-5" />,
+    label: "Feedback",
   },
   {
     href: "/faq",
