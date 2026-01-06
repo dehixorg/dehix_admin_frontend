@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState, useMemo } from "react";
 import { SearchComponent } from "../custom-table/FilterSearch";
 import {
   Sheet,
@@ -83,12 +83,38 @@ export const FilterTable = ({
     };
   }, []);
 
+  // Generate search suggestions from filter options
+  const searchOptions = useMemo(() => {
+    const options: { value: string; label: string }[] = [];
+    
+    // Add options from all filters
+    filterData?.forEach((filter) => {
+      filter.options.forEach((option) => {
+        options.push({
+          value: option.value,
+          label: option.label
+        });
+      });
+    });
+    
+    return options;
+  }, [filterData]);
+
+  const handleSearchSelect = (value: string) => {
+    console.log('Selected search option:', value);
+  };
+
   return (
     <div className="flex items-center justify-between p-4 border-b border-border bg-background text-foreground rounded-lg">
       {/* Search Bar */}
       {isSearch && (
-        <div className="w-1/3 mr-4">
-          <SearchComponent searchValue={search} setSearchValue={setSearch} />
+        <div className="w-1/3 mr-4 relative">
+          <SearchComponent 
+            searchValue={search} 
+            setSearchValue={setSearch} 
+            options={searchOptions}
+            onSelectOption={handleSearchSelect}
+          />
         </div>
       )}
 
@@ -164,14 +190,21 @@ export const FilterTable = ({
                               const newSelectedFilters = selectedFilters.map(
                                 (filterVal) => {
                                   if (filterVal.fieldName === filter.name) {
-                                    const newValue = filterVal.value.includes(
-                                      opt.value
-                                    )
-                                      ? filterVal.value.replace(
-                                          `${opt.value},`,
-                                          ""
-                                        )
-                                      : `${filterVal.value}${opt.value},`;
+                                    // Parse existing values
+                                    const currentValues = filterVal.value
+                                      .split(',')
+                                      .filter((v) => v.trim() !== '');
+                                    
+                                    // Toggle the clicked option
+                                    let newValue: string;
+                                    if (currentValues.includes(opt.value)) {
+                                      newValue = currentValues
+                                        .filter((v) => v !== opt.value)
+                                        .join(',');
+                                    } else {
+                                      newValue = [...currentValues, opt.value].join(',');
+                                    }
+                                    
                                     return { ...filterVal, value: newValue };
                                   }
                                   return filterVal;

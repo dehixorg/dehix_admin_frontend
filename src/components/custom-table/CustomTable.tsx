@@ -39,7 +39,11 @@ export const CustomTable = ({
   isDownload = false,
   emptyStateAction,
 }: Params) => {
-  const [data, setData] = useState([]);
+  // Define the data type for table rows
+  type TableData = any; // Consider replacing 'any' with a proper interface for your data
+
+  const [data, setData] = useState<TableData[]>([]);
+  const [filteredData, setFilteredData] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
@@ -58,35 +62,197 @@ export const CustomTable = ({
 
   const { toast } = useToast();
 
+  // Function to sort search results by relevance across all content
+  const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
+    if (!searchTerm) return [...data];
+
+    const searchLower = searchTerm.toLowerCase();
+
+    return [...data].sort((a, b) => {
+      // Check for exact matches first - search across ALL fields
+      const aExactMatch = Object.keys(a).some((key) => {
+        const value = a[key];
+        if (value === null || value === undefined) return false;
+
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find((f) => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(" ");
+            return arrayValues.toLowerCase() === searchLower;
+          }
+          return value.join(" ").toLowerCase() === searchLower;
+        }
+
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase() === searchLower;
+        }
+
+        return String(value).toLowerCase() === searchLower;
+      });
+
+      const bExactMatch = Object.keys(b).some((key) => {
+        const value = b[key];
+        if (value === null || value === undefined) return false;
+
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find((f) => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(" ");
+            return arrayValues.toLowerCase() === searchLower;
+          }
+          return value.join(" ").toLowerCase() === searchLower;
+        }
+
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase() === searchLower;
+        }
+
+        return String(value).toLowerCase() === searchLower;
+      });
+
+      if (aExactMatch && !bExactMatch) return -1;
+      if (!aExactMatch && bExactMatch) return 1;
+
+      // Then check for partial matches - search across ALL fields
+      const aPartialMatch = Object.keys(a).some((key) => {
+        const value = a[key];
+        if (value === null || value === undefined) return false;
+
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find((f) => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(" ");
+            return arrayValues.toLowerCase().includes(searchLower);
+          }
+          return value.join(" ").toLowerCase().includes(searchLower);
+        }
+
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase().includes(searchLower);
+        }
+
+        return String(value).toLowerCase().includes(searchLower);
+      });
+
+      const bPartialMatch = Object.keys(b).some((key) => {
+        const value = b[key];
+        if (value === null || value === undefined) return false;
+
+        // Handle arrays (like for ARRAY_VALUE field type)
+        if (Array.isArray(value)) {
+          const arrayField = fields.find((f) => f.fieldName === key);
+          if (arrayField?.arrayName) {
+            const arrayValues = value
+              .map((val: any) => {
+                const arrayName = arrayField.arrayName as string;
+                return val[arrayName] || val;
+              })
+              .join(" ");
+            return arrayValues.toLowerCase().includes(searchLower);
+          }
+          return value.join(" ").toLowerCase().includes(searchLower);
+        }
+
+        // Handle nested objects (but not arrays, which are handled above)
+        if (typeof value === "object" && !Array.isArray(value)) {
+          const stringValue = JSON.stringify(value);
+          return stringValue.toLowerCase().includes(searchLower);
+        }
+
+        return String(value).toLowerCase().includes(searchLower);
+      });
+
+      if (aPartialMatch && !bPartialMatch) return -1;
+      if (!aPartialMatch && bPartialMatch) return 1;
+
+      // If both have same match type, maintain their relative order
+      return 0;
+    });
+  };
+
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       window.scrollTo(0, 0);
       const params: Record<string, any> = {
-        filters: "",
         page: page,
         limit: limit,
       };
-      selectedFilters.map((filter) => {
-        params["filters"] += [`filter[${filter.fieldName}],`];
-      });
-      selectedFilters.map((filter) => {
+
+      // Build filters string only for filters with values
+      const activeFilters = selectedFilters.filter(
+        (filter) =>
+          filter.value !== undefined &&
+          filter.value !== null &&
+          filter.value !== ""
+      );
+
+      if (activeFilters.length > 0) {
+        params["filters"] = activeFilters
+          .map((filter) => `filter[${filter.fieldName}]`)
+          .join(",");
+      }
+
+      selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
           params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
             filter.value;
         } else {
-          params[`filter[${filter.fieldName}]`] = filter.value;
+          // Convert isActive filter value to boolean
+          if (filter.fieldName === "isActive") {
+            params[`filter[${filter.fieldName}]`] = filter.value === "true";
+          } else {
+            params[`filter[${filter.fieldName}]`] = filter.value;
+          }
         }
       });
-      if (search != "") {
+
+      if (search) {
         params["filter[search][value]"] = search;
         params["filter[search][columns]"] = searchColumn?.join(",");
       }
 
       params["filter[sortBy]"] = sortByValue;
       params["filter[sortOrder]"] = sortOrder;
+
       const response = await apiHelperService.fetchData(api, params);
-      setData(response.data.data);
+
+      const responseData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [];
+
+      if (search && searchColumn && searchColumn.length > 0) {
+        const sortedData = sortBySearchRelevance(responseData, search);
+        setFilteredData(sortedData);
+      } else {
+        setFilteredData(responseData);
+      }
+
+      setData(responseData);
     } catch (error) {
       toast({
         title: "Error",
@@ -105,11 +271,22 @@ export const CustomTable = ({
     sortByValue,
     sortOrder,
     title,
+    searchColumn,
   ]);
 
   useEffect(() => {
+    const safeData = Array.isArray(data) ? data : [];
+    if (search) {
+      const sortedData = sortBySearchRelevance(safeData, search);
+      setFilteredData(sortedData);
+    } else {
+      setFilteredData([...safeData]);
+    }
+  }, [search, data]);
+
+  useEffect(() => {
     fetchData();
-  }, [selectedFilters, search, page, limit, sortByValue, sortOrder]);
+  }, [fetchData]);
 
   useEffect(() => {
     setPage(1);
@@ -128,6 +305,8 @@ export const CustomTable = ({
   };
 
   const handleDownload = () => {
+    if (!Array.isArray(data) || data.length === 0) return;
+
     let content = "";
 
     const headings: string[] = [];
@@ -154,7 +333,6 @@ export const CustomTable = ({
 
     const blob = new Blob([content], { type: "text/csv" });
 
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
@@ -172,8 +350,13 @@ export const CustomTable = ({
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">{title}</h1>
-        <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
+          {title}
+        </h1>
+        <HeaderActionComponent
+          headerActions={mainTableActions}
+          refetch={refetch}
+        />
         <div className="flex items-center gap-2">
           <TableSelect
             currValue={limit}
@@ -183,7 +366,9 @@ export const CustomTable = ({
           />
           {data.length > 0 && (
             <span className="text-sm text-gray-500">
-              Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, data.length * page)} of {data.length * page} entries
+              Showing {(page - 1) * limit + 1} to{" "}
+              {Math.min(page * limit, data.length * page)} of{" "}
+              {data.length * page} entries
             </span>
           )}
         </div>
@@ -245,8 +430,8 @@ export const CustomTable = ({
                       </TableRow>
                     ))}
                   </>
-                ) : data?.length > 0 ? (
-                  data.map((elem: any, index: number) => (
+                ) : filteredData?.length > 0 ? (
+                  filteredData.map((elem: any, index: number) => (
                     <TableRow key={elem._id}>
                       {fields.map((field, index) => (
                         <TableCell

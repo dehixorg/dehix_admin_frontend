@@ -23,6 +23,7 @@ import {
   Key,
   Briefcase,
   Award,
+  Star,
   MessageSquare,
 } from "lucide-react";
 
@@ -94,6 +95,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/faq",
     icon: <MessageSquareMore className="h-5 w-5" />,
     label: "Faq",
+  },
+  {
+    href: "/dashboard/badges-and-levels",
+    icon: <Star className="h-5 w-5" />,
+    label: "Badges & Levels",
   },
   {
     href: "/project",
