@@ -70,7 +70,18 @@ const ArrayValueField = ({
   if (!value || !Array.isArray(value)) {
     return <span>-</span>;
   }
-  
+
+  const safeValue = value;
+
+  const getDisplayValue = (item: any): string => {
+    if (!item) return "";
+    if (typeof item === "string") return item;
+    if (fieldData.arrayName && typeof item === "object") {
+      return item[fieldData.arrayName] || "";
+    }
+    return String(item);
+  };
+
   return (
     <div className="relative group cursor-pointer">
       {safeValue.length > 0 ? (
@@ -84,7 +95,7 @@ const ArrayValueField = ({
             </div>
           }
           content={safeValue
-            .map((val) => getDisplayValue(val))
+            .map((val: any) => getDisplayValue(val))
             .filter(Boolean) // Remove any empty strings
             .join(", ")}
         />
@@ -105,7 +116,8 @@ const ActionField = ({
       <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
         {fieldData.actions?.icon ? (
           fieldData.actions.icon
-        ) : fieldData.actions?.options && fieldData.actions.options.length == 1 ? (
+        ) : fieldData.actions?.options &&
+          fieldData.actions.options.length == 1 ? (
           <ArrowRight />
         ) : (
           <DotsVerticalIcon />
@@ -197,7 +209,7 @@ export const TooltipField = ({
 };
 
 const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
-  if(!value) return <span>-</span>
+  if (!value) return <span>-</span>;
   if (fieldData.wordsCnt && value.length <= fieldData.wordsCnt)
     return <span>{value}</span>;
 

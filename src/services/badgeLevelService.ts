@@ -29,10 +29,12 @@ export const badgeLevelService = {
    * @param formData FormData containing the image file
    * @returns Promise with upload response including file URL and metadata
    */
-  uploadBadgeLevelImage: async (formData: FormData): Promise<BadgeLevelImageUploadResponse> => {
+  uploadBadgeLevelImage: async (
+    formData: FormData
+  ): Promise<BadgeLevelImageUploadResponse> => {
     try {
-      console.log('Starting image upload...');
-      
+      console.log("Starting image upload...");
+
       // Log formData contents
       for (const pair of (formData as any).entries()) {
         console.log(pair[0], pair[1]);
@@ -45,34 +47,39 @@ export const badgeLevelService = {
         isFileUpload: true,
       });
 
-      console.log('Upload API Response:', response);
+      console.log("Upload API Response:", response);
 
       if (!response.success) {
-        const errorMessage = response.data?.error || 
-                           response.data?.message || 
-                           'Failed to upload image';
-        console.error('Upload failed with response:', {
+        const errorMessage =
+          response.data?.error ||
+          response.data?.message ||
+          "Failed to upload image";
+        console.error("Upload failed with response:", {
           response,
-          error: errorMessage
+          error: errorMessage,
         });
         throw new Error(errorMessage);
       }
 
       // The response.data now contains the actual upload result with Location, Key, Bucket, etc.
       const responseData = response.data;
-      console.log('Upload successful, response data:', responseData);
+      console.log("Upload successful, response data:", responseData);
 
       if (!responseData) {
-        throw new Error('No data received from server');
+        throw new Error("No data received from server");
       }
 
       // Extract the image URL from the response
-      const location = responseData.Location || responseData.url || responseData.secure_url || responseData.imageUrl;
+      const location =
+        responseData.Location ||
+        responseData.url ||
+        responseData.secure_url ||
+        responseData.imageUrl;
       const key = responseData.Key || responseData.key;
 
       if (!location) {
-        console.error('Missing Location in response:', responseData);
-        throw new Error('No image URL found in response');
+        console.error("Missing Location in response:", responseData);
+        throw new Error("No image URL found in response");
       }
 
       return {
@@ -86,20 +93,20 @@ export const badgeLevelService = {
         error: responseData.error,
         status: responseData.status,
       };
-      
     } catch (error: any) {
-      console.error('Error in uploadBadgeLevelImage:', {
+      console.error("Error in uploadBadgeLevelImage:", {
         error,
         message: error.message,
         stack: error.stack,
-        response: error.response?.data || 'No response data',
-        status: error.response?.status
+        response: error.response?.data || "No response data",
+        status: error.response?.status,
       });
-      
-      const errorMessage = error.response?.data?.message || 
-                         error.message || 
-                         'Failed to upload image. Please try again.';
-      
+
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to upload image. Please try again.";
+
       throw new Error(errorMessage);
     }
   },

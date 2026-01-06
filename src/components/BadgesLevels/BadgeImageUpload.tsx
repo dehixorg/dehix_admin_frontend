@@ -1,5 +1,5 @@
-import React from 'react';
-import { ImageUpload } from '@/components/common/ImageUpload';
+import React from "react";
+import { ImageUpload } from "@/components/common/ImageUpload";
 
 interface BadgeImageUploadProps {
   value?: string;
@@ -20,7 +20,7 @@ const BadgeImageUpload: React.FC<BadgeImageUploadProps> = ({
       maxSizeMB={2}
       previewClassName="w-32 h-32"
       uploadButtonText="Upload Image"
-      fieldName="profilePicture"
+      fieldName="file"
     />
   );
 };

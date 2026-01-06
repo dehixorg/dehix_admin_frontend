@@ -7,81 +7,97 @@ import { useState } from "react";
 import EditBadgeLevel from "./editBadgeLevel";
 import DeleteBadgeLevel from "./deleteBadgeLevel";
 
-export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & { refetch?: () => void }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const BadgeLevelDetails = ({
+  id,
+  data,
+  refetch,
+  open,
+  onOpenChange,
+}: CustomComponentProps & {
+  refetch?: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+}) => {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const isOpen = open ?? internalOpen;
 
-  // Enhanced debug logging for image URL tracking
-  console.log('=== BadgeLevelDetails Image Debug ===');
-  console.log('ID:', id);
-  console.log('Full data object:', data);
-  console.log('Image URL:', data?.imageUrl);
-  console.log('Image URL type:', typeof data?.imageUrl);
-  console.log('Image URL length:', data?.imageUrl?.length);
-  console.log('Has imageUrl property:', 'imageUrl' in (data || {}));
-  console.log('Data keys:', Object.keys(data || {}));
+  const handleOpenChange = (value: boolean | ((prev: boolean) => boolean)) => {
+    const newValue = typeof value === "function" ? value(isOpen) : value;
+    if (onOpenChange) {
+      onOpenChange(newValue);
+    } else {
+      setInternalOpen(newValue);
+    }
+  };
 
   return (
     <CustomDialog
       title={"Badge & Level Details"}
       description={"Detailed information about the badge or level."}
       triggerState={isOpen}
-      setTriggerState={setIsOpen}
+      setTriggerState={handleOpenChange}
       content={
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Basic Information */}
           <div className="border-b pb-4">
-            <h3 className="font-semibold text-lg mb-2">Basic Information</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <p><strong>Type:</strong> <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">{data.type}</span></p>
-              <p><strong>Status:</strong> <span className={`px-2 py-1 rounded text-sm ${data.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                {data.isActive ? "Active" : "Inactive"}
-              </span></p>
-              <p><strong>Name:</strong> {data.name}</p>
-              <p><strong>Description:</strong> {data.description}</p>
+            <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-gray-100">
+              Basic Information
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Type:</strong>{" "}
+                <span className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm font-medium">
+                  {data.type}
+                </span>
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Status:</strong>{" "}
+                <span
+                  className={`px-3 py-1 rounded-md text-sm font-medium ${data.isActive ? "bg-green-500 text-white" : "bg-gray-500 text-white"}`}
+                >
+                  {data.isActive ? "Active" : "Inactive"}
+                </span>
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Name:</strong> {data.name}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <strong>Description:</strong> {data.description}
+              </p>
             </div>
           </div>
-
 
           {/* Image */}
           {data.imageUrl && (
             <div className="border-b pb-4">
-              <h3 className="font-semibold text-lg mb-2">Icon</h3>
+              <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-gray-100">
+                Icon
+              </h3>
               <div className="flex justify-center">
-                {/* Try Next.js Image first */}
                 <Image
                   src={data.imageUrl}
                   alt={data.name}
                   width={200}
                   height={200}
-                  className="object-cover rounded-lg border"
+                  className="w-full max-w-xs mx-auto object-cover rounded-lg border"
                   onError={(e) => {
-                    console.log('Next.js Image failed, trying regular img tag');
-                    console.log('Failed image URL:', data.imageUrl);
-                    // Hide Next.js Image and show regular img
-                    e.currentTarget.style.display = 'none';
-                    const regularImg = e.currentTarget.nextElementSibling as HTMLImageElement;
+                    e.currentTarget.style.display = "none";
+                    const regularImg = e.currentTarget
+                      .nextElementSibling as HTMLImageElement;
                     if (regularImg) {
-                      regularImg.style.display = 'block';
+                      regularImg.style.display = "block";
                     }
                   }}
-                  onLoad={() => {
-                    console.log('Next.js Image loaded successfully:', data.imageUrl);
-                  }}
                 />
-                {/* Fallback regular img tag */}
-                <img
+                <Image
                   src={data.imageUrl}
                   alt={data.name}
                   width={200}
                   height={200}
-                  className="object-cover rounded-lg border"
-                  style={{ display: 'none' }}
+                  className="w-full max-w-xs mx-auto object-cover rounded-lg border"
+                  style={{ display: "none" }}
                   onError={(e) => {
-                    console.log('Regular img also failed, using placeholder');
                     e.currentTarget.src = "/user.png";
-                  }}
-                  onLoad={() => {
-                    console.log('Regular img loaded successfully:', data.imageUrl);
                   }}
                 />
               </div>
@@ -90,16 +106,25 @@ export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & 
 
           {/* Type-specific fields */}
           <div className="border-b pb-4">
-            <h3 className="font-semibold text-lg mb-2">Type-Specific Details</h3>
+            <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-gray-100">
+              Type-Specific Details
+            </h3>
             {data.type === "BADGE" && (
               <div className="space-y-2">
-                <p><strong>Base Reward:</strong> {data.baseReward || 0} points</p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Base Reward:</strong> {data.baseReward || 0} points
+                </p>
               </div>
             )}
             {data.type === "LEVEL" && (
               <div className="space-y-2">
-                <p><strong>Priority:</strong> {data.priority || 0}</p>
-                <p><strong>Reward Multiplier:</strong> {data.rewardMultiplier || 1.0}x</p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Priority:</strong> {data.priority || 0}
+                </p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Reward Multiplier:</strong>{" "}
+                  {data.rewardMultiplier || 1.0}x
+                </p>
               </div>
             )}
           </div>
@@ -107,17 +132,27 @@ export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & 
           {/* Criteria */}
           {data.criteria && (
             <div>
-              <h3 className="font-semibold text-lg mb-2">Criteria</h3>
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-gray-100">
+                Criteria
+              </h3>
+              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
                 <ul className="space-y-2">
-                  {Object.entries(data.criteria).map(([key, value]: [string, any]) => (
-                    value && (
-                      <li key={key} className="flex justify-between">
-                        <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
-                        <span className="text-gray-700">{value.toString()}</span>
-                      </li>
-                    )
-                  ))}
+                  {Object.entries(data.criteria).map(
+                    ([key, value]: [string, any]) =>
+                      value && (
+                        <li key={key} className="flex justify-between">
+                          <span className="font-medium text-gray-700 dark:text-gray-300">
+                            {key
+                              .replace(/([A-Z])/g, " $1")
+                              .replace(/^./, (str) => str.toUpperCase())}
+                            :
+                          </span>
+                          <span className="text-gray-700 dark:text-gray-300">
+                            {value.toString()}
+                          </span>
+                        </li>
+                      )
+                  )}
                 </ul>
               </div>
             </div>
@@ -126,8 +161,16 @@ export const BadgeLevelDetails = ({ id, data, refetch }: CustomComponentProps & 
           {/* Action Buttons */}
           <div className="pt-4 border-t">
             <div className="flex gap-2">
-              <EditBadgeLevel data={data} refetch={refetch} onClose={() => setIsOpen(false)} />
-              <DeleteBadgeLevel data={data} refetch={refetch} onClose={() => setIsOpen(false)} />
+              <EditBadgeLevel
+                data={data}
+                refetch={refetch}
+                onClose={() => handleOpenChange(false)}
+              />
+              <DeleteBadgeLevel
+                data={data}
+                refetch={refetch}
+                onClose={() => handleOpenChange(false)}
+              />
             </div>
           </div>
         </div>
