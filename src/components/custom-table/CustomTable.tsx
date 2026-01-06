@@ -41,11 +41,13 @@ export const CustomTable = ({
 }: Params) => {
   // Define the data type for table rows
   type TableData = any; // Consider replacing 'any' with a proper interface for your data
-  
+
   const [data, setData] = useState<TableData[]>([]);
   const [filteredData, setFilteredData] = useState<TableData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
+    []
+  );
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
@@ -63,130 +65,130 @@ export const CustomTable = ({
   // Function to sort search results by relevance across all content
   const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
     if (!searchTerm) return [...data];
-    
+
     const searchLower = searchTerm.toLowerCase();
-    
+
     return [...data].sort((a, b) => {
       // Check for exact matches first - search across ALL fields
-      const aExactMatch = Object.keys(a).some(key => {
+      const aExactMatch = Object.keys(a).some((key) => {
         const value = a[key];
         if (value === null || value === undefined) return false;
-        
+
         // Handle arrays (like for ARRAY_VALUE field type)
         if (Array.isArray(value)) {
-          const arrayField = fields.find(f => f.fieldName === key);
+          const arrayField = fields.find((f) => f.fieldName === key);
           if (arrayField?.arrayName) {
             const arrayValues = value
               .map((val: any) => {
                 const arrayName = arrayField.arrayName as string;
                 return val[arrayName] || val;
               })
-              .join(' ');
+              .join(" ");
             return arrayValues.toLowerCase() === searchLower;
           }
-          return value.join(' ').toLowerCase() === searchLower;
+          return value.join(" ").toLowerCase() === searchLower;
         }
-        
+
         // Handle nested objects (but not arrays, which are handled above)
-        if (typeof value === 'object' && !Array.isArray(value)) {
+        if (typeof value === "object" && !Array.isArray(value)) {
           const stringValue = JSON.stringify(value);
           return stringValue.toLowerCase() === searchLower;
         }
-        
+
         return String(value).toLowerCase() === searchLower;
       });
-      
-      const bExactMatch = Object.keys(b).some(key => {
+
+      const bExactMatch = Object.keys(b).some((key) => {
         const value = b[key];
         if (value === null || value === undefined) return false;
-        
+
         // Handle arrays (like for ARRAY_VALUE field type)
         if (Array.isArray(value)) {
-          const arrayField = fields.find(f => f.fieldName === key);
+          const arrayField = fields.find((f) => f.fieldName === key);
           if (arrayField?.arrayName) {
             const arrayValues = value
               .map((val: any) => {
                 const arrayName = arrayField.arrayName as string;
                 return val[arrayName] || val;
               })
-              .join(' ');
+              .join(" ");
             return arrayValues.toLowerCase() === searchLower;
           }
-          return value.join(' ').toLowerCase() === searchLower;
+          return value.join(" ").toLowerCase() === searchLower;
         }
-        
+
         // Handle nested objects (but not arrays, which are handled above)
-        if (typeof value === 'object' && !Array.isArray(value)) {
+        if (typeof value === "object" && !Array.isArray(value)) {
           const stringValue = JSON.stringify(value);
           return stringValue.toLowerCase() === searchLower;
         }
-        
+
         return String(value).toLowerCase() === searchLower;
       });
-      
+
       if (aExactMatch && !bExactMatch) return -1;
       if (!aExactMatch && bExactMatch) return 1;
-      
+
       // Then check for partial matches - search across ALL fields
-      const aPartialMatch = Object.keys(a).some(key => {
+      const aPartialMatch = Object.keys(a).some((key) => {
         const value = a[key];
         if (value === null || value === undefined) return false;
-        
+
         // Handle arrays (like for ARRAY_VALUE field type)
         if (Array.isArray(value)) {
-          const arrayField = fields.find(f => f.fieldName === key);
+          const arrayField = fields.find((f) => f.fieldName === key);
           if (arrayField?.arrayName) {
             const arrayValues = value
               .map((val: any) => {
                 const arrayName = arrayField.arrayName as string;
                 return val[arrayName] || val;
               })
-              .join(' ');
+              .join(" ");
             return arrayValues.toLowerCase().includes(searchLower);
           }
-          return value.join(' ').toLowerCase().includes(searchLower);
+          return value.join(" ").toLowerCase().includes(searchLower);
         }
-        
+
         // Handle nested objects (but not arrays, which are handled above)
-        if (typeof value === 'object' && !Array.isArray(value)) {
+        if (typeof value === "object" && !Array.isArray(value)) {
           const stringValue = JSON.stringify(value);
           return stringValue.toLowerCase().includes(searchLower);
         }
-        
+
         return String(value).toLowerCase().includes(searchLower);
       });
-      
-      const bPartialMatch = Object.keys(b).some(key => {
+
+      const bPartialMatch = Object.keys(b).some((key) => {
         const value = b[key];
         if (value === null || value === undefined) return false;
-        
+
         // Handle arrays (like for ARRAY_VALUE field type)
         if (Array.isArray(value)) {
-          const arrayField = fields.find(f => f.fieldName === key);
+          const arrayField = fields.find((f) => f.fieldName === key);
           if (arrayField?.arrayName) {
             const arrayValues = value
               .map((val: any) => {
                 const arrayName = arrayField.arrayName as string;
                 return val[arrayName] || val;
               })
-              .join(' ');
+              .join(" ");
             return arrayValues.toLowerCase().includes(searchLower);
           }
-          return value.join(' ').toLowerCase().includes(searchLower);
+          return value.join(" ").toLowerCase().includes(searchLower);
         }
-        
+
         // Handle nested objects (but not arrays, which are handled above)
-        if (typeof value === 'object' && !Array.isArray(value)) {
+        if (typeof value === "object" && !Array.isArray(value)) {
           const stringValue = JSON.stringify(value);
           return stringValue.toLowerCase().includes(searchLower);
         }
-        
+
         return String(value).toLowerCase().includes(searchLower);
       });
-      
+
       if (aPartialMatch && !bPartialMatch) return -1;
       if (!aPartialMatch && bPartialMatch) return 1;
-      
+
       // If both have same match type, maintain their relative order
       return 0;
     });
@@ -200,31 +202,35 @@ export const CustomTable = ({
         page: page,
         limit: limit,
       };
-      
+
       // Build filters string only for filters with values
-      const activeFilters = selectedFilters.filter(filter => 
-        filter.value !== undefined && 
-        filter.value !== null && 
-        filter.value !== ''
+      const activeFilters = selectedFilters.filter(
+        (filter) =>
+          filter.value !== undefined &&
+          filter.value !== null &&
+          filter.value !== ""
       );
-      
+
       if (activeFilters.length > 0) {
-        params["filters"] = activeFilters.map(filter => `filter[${filter.fieldName}]`).join(',');
+        params["filters"] = activeFilters
+          .map((filter) => `filter[${filter.fieldName}]`)
+          .join(",");
       }
-      
+
       selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
-          params[`filter[${filter.fieldName}.${filter.arrayName}]`] = filter.value;
+          params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
+            filter.value;
         } else {
           // Convert isActive filter value to boolean
-          if (filter.fieldName === 'isActive') {
-            params[`filter[${filter.fieldName}]`] = filter.value === 'true';
+          if (filter.fieldName === "isActive") {
+            params[`filter[${filter.fieldName}]`] = filter.value === "true";
           } else {
             params[`filter[${filter.fieldName}]`] = filter.value;
           }
         }
       });
-      
+
       if (search) {
         params["filter[search][value]"] = search;
         params["filter[search][columns]"] = searchColumn?.join(",");
@@ -232,34 +238,49 @@ export const CustomTable = ({
 
       params["filter[sortBy]"] = sortByValue;
       params["filter[sortOrder]"] = sortOrder;
-      
+
       const response = await apiHelperService.fetchData(api, params);
-      
+
+      const responseData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [];
+
       if (search && searchColumn && searchColumn.length > 0) {
-        const sortedData = sortBySearchRelevance(response.data.data || [], search);
+        const sortedData = sortBySearchRelevance(responseData, search);
         setFilteredData(sortedData);
       } else {
-        setFilteredData(response.data.data || []);
+        setFilteredData(responseData);
       }
-      
-      setData(response.data.data || []);
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR(title || ""),
-          variant: "destructive", // Red error message
-        });
-      } finally {
-        setLoading(false);
-      }
-  }, [api, limit, page, search, selectedFilters, sortByValue, sortOrder, title, searchColumn])
+
+      setData(responseData);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR(title || ""),
+        variant: "destructive", // Red error message
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    api,
+    limit,
+    page,
+    search,
+    selectedFilters,
+    sortByValue,
+    sortOrder,
+    title,
+    searchColumn,
+  ]);
 
   useEffect(() => {
+    const safeData = Array.isArray(data) ? data : [];
     if (search) {
-      const sortedData = sortBySearchRelevance(data || [], search);
+      const sortedData = sortBySearchRelevance(safeData, search);
       setFilteredData(sortedData);
     } else {
-      setFilteredData([...(data || [])]);
+      setFilteredData([...safeData]);
     }
   }, [search, data]);
 
@@ -267,7 +288,6 @@ export const CustomTable = ({
     fetchData();
   }, [fetchData]);
 
-  
   useEffect(() => {
     setPage(1);
   }, [selectedFilters, search, limit]);
@@ -285,6 +305,8 @@ export const CustomTable = ({
   };
 
   const handleDownload = () => {
+    if (!Array.isArray(data) || data.length === 0) return;
+
     let content = "";
 
     const headings: string[] = [];
@@ -328,8 +350,13 @@ export const CustomTable = ({
   return (
     <div className="px-4">
       <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">{title}</h1>
-        <HeaderActionComponent headerActions={mainTableActions} refetch={refetch} />
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
+          {title}
+        </h1>
+        <HeaderActionComponent
+          headerActions={mainTableActions}
+          refetch={refetch}
+        />
         <div className="flex items-center gap-2">
           <TableSelect
             currValue={limit}
@@ -339,7 +366,9 @@ export const CustomTable = ({
           />
           {data.length > 0 && (
             <span className="text-sm text-gray-500">
-              Showing {((page - 1) * limit) + 1} to {Math.min(page * limit, data.length * page)} of {data.length * page} entries
+              Showing {(page - 1) * limit + 1} to{" "}
+              {Math.min(page * limit, data.length * page)} of{" "}
+              {data.length * page} entries
             </span>
           )}
         </div>

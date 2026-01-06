@@ -18,7 +18,7 @@ import AddBadgeLevel from "@/components/BadgesLevels/addBadgeLevel";
 import { BadgeLevelDetails } from "@/components/BadgesLevels/BadgeLevelDetails";
 
 const customTableProps: TableProps = {
-  api: "/admin/gamification/definition",
+  api: "/admin/gamification/levelsandbadges",
   uniqueId: "_id",
   fields: [
     {
@@ -72,7 +72,7 @@ const customTableProps: TableProps = {
     {
       textValue: "",
       type: FieldType.CUSTOM,
-      CustomComponent: BadgeLevelDetails
+      CustomComponent: BadgeLevelDetails,
     },
   ],
   searchColumn: ["name", "description", "type", "isActive"],

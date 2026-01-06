@@ -25,16 +25,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Get user data from cookies (set during login)
-    const getCookie = (name: string) => {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop()?.split(';').shift();
-      return null;
-    };
-    
-    const storedUser = getCookie("user");
-    const storedToken = getCookie("token");
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
 
     if (storedUser && storedToken) {
       const parsedUser = JSON.parse(storedUser);
@@ -48,22 +40,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (firebaseUser) {
         const accessToken = await firebaseUser.getIdToken();
         const claims = await firebaseUser.getIdTokenResult();
-        
-        // Extract only serializable data from Firebase user
-        const serializableUserData = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          emailVerified: firebaseUser.emailVerified,
-          type: claims.claims.type,
-        };
-        
-        localStorage.setItem("user", JSON.stringify(serializableUserData));
+        const userData = { ...firebaseUser, type: claims.claims.type };
+        localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("token", accessToken);
-        setUserState(firebaseUser);
+        setUserState(userData);
         initializeAxiosWithToken(accessToken);
-        dispatch(setUser(serializableUserData));
+        dispatch(setUser(userData));
       } else {
         localStorage.removeItem("user");
         localStorage.removeItem("token");

@@ -23,9 +23,7 @@ import {
   Key,
   Briefcase,
   Award,
-  Star
-  
-  
+  Star,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -94,7 +92,7 @@ export const menuItemsTop: MenuItem[] = [
   },
   {
     href: "/dashboard/badges-and-levels",
-    icon: <Award className="h-5 w-5" />,
+    icon: <Star className="h-5 w-5" />,
     label: "Badges & Levels",
   },
   {
