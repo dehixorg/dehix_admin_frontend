@@ -16,14 +16,18 @@ export const apiHelperService = {
   },
 
 
- getAllVerificationsById: async (id:string) => {
- 
-    const endpoint = `/verification/verifier/8797685f-767e-4bc7-87b0-87c36a4509d5`;
-    return await apiService({
+  getAllVerificationsById: async (firebaseId: string, docType?: string) => {
+    const params: Record<string, string> = {};
+
+    if (docType) {
+      params.doc_type = docType;
+    }
+    return apiService({
       method: Api_Methods.GET,
-      endpoint,
+      endpoint: "/verification/verifier",
+      params
     });
-  
-},
- 
+
+  },
+
 };
