@@ -2,38 +2,56 @@ import { NextResponse } from "next/server";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
+// Input validation schema
+interface KeyValueRequest {
+  value: string;
+  price?: number;
+  key?: string;
+}
+
+// Helper function for input validation
+function validateKeyValueInput(data: any): data is KeyValueRequest {
+  return (
+    typeof data === 'object' &&
+    data !== null &&
+    'value' in data &&
+    typeof data.value === 'string' &&
+    (data.price === undefined || typeof data.price === 'number') &&
+    (data.key === undefined || typeof data.key === 'string')
+  );
+}
+
 // Helper function to generate a unique key
 const generateKey = () => `key_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 // Handle GET /api/key-value
 export async function GET(request: Request) {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader) {
+    return NextResponse.json(
+      { message: "Authorization header is required" },
+      { status: 401 }
+    );
+  }
+
   try {
-    const auth = request.headers.get("authorization");
-
-    if (!auth) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
     const response = await fetch(`${API_BASE_URL}/api/key-value`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: auth,
-      },
+      headers: { Authorization: authHeader },
+      next: { revalidate: 60 } // Cache for 60 seconds
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
       return NextResponse.json(
-        { message: data.message || "Failed to fetch key-value pairs" },
+        { message: errorData.message || "Failed to fetch key-value pairs" },
         { status: response.status }
       );
     }
 
+    const data = await response.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error fetching key-value pairs:", error);
+    console.error('Error in GET /api/key-value:', error);
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

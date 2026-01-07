@@ -18,6 +18,14 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Key, Plus, Save, Edit, Search } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TablePagination } from "@/components/custom-table/Pagination";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
@@ -50,6 +58,16 @@ export default function KeyVariablesPage() {
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Calculate pagination
+  const totalPages = Math.ceil(keyValues.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = keyValues.slice(startIndex, endIndex);
 
   // Fetch all key-value pairs on component mount
   useEffect(() => {
@@ -96,7 +114,9 @@ export default function KeyVariablesPage() {
       setError(null);
 
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Unauthorized");
+      if (!token) {
+        throw new Error("Authentication required");
+      }
 
       const response = await fetch("/api/key-value", {
         method: "POST",
@@ -106,7 +126,7 @@ export default function KeyVariablesPage() {
         },
         body: JSON.stringify({
           value: newValue.trim(),
-          price: newPrice,
+          price: newPrice !== undefined ? Number(newPrice) : undefined,
         }),
       });
 
@@ -116,14 +136,13 @@ export default function KeyVariablesPage() {
         throw new Error(result.message || "Failed to create value");
       }
 
-      // ✅ backend returns created item
+      // Add the new key-value pair to the list
       setKeyValues((prev) => [...prev, result.data]);
-
       setNewValue("");
       setNewPrice(undefined);
+      setSuccess("Key-value pair added successfully!");
     } catch (err) {
-      setError("Failed to add key value");
-      console.error(err);
+      setError(err instanceof Error ? err.message : "Failed to add key value");
     } finally {
       setLoading(false);
     }
@@ -168,29 +187,22 @@ export default function KeyVariablesPage() {
 
       setEditingId(null);
       setCurrentEdit({});
+      setSuccess("Key-value pair updated successfully!");
     } catch (err) {
       setError("Failed to update value");
-      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Clear success message after 3 seconds
+  // Clear messages after 5 seconds
   useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => setSuccess(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [success]);
-
-  // Clear error after 5 seconds
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(null), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+    const timer = setTimeout(() => {
+      if (error) setError(null);
+      if (success) setSuccess(null);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [error, success]);
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -227,21 +239,49 @@ export default function KeyVariablesPage() {
           </div>
 
           {/* Success and Error Messages */}
-          {success && (
-            <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              {success}
-            </div>
-          )}
           {error && (
-            <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="fixed bottom-4 right-4 text-white px-4 py-2 rounded-md z-50">
               {error}
             </div>
           )}
-
+          {success && (
+            <div className="fixed bottom-4 right-4 text-foreground/80 px-4 py-2 z-50">
+              {success}
+            </div>
+          )}
           <Card>
-            <CardHeader className="flex items-center gap-2 border-b bg-muted/50 px-6 py-3">
-              <Key className="h-5 w-5" />
-              <span className="font-semibold">Key-Value Store</span>
+            <CardHeader className="p-0">
+              <div className="flex items-center justify-between border-b bg-muted/50 px-6 py-3">
+                <div className="flex items-center gap-2">
+                  <Key className="h-5 w-5" />
+                  <span className="font-semibold">Key-Value Store</span>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-muted-foreground">
+                      Items Per Page
+                    </span>
+                    <Select
+                      value={`${itemsPerPage}`}
+                      onValueChange={(value) => {
+                        setItemsPerPage(Number(value));
+                        setCurrentPage(1);
+                      }}
+                    >
+                      <SelectTrigger className="h-8 w-20">
+                        <SelectValue placeholder={itemsPerPage} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                          <SelectItem key={pageSize} value={`${pageSize}`}>
+                            {pageSize}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </div>
             </CardHeader>
 
             <CardContent className="p-6">
@@ -285,7 +325,7 @@ export default function KeyVariablesPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {keyValues.map((item) => (
+                    {currentItems.map((item) => (
                       <TableRow key={item._id}>
                         <TableCell>
                           {editingId === item._id ? (
@@ -348,8 +388,17 @@ export default function KeyVariablesPage() {
               )}
             </CardContent>
 
-            <CardFooter className="text-sm text-muted-foreground">
-              Showing {keyValues.length} item(s)
+            <CardFooter className="flex justify-between items-center p-4 border-t">
+              <div className="text-sm text-muted-foreground">
+                Showing {startIndex + 1} to{" "}
+                {Math.min(endIndex, keyValues.length)} of {keyValues.length}{" "}
+                entries
+              </div>
+              <TablePagination
+                page={currentPage}
+                setPage={setCurrentPage}
+                isNextAvailable={currentPage < totalPages}
+              />
             </CardFooter>
           </Card>
         </main>
