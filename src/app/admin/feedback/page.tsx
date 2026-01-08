@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import {
@@ -17,7 +18,26 @@ import {
 import AddFeedbackCampaign from "@/components/Feedback/AddFeedbackCampaign";
 import EditFeedbackCampaign from "@/components/Feedback/EditFeedbackCampaign";
 import ViewSubmissions from "@/components/Feedback/ViewSubmissions";
+import ViewDetailsDialog from "@/components/Feedback/ViewDetailsDialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Edit, Trash2, ChevronRight, Loader2 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { apiHelperService } from "@/services/admin";
 
 export default function FeedbackPage() {
   const customTableProps: TableProps = {
@@ -80,15 +100,116 @@ export default function FeedbackPage() {
         textValue: "Actions",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data, id, refetch }: CustomComponentProps) => {
-          return (
-            <div className="flex gap-2">
-              <EditFeedbackCampaign
-                campaignId={id}
-                campaignData={data}
-                refetch={refetch}
-              />
-            </div>
-          );
+          const ActionsComponent = () => {
+            const [editDialogOpen, setEditDialogOpen] = useState(false);
+            const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+            const [deleting, setDeleting] = useState(false);
+            const { toast } = useToast();
+
+            const handleDelete = async () => {
+              setDeleting(true);
+              try {
+                await apiHelperService.archiveFeedbackCampaign(id);
+                toast({
+                  title: "Success",
+                  description: "Campaign archived successfully",
+                });
+                setDeleteDialogOpen(false);
+                refetch?.();
+              } catch (error: any) {
+                toast({
+                  title: "Error",
+                  description:
+                    error?.response?.data?.message ||
+                    "Failed to archive campaign",
+                  variant: "destructive",
+                });
+              } finally {
+                setDeleting(false);
+              }
+            };
+
+            return (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" disabled={deleting}>
+                      {deleting ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                      <ViewDetailsDialog campaignId={id} campaignData={data} />
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onSelect={() => setEditDialogOpen(true)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => setDeleteDialogOpen(true)}
+                      disabled={deleting}
+                      className="text-red-600 focus:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <EditFeedbackCampaign
+                  campaignId={id}
+                  campaignData={data}
+                  refetch={refetch}
+                  open={editDialogOpen}
+                  onOpenChange={setEditDialogOpen}
+                />
+
+                <Dialog
+                  open={deleteDialogOpen}
+                  onOpenChange={setDeleteDialogOpen}
+                >
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Archive Campaign</DialogTitle>
+                      <DialogDescription>
+                        Are you sure you want to archive this campaign? This
+                        action cannot be undone.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setDeleteDialogOpen(false)}
+                        disabled={deleting}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={handleDelete}
+                        disabled={deleting}
+                      >
+                        {deleting ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Deleting...
+                          </>
+                        ) : (
+                          "Delete"
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </>
+            );
+          };
+
+          return <ActionsComponent />;
         },
       },
     ],
