@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Edit, Trash2, Loader2, Plus, AlertCircle } from "lucide-react";
+import { Edit, Loader2, Plus, AlertCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -71,14 +71,22 @@ type CampaignFormData = z.infer<typeof campaignSchema>;
 interface EditFeedbackCampaignProps extends CustomTableChildComponentsProps {
   campaignId: string;
   campaignData: any;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export default function EditFeedbackCampaign({
   campaignId,
   campaignData,
   refetch,
+  open: externalOpen,
+  onOpenChange: externalOnOpenChange,
 }: EditFeedbackCampaignProps) {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // Use external state if provided, otherwise use internal state
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalOnOpenChange || setInternalOpen;
   const [loading, setLoading] = useState(false);
   const [hasSubmissions, setHasSubmissions] = useState(false);
   const [fullCampaignData, setFullCampaignData] = useState<any>(null);
@@ -226,41 +234,16 @@ export default function EditFeedbackCampaign({
     }
   };
 
-  const handleArchive = async () => {
-    if (!confirm("Are you sure you want to archive this campaign?")) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      await apiHelperService.archiveFeedbackCampaign(campaignId);
-      toast({
-        title: "Success",
-        description: "Campaign archived successfully",
-      });
-      setOpen(false);
-      setFullCampaignData(null);
-      refetch?.();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description:
-          error?.response?.data?.message || "Failed to archive campaign",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Edit className="h-4 w-4 mr-2" />
-          Edit
-        </Button>
-      </DialogTrigger>
+      {!externalOpen && !externalOnOpenChange && (
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm">
+            <Edit className="h-4 w-4 mr-2" />
+            Edit
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Feedback Campaign</DialogTitle>
@@ -761,38 +744,27 @@ export default function EditFeedbackCampaign({
                   )}
               </div>
 
-              <DialogFooter className="flex justify-between">
+              <DialogFooter>
                 <Button
                   type="button"
-                  variant="destructive"
-                  onClick={handleArchive}
-                  disabled={loading}
+                  variant="outline"
+                  onClick={() => {
+                    setOpen(false);
+                    setFullCampaignData(null);
+                  }}
                 >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Archive
+                  Cancel
                 </Button>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      setOpen(false);
-                      setFullCampaignData(null);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save Changes"
-                    )}
-                  </Button>
-                </div>
+                <Button type="submit" disabled={loading}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Changes"
+                  )}
+                </Button>
               </DialogFooter>
             </form>
           </>
