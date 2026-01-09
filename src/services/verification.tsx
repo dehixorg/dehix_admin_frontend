@@ -1,5 +1,3 @@
-"use client";
-
 import { Api_Methods } from "../utils/common/enum"; // Importing Api_Methods
 
 import { apiService } from "./apiService";
