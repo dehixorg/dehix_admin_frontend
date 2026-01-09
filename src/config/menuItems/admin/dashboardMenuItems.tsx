@@ -159,6 +159,11 @@ export const menuItemsTop: MenuItem[] = [
     icon: <FileWarning className="h-5 w-5" />,
     label: "Reports",
   },
+  {
+    href: "/key-variables",
+    icon: <ShieldCheck className="h-5 w-5" />,
+    label: "Key Variables",
+  },
 ];
 
 export const menuItemsBottom: MenuItem[] = [
