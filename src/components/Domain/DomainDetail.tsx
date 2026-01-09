@@ -1,37 +1,37 @@
 import { useState } from "react";
 import { CustomDialog } from "../CustomDialog";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
-import EditSkillDescription from "./editSkilldesc";
-import ChangeSkillStatus from "./ChangeSkillStatus";
+import EditDomainDescription from "./editDomaindesc";
+import ChangeDomainStatus from "./ChangeDomainStatus";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { approveSkill, denySkill } from "@/services/skill";
+import { approveDomain, denyDomain } from "@/services/domain";
 import { useToast } from "@/hooks/use-toast";
 
-export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
+export const DomainDetail = ({ id, data, refetch }: CustomComponentProps) => {
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
-  const isInactiveFreelancerSkill =
+  const isInactiveFreelancerDomain =
     data.status?.toLowerCase() === "inactive" &&
     data.createdBy === "FREELANCER";
 
   const handleApprove = async () => {
     setIsProcessing(true);
     try {
-      await approveSkill(id, comment);
+      await approveDomain(id, comment);
       toast({
         title: "Success",
-        description: "Skill approved successfully",
+        description: "Domain approved successfully",
       });
       setOpen(false);
       refetch?.();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to approve skill",
+        description: error.message || "Failed to approve domain",
         variant: "destructive",
       });
     } finally {
@@ -42,17 +42,17 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
   const handleDeny = async () => {
     setIsProcessing(true);
     try {
-      await denySkill(id, comment);
+      await denyDomain(id, comment);
       toast({
         title: "Success",
-        description: "Skill denied and removed",
+        description: "Domain denied and removed",
       });
       setOpen(false);
       refetch?.();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to deny skill",
+        description: error.message || "Failed to deny domain",
         variant: "destructive",
       });
     } finally {
@@ -62,7 +62,7 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
 
   return (
     <CustomDialog
-      title={"Skill Details"}
+      title={"Domain Details"}
       triggerState={open}
       setTriggerState={setOpen}
       description={""}
@@ -90,12 +90,12 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
                 </p>
               )}
 
-              {isInactiveFreelancerSkill ? (
+              {isInactiveFreelancerDomain ? (
                 <>
                   <div className="border-t pt-4">
                     <h3 className="font-semibold mb-2">Approval Required</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      This skill was created by a freelancer and requires admin
+                      This domain was created by a freelancer and requires admin
                       approval
                     </p>
                     <Textarea
@@ -124,18 +124,20 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
                 </>
               ) : (
                 <>
-                  <ChangeSkillStatus
-                    skillId={id}
+                  <ChangeDomainStatus
+                    domainId={id}
                     currentStatus={data.status || "active"}
                     onUpdateSuccess={() => {
                       refetch?.();
                     }}
                   />
-                  <EditSkillDescription
-                    skillId={id}
+                  <EditDomainDescription
+                    isDialogopen={false}
+                    setIsDialogOpen={() => {}}
+                    domainId={id}
                     currentDescription={data.description || ""}
-                    onUpdateSuccess={() => {
-                      setOpen(false);
+                    currentStatus={data.status || "active"}
+                    onDescriptionUpdate={async (newDescription) => {
                       refetch?.();
                     }}
                   />

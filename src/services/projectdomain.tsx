@@ -35,4 +35,27 @@ export const apiHelperService = {
       },
     });
   },
+  approveProjectDomain: async (projectDomainId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/projectdomain/${projectDomainId}/approve`,
+      body: {
+        action: "APPROVE",
+        comment,
+      },
+    });
+  },
+  denyProjectDomain: async (projectDomainId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/projectdomain/${projectDomainId}/approve`,
+      body: {
+        action: "DENY",
+        comment,
+      },
+    });
+  },
 };
+
+export const approveProjectDomain = apiHelperService.approveProjectDomain;
+export const denyProjectDomain = apiHelperService.denyProjectDomain;

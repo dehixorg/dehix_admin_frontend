@@ -20,6 +20,7 @@ import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
 import { apiHelperService } from "@/services/projectdomain";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { ProjectDomainDetail } from "@/components/ProjectDomain/ProjectDomainDetail";
 
 export default function Talent() {
   const { toast } = useToast();
@@ -37,7 +38,7 @@ export default function Talent() {
   };
 
   const customTableProps: TableProps = {
-    api: "/projectdomain",
+    api: "/projectdomain/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -119,20 +120,40 @@ export default function Talent() {
           ],
         },
       },
+      {
+        textValue: "",
+        type: FieldType.CUSTOM,
+        CustomComponent: ProjectDomainDetail,
+      },
     ],
     filterData: [
-          {
-            name: "status",
-            textValue: "Status",
-            type: FilterDataType.SINGLE,
-            options: [
-              { label: "Active", value: "active,Active,ACTIVE" },
-              { label: "Inactive", value: "inactive,INACTIVE,Inactive" },
-            ],
-          },
+      {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Active", value: "active,Active,ACTIVE" },
+          { label: "Inactive", value: "inactive,INACTIVE,Inactive" },
         ],
+      },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
+        ],
+      },
+    ],
     tableHeaderActions: [AddProjectDomain],
-    searchColumn: ["label", "description", "status", "createdBy", "createdById"],
+    searchColumn: [
+      "label",
+      "description",
+      "status",
+      "createdBy",
+      "createdById",
+    ],
   };
 
   return (

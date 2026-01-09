@@ -19,7 +19,7 @@ import { useToast } from "../../components/ui/use-toast";
 import { Messages } from "../../utils/common/enum";
 import { apiHelperService } from "../../services/domain";
 import AddDomain from "../../components/Domain/addDomain";
-import { CustomTableComponent } from "@/components/Domain/CustomTableComponent";
+import { DomainDetail } from "@/components/Domain/DomainDetail";
 
 export default function Talent() {
   const { toast } = useToast();
@@ -41,7 +41,7 @@ export default function Talent() {
   };
 
   const customTableProps: TableProps = {
-    api: "/domain",
+    api: "/domain/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -70,6 +70,30 @@ export default function Talent() {
         ],
       },
       {
+        fieldName: "createdBy",
+        textValue: "Created By",
+        type: FieldType.STATUS,
+        statusFormats: [
+          {
+            textValue: "Admin",
+            value: "ADMIN",
+            bgColor: "#3b82f6",
+            textColor: "#ffffff",
+          },
+          {
+            textValue: "Freelancer",
+            value: "FREELANCER",
+            bgColor: "#ec4899",
+            textColor: "#ffffff",
+          },
+        ],
+      },
+      {
+        fieldName: "createdById",
+        textValue: "Created By ID",
+        type: FieldType.TEXT,
+      },
+      {
         textValue: "",
         type: FieldType.ACTION,
         actions: {
@@ -87,7 +111,7 @@ export default function Talent() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: CustomTableComponent,
+        CustomComponent: DomainDetail,
       },
     ],
     isDownload: true,
@@ -105,6 +129,15 @@ export default function Talent() {
           { label: "Database", value: "Database" },
           { label: "Cybersecurity", value: "Cybersecurity" },
           { label: "Networking", value: "Networking" },
+        ],
+      },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
         ],
       },
     ],

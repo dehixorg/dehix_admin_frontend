@@ -1,37 +1,41 @@
 import { useState } from "react";
 import { CustomDialog } from "../CustomDialog";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
-import EditSkillDescription from "./editSkilldesc";
-import ChangeSkillStatus from "./ChangeSkillStatus";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
-import { approveSkill, denySkill } from "@/services/skill";
+import {
+  approveProjectDomain,
+  denyProjectDomain,
+} from "@/services/projectdomain";
 import { useToast } from "@/hooks/use-toast";
 
-export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
+export const ProjectDomainDetail = ({
+  id,
+  data,
+  refetch,
+}: CustomComponentProps) => {
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
 
-  const isInactiveFreelancerSkill =
-    data.status?.toLowerCase() === "inactive" &&
-    data.createdBy === "FREELANCER";
+  const isInactiveFreelancerProjectDomain =
+    data.status === "INACTIVE" && data.createdBy === "FREELANCER";
 
   const handleApprove = async () => {
     setIsProcessing(true);
     try {
-      await approveSkill(id, comment);
+      await approveProjectDomain(id, comment);
       toast({
         title: "Success",
-        description: "Skill approved successfully",
+        description: "Project Domain approved successfully",
       });
       setOpen(false);
       refetch?.();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to approve skill",
+        description: error.message || "Failed to approve project domain",
         variant: "destructive",
       });
     } finally {
@@ -42,17 +46,17 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
   const handleDeny = async () => {
     setIsProcessing(true);
     try {
-      await denySkill(id, comment);
+      await denyProjectDomain(id, comment);
       toast({
         title: "Success",
-        description: "Skill denied and removed",
+        description: "Project Domain denied and removed",
       });
       setOpen(false);
       refetch?.();
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to deny skill",
+        description: error.message || "Failed to deny project domain",
         variant: "destructive",
       });
     } finally {
@@ -62,7 +66,7 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
 
   return (
     <CustomDialog
-      title={"Skill Details"}
+      title={"Project Domain Details"}
       triggerState={open}
       setTriggerState={setOpen}
       description={""}
@@ -71,13 +75,16 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
           <div>
             <div className="space-y-4">
               <p>
-                <strong>Name:</strong> {data.label}
+                <strong>Label:</strong> {data.label}
               </p>
               <p>
                 <strong>Description:</strong>
                 {data.description
                   ? data.description
                   : "No description available"}
+              </p>
+              <p>
+                <strong>Status:</strong> {data.status}
               </p>
               {data.createdBy && (
                 <p>
@@ -90,13 +97,13 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
                 </p>
               )}
 
-              {isInactiveFreelancerSkill ? (
+              {isInactiveFreelancerProjectDomain && (
                 <>
                   <div className="border-t pt-4">
                     <h3 className="font-semibold mb-2">Approval Required</h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      This skill was created by a freelancer and requires admin
-                      approval
+                      This project domain was created by a freelancer and
+                      requires admin approval
                     </p>
                     <Textarea
                       placeholder="Add a comment (optional for approval, recommended for denial)"
@@ -121,24 +128,6 @@ export const SkillDetails = ({ id, data, refetch }: CustomComponentProps) => {
                       </Button>
                     </div>
                   </div>
-                </>
-              ) : (
-                <>
-                  <ChangeSkillStatus
-                    skillId={id}
-                    currentStatus={data.status || "active"}
-                    onUpdateSuccess={() => {
-                      refetch?.();
-                    }}
-                  />
-                  <EditSkillDescription
-                    skillId={id}
-                    currentDescription={data.description || ""}
-                    onUpdateSuccess={() => {
-                      setOpen(false);
-                      refetch?.();
-                    }}
-                  />
                 </>
               )}
             </div>
