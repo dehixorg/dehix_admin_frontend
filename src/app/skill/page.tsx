@@ -23,7 +23,7 @@ import { SkillDetails } from "@/components/skill/SkillDetail";
 
 export default function Talent() {
   const customTableProps: TableProps = {
-    api: "/skills",
+    api: "/skills/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -63,9 +63,33 @@ export default function Talent() {
         ],
       },
       {
+        fieldName: "createdBy",
+        textValue: "Created By",
+        type: FieldType.STATUS,
+        statusFormats: [
+          {
+            textValue: "Admin",
+            value: "ADMIN",
+            bgColor: "#3b82f6",
+            textColor: "#ffffff",
+          },
+          {
+            textValue: "Freelancer",
+            value: "FREELANCER",
+            bgColor: "#ec4899",
+            textColor: "#ffffff",
+          },
+        ],
+      },
+      {
+        fieldName: "createdById",
+        textValue: "Created By ID",
+        type: FieldType.TEXT,
+      },
+      {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: SkillDetails
+        CustomComponent: SkillDetails,
       },
     ],
     searchColumn: ["label"],
@@ -77,6 +101,15 @@ export default function Talent() {
         options: [
           { label: "Active", value: "active,Active,ACTIVE" },
           { label: "Inactive", value: "inactive,Inactive,INACTIVE" },
+        ],
+      },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
         ],
       },
     ],
