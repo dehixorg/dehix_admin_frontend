@@ -25,6 +25,7 @@ import {
   Award,
   Star,
   MessageSquare,
+  Zap,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -115,6 +116,11 @@ export const menuItemsTop: MenuItem[] = [
     href: "/admin/leaderboard",
     icon: <Award className="h-5 w-5" />,
     label: "Leaderboard",
+  },
+  {
+    href: "/admin/streak-rewards",
+    icon: <Zap className="h-5 w-5" />,
+    label: "Streak Rewards",
   },
   {
     href: "/interview",
