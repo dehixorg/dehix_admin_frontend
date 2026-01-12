@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useState } from "react";
 import { Trash2 } from "lucide-react";
-import { axiosInstance } from "@/lib/axiosinstance";
+import { streakRewardService } from "@/services/streakRewardService";
 import {
   Dialog,
   DialogTrigger,
@@ -53,21 +55,14 @@ const DeleteStreakRewardDialog: React.FC<DeleteStreakRewardProps> = ({
 
     setIsDeleting(true);
     try {
-      const response = await axiosInstance.delete(
-        `/admin/streak-rewards/${data._id}`
-      );
-
-      if (response.status === 200) {
-        toast({
-          title: "Success",
-          description: Messages.DELETE_SUCCESS("streak reward"),
-        });
-        refetch?.();
-        onClose?.();
-        setOpen(false);
-      } else {
-        throw new Error("Failed to delete streak reward");
-      }
+      await streakRewardService.deleteStreakReward(data._id);
+      toast({
+        title: "Success",
+        description: Messages.DELETE_SUCCESS("streak reward"),
+      });
+      refetch?.();
+      onClose?.();
+      setOpen(false);
     } catch (error: any) {
       console.error("Delete error:", error);
       toast({
