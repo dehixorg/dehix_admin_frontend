@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { streakRewardService } from "@/services/streakRewardService";
 import EditStreakRewardDialog from "./EditStreakRewardDialog";
+import DeleteStreakRewardDialog from "./DeleteStreakRewardDialog";
 import {
   MoreVertical,
   Edit,
@@ -31,6 +32,7 @@ export default function StreakRewardActions({
   refetch,
 }: StreakRewardActionsProps) {
   const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -48,33 +50,6 @@ export default function StreakRewardActions({
         title: "Error",
         description:
           error?.response?.data?.message || "Failed to update status",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this streak reward? This action cannot be undone."
-    );
-
-    if (!confirmed) return;
-
-    setLoading(true);
-    try {
-      await streakRewardService.deleteStreakReward(id);
-      toast({
-        title: "Success",
-        description: "Streak reward deleted successfully",
-      });
-      if (refetch) refetch();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description:
-          error?.response?.data?.message || "Failed to delete streak reward",
         variant: "destructive",
       });
     } finally {
@@ -108,7 +83,10 @@ export default function StreakRewardActions({
               </>
             )}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleDelete} className="text-red-600">
+          <DropdownMenuItem
+            onClick={() => setDeleteOpen(true)}
+            className="text-red-600"
+          >
             <Trash2 className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
@@ -120,6 +98,13 @@ export default function StreakRewardActions({
         open={editOpen}
         onOpenChange={setEditOpen}
         refetch={refetch || (() => {})}
+      />
+
+      <DeleteStreakRewardDialog
+        data={data}
+        refetch={refetch}
+        open={deleteOpen}
+        onOpenChange={setDeleteOpen}
       />
     </>
   );
