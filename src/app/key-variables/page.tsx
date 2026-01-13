@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { axiosInstance } from "@/lib/axiosinstance";
 import {
   Table,
   TableBody,
@@ -54,8 +55,7 @@ export default function KeyVariablesPage() {
   const [newPrice, setNewPrice] = useState<number | undefined>(undefined);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [currentEdit, setCurrentEdit] = useState<Partial<KeyValuePair>>({});
-  const [loading, setLoading] = useState(false);
-  const [isFetching, setIsFetching] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
@@ -69,133 +69,116 @@ export default function KeyVariablesPage() {
   const endIndex = startIndex + itemsPerPage;
   const currentItems = keyValues.slice(startIndex, endIndex);
 
-  // Fetch all key-value pairs on component mount
   useEffect(() => {
     const fetchKeyValues = async () => {
+      setIsLoading(true);
       try {
-        setIsFetching(true);
-        setError(null);
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("Authentication required");
-
-        const response = await fetch("/api/key-value", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(
-            errorData.message || "Failed to fetch key-value pairs"
-          );
+        const response = await axiosInstance.get("/api/key-value");
+        if (response.data?.data) {
+          setKeyValues(response.data.data);
         }
-
-        const data = await response.json();
-        setKeyValues(Array.isArray(data.data) ? data.data : []);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load key-value pairs"
-        );
+        console.error("Error fetching key values:", err);
+        setError("Failed to fetch key values");
       } finally {
-        setIsFetching(false);
+        setIsLoading(false);
       }
     };
 
     fetchKeyValues();
   }, []);
 
-  // CREATE
   const handleAddKeyValue = async () => {
     if (!newValue.trim()) return;
 
     try {
-      setLoading(true);
+      setIsLoading(true);
       setError(null);
 
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("Authentication required");
-      }
+      const key = `key_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
 
-      const response = await fetch("/api/key-value", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          value: newValue.trim(),
-          price: newPrice !== undefined ? Number(newPrice) : undefined,
-        }),
+      const response = await axiosInstance.post("/api/key-value", {
+        key,
+        value: newValue.trim(),
+        price: newPrice !== undefined ? Number(newPrice) : undefined,
       });
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to create value");
+      if (response.data?.data) {
+        const newItem = response.data.data;
+        setKeyValues((prev) => [
+          {
+            _id: newItem._id,
+            value: newItem.value,
+            price: newItem.price,
+            createdAt: newItem.createdAt,
+            updatedAt: newItem.updatedAt,
+          },
+          ...prev,
+        ]);
+        setNewValue("");
+        setNewPrice(undefined);
+        setSuccess("Key-value pair added successfully!");
+      } else {
+        throw new Error("Invalid response format from server");
       }
-
-      // Add the new key-value pair to the list
-      setKeyValues((prev) => [...prev, result.data]);
-      setNewValue("");
-      setNewPrice(undefined);
-      setSuccess("Key-value pair added successfully!");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add key value");
+    } catch (err: any) {
+      console.error("Error adding key-value pair:", err);
+      setError(
+        err.response?.data?.message ||
+          "Failed to add key value. Please try again."
+      );
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // START EDIT
   const startEditing = (item: KeyValuePair) => {
     setEditingId(item._id);
-    setCurrentEdit(item);
+    setCurrentEdit({
+      value: item.value,
+      price: item.price,
+    });
   };
 
-  // UPDATE
   const saveEdit = async () => {
     if (!editingId || currentEdit.value === undefined) return;
 
     try {
-      setLoading(true);
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Unauthorized");
+      setIsLoading(true);
+      setError(null);
+      setSuccess(null);
 
-      const response = await fetch(`/api/key-value/${editingId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          value: currentEdit.value,
-          price: currentEdit.price,
-        }),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || "Failed to update");
-      }
-
-      setKeyValues((prev) =>
-        prev.map((item) => (item._id === editingId ? result.data : item))
+      // Optimistic update
+      setKeyValues((prevKeyValues) =>
+        prevKeyValues.map((item) =>
+          item._id === editingId
+            ? {
+                ...item,
+                value: currentEdit.value,
+                price: currentEdit.price,
+                updatedAt: new Date().toISOString(),
+              }
+            : item
+        )
       );
+
+      // API call after optimistic update
+      await axiosInstance.put(`/api/key-value/${editingId}`, {
+        value: currentEdit.value,
+        price: currentEdit.price,
+      });
 
       setEditingId(null);
       setCurrentEdit({});
       setSuccess("Key-value pair updated successfully!");
-    } catch (err) {
-      setError("Failed to update value");
+    } catch (err: any) {
+      console.error("Error updating key-value pair:", err);
+      setError(err.response?.data?.message || "Failed to update value");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // Clear messages after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       if (error) setError(null);
@@ -272,7 +255,7 @@ export default function KeyVariablesPage() {
                         <SelectValue placeholder={itemsPerPage} />
                       </SelectTrigger>
                       <SelectContent>
-                        {[5, 10, 20, 30, 40, 50].map((pageSize) => (
+                        {[10, 25, 50, 100].map((pageSize) => (
                           <SelectItem key={pageSize} value={`${pageSize}`}>
                             {pageSize}
                           </SelectItem>
@@ -301,12 +284,12 @@ export default function KeyVariablesPage() {
                     )
                   }
                 />
-                <Button onClick={handleAddKeyValue} disabled={loading}>
+                <Button onClick={handleAddKeyValue} disabled={isLoading}>
                   <Plus className="h-4 w-4 mr-1" /> Add
                 </Button>
               </div>
 
-              {isFetching ? (
+              {isLoading ? (
                 <div className="flex justify-center items-center p-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
                 </div>
