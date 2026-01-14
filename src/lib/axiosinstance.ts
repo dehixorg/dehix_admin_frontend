@@ -3,17 +3,17 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 // Create an Axios instance
 let axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC__BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
-
-
-
 
 // Function to initialize Axios with Bearer token
 const initializeAxiosWithToken = (token: string | null) => {
-
   axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC__BASE_URL,
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -23,34 +23,33 @@ const initializeAxiosWithToken = (token: string | null) => {
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get token from local storage
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
     // If token exists, add it to the headers
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
     // Handle request errors
     console.error("Request error:", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 // Response interceptor (optional)
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
-
-    
     return response;
   },
   (error) => {
     // Handle errors if needed
     console.error("Response error:", error);
     return Promise.reject(error);
-  },
+  }
 );
 
 export { axiosInstance, initializeAxiosWithToken };

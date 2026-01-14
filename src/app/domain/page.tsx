@@ -18,10 +18,10 @@ import { Trash2Icon } from "lucide-react";
 import { useToast } from "../../components/ui/use-toast";
 import { Messages } from "../../utils/common/enum";
 import { apiHelperService } from "../../services/domain";
-import { CustomTableComponent } from "@/components/Domain/CustomTableComponent";
-import AddDomain from "@/components/Domain/addDomain";
+import AddDomain from "../../components/Domain/addDomain";
+import { DomainDetail } from "@/components/Domain/DomainDetail";
 
-export default function DomainPage() {
+export default function Talent() {
   const { toast } = useToast();
 
   const handleDelete = async (
@@ -41,7 +41,7 @@ export default function DomainPage() {
   };
 
   const customTableProps: TableProps = {
-    api: "/domain",
+    api: "/domain/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -56,29 +56,42 @@ export default function DomainPage() {
         type: FieldType.TEXT,
       },
       {
-        fieldName: "description",
-        textValue: "Description",
-        type: FieldType.LONGTEXT,
-        wordsCnt: 50,
+        fieldName: "createdAt",
+        textValue: "Created At",
+        type: FieldType.DATETIME,
       },
       {
         fieldName: "status",
         textValue: "Status",
         type: FieldType.STATUS,
         statusFormats: [
+          { textValue: "Active", value: "active", bgColor: "green" },
+          { textValue: "Inactive", value: "inactive", bgColor: "red" },
+        ],
+      },
+      {
+        fieldName: "createdBy",
+        textValue: "Created By",
+        type: FieldType.STATUS,
+        statusFormats: [
           {
-            textValue: "Active",
-            value: "active",
-            bgColor: "#57fa70",
-            textColor: "#024d0d",
+            textValue: "Admin",
+            value: "ADMIN",
+            bgColor: "#3b82f6",
+            textColor: "#ffffff",
           },
           {
-            value: "inactive",
-            bgColor: "yellow",
-            textColor: "#525002",
-            textValue: "Inactive",
+            textValue: "Freelancer",
+            value: "FREELANCER",
+            bgColor: "#ec4899",
+            textColor: "#ffffff",
           },
         ],
+      },
+      {
+        fieldName: "createdById",
+        textValue: "Created By ID",
+        type: FieldType.TEXT,
       },
       {
         textValue: "",
@@ -98,23 +111,13 @@ export default function DomainPage() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: CustomTableComponent,
+        CustomComponent: DomainDetail,
       },
     ],
-    searchColumn: ["label"],
     isDownload: true,
+    isFilter: true,
     title: "Domains",
-    tableHeaderActions: [AddDomain],
     filterData: [
-      {
-        name: "status",
-        textValue: "Status",
-        type: FilterDataType.SINGLE,
-        options: [
-          { label: "Active", value: "active,Active,ACTIVE" },
-          { label: "Inactive", value: "inactive,Inactive,INACTIVE" },
-        ],
-      },
       {
         name: "label",
         textValue: "Domains",
@@ -128,7 +131,18 @@ export default function DomainPage() {
           { label: "Networking", value: "Networking" },
         ],
       },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
+        ],
+      },
     ],
+    searchColumn: ["label"],
+    tableHeaderActions: [AddDomain],
   };
 
   return (
