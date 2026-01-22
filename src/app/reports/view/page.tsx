@@ -45,6 +45,7 @@ interface ReportType {
   imageMeta?: ImageMeta[];
   report_role: string;
   reportedById: string;
+  reportedByUserName?: string;
 }
 
 const ViewReportPage = () => {
@@ -229,8 +230,8 @@ const ViewReportPage = () => {
               <p className="text-lg dark:text-gray-100">{report.subject}</p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">{report.report_role} ID</h2>
-              <p className="text-lg dark:text-gray-100">{report.reportedById}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Reported By</h2>
+              <p className="text-lg dark:text-gray-100">{report.reportedByUserName || report.reportedById}</p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
               <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Status</h2>
@@ -297,12 +298,36 @@ const ViewReportPage = () => {
             <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Message Thread</h2>
 
             <div className="h-[400px] overflow-y-auto space-y-4 px-2">
+              {/* Original Report Case as Context */}
+              <div className="flex justify-start">
+                <div className="max-w-[85%] px-4 py-3 rounded-lg text-sm shadow-sm bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900">
+                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase mb-1">
+                    INITIAL REPORT FROM: {report.reportedByUserName || report.reportedById}
+                  </p>
+                  <p className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 italic">
+                    &quot;{report.description}&quot;
+                  </p>
+                  <p className="text-[10px] text-muted-foreground dark:text-gray-400 mt-2">
+                    Reported At: {new Date(report.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-b dark:border-zinc-800 my-4 flex items-center justify-center">
+                <span className="bg-white dark:bg-zinc-900 px-2 text-[10px] text-muted-foreground uppercase tracking-widest">
+                  Discussion Thread
+                </span>
+              </div>
+
               {report.messages?.length ? (
                 report.messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
+                    className={`flex flex-col ${msg.sender === "admin" ? "items-end" : "items-start"}`}
                   >
+                    <span className="text-[10px] font-medium text-muted-foreground mb-1 px-1">
+                      {msg.sender === "admin" ? "Admin" : (report.reportedByUserName || "Reporter")}
+                    </span>
                     <div
                       className={`max-w-[70%] px-4 py-2 rounded-lg text-sm shadow-sm ${
                         msg.sender === "admin"
@@ -318,9 +343,8 @@ const ViewReportPage = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No messages yet.</p>
+                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No discussion messages yet.</p>
               )}
-
             </div>
 
             <div className="mt-6 space-y-2">

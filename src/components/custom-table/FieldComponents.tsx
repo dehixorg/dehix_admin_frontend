@@ -135,7 +135,9 @@ const ActionField = ({
             >
               {type === "Button" && (
                 <div
-                  onClick={async () => {
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     await handler?.({ id, refetch });
                     refetch && refetch();
                   }}
