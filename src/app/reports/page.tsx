@@ -57,7 +57,11 @@ export default function AllReportsPage() {
 
         {/* Table */}
         <div className="px-4 sm:px-6">
-          <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
+          <Tabs
+            value={currentTab}
+            onValueChange={handleTabChange}
+            className="w-full"
+          >
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="reported-messages">

@@ -78,7 +78,9 @@ function ReportedMessagesContent() {
       if (response.success) {
         setMessage(response.data.data);
       } else {
-        throw new Error(response.data?.message || "Failed to load report details.");
+        throw new Error(
+          response.data?.message || "Failed to load report details."
+        );
       }
     } catch (error: any) {
       console.error("Failed to fetch reported message detail:", error);
@@ -123,7 +125,10 @@ function ReportedMessagesContent() {
     if (!id) return;
     setUpdatingStatus(true);
     try {
-      const response = await apiHelperService.updateReportedMessageStatus(id, newStatus);
+      const response = await apiHelperService.updateReportedMessageStatus(
+        id,
+        newStatus
+      );
       if (response.success) {
         toast({
           title: "Success",
@@ -168,7 +173,9 @@ function ReportedMessagesContent() {
         };
 
         setMessage((prev) =>
-          prev ? { ...prev, messages: [...(prev.messages || []), newMessage] } : prev
+          prev
+            ? { ...prev, messages: [...(prev.messages || []), newMessage] }
+            : prev
         );
 
         toast({ title: "Reply sent" });
@@ -202,7 +209,8 @@ function ReportedMessagesContent() {
         <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
-  if (!message) return <div className="p-10 text-center">Report not found.</div>;
+  if (!message)
+    return <div className="p-10 text-center">Report not found.</div>;
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40 dark:bg-zinc-950">
@@ -233,50 +241,87 @@ function ReportedMessagesContent() {
 
         <main className="p-6 space-y-6">
           <h1 className="text-2xl font-semibold dark:text-gray-100">
-            Report Details <span className="text-sm font-normal text-muted-foreground">(Reported Message)</span>
+            Report Details{" "}
+            <span className="text-sm font-normal text-muted-foreground">
+              (Reported Message)
+            </span>
           </h1>
 
           <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Subject</h2>
-              <p className="text-lg dark:text-gray-100 break-words">Message Report</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Subject
+              </h2>
+              <p className="text-lg dark:text-gray-100 break-words">
+                Message Report
+              </p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Message Sender</h2>
-              <p className="text-lg dark:text-gray-100 break-words">{message.messageSenderUserName || message.messageSenderId}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Message Sender
+              </h2>
+              <p className="text-lg dark:text-gray-100 break-words">
+                {message.messageSenderUserName || message.messageSenderId}
+              </p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Reported By</h2>
-              <p className="text-lg dark:text-gray-100 break-words">{message.reportedByUserName || message.reportedById}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Reported By
+              </h2>
+              <p className="text-lg dark:text-gray-100 break-words">
+                {message.reportedByUserName || message.reportedById}
+              </p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Status</h2>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Status
+              </h2>
               <div className="flex items-center gap-2">
-                <p className={`text-sm font-medium ${message.status === "OPEN" ? "text-green-600" : message.status === "CLOSED" ? "text-red-600" : "text-yellow-600"}`}>
+                <p
+                  className={`text-sm font-medium ${message.status === "OPEN" ? "text-green-600" : message.status === "CLOSED" ? "text-red-600" : "text-yellow-600"}`}
+                >
                   {message.status}
                 </p>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" disabled={updatingStatus}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={updatingStatus}
+                    >
                       {updatingStatus ? "..." : "Update"}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="dark:bg-zinc-900">
-                    <DropdownMenuItem onClick={() => updateStatus("OPEN")}>OPEN</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus("IN_PROGRESS")}>Enable Chat</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>CLOSED</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateStatus("OPEN")}>
+                      OPEN
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => updateStatus("IN_PROGRESS")}
+                    >
+                      Enable Chat
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>
+                      CLOSED
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Reported Message</h2>
-              <p className="whitespace-pre-wrap dark:text-gray-100">{message.messageContent}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Reported Message
+              </h2>
+              <p className="whitespace-pre-wrap dark:text-gray-100">
+                {message.messageContent}
+              </p>
             </div>
 
             {(message?.imageMeta ?? []).length > 0 && (
               <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-                <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Attached Screenshots</h2>
+                <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                  Attached Screenshots
+                </h2>
                 <div className="flex flex-wrap gap-4">
                   {(message?.imageMeta ?? []).map((img, index) => (
                     <button
@@ -317,14 +362,17 @@ function ReportedMessagesContent() {
 
           {/* CHAT SECTION / MESSAGE THREAD */}
           <section className="bg-white dark:bg-zinc-900 rounded-md shadow p-6 max-w-3xl mx-auto w-full">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Message Thread</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+              Message Thread
+            </h2>
 
             <div className="h-[400px] overflow-y-auto space-y-4 px-2">
               {/* Original Reported Message as Context */}
               <div className="flex justify-start">
                 <div className="max-w-[85%] px-4 py-3 rounded-lg text-sm shadow-sm bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900">
                   <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase mb-1">
-                    REPORTED MESSAGE FROM: {message.messageSenderUserName || message.messageSenderId}
+                    REPORTED MESSAGE FROM:{" "}
+                    {message.messageSenderUserName || message.messageSenderId}
                   </p>
                   <p className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 italic">
                     &quot;{message.messageContent}&quot;
@@ -348,7 +396,9 @@ function ReportedMessagesContent() {
                     className={`flex flex-col ${msg.sender === "admin" ? "items-end" : "items-start"}`}
                   >
                     <span className="text-[10px] font-medium text-muted-foreground mb-1 px-1">
-                      {msg.sender === "admin" ? "Admin" : (message.reportedByUserName || "Reporter")}
+                      {msg.sender === "admin"
+                        ? "Admin"
+                        : message.reportedByUserName || "Reporter"}
                     </span>
                     <div
                       className={`max-w-[70%] px-4 py-2 rounded-lg text-sm shadow-sm ${
@@ -365,7 +415,9 @@ function ReportedMessagesContent() {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No discussion messages yet.</p>
+                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">
+                  No discussion messages yet.
+                </p>
               )}
             </div>
 
@@ -384,7 +436,10 @@ function ReportedMessagesContent() {
 
             <div className="mt-6 space-y-2">
               <div className="text-xs text-muted-foreground space-y-1 border-t dark:border-zinc-700 pt-4">
-                <p>Reported By: {message.reportedByUserName || message.reportedById}</p>
+                <p>
+                  Reported By:{" "}
+                  {message.reportedByUserName || message.reportedById}
+                </p>
                 <p>Reason: {message.reason || "N/A"}</p>
                 <p>Report ID: {message._id}</p>
                 <p>Reported At: {formatDate(message.createdAt)}</p>
@@ -399,11 +454,13 @@ function ReportedMessagesContent() {
 
 export default function ReportedMessagesPage() {
   return (
-    <Suspense fallback={
-       <div className="flex h-screen w-full items-center justify-center bg-muted/40 dark:bg-zinc-950">
-         <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
-       </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-full items-center justify-center bg-muted/40 dark:bg-zinc-950">
+          <LoaderCircle className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      }
+    >
       <ReportedMessagesContent />
     </Suspense>
   );
