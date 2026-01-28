@@ -132,12 +132,11 @@ export const DomainDetail = ({ id, data, refetch }: CustomComponentProps) => {
                     }}
                   />
                   <EditDomainDescription
-                    isDialogopen={false}
+                    isDialogOpen={false}
                     setIsDialogOpen={() => {}}
                     domainId={id}
                     currentDescription={data.description || ""}
-                    currentStatus={data.status || "active"}
-                    onDescriptionUpdate={async (newDescription) => {
+                    onUpdateSuccess={() => {
                       refetch?.();
                     }}
                   />
