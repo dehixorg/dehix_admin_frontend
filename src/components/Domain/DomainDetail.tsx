@@ -136,7 +136,9 @@ export const DomainDetail = ({ id, data, refetch }: CustomComponentProps) => {
                     setIsDialogOpen={() => {}}
                     domainId={id}
                     currentDescription={data.description || ""}
-                    onUpdateSuccess={() => refetch?.()}
+                    onUpdateSuccess={() => {
+                      refetch?.();
+                    }}
                   />
                 </>
               )}
