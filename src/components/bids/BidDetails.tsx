@@ -59,7 +59,7 @@ export const BidDetails = ({ data }: CustomComponentProps) => {
             <div>
               <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Description</p>
               <div className="p-2 mt-1 bg-gray-100 dark:bg-zinc-700 rounded-md overflow-hidden">
-                <p className="text-xs whitespace-pre-wrap break-all break-words overflow-wrap-anywhere">{data.description}</p>
+                <p className="text-xs whitespace-pre-wrap break-all break-words">{data.description}</p>
               </div>
             </div>
           </div>
