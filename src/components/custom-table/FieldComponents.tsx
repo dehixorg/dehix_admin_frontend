@@ -111,14 +111,54 @@ const ActionField = ({
   fieldData,
   refetch,
 }: FieldComponentProps<Actions>) => {
+  if (fieldData.actions?.options && fieldData.actions.options.length === 1) {
+    const { actionIcon, actionName, type, handler, href, className } = fieldData.actions.options[0];
+    
+    if (type === "Button") {
+      return (
+        <div
+          onClick={async () => {
+            await handler?.({ id, refetch });
+            refetch && refetch();
+          }}
+          className={twMerge(
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
+            className
+          )}
+        >
+          {fieldData.actions?.icon ? (
+            fieldData.actions.icon
+          ) : (
+            <ArrowRight className="w-4 h-4" />
+          )}
+        </div>
+      );
+    }
+    
+    if (type === "Link") {
+      return (
+        <Link
+          href={href || "#"}
+          className={twMerge(
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
+            className
+          )}
+        >
+          {fieldData.actions?.icon ? (
+            fieldData.actions.icon
+          ) : (
+            <ArrowRight className="w-4 h-4" />
+          )}
+        </Link>
+      );
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
         {fieldData.actions?.icon ? (
           fieldData.actions.icon
-        ) : fieldData.actions?.options &&
-          fieldData.actions.options.length == 1 ? (
-          <ArrowRight />
         ) : (
           <DotsVerticalIcon />
         )}
