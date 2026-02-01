@@ -48,15 +48,31 @@ interface DomainData {
 
 interface InterviewData {
   _id: string;
-  interviewerId: string;
+  interviewerId?: string;
   intervieweeId: string;
-  skill?: string;
-  domain?: string;
+  interviewer?: {
+    _id: string;
+    userName: string;
+    firstName?: string;
+    lastName?: string;
+    profilePic?: string;
+    skills?: string[];
+  };
+  interviewee?: {
+    _id: string;
+    userName: string;
+    firstName?: string;
+    lastName?: string;
+    profilePic?: string;
+    skills?: string[];
+  };
+  talentName?: string;
   interviewDate: string; 
-  rating: number;
+  interviewerRating?: number;
+  intervieweeRating?: number;
   talentType: "skill" | "domain"; 
   talentId: string;
-  comments: string;
+  comments?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -125,19 +141,50 @@ const InterviewTable: React.FC = () => {
       setInterviewData([]);
       setFreelancerDetails({});
     } else {
-      // 🔽 Normalize talentType here
+      // Normalize talentType and build freelancer details from API response
       rawInterviewData = rawInterviewData.map((interview) => ({
         ...interview,
         talentType: interview.talentType?.toLowerCase() as "skill" | "domain",
       }));
 
-      const allFreelancerIds = [
-        ...rawInterviewData.map((d) => d.interviewerId),
-        ...rawInterviewData.map((d) => d.intervieweeId),
-      ].filter(Boolean);
+      // Build freelancer details map from the API response (no need for additional API calls)
+      const detailsMap: Record<string, FreelancerPersonalInfo> = {};
+      rawInterviewData.forEach((interview) => {
+        // Add interviewee details
+        if (interview.interviewee) {
+          const name = interview.interviewee.firstName 
+            || interview.interviewee.userName 
+            || formatID(interview.intervieweeId);
+          detailsMap[interview.intervieweeId] = {
+            _id: interview.intervieweeId,
+            name: name,
+          };
+        } else if (interview.intervieweeId) {
+          // Fallback if interviewee object is missing
+          detailsMap[interview.intervieweeId] = {
+            _id: interview.intervieweeId,
+            name: formatID(interview.intervieweeId),
+          };
+        }
+        // Add interviewer details
+        if (interview.interviewer && interview.interviewerId) {
+          const name = interview.interviewer.firstName 
+            || interview.interviewer.userName 
+            || formatID(interview.interviewerId);
+          detailsMap[interview.interviewerId] = {
+            _id: interview.interviewerId,
+            name: name,
+          };
+        } else if (interview.interviewerId) {
+          // Fallback if interviewer object is missing
+          detailsMap[interview.interviewerId] = {
+            _id: interview.interviewerId,
+            name: formatID(interview.interviewerId),
+          };
+        }
+      });
 
-      const fetchedFreelancerDetails = await fetchFreelancerDetails(allFreelancerIds);
-      setFreelancerDetails(fetchedFreelancerDetails);
+      setFreelancerDetails(detailsMap);
       setInterviewData(rawInterviewData);
     }
   } catch (error) {
@@ -183,8 +230,20 @@ const InterviewTable: React.FC = () => {
   };
 
   // Helper function to get freelancer name from the details map
-  const getFreelancerName = (id: string | undefined): string => {
+  const getFreelancerName = (id: string | undefined, interview?: InterviewData): string => {
     if (!id) return "No Data Available";
+    
+    // First try to get from the interview object directly
+    if (interview) {
+      if (id === interview.intervieweeId && interview.interviewee) {
+        return interview.interviewee.firstName || interview.interviewee.userName || formatID(id);
+      }
+      if (id === interview.interviewerId && interview.interviewer) {
+        return interview.interviewer.firstName || interview.interviewer.userName || formatID(id);
+      }
+    }
+    
+    // Fall back to the details map
     return freelancerDetails[id]?.name || formatID(id);
   };
 
@@ -270,7 +329,7 @@ const InterviewTable: React.FC = () => {
                             <Tooltip>
                               <TooltipTrigger>
                                 <a
-                                  href={`/freelancers/${interview.intervieweeId}`}
+                                  href={`/freelancer/tabs?id=${interview.intervieweeId}`}
                                   className="text-blue-600 hover:underline"
                                 >
                                   {getFreelancerName(interview.intervieweeId)}
@@ -294,9 +353,7 @@ const InterviewTable: React.FC = () => {
                               handleViewTalentDetails(interview.talentType, interview.talentId)
                             }
                           >
-{interview.talentType === "skill"
-  ? (interview.skill || "View Talent")
-  : (interview.domain || "View Talent")}
+{interview.talentName || "View Talent"}
                           </button>
                         ) : (
                           "No Data Available"
@@ -307,9 +364,9 @@ const InterviewTable: React.FC = () => {
                           "No Data Available"}
                       </TableCell>
                       <TableCell className="text-center">
-                        {interview.rating == null
-                          ? "No Data Available"
-                          : interview.rating}
+                        {interview.interviewerRating != null || interview.intervieweeRating != null
+                          ? `${interview.interviewerRating || 0}/${interview.intervieweeRating || 0}`
+                          : "No Data Available"}
                       </TableCell>
                       <TableCell>
                         <Dialog>
@@ -331,7 +388,7 @@ const InterviewTable: React.FC = () => {
                               </p>
                               <p>
                                 <strong>Interviewer Name:</strong>{" "}
-                                {getFreelancerName(interview.interviewerId)}
+                                {getFreelancerName(interview.interviewerId, interview)}
                               </p>
                               <p>
                                 <strong>Interviewee ID:</strong>{" "}
@@ -339,11 +396,11 @@ const InterviewTable: React.FC = () => {
                               </p>
                               <p>
                                 <strong>Interviewee Name:</strong>{" "}
-                                {getFreelancerName(interview.intervieweeId)}
+                                {getFreelancerName(interview.intervieweeId, interview)}
                               </p>
                               <p>
                                 <strong>Skill/Domain:</strong>{" "}
-                                {interview.skill || interview.domain || "No Data Available"}
+                                {interview.talentName || "No Data Available"}
                               </p>
                               <p>
                                 <strong>Talent Type:</strong>{" "}
@@ -356,10 +413,12 @@ const InterviewTable: React.FC = () => {
                                 ).toLocaleString() || "No Data Available"}
                               </p>
                               <p>
-                                <strong>Rating:</strong>{" "}
-                                {interview.rating == null
-                                  ? "No Data Available"
-                                  : interview.rating}
+                                <strong>Interviewer Rating:</strong>{" "}
+                                {interview.interviewerRating ?? "No Data Available"}
+                              </p>
+                              <p>
+                                <strong>Interviewee Rating:</strong>{" "}
+                                {interview.intervieweeRating ?? "No Data Available"}
                               </p>
                               <p>
                                 <strong>Comments:</strong>{" "}
