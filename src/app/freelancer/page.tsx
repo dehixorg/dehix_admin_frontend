@@ -43,34 +43,36 @@ export default function Talent() {
         tooltipContent: "Personal Phone Number",
       },
       {
-        fieldName: "attributes",
         textValue: "Skills",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data }: { data: Record<string, any> }) => {
           // Safely access and filter skills
           const skills = Array.isArray(data.attributes)
             ? data.attributes
-                .filter((attr) => attr?.type === "SKILL")
-                .map((skill) => skill.name)
-                .filter(Boolean) // Remove any undefined/null values
+                .filter((attr) => attr?.type === "SKILL" && attr?.name)
+                .map((skill) => skill.name?.trim())
+                .filter((name) => name && name.length > 0)
             : [];
 
           return (
             <div className="flex flex-wrap gap-1">
-              {skills.slice(0, 3).map((skill, index) => (
-                <span
-                  key={`skill-${index}`}
-                  className="px-2 py-1 text-xs bg-gray-100 rounded-md"
-                >
-                  {skill}
-                </span>
-              ))}
-              {skills.length > 3 && (
-                <span className="text-xs text-gray-500">
-                  +{skills.length - 3} more
-                </span>
-              )}
-              {skills.length === 0 && (
+              {skills.length > 0 ? (
+                <>
+                  {skills.slice(0, 1).map((skill, index) => (
+                    <span
+                      key={`skill-${index}`}
+                      className="text-sm"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {skills.length > 1 && (
+                    <span className="text-xs text-gray-500">
+                      +{skills.length - 1} more
+                    </span>
+                  )}
+                </>
+              ) : (
                 <span className="text-xs text-gray-400">No skills</span>
               )}
             </div>
@@ -78,34 +80,36 @@ export default function Talent() {
         },
       },
       {
-        fieldName: "attributes",
         textValue: "Domains",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data }: { data: Record<string, any> }) => {
           // Safely access and filter domains
           const domains = Array.isArray(data.attributes)
             ? data.attributes
-                .filter((attr) => attr?.type === "DOMAIN")
-                .map((domain) => domain.name)
-                .filter(Boolean) // Remove any undefined/null values
+                .filter((attr) => attr?.type === "DOMAIN" && attr?.name)
+                .map((domain) => domain.name?.trim())
+                .filter((name) => name && name.length > 0) // Remove any undefined/null/empty values
             : [];
 
           return (
             <div className="flex flex-wrap gap-1">
-              {domains.slice(0, 3).map((domain, index) => (
-                <span
-                  key={`domain-${index}`}
-                  className="px-2 py-1 text-xs bg-blue-50 text-blue-700 rounded-md"
-                >
-                  {domain}
-                </span>
-              ))}
-              {domains.length > 3 && (
-                <span className="text-xs text-gray-500">
-                  +{domains.length - 3} more
-                </span>
-              )}
-              {domains.length === 0 && (
+              {domains.length > 0 ? (
+                <>
+                  {domains.slice(0, 1).map((domain, index) => (
+                    <span
+                      key={`domain-${index}`}
+                      className="text-sm"
+                    >
+                      {domain}
+                    </span>
+                  ))}
+                  {domains.length > 1 && (
+                    <span className="text-xs text-gray-500">
+                      +{domains.length - 1} more
+                    </span>
+                  )}
+                </>
+              ) : (
                 <span className="text-xs text-gray-400">No domains</span>
               )}
             </div>

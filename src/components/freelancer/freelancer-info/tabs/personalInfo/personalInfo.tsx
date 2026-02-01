@@ -18,14 +18,35 @@ import {ProfileCard}  from "../profileCard/ProfileCard"
 
 const fetchUserProfile = async (id: string) => {
   const { data } = await apiHelperService.getAllFreelancerPersonalInfo(id);
+  
+  // Extract skills and domains from attributes array
+  const attributes = data.data.attributes || [];
+  const skills = attributes
+    .filter((attr: any) => attr?.type === "SKILL" && attr?.name)
+    .map((skill: any) => ({
+      name: skill.name,
+      experience: skill.experience,
+      level: skill.level,
+      _id: skill._id,
+    }));
+  
+  const domain = attributes
+    .filter((attr: any) => attr?.type === "DOMAIN" && attr?.name)
+    .map((dom: any) => ({
+      name: dom.name,
+      experience: dom.experience,
+      level: dom.level,
+      _id: dom._id,
+    }));
+  
   return {
     profile: data.data,
     education: Object.values(data.data.education ?? {}),
     projects: Object.values(data.data.projects ?? {}),
     professional: Object.values(data.data.professionalInfo ?? {}),
 
-    skills: data.data.skills ?? [],
-    domain: data.data.domain ?? [],
+    skills: skills,
+    domain: domain,
     consultant: Object.values(data.consultant ?? {}),
   };
 };
