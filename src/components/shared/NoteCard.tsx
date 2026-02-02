@@ -147,12 +147,12 @@ const COLOR_PALETTE = [
 
 // Available banner images
 const BANNER_IMAGES = [
-  'https://www.gstatic.com/keep/backgrounds/notes_light_0609.svg',
-  'https://www.gstatic.com/keep/backgrounds/food_light_0609.svg',
-  'https://www.gstatic.com/keep/backgrounds/music_light_0609.svg',
-  'https://www.gstatic.com/keep/backgrounds/recipe_light_0609.svg',
-  'https://www.gstatic.com/keep/backgrounds/notes_dark_0609.svg',
-  'https://www.gstatic.com/keep/backgrounds/places_light_0609.svg',
+  '/banner1.svg',
+  '/banner2.svg',
+  '/banner3.svg',
+  '/banner4.svg',
+  '/banner5.svg',
+  '/banner6.svg',
 ];
 
 interface NoteCardProps {
@@ -169,6 +169,9 @@ interface NoteCardProps {
   ) => Promise<void>;
   onDeleteClick: (noteId: string | undefined) => void;
   onUpdateNoteLabel?: (noteId: string | undefined, label: string) => void;
+  onTouchStart?: () => void;
+  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchEnd?: () => void;
 }
 
 const NoteCard = ({
@@ -182,6 +185,9 @@ const NoteCard = ({
   onUpdateNoteType,
   onDeleteClick,
   onUpdateNoteLabel,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
 }: NoteCardProps) => {
   // State
   const [isExpanded, setIsExpanded] = useState(false);
@@ -356,6 +362,9 @@ const NoteCard = ({
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
         className="relative group w-full h-full"
       >
         <Card

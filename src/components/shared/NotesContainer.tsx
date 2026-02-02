@@ -24,10 +24,14 @@ const NotesContainer = ({
   const { handleSaveEditNote, handleDeletePermanently, handleUpdateNoteType } =
     useNotes(fetchNotes, notes);
 
-  const { handleDragStart, handleDragOver, handleDrop } = useDragAndDrop(
-    notes,
-    setNotes,
-  );
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = useDragAndDrop(notes, setNotes);
 
   return (
     <div className="w-full">
@@ -52,6 +56,9 @@ const NotesContainer = ({
                 handleDragOver(index + 1);
               }}
               onDrop={handleDrop}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               isTrash={!!isTrash}
               isArchive={isArchive}
               onEditNote={handleSaveEditNote}

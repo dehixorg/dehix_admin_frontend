@@ -50,6 +50,9 @@ const MyNotesContainer = ({
     handleDragStart,
     handleDragOver,
     handleDrop,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
   } = useDragAndDrop(notes, setNotes);
 
   const navItems = (note: Note) => {
@@ -136,6 +139,9 @@ const MyNotesContainer = ({
                 handleDragOver(index);
               }}
               onDrop={handleDrop}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               notes={notes}
               setNotes={setNotes}
               isTrash={!!isTrash}

@@ -13,7 +13,7 @@ import { notesMenu } from '@/config/menuItems/admin/dashboardMenuItems';
 import NotesHeader from '@/components/business/header/NotesHeader';
 import NotesRender from '@/components/shared/NotesRender';
 import { axiosInstance } from '@/lib/axiosinstance';
-import { LabelType, Note, NoteType } from '@/utils/types/note';
+import { EntityType, LabelType, Note, NoteType } from '@/utils/types/note';
 import { toast } from '@/components/ui/use-toast';
 import useFetchNotes from '@/hooks/useFetchNotes';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -51,7 +51,7 @@ const Notes = () => {
       banner: note.banner || '',
       noteType: NoteType.NOTE,
       type: LabelType.PERSONAL,
-      entityType: user?.type?.toUpperCase(),
+      entityType: (user?.type?.toUpperCase() as EntityType) || EntityType.BUSINESS,
     } as Note;
 
     // Optimistically update the UI

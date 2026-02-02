@@ -129,7 +129,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       }
       await fetchNotes();
     } catch (error) {
-      showError('Failed to update the note label.');
+      showError('Failed to update the note type.');
     }
   };
 

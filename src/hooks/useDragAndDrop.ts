@@ -32,7 +32,7 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
         variant: 'destructive',
         duration: 5000,
       });
-      return;
+      return false;
     }
 
     try {
@@ -49,7 +49,9 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
           variant: 'destructive',
           duration: 5000,
         });
+        return false;
       }
+      return true;
     } catch (error: any) {
       console.error('Error updating note order:', error.message);
       toast({
@@ -58,6 +60,7 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
         variant: 'destructive',
         duration: 5000,
       });
+      return false;
     }
   };
 
@@ -87,8 +90,12 @@ const useDragAndDrop = (notes: Note[], setNotes: (notes: Note[]) => void) => {
     if (draggingIndex !== null && draggingOverIndex !== null) {
       const updatedNotesRender = moveNote(draggingIndex, draggingOverIndex);
       if (updatedNotesRender !== notes) {
+        const previousNotes = [...notes];
         setNotes(updatedNotesRender);
-        await persistOrder(updatedNotesRender);
+        const success = await persistOrder(updatedNotesRender);
+        if (!success) {
+          setNotes(previousNotes);
+        }
       }
     }
     setDraggingIndex(null);

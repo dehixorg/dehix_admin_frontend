@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { LabelType, Note, NoteType } from '@/utils/types/note';
+import { EntityType, LabelType, Note, NoteType } from '@/utils/types/note';
 import NotesRender from '@/components/shared/NotesRender';
 import NotesHeader from '@/components/business/header/NotesHeader';
 import SidebarMenu from '@/components/menu/sidebarMenu';
@@ -51,7 +51,7 @@ const Page = () => {
       isHTML: false,
       noteType: NoteType.ARCHIVE,
       type: LabelType.PERSONAL,
-      entityType: user?.type?.toUpperCase() || 'BUSINESS',
+      entityType: (user?.type?.toUpperCase() as EntityType) || EntityType.BUSINESS,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

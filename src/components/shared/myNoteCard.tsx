@@ -28,6 +28,9 @@ interface NoteCardProps {
       setNotes: (notes: Note[]) => void
     ) => void;
   }>;
+  onTouchStart?: () => void;
+  onTouchMove?: (e: React.TouchEvent) => void;
+  onTouchEnd?: () => void;
 }
 
 const MyNoteCard = ({
@@ -44,6 +47,9 @@ const MyNoteCard = ({
   onDeleteClick,
   onChangeBanner,
   navItems,
+  onTouchStart,
+  onTouchMove,
+  onTouchEnd,
 }: NoteCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -164,6 +170,9 @@ const MyNoteCard = ({
       onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
       className="relative h-full"
     >
       <Card
