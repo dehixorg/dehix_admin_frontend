@@ -1,13 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import MyNoteCard from "./myNoteCard";
-import DialogConfirmation from "./DialogConfirmation";
-import DialogSelectedNote from "./DialogSelectedNote";
-import DialogUpdateType from "./DialogUpdateType";
+import { NoteCard } from './NoteCard';
 
-import { Note, NoteType } from "@/utils/types/note";
-import useNotes from "@/hooks/useNotes";
-import useDragAndDrop from "@/hooks/useDragAndDrop";
+import useDragAndDrop from '@/hooks/useDragAndDrop';
+import useNotes from '@/hooks/useNotes';
+import type { Note } from '@/utils/types/note';
 
 interface NotesContainerProps {
   notes: Note[];
@@ -24,190 +21,64 @@ const NotesContainer = ({
   isTrash,
   fetchNotes,
 }: NotesContainerProps) => {
-  const user: string | null = localStorage.getItem("user");
-  const parsedUser = user ? JSON.parse(user) : null;
-
-  const uId = parsedUser ? parsedUser.uid : null;
-
-  const userType = parsedUser ? parsedUser.type : null;
+  const { handleSaveEditNote, handleDeletePermanently, handleUpdateNoteType } =
+    useNotes(fetchNotes, notes);
 
   const {
-    selectedDeleteNote,
-    setSelectedDeleteNote,
-    selectedTypeNote,
-    setSelectedTypeNote,
-    isDeleting,
-    setIsDeleting,
-    handleSaveEditNote,
-    handleDialogClose,
-    handleDeletePermanently,
-    handleChangeBanner,
-    handleUpdateNoteType,
-    handleUpdateNoteLabel,
-  } = useNotes(fetchNotes, notes);
-
-  const {
-    draggingIndex,
-    draggingOverIndex,
     handleDragStart,
     handleDragOver,
     handleDrop,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
   } = useDragAndDrop(notes, setNotes);
-
-  const navItems = (note: Note) => {
-    // Only show edit options if the user is superadmin or the creator of the note
-    if (
-      userType === "superadmin" ||
-      (userType === "admin" && note.userId === uId)
-    ) {
-      const items = [];
-
-      // For trashed notes, show restore and delete permanently options
-      if (isTrash) {
-        items.push(
-          {
-            label: "Restore",
-            onClick: (noteId: string | undefined) => {
-              handleUpdateNoteType(noteId, NoteType.NOTE);
-            },
-          },
-          {
-            label: "Delete Permanently",
-            onClick: () => {
-              setIsDeleting(true);
-              setSelectedDeleteNote(note);
-            },
-          }
-        );
-      }
-      // For archived notes, show unarchive and move to trash options
-      else if (isArchive) {
-        items.push(
-          {
-            label: "Unarchive",
-            onClick: (noteId: string | undefined) => {
-              handleUpdateNoteType(noteId, NoteType.NOTE);
-            },
-          },
-          {
-            label: "Move to Trash",
-            onClick: (noteId: string | undefined) => {
-              handleUpdateNoteType(noteId, NoteType.TRASH);
-            },
-          }
-        );
-      }
-      // For regular notes, show archive and move to trash options
-      else {
-        items.push(
-          {
-            label: "Archive",
-            onClick: (noteId: string | undefined) => {
-              handleUpdateNoteType(noteId, NoteType.ARCHIVE);
-            },
-          },
-          {
-            label: "Move to Trash",
-            onClick: (noteId: string | undefined) => {
-              handleUpdateNoteType(noteId, NoteType.TRASH);
-            },
-          },
-          {
-            label: "Add Label",
-            onClick: (noteId: string | undefined) => {
-              setSelectedTypeNote(notes.find((n) => n._id === noteId) || null);
-            },
-          }
-        );
-      }
-
-      return items;
-    }
-
-    // Return an empty array if the user doesn't have permissions
-    return [];
-  };
-
-  // Show 'Archive' in archive view, 'My Notes' otherwise
-  const getHeading = () => isArchive ? 'Archive' : 'My Notes';
 
   return (
     <div className="w-full">
-      <h2 className="text-2xl font-bold mb-6 px-4">{getHeading()}</h2>
-      <div className="flex justify-center items-center">
-        <div className="flex flex-wrap justify-center gap-6 p-4 w-full">
-          {notes.map((note, index) => (
-            <MyNoteCard
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+        <div
+          className="col-span-full h-2"
+          onDragOver={(e) => {
+            e.preventDefault();
+            handleDragOver(0);
+          }}
+          onDrop={handleDrop}
+        />
+
+        {notes.map((note, index) => (
+          <div key={note._id} data-note-index={index} className="touch-none">
+            <NoteCard
               key={note._id}
               note={note}
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => {
                 e.preventDefault();
-                handleDragOver(index);
+                handleDragOver(index + 1);
               }}
               onDrop={handleDrop}
-              notes={notes}
-              setNotes={setNotes}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               isTrash={!!isTrash}
               isArchive={isArchive}
-              onEditNote={async (updatedNote: Note) => {
-                if (
-                  userType === "superadmin" ||
-                  (userType === "admin" && updatedNote.userId === uId)
-                ) {
-                  await handleSaveEditNote(updatedNote);
-                } else {
-                  console.error("Permission denied: Cannot edit this note.");
-                }
-              }}
+              onEditNote={handleSaveEditNote}
               onUpdateNoteType={handleUpdateNoteType}
               onDeleteClick={(noteId: string | undefined) => {
-                if (userType === "superadmin" || note.userId === uId) {
-                  // For trashed notes, show delete confirmation
-                  // For others, move to trash
-                  if (isTrash) {
-                    setIsDeleting(true);
-                    setSelectedDeleteNote(
-                      notes.find((n) => n._id === noteId) || null
-                    );
-                  } else {
-                    handleUpdateNoteType(noteId, NoteType.TRASH);
-                  }
-                } else {
-                  console.error("Permission denied: Cannot delete this note.");
-                }
+                if (noteId) handleDeletePermanently(noteId);
               }}
-              onChangeBanner={(
-                noteId: string | undefined,
-                newBannerUrl: string
-              ) => {
-                if (userType === "superadmin" || note.userId === uId) {
-                  handleChangeBanner(noteId, newBannerUrl);
-                } else {
-                  console.error(
-                    "Permission denied: Cannot change banner of this note."
-                  );
-                }
-              }}
-              navItems={navItems(note)}
             />
-          ))}
-        </div>
+          </div>
+        ))}
+
+        <div
+          className="col-span-full h-2"
+          onDragOver={(e) => {
+            e.preventDefault();
+            handleDragOver(notes.length);
+          }}
+          onDrop={handleDrop}
+        />
       </div>
-      {isDeleting && (
-        <DialogConfirmation
-          onClose={handleDialogClose}
-          note={selectedDeleteNote}
-          onDelete={handleDeletePermanently}
-        />
-      )}
-      {selectedTypeNote && (
-        <DialogUpdateType
-          note={selectedTypeNote}
-          onClose={() => setSelectedTypeNote(null)}
-          onUpdate={handleUpdateNoteLabel}
-        />
-      )}
     </div>
   );
 };

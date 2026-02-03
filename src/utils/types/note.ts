@@ -22,14 +22,12 @@ export enum NoteType {
   TRASH = 'TRASH',
   ARCHIVE = 'ARCHIVE',
   PINNED = 'PINNED',
-  ARCHIVED = 'ARCHIVED'
 }
 
 // Updated Note type
 export type Note = {
   _id?: string;
-  adminId?: string;
-  userId: string;
+  userId?: string;
   title: string;
   content: string;
   bgColor?: string; // Optional color for note display
@@ -39,14 +37,16 @@ export type Note = {
   entityType?: EntityType; // Type of the entity associated with the note
   type?: LabelType; // Label or type of the note
   noteType: NoteType;
-  isPinned?: boolean; // Whether the note is pinned
-  updatedAt?: Date | string; // Last updated timestamp
-  createdAt?: Date | string; // Creation timestamp
+  isPinned?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export const badgeColors: { [key: string]: string } = {
-  PERSONAL: 'bg-blue-500 text-white hover:text-black',
-  WORK: 'bg-green-500 text-white hover:text-black',
-  REMINDER: 'bg-yellow-500 text-black hover:text-black',
-  TASK: 'bg-red-500 text-white hover:text-black',
+  PERSONAL:
+    'bg-blue-500 text-black dark:text-white hover:text-black dark:hover:text-white',
+  WORK: 'bg-green-500 text-black dark:text-white hover:text-black dark:hover:text-white',
+  REMINDER:
+    'bg-yellow-500 text-black dark:text-white hover:text-black dark:hover:text-white',
+  TASK: 'bg-red-500 text-black dark:text-white hover:text-black dark:hover:text-white',
 };

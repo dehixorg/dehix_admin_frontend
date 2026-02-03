@@ -19,7 +19,7 @@ import { Note } from "@/utils/types/note";
 import { CreateNoteDialog } from "@/components/shared/CreateNoteDialog";
 
 interface NotesHeaderProps {
-  onNoteCreate: (note: Note) => void;
+  onNoteCreate?: (note: Note) => void;
   notes: Note[];
   setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   isTrash: boolean;
@@ -135,7 +135,9 @@ const NotesHeader = ({
               </DropdownMenu>
 
               {/* Create Dialog */}
-              <CreateNoteDialog onNoteCreate={onNoteCreate} userId={userId} />
+              {onNoteCreate && (
+                <CreateNoteDialog onNoteCreate={onNoteCreate} userId={userId} />
+              )}
             </div>
           </div>
         )}
