@@ -31,8 +31,8 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   setActive = () => null,
 }) => {
   return (
-    <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-      <nav className="flex flex-col items-center gap-3 px-2 sm:py-5">
+    <aside className="fixed inset-y-0 left-0 z-10 hidden h-screen w-16 flex-col border-r bg-background sm:flex">
+      <nav className="flex h-full flex-col items-center gap-3 overflow-y-auto overflow-x-hidden px-2 py-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/30">
         {menuItemsTop.map((item, index) => {
           if (item.subItems) {
             return (
@@ -44,16 +44,16 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
               />
             );
           }
-          
+
           const isDehix = item.label === "Dehix";
           const isActive = item.label === active;
-          const linkClasses = `flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 
+          const linkClasses = `flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
             ${
-              isDehix 
-                ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base" 
-                : isActive 
-                ? "bg-accent text-accent-foreground" 
-                : "text-muted-foreground"
+              isDehix
+                ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+                : isActive
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground"
             }`;
 
           return (
@@ -68,7 +68,9 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                   {item.label && <span className="sr-only">{item.label}</span>}
                 </Link>
               </TooltipTrigger>
-              {item.label && <TooltipContent side="right">{item.label}</TooltipContent>}
+              {item.label && (
+                <TooltipContent side="right">{item.label}</TooltipContent>
+              )}
             </Tooltip>
           );
         })}
@@ -86,18 +88,20 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                 href={item.href}
                 className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 
                   ${
-                    item.label === "Dehix" 
-                      ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base" 
-                      : item.label === active 
-                      ? "bg-accent text-accent-foreground" 
-                      : "text-muted-foreground"
+                    item.label === "Dehix"
+                      ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+                      : item.label === active
+                        ? "bg-accent text-accent-foreground"
+                        : "text-muted-foreground"
                   }`}
               >
                 {item.icon}
                 {item.label && <span className="sr-only">{item.label}</span>}
               </Link>
             </TooltipTrigger>
-            {item.label && <TooltipContent side="right">{item.label}</TooltipContent>}
+            {item.label && (
+              <TooltipContent side="right">{item.label}</TooltipContent>
+            )}
           </Tooltip>
         ))}
       </nav>

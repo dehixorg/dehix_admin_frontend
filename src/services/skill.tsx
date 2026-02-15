@@ -55,7 +55,29 @@ export const apiHelperService = {
     return apiService({
       method: Api_Methods.GET,
       endpoint: `/skills/${Id}`,
-      
     });
-  }
+  },
+  approveSkill: async (skillId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/skill/${skillId}/approve`,
+      body: {
+        action: "APPROVE",
+        comment,
+      },
+    });
+  },
+  denySkill: async (skillId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/skill/${skillId}/approve`,
+      body: {
+        action: "DENY",
+        comment,
+      },
+    });
+  },
 };
+
+export const approveSkill = apiHelperService.approveSkill;
+export const denySkill = apiHelperService.denySkill;

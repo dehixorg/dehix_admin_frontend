@@ -86,7 +86,7 @@ const BusinessTabs = () => {
           <Breadcrumb
             items={[
               { label: "Dashboard", link: "" },
-              { label: "Verification", link: "/verification" },
+              { label: "Admin Oracle Verification", link: "/adminVerification" },
             ]}
           />
           <div className="relative ml-auto flex-1 md:grow-0">
@@ -100,13 +100,13 @@ const BusinessTabs = () => {
           <DropdownProfile />
         </header>
         <main className="ml-5 mr-5">
-          <Tabs defaultValue="Admin Verification">
+          <Tabs defaultValue="Admin Oracle Verification">
             <TabsList className="flex w-full justify-between gap-2">
-              <TabsTrigger value="Admin Verification" className="flex-1 text-center">
-                Admin Verification
+              <TabsTrigger value="Admin Oracle Verification" className="flex-1 text-center">
+                Admin Oracle Verification
               </TabsTrigger>
             </TabsList>
-            <TabsContent value="Admin Verification">
+            <TabsContent value="Admin Oracle Verification">
               <Verification Data={adminVerifications}/>
             </TabsContent>
           </Tabs>

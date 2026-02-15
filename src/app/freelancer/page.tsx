@@ -43,16 +43,78 @@ export default function Talent() {
         tooltipContent: "Personal Phone Number",
       },
       {
-        fieldName: "skills",
         textValue: "Skills",
-        type: FieldType.ARRAY_VALUE,
-        arrayName: "name",
+        type: FieldType.CUSTOM,
+        CustomComponent: ({ data }: { data: Record<string, any> }) => {
+          // Safely access and filter skills
+          const skills = Array.isArray(data.attributes)
+            ? data.attributes
+                .filter((attr) => attr?.type === "SKILL" && attr?.name)
+                .map((skill) => skill.name?.trim())
+                .filter((name) => name && name.length > 0)
+            : [];
+
+          return (
+            <div className="flex flex-wrap gap-1">
+              {skills.length > 0 ? (
+                <>
+                  {skills.slice(0, 1).map((skill, index) => (
+                    <span
+                      key={`skill-${index}`}
+                      className="text-sm"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {skills.length > 1 && (
+                    <span className="text-xs text-gray-500">
+                      +{skills.length - 1} more
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-xs text-gray-400">No skills</span>
+              )}
+            </div>
+          );
+        },
       },
       {
-        fieldName: "domain",
         textValue: "Domains",
-        type: FieldType.ARRAY_VALUE,
-        arrayName: "name",
+        type: FieldType.CUSTOM,
+        CustomComponent: ({ data }: { data: Record<string, any> }) => {
+          // Safely access and filter domains
+          const domains = Array.isArray(data.attributes)
+            ? data.attributes
+                .filter((attr) => attr?.type === "DOMAIN" && attr?.name)
+                .map((domain) => domain.name?.trim())
+                .filter((name) => name && name.length > 0) // Remove any undefined/null/empty values
+            : [];
+
+          return (
+            <div className="flex flex-wrap gap-1">
+              {domains.length > 0 ? (
+                <>
+                  {domains.slice(0, 1).map((domain, index) => (
+                    <span
+                      key={`domain-${index}`}
+                      className="text-sm"
+                    >
+                      {domain}
+                    </span>
+                  ))}
+                  {domains.length > 1 && (
+                    <span className="text-xs text-gray-500">
+                      +{domains.length - 1} more
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="text-xs text-gray-400">No domains</span>
+              )}
+            </div>
+          );
+        },
       },
       {
         textValue: "",
@@ -74,6 +136,18 @@ export default function Talent() {
     ],
     filterData: [
       {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "ACTIVE", value: "ACTIVE" },
+          {
+            label: "NOT VERIFIED",
+            value: "Not_Verified,Notverified,NOT_VERIFIED",
+          },
+        ],
+      },
+      {
         name: "skills",
         textValue: "Skills",
         type: FilterDataType.MULTI,
@@ -83,8 +157,7 @@ export default function Talent() {
           { label: "Vue", value: "Vue" },
           { label: "Django", value: "Django" },
           { label: "Angular", value: "Angular" },
-          { label: "Node JS", value: "Node.js" }
-
+          { label: "Node JS", value: "Node.js" },
         ],
       },
       {
@@ -99,11 +172,10 @@ export default function Talent() {
         ],
       },
     ],
-    searchColumn: ["firstName","skills.name", "email"],
+    searchColumn: ["firstName", "email"],
     isDownload: true,
-    sortBy: [{ fieldName: "dob", label: "Date Of Birth" }]
-  }
-
+    sortBy: [{ fieldName: "createdAt", label: "Created At" }],
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -119,20 +191,13 @@ export default function Talent() {
             menuItemsBottom={menuItemsBottom}
             active="Freelancer"
           />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "#" },
-              { label: "Freelancer", link: "#" },
-            ]}
-          />
+          <Breadcrumb items={[{ label: "Freelancer", link: "#" }]} />
           <div className="relative ml-auto flex-1 md:grow-0">
             <DropdownProfile />
           </div>
         </header>
         <main className="ml-5">
-          <CustomTable
-            {...customTableProps}
-          />
+          <CustomTable {...customTableProps} />
         </main>
       </div>
     </div>

@@ -1,3 +1,4 @@
+// hooks/useNotes.ts
 import { useState } from 'react';
 
 import { axiosInstance } from '@/lib/axiosinstance';
@@ -34,7 +35,6 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       return;
     }
 
-
     try {
       const response = await axiosInstance.put(`/notes/${note._id}`, {
         title: note.title,
@@ -43,36 +43,40 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
         banner: note.banner || '',
         isHTML: note.isHTML || false,
         entityID: note.entityID || '',
-        entityType: note.entityType || '',
         noteType: note?.noteType || NoteType.NOTE,
         type: note?.type || LabelType.PERSONAL,
       });
 
       if (response?.status === 200) {
         showSuccess('Note updated successfully.');
+        await fetchNotes();
+        setSelectedNote(null);
       }
-    } catch (error) {
-      showError('Failed to update the note.');
-    } finally {
-      await fetchNotes(); // Refresh notes
-      setSelectedNote(null); // Clear selection
+    } catch (error: any) {
+      showError(
+        error?.response?.data?.message || 'Failed to update the note.',
+      );
     }
   };
 
   const handleDialogClose = () => {
+    // Reset all related states when closing the dialog
     setSelectedNote(null);
+    setSelectedDeleteNote(null);
+    setSelectedTypeNote(null);
     setIsDeleting(false);
   };
 
   const handleDeletePermanently = async (noteId: string | null) => {
     if (!noteId) {
       showError('Invalid note ID.');
+      setIsDeleting(false);
       return;
     }
     try {
       await axiosInstance.delete(`/notes/${noteId}`);
       showSuccess('Note deleted permanently.');
-      fetchNotes();
+      await fetchNotes();
     } catch (error) {
       showError('Failed to delete the note.');
     }
@@ -85,7 +89,7 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
   ) => {
     const noteToUpdate = notes.find((note) => note._id === noteId);
 
-    if (!noteToUpdate) {  
+    if (!noteToUpdate) {
       showError('Note not found.');
       return;
     }
@@ -96,12 +100,11 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       });
 
       if (response?.status == 200) {
-        showSuccess(`Note Banner updated`);
+        showSuccess('Note banner updated.');
       }
       await fetchNotes();
     } catch (error) {
-      showError(`Failed to update the note banner.`);
-
+      showError('Failed to update the note banner.');
     }
   };
 
@@ -122,12 +125,11 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       });
 
       if (response?.status == 200) {
-        showSuccess(`Note moved to ${type.toLowerCase()}`);
+        showSuccess(`Note moved to ${type.toLowerCase()}.`);
       }
       await fetchNotes();
     } catch (error) {
-      showError(`Failed to update the note label.`);
-
+      showError('Failed to update the note type.');
     }
   };
 
@@ -148,12 +150,11 @@ const useNotes = (fetchNotes: () => Promise<void>, notes: Note[]) => {
       });
 
       if (response?.status == 200) {
-        showSuccess(`Note Label updated`);
+        showSuccess('Note label updated.');
       }
       await fetchNotes();
     } catch (error) {
-      showError(`Failed to update the note label.`);
-
+      showError('Failed to update the note label.');
     }
   };
 

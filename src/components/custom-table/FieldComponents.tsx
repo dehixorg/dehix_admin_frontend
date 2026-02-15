@@ -67,24 +67,38 @@ const ArrayValueField = ({
   value,
   fieldData,
 }: FieldComponentProps<Array<Record<string, any>>>) => {
+  if (!value || !Array.isArray(value)) {
+    return <span>-</span>;
+  }
+
+  const safeValue = value;
+
+  const getDisplayValue = (item: any): string => {
+    if (!item) return "";
+    if (typeof item === "string") return item;
+    if (fieldData.arrayName && typeof item === "object") {
+      return item[fieldData.arrayName] || "";
+    }
+    return String(item);
+  };
+
   return (
     <div className="relative group cursor-pointer">
-      {value.length > 0 ? (
-        <>
-          <ToolTip
-            trigger={
-              <div className="">
-                <span>{fieldData.arrayName ? value[0][fieldData.arrayName] : value[0]} </span>
-                <span className="text-xs text-gray-500">
-                  {value.length > 1 && `+${value.length - 1} more`}
-                </span>
-              </div>
-            }
-            content={value
-              .map((val: any) => fieldData.arrayName ? `${val[fieldData.arrayName!]}` : `${val}`)
-              .join(", ")}
-          />
-        </>
+      {safeValue.length > 0 ? (
+        <ToolTip
+          trigger={
+            <div className="">
+              <span>{getDisplayValue(safeValue[0])} </span>
+              <span className="text-xs text-gray-500">
+                {safeValue.length > 1 && `+${safeValue.length - 1} more`}
+              </span>
+            </div>
+          }
+          content={safeValue
+            .map((val: any) => getDisplayValue(val))
+            .filter(Boolean) // Remove any empty strings
+            .join(", ")}
+        />
       ) : (
         <span className="text-xs text-gray-500">-</span>
       )}
@@ -97,13 +111,54 @@ const ActionField = ({
   fieldData,
   refetch,
 }: FieldComponentProps<Actions>) => {
+  if (fieldData.actions?.options && fieldData.actions.options.length === 1) {
+    const { actionIcon, actionName, type, handler, href, className } = fieldData.actions.options[0];
+    
+    if (type === "Button") {
+      return (
+        <div
+          onClick={async () => {
+            await handler?.({ id, refetch });
+            refetch && refetch();
+          }}
+          className={twMerge(
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
+            className
+          )}
+        >
+          {fieldData.actions?.icon ? (
+            fieldData.actions.icon
+          ) : (
+            <ArrowRight className="w-4 h-4" />
+          )}
+        </div>
+      );
+    }
+    
+    if (type === "Link") {
+      return (
+        <Link
+          href={href || "#"}
+          className={twMerge(
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
+            className
+          )}
+        >
+          {fieldData.actions?.icon ? (
+            fieldData.actions.icon
+          ) : (
+            <ArrowRight className="w-4 h-4" />
+          )}
+        </Link>
+      );
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
         {fieldData.actions?.icon ? (
           fieldData.actions.icon
-        ) : fieldData.actions?.options.length == 1 ? (
-          <ArrowRight />
         ) : (
           <DotsVerticalIcon />
         )}
@@ -120,7 +175,12 @@ const ActionField = ({
             >
               {type === "Button" && (
                 <div
-                  onClick={() => handler?.({ id, refetch })}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    await handler?.({ id, refetch });
+                    refetch && refetch();
+                  }}
                   className={twMerge(
                     "text-sm w-full py-2 px-3 flex items-center dark:text-gray-300 justify-start hover:cursor-pointer gap-4 font-medium text-gray-600",
                     className
@@ -163,7 +223,7 @@ const CurrencyField = ({ fieldData, value }: FieldComponentProps<string>) => {
 
 const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
   const statusMetaData = fieldData.statusFormats?.find(
-    (status) => status.value.toLowerCase() === value.toLowerCase()
+    (status) => status.value.toLowerCase() === String(value).toLowerCase()
   );
 
   if (!statusMetaData) return <span>{value}</span>;
@@ -191,7 +251,7 @@ export const TooltipField = ({
 };
 
 const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
-  if(!value) return <span>-</span>
+  if (!value) return <span>-</span>;
   if (fieldData.wordsCnt && value.length <= fieldData.wordsCnt)
     return <span>{value}</span>;
 
@@ -227,6 +287,7 @@ const CustomComponent = ({
 };
 
 const LengthField = ({ value }: FieldComponentProps<Record<string, any>[]>) => {
+  if (!value || !Array.isArray(value)) return <span>0</span>;
   return <span>{value.length}</span>;
 };
 

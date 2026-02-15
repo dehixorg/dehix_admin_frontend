@@ -6,12 +6,15 @@ import { apiHelperService } from "@/services/report";
 import { useToast } from "@/components/ui/use-toast";
 import SidebarMenu from "@/components/menu/sidebarMenu";
 import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import {
   DropdownMenu,
@@ -45,6 +48,7 @@ interface ReportType {
   imageMeta?: ImageMeta[];
   report_role: string;
   reportedById: string;
+  reportedByUserName?: string;
 }
 
 const ViewReportPage = () => {
@@ -102,7 +106,6 @@ const ViewReportPage = () => {
     return () => clearInterval(interval); // cleanup
   }, [id, report?.status]);
 
-
   const handleReply = async () => {
     if (!replyMessage.trim()) {
       toast({ title: "Reply message can't be empty", variant: "destructive" });
@@ -133,9 +136,7 @@ const ViewReportPage = () => {
       };
 
       setReport((prev) =>
-        prev
-          ? { ...prev, messages: [...prev.messages, newMessage] }
-          : prev
+        prev ? { ...prev, messages: [...prev.messages, newMessage] } : prev,
       );
 
       toast({ title: "Reply sent", description: replyMessage });
@@ -145,10 +146,12 @@ const ViewReportPage = () => {
       // Optionally update status if desired
       setReport((prev) =>
         prev
-          ? { ...prev, status: prev.status === "OPEN" ? "IN_PROGRESS" : prev.status }
-          : prev
+          ? {
+              ...prev,
+              status: prev.status === "OPEN" ? "IN_PROGRESS" : prev.status,
+            }
+          : prev,
       );
-
     } catch (error) {
       toast({
         title: "Error",
@@ -169,12 +172,19 @@ const ViewReportPage = () => {
     }
 
     try {
-      const res = await apiHelperService.updateReportStatus(report._id, newStatus);
+      const res = await apiHelperService.updateReportStatus(
+        report._id,
+        newStatus,
+      );
 
       setReport((prev) =>
         prev
-          ? { ...prev, status: res.data.data.status, updatedAt: res.data.data.updatedAt }
-          : prev
+          ? {
+              ...prev,
+              status: res.data.data.status,
+              updatedAt: res.data.data.updatedAt,
+            }
+          : prev,
       );
 
       toast({
@@ -221,42 +231,66 @@ const ViewReportPage = () => {
         </header>
 
         <main className="p-6 space-y-6">
-          <h1 className="text-2xl font-semibold dark:text-gray-100">Report Details</h1>
+          <h1 className="text-2xl font-semibold dark:text-gray-100">
+            Report Details
+          </h1>
 
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Subject</h2>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Subject
+              </h2>
               <p className="text-lg dark:text-gray-100">{report.subject}</p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">{report.report_role} ID</h2>
-              <p className="text-lg dark:text-gray-100">{report.reportedById}</p>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Reported By</h2>
+              <p className="text-lg dark:text-gray-100">{report.reportedByUserName || report.reportedById}</p>
             </div>
             <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Status</h2>
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Status
+              </h2>
               <div className="flex items-center gap-2">
-                <p className={`text-sm font-medium ${report.status === "OPEN" ? "text-green-600" : "text-red-600"}`}>
+                <p
+                  className={`text-sm font-medium ${report.status === "OPEN" ? "text-green-600" : "text-red-600"}`}
+                >
                   {report.status}
                 </p>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm">Update</Button>
+                    <Button variant="outline" size="sm">
+                      Update
+                    </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="dark:bg-zinc-900">
-                    <DropdownMenuItem onClick={() => updateStatus("OPEN")}>OPEN</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus("IN_PROGRESS")}>Enable Chat</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>CLOSED</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateStatus("OPEN")}>
+                      OPEN
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => updateStatus("IN_PROGRESS")}
+                    >
+                      Enable Chat
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => updateStatus("CLOSED")}>
+                      CLOSED
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
             </div>
-            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Description</h2>
-              <p className="whitespace-pre-wrap dark:text-gray-100">{report.description}</p>
+            <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-4">
+              <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                Description
+              </h2>
+              <p className="whitespace-pre-wrap dark:text-gray-100">
+                {report.description}
+              </p>
             </div>
             {(report?.imageMeta ?? []).length > 0 && (
-              <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-3">
-                <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">Attached Screenshots</h2>
+              <div className="bg-white dark:bg-zinc-900 rounded-md shadow p-4 sm:col-span-2 lg:col-span-4">
+                <h2 className="font-semibold mb-1 text-muted-foreground dark:text-gray-400">
+                  Attached Screenshots
+                </h2>
                 <div className="flex flex-wrap gap-4">
                   {(report?.imageMeta ?? []).map((img, index) => (
                     <button
@@ -285,6 +319,8 @@ const ViewReportPage = () => {
               <Image
                 src={activeImage}
                 alt="Full view"
+                width={800}
+                height={600}
                 className="max-w-full max-h-full rounded shadow-lg"
               />
             </div>
@@ -292,15 +328,41 @@ const ViewReportPage = () => {
 
           {/* CHAT SECTION */}
           <section className="bg-white dark:bg-zinc-900 rounded-md shadow p-6 max-w-3xl mx-auto w-full">
-            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Message Thread</h2>
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+              Message Thread
+            </h2>
 
             <div className="h-[400px] overflow-y-auto space-y-4 px-2">
+              {/* Original Report Case as Context */}
+              <div className="flex justify-start">
+                <div className="max-w-[85%] px-4 py-3 rounded-lg text-sm shadow-sm bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900">
+                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-500 uppercase mb-1">
+                    INITIAL REPORT FROM: {report.reportedByUserName || report.reportedById}
+                  </p>
+                  <p className="whitespace-pre-wrap text-gray-900 dark:text-gray-100 italic">
+                    &quot;{report.description}&quot;
+                  </p>
+                  <p className="text-[10px] text-muted-foreground dark:text-gray-400 mt-2">
+                    Reported At: {new Date(report.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border-b dark:border-zinc-800 my-4 flex items-center justify-center">
+                <span className="bg-white dark:bg-zinc-900 px-2 text-[10px] text-muted-foreground uppercase tracking-widest">
+                  Discussion Thread
+                </span>
+              </div>
+
               {report.messages?.length ? (
                 report.messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${msg.sender === "admin" ? "justify-end" : "justify-start"}`}
+                    className={`flex flex-col ${msg.sender === "admin" ? "items-end" : "items-start"}`}
                   >
+                    <span className="text-[10px] font-medium text-muted-foreground mb-1 px-1">
+                      {msg.sender === "admin" ? "Admin" : (report.reportedByUserName || "Reporter")}
+                    </span>
                     <div
                       className={`max-w-[70%] px-4 py-2 rounded-lg text-sm shadow-sm ${
                         msg.sender === "admin"
@@ -316,9 +378,8 @@ const ViewReportPage = () => {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No messages yet.</p>
+                <p className="text-sm text-muted-foreground dark:text-gray-400 text-center mt-10">No discussion messages yet.</p>
               )}
-
             </div>
 
             <div className="mt-6 space-y-2">

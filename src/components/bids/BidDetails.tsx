@@ -10,8 +10,8 @@ export const BidDetails = ({ data }: CustomComponentProps) => {
         title="Bid Details"
         description="Detailed information about the selected bid."
         content={
-          <div className="flex flex-col space-y-6 p-6 rounded-md text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-zinc-800">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col space-y-3 p-4 rounded-md text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-zinc-800">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Project ID</p>
                 <Link 
@@ -32,7 +32,7 @@ export const BidDetails = ({ data }: CustomComponentProps) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
                 <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Current Price</p>
                 <p className="text-xl font-bold mt-1">
@@ -58,8 +58,8 @@ export const BidDetails = ({ data }: CustomComponentProps) => {
             {/* Description */}
             <div>
               <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Description</p>
-              <div className="p-4 mt-2 bg-gray-100 dark:bg-zinc-700 rounded-md">
-                <p className="text-sm whitespace-pre-wrap">{data.description}</p>
+              <div className="p-2 mt-1 bg-gray-100 dark:bg-zinc-700 rounded-md overflow-hidden">
+                <p className="text-xs whitespace-pre-wrap break-all break-words">{data.description}</p>
               </div>
             </div>
           </div>

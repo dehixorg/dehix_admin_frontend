@@ -56,7 +56,29 @@ export const apiHelperService = {
     return apiService({
       method: Api_Methods.GET,
       endpoint: `/domain/${Id}`,
-      
     });
-  }
+  },
+  approveDomain: async (domainId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/domain/${domainId}/approve`,
+      body: {
+        action: "APPROVE",
+        comment,
+      },
+    });
+  },
+  denyDomain: async (domainId: string, comment: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/verification/domain/${domainId}/approve`,
+      body: {
+        action: "DENY",
+        comment,
+      },
+    });
+  },
 };
+
+export const approveDomain = apiHelperService.approveDomain;
+export const denyDomain = apiHelperService.denyDomain;

@@ -33,6 +33,7 @@ import { apiHelperService } from "@/services/domain";
 import { formatTime } from "@/lib/utils";
 import CopyButton from "@/components/copybutton";
 import EditDomainDescription from "@/components/Domain/editDomaindesc";
+import ChangeDomainStatus from "@/components/Domain/ChangeDomainStatus";
 import { Button } from "@/components/ui/button";
 interface DomainData {
   _id: string;
@@ -242,16 +243,38 @@ const DomainTable: React.FC = () => {
                           </DialogHeader>
                           <div>
                             {selectedIndex != -1 ? (
-                              <div>
+                              <div className="space-y-4">
                                 <p>
                                   <strong>Name:</strong>{" "}
-                                  {domainData[index].label}
+                                  {domainData[selectedIndex].label}
                                 </p>
                                 <p>
                                   <strong>Description:</strong>{" "}
-                                  {domainData[index].description ||
+                                  {domainData[selectedIndex].description ||
                                     "No description available"}
                                 </p>
+                                <ChangeDomainStatus
+                                  domainId={domainData[selectedIndex]._id}
+                                  currentStatus={domainData[selectedIndex].status || "active"}
+                                  onUpdateSuccess={() => {
+                                    fetchDomainData();
+                                  }}
+                                />
+                                {isEditDialogOpen && selectedIndex !== -1 && (
+                                  <EditDomainDescription
+                                    isDialogOpen={isEditDialogOpen}
+                                    setIsDialogOpen={setIsEditDialogOpen}
+                                    domainId={domainData[selectedIndex]._id}
+                                    currentDescription={
+                                      domainData[selectedIndex].description || ""
+                                    }
+                                    onUpdateSuccess={() => {
+                                      // Refresh the data after successful update
+                                      fetchDomainData();
+                                      setIsEditDialogOpen(false);
+                                    }}
+                                  />
+                                )}
                                 <Button
                                   variant="outline"
                                   onClick={() => {
@@ -267,24 +290,6 @@ const DomainTable: React.FC = () => {
                           </div>
                         </DialogContent>
                       </Dialog>
-                      {isEditDialogOpen && selectedIndex && (
-                        <EditDomainDescription
-                          isDialogopen={isEditDialogOpen}
-                          setIsDialogOpen={() => setIsEditDialogOpen(false)}
-                          domainId={domainData[index]._id}
-                          currentDescription={
-                            domainData[index].description || ""
-                          }
-                          onDescriptionUpdate={(newDescription: string) => {
-                            setDomainData((prevDomainData) => {
-                              const updatedDomainData = [...prevDomainData];
-                              updatedDomainData[index].description =
-                                newDescription;
-                              return updatedDomainData;
-                            });
-                          }}
-                        />
-                      )}
                     </TableRow>
                   ))
                 ) : (

@@ -4,11 +4,13 @@ import { Api_Methods } from "../utils/common/enum"; // Importing Api_Methods
 import { axiosInstance } from "@/lib/axiosinstance";
 
 interface ApiRequest {
-  method: Api_Methods; // Use the Api_Methods enum directly
+  method: Api_Methods;
   endpoint: string;
   body?: any;
   params?: Record<string, any>;
   authToken?: string;
+  headers?: Record<string, string>;
+  isFileUpload?: boolean;
 }
 
 export const apiService = async ({
@@ -16,7 +18,8 @@ export const apiService = async ({
   endpoint,
   body = null,
   params = {},
-
+  headers = {},
+  isFileUpload = false
 }: ApiRequest): Promise<{ success: boolean; data: any }> => {
   try {
     let response;
@@ -25,11 +28,33 @@ export const apiService = async ({
         response = await axiosInstance.get(endpoint, { params });
         break;
       case Api_Methods.POST:
-        response = await axiosInstance.post(endpoint, body, { params });
+        if (isFileUpload) {
+          // For file uploads, let Axios set the Content-Type automatically with boundary
+          response = await axiosInstance.post(endpoint, body, { 
+            params,
+            headers: {
+              ...headers,
+              // Don't set Content-Type for FormData - let Axios handle it
+            }
+          });
+        } else {
+          response = await axiosInstance.post(endpoint, body, { 
+            params,
+            headers: headers
+          });
+        }
         break;
-      case Api_Methods.PUT:
-        response = await axiosInstance.put(endpoint, body, { params });
+      case Api_Methods.PUT: {
+        // For PUT requests, ensure the endpoint includes the ID if it's in the body
+        let putEndpoint = endpoint;
+        if (body?.ads_id && !endpoint.endsWith(`/${body.ads_id}`)) {
+          putEndpoint = endpoint.endsWith('/') 
+            ? `${endpoint}${body.ads_id}`
+            : `${endpoint}/${body.ads_id}`;
+        }
+        response = await axiosInstance.put(putEndpoint, body, { params });
         break;
+      }
       case Api_Methods.DELETE:
         response = await axiosInstance.delete(endpoint, { params });
         break;
