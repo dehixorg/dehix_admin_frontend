@@ -18,6 +18,7 @@ export default function Talent() {
   const { toast } = useToast();
 
   const customTableProps: TableProps = {
+    title: "Project Domain",
     api: "/projectdomain/admin",
     uniqueId: "_id",
     fields: [

@@ -91,7 +91,7 @@ export default function BadgesAndLevels() {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button type="button" variant="ghost" size="icon">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>

@@ -33,8 +33,8 @@ const customTableProps: TableProps = {
       type: FieldType.STATUS,
       statusFormats: [
         {
-          textValue: "Accepted",
-          value: "ACCEPTED",
+          textValue: "Approved",
+          value: "APPROVED",
           bgColor: "#57fa70",
           textColor: "#024d0d",
         },
