@@ -44,7 +44,7 @@ interface DehixTalentProps {
   profile?: any;
 }
 
-const DehixTalent: React.FC<DehixTalentProps> = ({  profile,id }) => {
+const DehixTalent: React.FC<DehixTalentProps> = ({ profile: _profile, id }) => {
   const [talentData, setTalentData] = useState<DehixTalentData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();

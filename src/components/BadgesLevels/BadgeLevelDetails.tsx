@@ -1,14 +1,12 @@
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
 import { useState } from "react";
 import EditBadgeLevel from "./editBadgeLevel";
 import DeleteBadgeLevel from "./deleteBadgeLevel";
 
 export const BadgeLevelDetails = ({
-  id,
+  id: _id,
   data,
   refetch,
   open,

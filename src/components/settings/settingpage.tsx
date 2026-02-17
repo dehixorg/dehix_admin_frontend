@@ -55,7 +55,9 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
   //const user1 = "emJFgSdULVesBMqVrd7nQTQ2FhB2";
   const [user, setUser] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [_error, setError] = useState<string | null>(null);
+  const [updating, setUpdating] = useState<boolean>(false);
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -67,7 +69,6 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
     },
     mode: 'all',
   });
-  const [updating, setUpdating] = useState<boolean>(false);
 
   const fetchUserDetails = React.useCallback(async () => {
     try {
@@ -103,6 +104,7 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
 
   async function onSubmit(data: ProfileFormValues) {
     setLoading(true);
+    setUpdating(true);
     try {
        await axiosInstance.put(`/admin/${user_id}`, {
          ...data,
@@ -140,6 +142,7 @@ const CurrentUserDetails: React.FC <CurrentUserDetailsProps> = ({ user_id }) => 
       });
     }
     } finally {
+      setUpdating(false);
       setLoading(false); // Always reset loading state
     }
   };

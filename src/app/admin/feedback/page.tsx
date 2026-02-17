@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   CustomComponentProps,
@@ -92,7 +85,7 @@ export default function FeedbackPage() {
       {
         textValue: "Submissions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data, id }: CustomComponentProps) => {
+        CustomComponent: ({ id }: CustomComponentProps) => {
           return <ViewSubmissions campaignId={id} />;
         },
       },
@@ -220,33 +213,16 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Feedback"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Feedback"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/admin" },
-              { label: "Feedback", link: "#" },
-            ]}
-          />
-          <div className="ml-auto">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Feedback"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/admin" },
+        { label: "Feedback", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }

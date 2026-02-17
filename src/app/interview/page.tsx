@@ -1,16 +1,6 @@
 "use client";
-import { Search } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import InterviewTable from "@/components/interview/Interviewtable";
-import DropdownProfile from "@/components/shared/DropdownProfile";
 
 export default function Talent() {
   return (
