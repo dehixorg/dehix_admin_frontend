@@ -16,7 +16,7 @@ interface ProfessionalData {
 function BusinessProfessionalInfo({
   professionalData,
 }: {
-  professionalData: ProfessionalData |null ;
+  professionalData: ProfessionalData | null;
 }) {
   const business = professionalData;
 
@@ -102,22 +102,20 @@ function BusinessProfessionalInfo({
 
             <div className="flex items-center space-x-3">
               <Shield
-                className={`text-${
-                  business.isVerified === "Yes" ? "green" : "red"
-                }-500`}
+                className={`${business.isVerified === "Yes" ? "text-green-500" : "text-red-500"
+                  }`}
                 size={20}
               />
               <div>
                 <p className="text-sm font-medium">Verified Status</p>
-                <p
-                  className={`text-base ${
-                    business.isVerified === "Yes"
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
+                <span
+                  className={`inline-block mt-1 ${business.isVerified === "Yes"
+                    ? "bg-green-500/20 text-green-700 dark:text-green-400"
+                    : "bg-red-500/20 text-red-700 dark:text-red-400"
+                    } rounded-full px-3 py-1 text-xs font-medium`}
                 >
-                  {business.isVerified}
-                </p>
+                  {business.isVerified === "Yes" ? "Verified" : "Not Verified"}
+                </span>
               </div>
             </div>
           </div>

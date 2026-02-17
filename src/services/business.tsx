@@ -35,7 +35,7 @@ export const apiHelperService = {
       body: projectData,
     });
   },
-  updateUserStatus:async (Id: string, status: string) => {
+  updateUserStatus: async (Id: string, status: string) => {
     return apiService({
       method: Api_Methods.PUT,
       endpoint: `/business/${Id}`,
@@ -51,7 +51,7 @@ export const apiHelperService = {
     });
   },
 
-   // Endpoint to get invited freelancers for a specific project
+  // Endpoint to get invited freelancers for a specific project
   getProjectInvitedFreelancers: async (projectId: string) => {
     return apiService({
       method: Api_Methods.GET,
@@ -82,7 +82,7 @@ export const apiHelperService = {
       endpoint: `/business/hire-dehixtalent/${projectId}/rejected`,
     });
   },
-   getAllFreelancerPersonalInfo: async (itemId: string) => {
+  getAllFreelancerPersonalInfo: async (itemId: string) => {
     return apiService({
       method: Api_Methods.GET,
       endpoint: `/freelancer/admin/${itemId}`,

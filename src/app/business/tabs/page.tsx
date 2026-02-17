@@ -43,7 +43,7 @@ interface HireFreelancerinfo {
 }
 const BusinessTabs = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id")||"";
+  const id = searchParams.get("id") || "";
   const [businessprofessionalinfo, setBusinessprofessionalinfo] = useState<Professionalinfo | null>(null);
   const [businesspersonalinfo, setBusinesspersonalinfo] = useState<Personalinfo | null>(null);
   const [hirefreelancerinfo, sethirefreelancerinfo] = useState<HireFreelancerinfo[] | null>(null);
@@ -152,7 +152,7 @@ const BusinessTabs = () => {
               <PersonalInfo personalData={businesspersonalinfo} />
             </TabsContent>
             <TabsContent value="Professional-Info">
-              <ProfessionalInfo  professionalData={businessprofessionalinfo} />
+              <ProfessionalInfo professionalData={businessprofessionalinfo} />
             </TabsContent>
             <TabsContent value="ProjectList">
               <ProjectList id={id || ""} />
