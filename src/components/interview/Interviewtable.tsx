@@ -21,31 +21,15 @@ import { apiHelperService } from "@/services/interview";
 import { formatID } from "@/utils/common/enum";
 import CopyButton from "@/components/copybutton";
 import InterviewTableSkeleton from "@/utils/common/skeleton";
+import { apiHelperService as skillApiService } from "@/services/skill";
+import { apiHelperService as domainApiService } from "@/services/domain";
 
-// Assuming services for freelancers, skills, and domains exist
-import { apiHelperService as freelancerApiService } from "@/services/business";
-import { apiHelperService as skillApiService } from "@/services/skill"; // Path to your skill service
-import { apiHelperService as domainApiService } from "@/services/domain"; // Path to your domain service
-
-// Define the structure for freelancer personal info
 interface FreelancerPersonalInfo {
   _id: string;
-  name: string; // This will store the firstName
+  name: string;
 }
 
-// Define interfaces for Skill and Domain
-interface SkillData {
-  _id: string;
-  label: string;
-  description:string;
-}
-
-interface DomainData {
-  _id: string;
-  label: string;
-  description:string;
-}
-
+// Define the structure for interview data
 interface InterviewData {
   _id: string;
   interviewerId?: string;
@@ -79,7 +63,9 @@ interface InterviewData {
 
 const InterviewTable: React.FC = () => {
   const [interviewData, setInterviewData] = useState<InterviewData[]>([]);
-  const [freelancerDetails, setFreelancerDetails] = useState<Record<string, FreelancerPersonalInfo>>({});
+  const [freelancerDetails, setFreelancerDetails] = useState<
+    Record<string, FreelancerPersonalInfo>
+  >({});
   const [loading, setLoading] = useState(true);
   const [noData, setNoData] = useState(false);
   const { toast } = useToast();
@@ -87,44 +73,6 @@ const InterviewTable: React.FC = () => {
   const [openTalentDialog, setOpenTalentDialog] = useState(false);
   const [selectedTalentDetails, setSelectedTalentDetails] = useState<any | null>(null);
   const [selectedTalentType, setSelectedTalentType] = useState<"skill" | "domain" | null>(null);
-
-  /**
-   * Fetches personal details for a list of unique freelancer IDs.
-   * Stores them in a map where key is freelancer ID and value is their details.
-   * @param ids An array of freelancer IDs.
-   * @returns A promise that resolves to a map of freelancer IDs to their details.
-   */
-  const fetchFreelancerDetails = async (ids: string[]): Promise<Record<string, FreelancerPersonalInfo>> => {
-    const detailsMap: Record<string, FreelancerPersonalInfo> = {};
-    const uniqueIds = Array.from(new Set(ids.filter(Boolean)));
-
-    if (uniqueIds.length === 0) {
-      return detailsMap;
-    }
-
-    try {
-      const detailPromises = uniqueIds.map(async (id) => {
-        try {
-          const response = await freelancerApiService.getAllFreelancerPersonalInfo(id);
-          if (response?.data?.data?.firstName) {
-            detailsMap[id] = {
-              _id: id,
-              name: response.data.data.firstName,
-            };
-          } else {
-            detailsMap[id] = { _id: id, name: "Unknown Freelancer" };
-          }
-        } catch (innerError) {
-          console.error(`Failed to fetch freelancer details for ID ${id}:`, innerError);
-          detailsMap[id] = { _id: id, name: "Unknown Freelancer" };
-        }
-      });
-      await Promise.all(detailPromises);
-    } catch (error) {
-      console.error("Error fetching freelancer details:", error);
-    }
-    return detailsMap;
-  };
 
   /**
    * Fetches interview data and then enriches it with freelancer names.

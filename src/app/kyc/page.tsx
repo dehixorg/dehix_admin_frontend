@@ -1,20 +1,13 @@
 "use client";
 
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import DropdownProfile from "@/components/shared/DropdownProfile";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
   FilterDataType,
   Params as TableProps,
 } from "@/components/custom-table/FieldTypes";
-import { ChevronRight, CheckCircle, XCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { kycApiService } from "@/services/kyc";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
@@ -135,7 +128,7 @@ export default function KYCPage() {
       {
         textValue: "Actions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data, refetch }: { data: any; refetch?: () => void }) => {
+        CustomComponent: ({ data }: { data: any }) => {
           const role = data.role || "";
           const id = data._id;
           
@@ -217,33 +210,16 @@ export default function KYCPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="KYC"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="KYC"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard" },
-              { label: "KYC Requests", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5">
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="KYC"
+      breadcrumbItems={[
+        
+        { label: "KYC Requests", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="ml-5"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }
