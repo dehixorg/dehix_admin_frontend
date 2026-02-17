@@ -4,7 +4,9 @@ import Link from "next/link";
 import {
   Briefcase,
   DollarSign,
+  User,
   Info,
+  Calendar,
   PackageOpen,
   Fingerprint,
   CopyIcon,
@@ -98,7 +100,7 @@ type ProjectBidsProps = React.ComponentProps<typeof Card> & {
   id: string;
 };
 
-export function ProjectBids({ id }: ProjectBidsProps) {
+export function ProjectBids({ id, ...props }: ProjectBidsProps) {
   const [profilesWithBids, setProfilesWithBids] = useState<ProfileWithBid[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

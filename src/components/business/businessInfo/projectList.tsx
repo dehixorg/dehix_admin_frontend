@@ -17,8 +17,13 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ButtonIcon } from "@/components/ui/arrowButton";
 import { formatID, Messages, StatusEnum } from "@/utils/common/enum";
 import { Badge } from "@/components/ui/badge";

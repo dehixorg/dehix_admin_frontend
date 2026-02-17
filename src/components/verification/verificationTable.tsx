@@ -31,26 +31,14 @@ import { Badge } from "@/components/ui/badge";
 import {getStatusBadge} from "@/utils/common/utils"
 
 interface Verificationinfo {
-  _id?: string;
-  verifier_id: string;
-  verifier_username: string;
-  requester_id: string;
-  requester_username?: string;
-  document_id: string;
-  verification_status: string;
-  comment?: string;
-  verified_at?: string;
-  doc_type: string;
-  Requester?: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phone?: string;
-    role?: string;
-    userName?: string;
-    profilePic?: string;
-  };
-  result?: Record<string, unknown>;
+  verifier_id:string;
+  verifier_username:string;
+  requester_id:string;
+  document_id:string;
+  verification_status:string;
+  comment:string;
+  verified_at:string;
+  doc_type:string;
 }
 
 interface Props {
@@ -77,10 +65,9 @@ const Verification: React.FC <Props>= ({ Data }) => {
             <Table>
               <TableHeader>
               <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Requester</TableHead>
+                  <TableHead>Verifier ID</TableHead>
+                  <TableHead>Verifier Username</TableHead>
                   <TableHead>Requester ID</TableHead>
-                  <TableHead>Verifier</TableHead>
                   <TableHead>Document ID</TableHead>
                   <TableHead>Verified At</TableHead>
                   <TableHead>Status</TableHead>
@@ -89,27 +76,37 @@ const Verification: React.FC <Props>= ({ Data }) => {
               <TableBody>
                 { Data.length > 0 ? (
                   Data.map((user) => (
-                    <TableRow key={user._id ?? user.document_id}>
+                    <TableRow key={user.document_id}>
                       <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {(user.doc_type || "N/A").toUpperCase()}
-                          </span>
+                      {user.verifier_id ? (
+                        <div className="flex items-center space-x-2">
+                          <Tooltip>
+                            <TooltipTrigger>
+                            <span
+                                  onClick={() => router.push(`/freelancer/tabs?id=${user.verifier_id}`)}
+                                  className="cursor-pointer text-blue-500 hover:underline"
+                                >
+                                  <span>{formatID(user.verifier_id || "")}</span>
+                                </span>
+                            </TooltipTrigger>
+
+                            <CopyButton id={user.verifier_id} />
+
+                            <TooltipContent>
+                              {user.verifier_id || "No Data Available"}
+                            </TooltipContent>
+                          </Tooltip>
                         </div>
+                         ) : (
+                            "No Data Available"
+                          )}
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium">
-                            {user.Requester?.firstName || user.Requester?.lastName
-                              ? `${user.Requester?.firstName ?? ""} ${user.Requester?.lastName ?? ""}`.trim()
-                              : (user.requester_username ?? "No Data Available")}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {user.Requester?.email ?? ""}
-                          </span>
+                        <div className="flex items-center space-x-2">
+                        { user.verifier_username?user.verifier_username:"No Data Available"}
                         </div>
-                      </TableCell>
-                      <TableCell>
+                        </TableCell>
+                        <TableCell>
                       {user.requester_id ? (
                         <div className="flex items-center space-x-2">
                           <Tooltip>
@@ -132,12 +129,6 @@ const Verification: React.FC <Props>= ({ Data }) => {
                          ) : (
                             "No Data Available"
                           )}
-                      </TableCell>
-
-                      <TableCell>
-                        <div className="flex items-center space-x-2">
-                          {user.verifier_username ? user.verifier_username : "No Data Available"}
-                        </div>
                       </TableCell>
                     
                       <TableCell>
@@ -173,7 +164,7 @@ const Verification: React.FC <Props>= ({ Data }) => {
                     </Badge>)
                     :("N/A")}
                     </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell>
                         <Dialog>
                           <DialogTrigger asChild>
                             <ButtonIcon />
@@ -197,7 +188,7 @@ const Verification: React.FC <Props>= ({ Data }) => {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center">
+                    <TableCell colSpan={6} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen
                           className="mx-auto text-gray-500"

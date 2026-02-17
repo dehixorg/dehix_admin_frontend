@@ -86,7 +86,7 @@ export const SearchComponent = ({
       </form>
 
       {isDropdownOpen && filteredOptions.length > 0 && (
-        <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mb-1 bottom-full bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
           {filteredOptions.map((option) => (
             <div
               key={option.value}

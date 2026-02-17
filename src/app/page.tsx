@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ThemeToggle } from "@/components/shared/themeToggle";
-import PublicLayout from "@/components/layouts/PublicLayout";
 
 const leftNavItems = [
   { label: "Home", link: "/" },
@@ -31,7 +30,7 @@ const HomePage = () => {
   }, [router]);
 
   return (
-    <PublicLayout>
+    <>
       <div className="fixed right-10 bottom-10">
         <ThemeToggle />
       </div>
@@ -251,7 +250,7 @@ const HomePage = () => {
           </div>
         </section>
       </div>
-    </PublicLayout>
+    </>
   );
 };
 

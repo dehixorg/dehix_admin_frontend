@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { axiosInstance } from "@/lib/axiosinstance";
@@ -28,8 +28,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 import { BadgeImageUpload } from "./BadgeImageUpload";
-
-
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
