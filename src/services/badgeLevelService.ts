@@ -15,14 +15,6 @@ export interface BadgeLevelImageUploadResponse {
   status?: number;
 }
 
-interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  message?: string;
-  error?: string;
-  status?: number;
-}
-
 export const badgeLevelService = {
   /**
    * Uploads a badge or level image to the server

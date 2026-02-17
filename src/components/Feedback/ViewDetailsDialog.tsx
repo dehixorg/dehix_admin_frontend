@@ -25,12 +25,12 @@ import { apiHelperService } from "@/services/admin";
 
 interface ViewDetailsDialogProps {
   campaignId: string;
-  campaignData: any;
+  campaignData?: any;
 }
 
 export default function ViewDetailsDialog({
   campaignId,
-  campaignData,
+  campaignData: _campaignData,
 }: ViewDetailsDialogProps) {
   const [open, setOpen] = useState(false);
   const [campaign, setCampaign] = useState<any>(null);

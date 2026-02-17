@@ -61,3 +61,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.card {
+  @apply bg-muted-foreground/20 dark:bg-muted/20;
+}
+
+.bg-gradient {
+  @apply bg-gradient-to-bl from-background/0 via-primary/5 to-primary/20;
+}

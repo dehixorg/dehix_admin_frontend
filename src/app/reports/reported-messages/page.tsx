@@ -2,10 +2,7 @@
 
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import DropdownProfile from "@/components/shared/DropdownProfile";
-import Breadcrumb from "@/components/shared/breadcrumbList";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { v4 as uuidv4 } from "uuid";
@@ -17,10 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  menuItemsTop,
-  menuItemsBottom,
-} from "@/config/menuItems/admin/dashboardMenuItems";
 import { LoaderCircle } from "lucide-react";
 import { apiHelperService } from "@/services/report";
 
@@ -213,33 +206,16 @@ function ReportedMessagesContent() {
     return <div className="p-10 text-center">Report not found.</div>;
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40 dark:bg-zinc-950">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Reports"
-      />
-
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background dark:bg-zinc-950 px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Reports"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard" },
-              { label: "Reports", link: "/reports" },
-              { label: `#${message._id?.slice(-6) ?? "N/A"}`, link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-
-        <main className="p-6 space-y-6">
+    <AdminDashboardLayout
+      active="Reports"
+      breadcrumbItems={[
+        
+        { label: "Reports", link: "/reports" },
+        { label: `#${message._id?.slice(-6) ?? "N/A"}`, link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="p-6 space-y-6"
+    >
           <h1 className="text-2xl font-semibold dark:text-gray-100">
             Report Details{" "}
             <span className="text-sm font-normal text-muted-foreground">
@@ -446,9 +422,7 @@ function ReportedMessagesContent() {
               </div>
             </div>
           </section>
-        </main>
-      </div>
-    </div>
+    </AdminDashboardLayout>
   );
 }
 

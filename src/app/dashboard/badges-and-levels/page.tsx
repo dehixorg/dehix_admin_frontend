@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -27,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { BadgeLevelDetails } from "@/components/BadgesLevels/BadgeLevelDetails";
 import EditBadgeLevel from "@/components/BadgesLevels/editBadgeLevel";
 import DeleteBadgeLevel from "@/components/BadgesLevels/deleteBadgeLevel";
-import { axiosInstance } from "@/lib/axiosinstance";
 
 export default function BadgesAndLevels() {
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -38,18 +30,6 @@ export default function BadgesAndLevels() {
 
   const handleRefetch = () => {
     setTableKey((prev) => prev + 1);
-  };
-
-  const fetchRowData = async (id: string) => {
-    try {
-      const response = await axiosInstance.get(
-        `/admin/gamification/levelsandbadges/${id}`
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching row data:", error);
-      return null;
-    }
   };
 
   const customTableProps: TableProps = {
@@ -107,11 +87,11 @@ export default function BadgesAndLevels() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ id, data, refetch }: any) => {
+        CustomComponent: ({ data }: any) => {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button type="button" variant="ghost" size="icon">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -176,33 +156,16 @@ export default function BadgesAndLevels() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Badges & Levels"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Badges & Levels"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/badges-and-levels" },
-              { label: "Badges & Levels", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5 mr-3">
-          <CustomTable key={tableKey} {...customTableProps} />
-        </main>
-      </div>
+    <AdminDashboardLayout
+      active="Badges & Levels"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/dashboard/badges-and-levels" },
+        { label: "Badges & Levels", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="ml-5 mr-3"
+    >
+      <CustomTable key={tableKey} {...customTableProps} />
 
       {/* Dialogs controlled by state */}
       {selectedRow && (
@@ -228,6 +191,6 @@ export default function BadgesAndLevels() {
           />
         </>
       )}
-    </div>
+    </AdminDashboardLayout>
   );
 }
