@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Archive, Pin, Trash2, Save, X } from "lucide-react";
+import { Archive, Trash2, Save, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import BannerChangerPopover from "./BannerChangerPopUp";

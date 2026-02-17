@@ -4,9 +4,7 @@ import Link from "next/link";
 import {
   Briefcase,
   DollarSign,
-  User,
   Info,
-  Calendar,
   PackageOpen,
   Fingerprint,
   CopyIcon,

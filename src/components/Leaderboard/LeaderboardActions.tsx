@@ -12,7 +12,6 @@ import {
   MoreVertical,
   Info,
   Calculator,
-  Gift,
   Edit,
   Archive,
 } from "lucide-react";

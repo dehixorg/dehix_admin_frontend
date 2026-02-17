@@ -1,5 +1,5 @@
 "use client";
-import { Search, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";

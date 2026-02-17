@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { PackageOpen } from "lucide-react";
 
-import { DeleteButtonIcon } from "../ui/deleteButton";
 import { useToast } from "@/components/ui/use-toast";
 import AddDomain from "@/components/Domain/addDomain";
 import { Card } from "@/components/ui/card";
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/table";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,

@@ -8,10 +8,9 @@ import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import PersonalInfo from "@/components/business/businessInfo/personalInfo";
 import ProfessionalInfo from "@/components/business/businessInfo/professionalInfo";
 import ProjectList from "@/components/business/businessInfo/projectList";
-import Appliedcandidates from "@/components/business/businessInfo/appliedCandidates";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 import { apiHelperService } from "@/services/business";
-import { Messages, StatusEnum, statusType } from "@/utils/common/enum";
+import { Messages, StatusEnum } from "@/utils/common/enum";
 
 interface Personalinfo {
   name: string; // Combined first and last name

@@ -7,7 +7,7 @@ import {
   FilterDataType,
   Params as TableProps,
 } from "@/components/custom-table/FieldTypes";
-import { ChevronRight, CheckCircle, XCircle, Clock } from "lucide-react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { kycApiService } from "@/services/kyc";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";

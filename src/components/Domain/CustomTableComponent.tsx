@@ -3,9 +3,7 @@ import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
 import EditDomainDescription from "./editDomaindesc";
-import { apiHelperService } from "@/services/domain";
 import { useToast } from "../ui/use-toast";
-import { Messages } from "@/utils/common/enum";
 
 export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps) => {
     const { toast } = useToast();

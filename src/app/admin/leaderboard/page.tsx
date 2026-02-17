@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType } from "@/components/custom-table/FieldTypes";
