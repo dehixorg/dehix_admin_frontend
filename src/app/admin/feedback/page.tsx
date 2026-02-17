@@ -49,9 +49,11 @@ export default function FeedbackPage() {
         wordsCnt: 20,
       },
       {
+        fieldName: "targetAudience",
         textValue: "Target Audience",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data }: CustomComponentProps) => {
+          if (!data) return <span>-</span>;
           const userType = data.targetAudience?.userType ?? "N/A";
           const colors: Record<string, string> = {
             FREELANCER: "bg-blue-100 text-blue-800",
@@ -62,9 +64,11 @@ export default function FeedbackPage() {
         },
       },
       {
+        fieldName: "status",
         textValue: "Status",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data }: CustomComponentProps) => {
+          if (!data) return <span>-</span>;
           if (data.isArchived) {
             return <Badge variant="destructive">Archived</Badge>;
           }
@@ -76,13 +80,16 @@ export default function FeedbackPage() {
         },
       },
       {
+        fieldName: "questions",
         textValue: "Questions",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data }: CustomComponentProps) => {
+          if (!data) return <span>0</span>;
           return <span>{data.questions?.length || 0}</span>;
         },
       },
       {
+        fieldName: "submissions",
         textValue: "Submissions",
         type: FieldType.CUSTOM,
         CustomComponent: ({ id }: CustomComponentProps) => {
@@ -90,6 +97,7 @@ export default function FeedbackPage() {
         },
       },
       {
+        fieldName: "actions",
         textValue: "Actions",
         type: FieldType.CUSTOM,
         CustomComponent: ({ data, id, refetch }: CustomComponentProps) => {
