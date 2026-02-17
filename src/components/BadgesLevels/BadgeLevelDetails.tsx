@@ -6,7 +6,7 @@ import EditBadgeLevel from "./editBadgeLevel";
 import DeleteBadgeLevel from "./deleteBadgeLevel";
 
 export const BadgeLevelDetails = ({
-  id,
+  id: _id,
   data,
   refetch,
   open,

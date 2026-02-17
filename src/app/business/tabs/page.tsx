@@ -10,7 +10,7 @@ import ProfessionalInfo from "@/components/business/businessInfo/professionalInf
 import ProjectList from "@/components/business/businessInfo/projectList";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 import { apiHelperService } from "@/services/business";
-import { Messages, StatusEnum } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
 
 interface Personalinfo {
   name: string; // Combined first and last name
@@ -26,19 +26,11 @@ interface Professionalinfo {
   personalWebsite: string;
   isVerified: string;
 }
-interface HireFreelancerinfo {
-  freelancer: string;
-  status: StatusEnum;
-  _id: string;
-}
 const BusinessTabs = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id")||"";
   const [businessprofessionalinfo, setBusinessprofessionalinfo] = useState<Professionalinfo | null>(null);
   const [businesspersonalinfo, setBusinesspersonalinfo] = useState<Personalinfo | null>(null);
-  const [hirefreelancerinfo, sethirefreelancerinfo] = useState<HireFreelancerinfo[] | null>(null);
-  const [appliedcandidateinfo, setappliedcandidateinfo] = useState<string[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -65,17 +57,12 @@ const BusinessTabs = () => {
         };
 
         setBusinessprofessionalinfo(professionalInfo);
-
-        setappliedcandidateinfo(data.Appliedcandidates || []);
-        sethirefreelancerinfo(data.hirefreelancer || []);
       } catch (error) {
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR("business"),
           variant: "destructive", // Red error message
         });
-      } finally {
-        setLoading(false);
       }
     };
 

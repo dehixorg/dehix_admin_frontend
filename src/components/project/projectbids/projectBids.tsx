@@ -98,7 +98,7 @@ type ProjectBidsProps = React.ComponentProps<typeof Card> & {
   id: string;
 };
 
-export function ProjectBids({ id, ...props }: ProjectBidsProps) {
+export function ProjectBids({ id }: ProjectBidsProps) {
   const [profilesWithBids, setProfilesWithBids] = useState<ProfileWithBid[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

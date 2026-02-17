@@ -403,7 +403,7 @@ export const CustomTable = ({
             <Table>
               <TableHeader>
                 <TableRow>
-                  {fields.map((field, index) => (
+                  {fields.map((field) => (
                     <TableHead key={field.fieldName}>
                       {field.tooltip ? (
                         <ToolTip
@@ -422,7 +422,7 @@ export const CustomTable = ({
                   <>
                     {[...Array(10)].map((_, i) => (
                       <TableRow key={i}>
-                        {fields.map((field, index) => (
+                        {fields.map((field) => (
                           <TableCell key={field.fieldName}>
                             <Skeleton className="h-5 w-20" />
                           </TableCell>
@@ -431,7 +431,7 @@ export const CustomTable = ({
                     ))}
                   </>
                 ) : filteredData?.length > 0 ? (
-                  filteredData.map((elem: any, index: number) => (
+                  filteredData.map((elem: any) => (
                     <TableRow key={elem._id}>
                       {fields.map((field, index) => (
                         <TableCell

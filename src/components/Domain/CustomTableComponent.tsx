@@ -3,10 +3,8 @@ import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
 import EditDomainDescription from "./editDomaindesc";
-import { useToast } from "../ui/use-toast";
 
-export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps) => {
-    const { toast } = useToast();
+export const CustomTableComponent = ({ id: _id, data, refetch }: CustomComponentProps) => {
 
     const [isEditDialogOpen, setIsEditDialogOpen] =
       useState(false);

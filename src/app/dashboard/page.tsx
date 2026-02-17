@@ -12,7 +12,6 @@ import {
   CircleDollarSign,
   FolderKanban,
 } from "lucide-react";
-import { useSelector } from "react-redux";
 
 import CustomCard from "@/components/newcomp-test/act-proj/active-card";
 import CardWithForm from "@/components/newcomp-test/pen-proj/pending-card";
@@ -50,12 +49,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RootState } from "@/lib/store";
 import FreelancerDashboardLayout from "@/components/layouts/FreelancerDashboardLayout";
 import dummyData from "@/dummydata.json";
 
 export default function Dashboard() {
-  const user = useSelector((state: RootState) => state.user);
   return (
     <FreelancerDashboardLayout
       active="Dashboard"

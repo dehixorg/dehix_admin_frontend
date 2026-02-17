@@ -40,7 +40,7 @@ export default function DetailForm() {
     },
   });
 
-  const handleSubmit = (values: FormSchema) => {
+  const handleSubmit = (_values: FormSchema) => {
   };
 
   return (

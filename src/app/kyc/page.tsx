@@ -128,7 +128,7 @@ export default function KYCPage() {
       {
         textValue: "Actions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data, refetch }: { data: any; refetch?: () => void }) => {
+        CustomComponent: ({ data }: { data: any }) => {
           const role = data.role || "";
           const id = data._id;
           

@@ -9,7 +9,7 @@ export default function ReportPage() {
   const reportedId = searchParams.get("id") || "";
   const reportType = searchParams.get("role") || "user";
 
-  const reportData = {
+  const _reportData = {
     subject: "", // will be filled in the form
     description: "", // will be filled in the form
     report_type: reportType,

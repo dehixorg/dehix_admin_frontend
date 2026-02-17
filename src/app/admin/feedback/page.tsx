@@ -85,7 +85,7 @@ export default function FeedbackPage() {
       {
         textValue: "Submissions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data, id }: CustomComponentProps) => {
+        CustomComponent: ({ id }: CustomComponentProps) => {
           return <ViewSubmissions campaignId={id} />;
         },
       },

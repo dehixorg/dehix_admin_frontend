@@ -30,7 +30,7 @@ const Page = () => {
     fetchNotes();
   }, [userId, fetchNotes]);
 
-  const handleCreateNote = async (note: Partial<Note>) => {
+  const _handleCreateNote = async (note: Partial<Note>) => {
     if (!note.title || !note.content || !userId) {
       toast({
         title: 'Error',

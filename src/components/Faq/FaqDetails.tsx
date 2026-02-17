@@ -1,7 +1,7 @@
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 
-export const FaqDetails = ({ id, data }: CustomComponentProps) => {
+export const FaqDetails = ({ id: _id, data }: CustomComponentProps) => {
   return (
     <CustomDialog
       title={"Faq Details"}

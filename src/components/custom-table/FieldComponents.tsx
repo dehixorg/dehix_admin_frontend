@@ -112,7 +112,7 @@ const ActionField = ({
   refetch,
 }: FieldComponentProps<Actions>) => {
   if (fieldData.actions?.options && fieldData.actions.options.length === 1) {
-    const { actionIcon, actionName, type, handler, href, className } = fieldData.actions.options[0];
+    const { type, handler, href, className } = fieldData.actions.options[0];
     
     if (type === "Button") {
       return (

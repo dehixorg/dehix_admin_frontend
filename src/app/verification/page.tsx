@@ -38,7 +38,7 @@ const BusinessTabs = () => {
   const [education,seteducation] = useState<Verificationinfo[] | null>(null);
   const [business,setbusiness] = useState<Verificationinfo[]| null>(null);
   const [other, setother] = useState<Verificationinfo[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [_loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
   useEffect(() => {

@@ -57,27 +57,6 @@ export default function LeaderboardActions({
     }
   };
 
-  const handleDistribute = async () => {
-    try {
-      setLoading(true);
-      await apiHelperService.distributeRewards(id);
-      toast({
-        title: "Success",
-        description: "Rewards distributed successfully",
-      });
-      refetch();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description:
-          error?.response?.data?.message || "Failed to distribute rewards",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleArchive = async () => {
     try {
       setLoading(true);

@@ -77,18 +77,6 @@ const DomainTable: React.FC = () => {
     fetchDomainData();
   }, [fetchDomainData]);
 
-  const handleDelete = async (domainId: string) => {
-    try {
-      await apiHelperService.deleteDomain(domainId);
-      fetchDomainData();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: Messages.DELETE_ERROR("domain"),
-        variant: "destructive",
-      });
-    }
-  };
   const handleDescButtonClick = (index: number) => {
     setSelectedIndex(index);
     setIsDialogOpen(true);

@@ -186,7 +186,7 @@ export const FilterTable = ({
                             checked={selectedFilters
                               .find(({ fieldName }) => fieldName === filter.name)!
                               .value.includes(opt.value)}
-                            onClick={(e) => {
+                            onClick={(_e) => {
                               const newSelectedFilters = selectedFilters.map(
                                 (filterVal) => {
                                   if (filterVal.fieldName === filter.name) {

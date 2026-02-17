@@ -17,18 +17,6 @@ import { ProjectDomainDetail } from "@/components/ProjectDomain/ProjectDomainDet
 export default function Talent() {
   const { toast } = useToast();
 
-  const handleDelete = async (domainId: string) => {
-    try {
-      await apiHelperService.deleteProjectdomain(domainId);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: Messages.DELETE_ERROR("domain"),
-        variant: "destructive", // Red error message
-      });
-    }
-  };
-
   const customTableProps: TableProps = {
     api: "/projectdomain/admin",
     uniqueId: "_id",
