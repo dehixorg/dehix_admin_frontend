@@ -152,7 +152,26 @@ const BusinessTabs = () => {
               <PersonalInfo personalData={businesspersonalinfo} />
             </TabsContent>
             <TabsContent value="Professional-Info">
-              <ProfessionalInfo professionalData={businessprofessionalinfo} />
+              <ProfessionalInfo
+                professionalData={businessprofessionalinfo}
+                businessId={id}
+                onUpdateSuccess={async () => {
+                  try {
+                    const response = await apiHelperService.getAllBusinessPersonalInfo(id);
+                    const data = response.data;
+                    const professionalInfo: Professionalinfo = {
+                      companyName: data.companyName || "Not Provided",
+                      companySize: data.companySize || "Not Provided",
+                      linkedIn: data.linkedIn || "Not Provided",
+                      personalWebsite: data.personalWebsite || "Not Provided",
+                      isVerified: data.isVerified ? "Yes" : "No",
+                    };
+                    setBusinessprofessionalinfo(professionalInfo);
+                  } catch (error) {
+                    console.error("Failed to refetch business data", error);
+                  }
+                }}
+              />
             </TabsContent>
             <TabsContent value="ProjectList">
               <ProjectList id={id || ""} />

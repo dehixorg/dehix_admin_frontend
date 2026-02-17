@@ -1,8 +1,8 @@
 "use client";
 
-import { PackageOpen, Shield, ShieldOff, Globe, Users, Link } from "lucide-react"; // Added icons for better representation
-
+import { PackageOpen, Shield, ShieldOff, Globe, Users, Link } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ChangeVerificationStatus from "../ChangeVerificationStatus";
 
 
 interface ProfessionalData {
@@ -13,11 +13,17 @@ interface ProfessionalData {
   isVerified: string;
 }
 
+interface BusinessProfessionalInfoProps {
+  professionalData: ProfessionalData | null;
+  businessId?: string;
+  onUpdateSuccess?: () => void;
+}
+
 function BusinessProfessionalInfo({
   professionalData,
-}: {
-  professionalData: ProfessionalData | null;
-}) {
+  businessId,
+  onUpdateSuccess,
+}: BusinessProfessionalInfoProps) {
   const business = professionalData;
 
   if (!business) {
@@ -100,24 +106,32 @@ function BusinessProfessionalInfo({
               </div>
             </div>
 
-            <div className="flex items-center space-x-3">
-              <Shield
-                className={`${business.isVerified === "Yes" ? "text-green-500" : "text-red-500"
-                  }`}
-                size={20}
+            {businessId ? (
+              <ChangeVerificationStatus
+                businessId={businessId}
+                currentStatus={business.isVerified}
+                onUpdateSuccess={onUpdateSuccess}
               />
-              <div>
-                <p className="text-sm font-medium">Verified Status</p>
-                <span
-                  className={`inline-block mt-1 ${business.isVerified === "Yes"
-                    ? "bg-green-500/20 text-green-700 dark:text-green-400"
-                    : "bg-red-500/20 text-red-700 dark:text-red-400"
-                    } rounded-full px-3 py-1 text-xs font-medium`}
-                >
-                  {business.isVerified === "Yes" ? "Verified" : "Not Verified"}
-                </span>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <Shield
+                  className={`${business.isVerified === "Yes" ? "text-green-500" : "text-red-500"
+                    }`}
+                  size={20}
+                />
+                <div>
+                  <p className="text-sm font-medium">Verified Status</p>
+                  <span
+                    className={`inline-block mt-1 ${business.isVerified === "Yes"
+                      ? "bg-green-500/20 text-green-700 dark:text-green-400"
+                      : "bg-red-500/20 text-red-700 dark:text-red-400"
+                      } rounded-full px-3 py-1 text-xs font-medium`}
+                  >
+                    {business.isVerified === "Yes" ? "Verified" : "Not Verified"}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </CardContent>

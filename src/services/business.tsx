@@ -37,9 +37,10 @@ export const apiHelperService = {
   },
   updateUserStatus: async (Id: string, status: string) => {
     return apiService({
-      method: Api_Methods.PUT,
-      endpoint: `/business/${Id}`,
+      method: Api_Methods.PATCH,
+      endpoint: `/business/status`,
       body: {
+        business_id: Id,
         status,
       },
     });
