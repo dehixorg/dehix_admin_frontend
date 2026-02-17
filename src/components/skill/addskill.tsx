@@ -39,6 +39,11 @@ interface SkillData {
   status?: string;
 }
 
+interface AddSkillProps {
+  onAddSkill: () => void; // Prop to pass the new Skill
+  skillData: SkillData[];
+}
+
 // Zod schema for form validation
 const SkillSchema = z.object({
   label: z.string().nonempty("Please enter a Skill name"),
@@ -48,6 +53,8 @@ const SkillSchema = z.object({
 
 const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   // Use Skill type here
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
@@ -152,6 +159,12 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
               )}
             />
           </div>
+          {errorMessage && (
+            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
+          )}
+          {successMessage && (
+            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
+          )}
           <DialogFooter>
             <Button type="submit">Save</Button>
           </DialogFooter>

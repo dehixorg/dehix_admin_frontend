@@ -161,7 +161,7 @@ export const AddProject: React.FC<AddProjectProps> = ({ onFormSubmit }) => {
         .map((tech) => tech.trim())
         .filter((tech) => tech !== "");
 
-      const _response = await axiosInstance.post(
+      const response = await axiosInstance.post(
         `/freelancer/${user.uid}/project`,
         {
           ...data,

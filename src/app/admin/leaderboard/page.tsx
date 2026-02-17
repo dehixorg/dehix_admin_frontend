@@ -1,6 +1,14 @@
 "use client";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import { useState } from "react";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import {
+  menuItemsTop,
+  menuItemsBottom,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType } from "@/components/custom-table/FieldTypes";
 import CreateLeaderboardDialog from "@/components/Leaderboard/CreateLeaderboardDialog";
@@ -94,25 +102,48 @@ export default function LeaderboardPage() {
   ];
 
   return (
-    <AdminDashboardLayout
-      active="Leaderboard"
-      breadcrumbItems={[
-        
-        { label: "Leaderboard", link: "/admin/leaderboard" },
-      ]}
-      showSearch={false}
-      mainClassName="ml-5 mr-3"
-    >
-      <CustomTable
-        api="/admin/leaderboard/get-all"
-        uniqueId="_id"
-        title="Leaderboard Contests"
-        fields={fields}
-        isDownload={true}
-        searchColumn={["name", "frequency", "status"]}
-        tableHeaderActions={[CreateLeaderboardDialog]}
-        emptyStateAction={CreateLeaderboardDialog}
+    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <SidebarMenu
+        menuItemsTop={menuItemsTop}
+        menuItemsBottom={menuItemsBottom}
+        active="Leaderboard"
       />
-    </AdminDashboardLayout>
+      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+          <CollapsibleSidebarMenu
+            menuItemsTop={menuItemsTop}
+            menuItemsBottom={menuItemsBottom}
+            active="Leaderboard"
+          />
+          <Breadcrumb
+            items={[
+              {
+                label: "Dashboard",
+                link: "/dashboard",
+              },
+              {
+                label: "Leaderboard",
+                link: "/admin/leaderboard",
+              },
+            ]}
+          />
+          <div className="ml-auto">
+            <DropdownProfile />
+          </div>
+        </header>
+        <main className="ml-5 mr-3">
+          <CustomTable
+            api="/admin/leaderboard/get-all"
+            uniqueId="_id"
+            title="Leaderboard Contests"
+            fields={fields}
+            isDownload={true}
+            searchColumn={["name", "frequency", "status"]}
+            tableHeaderActions={[CreateLeaderboardDialog]}
+            emptyStateAction={CreateLeaderboardDialog}
+          />
+        </main>
+      </div>
+    </div>
   );
 }

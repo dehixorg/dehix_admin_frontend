@@ -43,7 +43,7 @@ type ProjectCardProps = React.ComponentProps<typeof Card> & {
   id: string;
 };
 
-export function ProjectCard({ id }: ProjectCardProps) {
+export function ProjectCard({ id, ...props }: ProjectCardProps) {
   const [projectInfo, setProjectInfo] = useState<DehixProjectInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

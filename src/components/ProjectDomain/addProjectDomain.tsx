@@ -58,6 +58,7 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
   const {
     control,
     handleSubmit,
+    formState: { errors },
     reset,
   } = useForm<DomainData>({
     resolver: zodResolver(domainSchema),

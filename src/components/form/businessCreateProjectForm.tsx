@@ -172,7 +172,7 @@ export function CreateProjectBusinessForm() {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      const _response = await apiHelperService.createProject(user.uid, {
+      const response = await apiHelperService.createProject(user.uid, {
         ...data,
         role: "",
         projectType: "",

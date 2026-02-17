@@ -63,14 +63,19 @@ const fetchProfile = async (id: string) => {
 interface PersonalInfoProps {
   id?: string;
   /** Profile passed down from parent */
-}
+  
 
+}
+let origprofile;
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
   /* one set for the PARENT profile… */
   const [parentProfile, setParentProfile] = useState<any>(null);
-
-  const [parentDomain] = useState<any[]>([]);
-  const [parentConsultant] = useState<any[]>([]);
+ 
+  const [parentProjects, setParentProjects] = useState<any[]>([]);
+  const [parentProfessional, setParentProfessional] = useState<any[]>([]);
+  const [parentSkills, setParentSkills] = useState<any[]>([]);
+  const [parentDomain, setParentDomain] = useState<any[]>([]);
+  const [parentConsultant, setParentConsultant] = useState<any[]>([]);
 
   /* …and one set for the API profile */
   const [apiProfile, setApiProfile] = useState<any>(null);
