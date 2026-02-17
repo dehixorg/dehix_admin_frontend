@@ -5,28 +5,18 @@ import {
   Copy,
   CreditCard,
   File,
-  Home,
-  LineChart,
   ListFilter,
   MoreVertical,
-  Package,
-  Search,
-  Settings,
   Truck,
-  Users2,
   Activity,
   CircleDollarSign,
   FolderKanban,
-  Sparkles,
-  Boxes,
-  
 } from "lucide-react";
 import { useSelector } from "react-redux";
 
 import CustomCard from "@/components/newcomp-test/act-proj/active-card";
 import CardWithForm from "@/components/newcomp-test/pen-proj/pending-card";
 import { Badge } from "@/components/ui/badge";
-import Breadcrumb from "@/components/shared/breadcrumbList";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -45,7 +35,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Pagination,
   PaginationContent,
@@ -62,87 +51,21 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RootState } from "@/lib/store";
-import SidebarMenu, { MenuItem } from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import FreelancerDashboardLayout from "@/components/layouts/FreelancerDashboardLayout";
 import dummyData from "@/dummydata.json";
 
 export default function Dashboard() {
   const user = useSelector((state: RootState) => state.user);
-  const menuItemsTop: MenuItem[] = [
-    {
-      href: "#",
-      icon: <Boxes className="h-4 w-4 transition-all group-hover:scale-110" />,
-      label: "Dehix",
-    },
-    {
-      href: "#",
-      icon: <Home className="h-5 w-5" />,
-      label: "Dashboard",
-    },
-    {
-      href: "#",
-      icon: <Package className="h-5 w-5" />,
-      label: "Projects",
-    },
-    {
-      href: "#",
-      icon: <Users2 className="h-5 w-5" />,
-      label: "Customers",
-    },
-    {
-      href: "#",
-      icon: <LineChart className="h-5 w-5" />,
-      label: "Analytics",
-    },
-    {
-      href: "/dashboard/talent",
-      icon: <Sparkles className="h-5 w-5" />,
-      label: "Talent",
-    },
-  ];
-
-  const menuItemsBottom: MenuItem[] = [
-    {
-      href: "/settings/personal-info",
-      icon: <Settings className="h-5 w-5" />,
-      label: "Settings",
-    },
-  ];
-
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Dashboard"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Dashboard"
-          />
-
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/freelancer" },
-              { label: "Orders", link: "/dashboard/freelancer" },
-              { label: "Recent Orders", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownProfile />
-        </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
+    <FreelancerDashboardLayout
+      active="Dashboard"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/dashboard/freelancer" },
+        { label: "Orders", link: "/dashboard/freelancer" },
+        { label: "Recent Orders", link: "#" },
+      ]}
+      mainClassName="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3"
+    >
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 min-w-2">
             <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 pt-2 pb-2 ml-1 md:gap-4">
               <div className="col-span-1 pb-1.2">
@@ -611,8 +534,6 @@ export default function Dashboard() {
               </CardFooter>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+    </FreelancerDashboardLayout>
   );
 }
