@@ -100,7 +100,7 @@ export const AddEducation: React.FC<AddEducationProps> = ({ onFormSubmit }) => {
         verificationUpdateTime: data.verificationUpdateTime || new Date(),
         comments: "",
       };
-      const response = await axiosInstance.post(
+      const _response = await axiosInstance.post(
         `/freelancer/${user.uid}/education`,
         formattedData,
       );
