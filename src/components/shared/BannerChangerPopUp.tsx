@@ -8,7 +8,7 @@ interface BannerChangerPopoverProps {
   onBannerChange: (banner: string) => void;
 }
 
-const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ noteId, onBannerChange }) => {
+const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ noteId: _noteId, onBannerChange }) => {
   const banners = [
     '/banner1.svg',
     '/banner2.svg',

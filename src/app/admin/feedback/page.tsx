@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   CustomComponentProps,
@@ -92,7 +85,7 @@ export default function FeedbackPage() {
       {
         textValue: "Submissions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data, id }: CustomComponentProps) => {
+        CustomComponent: ({ id }: CustomComponentProps) => {
           return <ViewSubmissions campaignId={id} />;
         },
       },

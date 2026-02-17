@@ -36,7 +36,7 @@ export default function LeaderboardDetailsDialog({
   leaderboardId,
   open,
   onOpenChange,
-  refetch,
+  refetch: _refetch,
 }: LeaderboardDetailsDialogProps) {
   const [loading, setLoading] = useState(true);
   const [leaderboard, setLeaderboard] = useState<any>(null);

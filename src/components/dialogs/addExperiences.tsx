@@ -100,7 +100,7 @@ export const AddExperience: React.FC<AddExperienceProps> = ({
 
   async function onSubmit(data: ExperienceFormValues) {
     try {
-      const response = await axiosInstance.post(
+      const _response = await axiosInstance.post(
         `/freelancer/${user.uid}/experience`,
         {
           company: data.company || "",

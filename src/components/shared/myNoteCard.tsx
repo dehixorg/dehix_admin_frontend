@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Archive, Pin, Trash2, Save, X } from "lucide-react";
+import { Archive, Trash2, Save, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import BannerChangerPopover from "./BannerChangerPopUp";
@@ -35,18 +35,18 @@ interface NoteCardProps {
 
 const MyNoteCard = ({
   note,
-  notes,
-  setNotes,
+  notes: _notes,
+  setNotes: _setNotes,
   onDragStart,
   onDragOver,
   onDrop,
-  isTrash,
-  isArchive,
+  isTrash: _isTrash,
+  isArchive: _isArchive,
   onEditNote,
   onUpdateNoteType,
   onDeleteClick,
   onChangeBanner,
-  navItems,
+  navItems: _navItems,
   onTouchStart,
   onTouchMove,
   onTouchEnd,
@@ -65,7 +65,7 @@ const MyNoteCard = ({
   }, [note]);
 
   // When user clicks the card (not controls) open & edit inline
-  const handleCardClick = (e?: React.MouseEvent) => {
+  const handleCardClick = () => {
     // If we're already editing, do nothing
     if (isEditing) return;
     setIsExpanded(true);

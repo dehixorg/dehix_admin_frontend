@@ -24,6 +24,8 @@ import { TableSelect } from "./TableSelect";
 import { twMerge } from "tailwind-merge";
 import { useToast } from "../ui/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 
 export const CustomTable = ({
   title,
@@ -61,6 +63,7 @@ export const CustomTable = ({
   const [limit, setLimit] = useState<number>(20);
 
   const { toast } = useToast();
+  const isBadgeTable = (title || "").toLowerCase().includes("badge");
 
   // Function to sort search results by relevance across all content
   const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
@@ -364,24 +367,32 @@ export const CustomTable = ({
             values={[10, 25, 50, 100]}
             setCurrValue={setLimitUtils}
           />
+          <div className="rounded-full px-3 py-1.5 shadow-sm">
+            <TableSelect
+              currValue={limit}
+              label="Items Per Page"
+              values={[10, 25, 50, 100]}
+              setCurrValue={setLimitUtils}
+            />
+          </div>
           {data.length > 0 && (
-            <span className="text-sm text-gray-500">
-              Showing {(page - 1) * limit + 1} to{" "}
-              {Math.min(page * limit, data.length * page)} of{" "}
-              {data.length * page} entries
-            </span>
+            <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-thin">
+              {`${data.length} items found`}
+            </Badge>
+          )}
+          {isDownload && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
+              onClick={handleDownload}
+            >
+              <DownloadIcon className="size-4" />
+              Download
+            </Button>
           )}
         </div>
-        {/* Download Button */}
-        {isDownload && (
-          <span
-            className="w-fit text-sm text-gray-600 mx-4 bg-gray-100 border-gray-400 cursor-pointer hover:bg-gray-200 transition-colors shadow-sm py-2.5 px-3 rounded-sm"
-            onClick={handleDownload}
-          >
-            <DownloadIcon className="inline mr-1 size-4 dark:text-gray-900" />
-            Download
-          </span>
-        )}
       </div>
       <div className="mb-8 mt-4 w-full">
         <Card className="w-full" style={{ width: '100%' }}>
@@ -421,18 +432,21 @@ export const CustomTable = ({
                 {loading ? (
                   <>
                     {[...Array(10)].map((_, i) => (
-                      <TableRow key={i}>
-                        {fields.map((field, index) => (
+                      <TableRow key={i} className="hover:bg-transparent">
+                        {fields.map((field) => (
                           <TableCell key={field.fieldName}>
-                            <Skeleton className="h-5 w-20" />
+                            <Skeleton className="h-5 w-full max-w-[140px] rounded-full" />
                           </TableCell>
                         ))}
                       </TableRow>
                     ))}
                   </>
                 ) : filteredData?.length > 0 ? (
-                  filteredData.map((elem: any, index: number) => (
-                    <TableRow key={elem._id}>
+                  filteredData.map((elem: any) => (
+                    <TableRow
+                      key={elem[uniqueId]}
+                      className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                    >
                       {fields.map((field, index) => (
                         <TableCell
                           key={field.fieldName}
@@ -461,17 +475,17 @@ export const CustomTable = ({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center">
+                    <TableCell colSpan={fields.length} className="text-center">
                       {emptyStateAction ? (
-                        <div className="text-center py-16 w-full">
+                        <div className="w-full py-16 text-center">
                           <PackageOpen
-                            className="mx-auto text-gray-400 mb-4"
+                            className="mx-auto mb-4 text-muted-foreground"
                             size="80"
                           />
-                          <p className="text-gray-600 mb-6 text-lg font-medium">
+                          <p className="mb-2 text-lg font-medium text-foreground">
                             No leaderboard contests yet
                           </p>
-                          <p className="text-gray-500 mb-8">
+                          <p className="mb-8 text-sm text-muted-foreground">
                             Create your first leaderboard contest to get started
                           </p>
                           {React.createElement(emptyStateAction, {
@@ -479,16 +493,15 @@ export const CustomTable = ({
                           })}
                         </div>
                       ) : (
-                        <div className="text-center py-10 w-full mt-10">
+                        <div className="mx-auto my-8 w-full max-w-md rounded-xl border border-dashed border-border/70 bg-muted/20 p-8 text-center">
                           <PackageOpen
-                            className="mx-auto text-gray-500"
-                            size="100"
+                            className="mx-auto text-muted-foreground"
+                            size="72"
                           />
-                          <p className="text-gray-500">
-                            No data available.
-                            <br /> This feature will be available soon.
-                            <br />
-                            Here you can get directly hired for different roles.
+                          <p className="mt-4 text-sm text-muted-foreground">
+                            {isBadgeTable
+                              ? "No badges or levels found. Create one to start building your progression system."
+                              : "No data available for the selected filters."}
                           </p>
                         </div>
                       )}

@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { CustomTableChildComponentsProps, HeaderActions } from "./FieldTypes";
 import React from "react";
+import { Button } from "../ui/button";
 
 interface HeaderActionComponentProps extends CustomTableChildComponentsProps {
   headerActions?: Array<HeaderActions | React.FC<CustomTableChildComponentsProps>>;
@@ -10,6 +11,8 @@ export const HeaderActionComponent = ({
   headerActions,
   refetch
 }: HeaderActionComponentProps) => {
+  if (!headerActions?.length) return null;
+
   return (
     <div className="flex gap-3 mr-4 flex-wrap flex-grow flex-row-reverse">
       {headerActions?.map((Actions, index) => (
