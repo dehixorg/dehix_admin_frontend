@@ -344,11 +344,6 @@ export default function KeyVariablesPage() {
             </CardContent>
 
             <CardFooter className="flex justify-between items-center p-4 border-t">
-              <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1} to{" "}
-                {Math.min(endIndex, keyValues.length)} of {keyValues.length}{" "}
-                entries
-              </div>
               <TablePagination
                 page={currentPage}
                 setPage={setCurrentPage}
