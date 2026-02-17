@@ -86,7 +86,7 @@ export const FilterTable = ({
   // Generate search suggestions from filter options
   const searchOptions = useMemo(() => {
     const options: { value: string; label: string }[] = [];
-    
+
     // Add options from all filters
     filterData?.forEach((filter) => {
       filter.options.forEach((option) => {
@@ -96,7 +96,7 @@ export const FilterTable = ({
         });
       });
     });
-    
+
     return options;
   }, [filterData]);
 
@@ -109,9 +109,9 @@ export const FilterTable = ({
       {/* Search Bar */}
       {isSearch && (
         <div className="w-1/3 mr-4 relative">
-          <SearchComponent 
-            searchValue={search} 
-            setSearchValue={setSearch} 
+          <SearchComponent
+            searchValue={search}
+            setSearchValue={setSearch}
             options={searchOptions}
             onSelectOption={handleSearchSelect}
           />
@@ -194,7 +194,7 @@ export const FilterTable = ({
                                     const currentValues = filterVal.value
                                       .split(',')
                                       .filter((v) => v.trim() !== '');
-                                    
+
                                     // Toggle the clicked option
                                     let newValue: string;
                                     if (currentValues.includes(opt.value)) {
@@ -204,7 +204,7 @@ export const FilterTable = ({
                                     } else {
                                       newValue = [...currentValues, opt.value].join(',');
                                     }
-                                    
+
                                     return { ...filterVal, value: newValue };
                                   }
                                   return filterVal;

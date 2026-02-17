@@ -348,7 +348,7 @@ export const CustomTable = ({
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
       <div className="w-full flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
           {title}
@@ -383,8 +383,8 @@ export const CustomTable = ({
           </span>
         )}
       </div>
-      <div className="mb-8 mt-4">
-        <Card>
+      <div className="mb-8 mt-4 w-full">
+        <Card className="w-full" style={{ width: '100%' }}>
           {isFilter && (
             <FilterTable
               filterData={filterData}
@@ -399,12 +399,12 @@ export const CustomTable = ({
               refetch={refetch}
             />
           )}
-          <div className="lg:overflow-x-auto">
-            <Table>
+          <div className="w-full overflow-x-auto">
+            <Table className="w-full">
               <TableHeader>
                 <TableRow>
                   {fields.map((field, index) => (
-                    <TableHead key={field.fieldName}>
+                    <TableHead key={field.fieldName} className="px-4 py-3 text-sm font-medium">
                       {field.tooltip ? (
                         <ToolTip
                           trigger={field.textValue}
@@ -437,7 +437,7 @@ export const CustomTable = ({
                         <TableCell
                           key={field.fieldName}
                           className={twMerge(
-                            "text-gray-900 dark:text-gray-300",
+                            "text-gray-900 dark:text-gray-300 px-4 py-3 text-sm",
                             field.className
                           )}
                           width={field.width}
