@@ -14,6 +14,7 @@ export interface MenuItem {
   href: string;
   icon: React.ReactNode;
   label?: string;
+  count?: number; // Added count property
 }
 
 type MergedMenuItemProps = {
@@ -32,6 +33,9 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const rect = iconRef.current?.getBoundingClientRect();
+
+  // Calculate total count for parent badge
+  const totalCount = subItems.reduce((acc, item) => acc + (item.count || 0), 0);
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -58,7 +62,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
         <TooltipTrigger asChild>
           <div
             ref={iconRef}
-            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg
+            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg relative
               text-foreground transition-colors hover:bg-gray-300 hover:text-foreground
               md:h-8 md:w-8
               ${
@@ -71,6 +75,11 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
             {React.cloneElement(parentItem.icon as React.ReactElement, {
               className: "h-5 w-5",
             })}
+             {totalCount > 0 && (
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                {totalCount}
+              </span>
+            )}
             {parentItem.label && (
               <span className="sr-only">{parentItem.label}</span>
             )}
@@ -78,14 +87,14 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
         </TooltipTrigger>
 
         {parentItem.label && (
-          <TooltipContent side="right">{parentItem.label}</TooltipContent>
+          <TooltipContent side="right">{parentItem.label} {totalCount > 0 ? `(${totalCount})` : ''}</TooltipContent>
         )}
       </Tooltip>
 
       {/* Dropdown */}
       {isOpen && rect && (
         <div
-          className="fixed z-[9999] w-56 rounded-lg border bg-background shadow-2xl"
+          className="fixed z-[9999] w-64 rounded-lg border bg-background shadow-2xl"
           style={{
             left: rect.right + 8,
             top: rect.top + rect.height / 2,
@@ -99,7 +108,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
               <Link
                 key={index}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-2 text-sm transition-colors
+                className={`flex items-center justify-between gap-3 px-4 py-2 text-sm transition-colors
                   ${
                     item.label === active
                       ? "bg-gray-300 text-foreground"
@@ -107,8 +116,15 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                   }
                 `}
               >
-                <span className="flex-shrink-0">{item.icon}</span>
-                <span className="whitespace-nowrap">{item.label}</span>
+                <div className="flex items-center gap-3">
+                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="whitespace-nowrap">{item.label}</span>
+                </div>
+                 {(item.count || 0) > 0 ? (
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
+                    {item.count}
+                  </span>
+                ) : null}
               </Link>
             ))}
           </div>
