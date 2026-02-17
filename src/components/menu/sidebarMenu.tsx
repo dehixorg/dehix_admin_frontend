@@ -47,13 +47,13 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
           const isDehix = item.label === "Dehix";
           const isActive = item.label === active;
-          const linkClasses = `flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
+          const linkClasses = `flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-gray-300 hover:text-foreground
             ${
               isDehix
                 ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                 : isActive
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground"
+                  ? "bg-gray-300 text-foreground"
+                  : "text-foreground"
             }`;
 
           return (
@@ -86,13 +86,13 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
             <TooltipTrigger asChild>
               <Link
                 href={item.href}
-                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8 
+                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-gray-300 hover:text-foreground md:h-8 md:w-8 
                   ${
                     item.label === "Dehix"
                       ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                       : item.label === active
-                        ? "bg-accent text-accent-foreground"
-                        : "text-muted-foreground"
+                        ? "bg-gray-300 text-foreground"
+                        : "text-foreground"
                   }`}
               >
                 {item.icon}
