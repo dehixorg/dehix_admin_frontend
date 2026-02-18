@@ -122,9 +122,9 @@ export default function AddFeedbackCampaign({
           options:
             q.type === "MULTIPLE_CHOICE" && q.optionsText
               ? q.optionsText
-                  .split("\n")
-                  .filter((o) => o.trim())
-                  .map((o) => o.trim())
+                .split("\n")
+                .filter((o) => o.trim())
+                .map((o) => o.trim())
               : undefined,
         })),
       };
@@ -152,9 +152,9 @@ export default function AddFeedbackCampaign({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Campaign
+        <Button className="text-xs sm:text-sm px-2 sm:px-4">
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+          <span className="whitespace-nowrap">Create Campaign</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
