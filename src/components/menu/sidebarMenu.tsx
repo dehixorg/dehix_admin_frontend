@@ -60,7 +60,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
             <Tooltip key={index}>
               <TooltipTrigger asChild>
                 <Link
-                  href={isActive || isDehix ? "#" : item.href}
+                  href={isDehix ? "#" : item.href}
                   onClick={() => item.label && setActive(item.label)}
                   className={linkClasses}
                 >
