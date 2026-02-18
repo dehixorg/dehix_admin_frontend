@@ -267,7 +267,7 @@ const ArrayValueField = ({
       ) : (
         <span className="text-xs text-gray-500">-</span>
       )}
-    </div>https://github.com/dehixorg/dehix_admin_frontend/pull/159/conflict?name=src%252Fcomponents%252Fcustom-table%252FFieldComponents.tsx&ancestor_oid=e455ca70769fc39041a8579aa6d0ea0c85cded2d&base_oid=6b438acd92087f4808df99d30875869976e77126&head_oid=178ad7df664ff3fa66fc991d162bffd4fd93983f
+    </div>
   );
 };
 
@@ -277,7 +277,7 @@ const ActionField = ({
   refetch,
 }: FieldComponentProps<Actions>) => {
   if (fieldData.actions?.options && fieldData.actions.options.length === 1) {
-    const { actionIcon, actionName, type, handler, href, className } = fieldData.actions.options[0];
+    const { type, handler, href, className } = fieldData.actions.options[0];
 
     if (type === "Button") {
       return (

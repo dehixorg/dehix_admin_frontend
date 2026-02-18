@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import PersonalInfo from "@/components/business/businessInfo/personalInfo";
 import ProfessionalInfo from "@/components/business/businessInfo/professionalInfo";
 import ProjectList from "@/components/business/businessInfo/projectList";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 import { apiHelperService } from "@/services/business";
 import { Messages } from "@/utils/common/enum";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 
 interface Personalinfo {
   name: string; // Combined first and last name
