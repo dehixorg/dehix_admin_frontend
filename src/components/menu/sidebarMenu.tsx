@@ -76,38 +76,36 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                 active={active}
               />
             );
-          } else {
-            return (
-              <Tooltip key={index}>
-                <TooltipTrigger asChild>
-                  <Link
-                    href={item.href}
-                    className={`flex items-center gap-3 rounded-lg p-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors ${
-                      active === item.href ||
-                      active === item.label ||
-                      active === item.label?.toLowerCase() ||
-                      window.location.pathname === item.href
-                        ? "bg-accent text-accent-foreground shadow-sm"
-                        : "text-foreground hover:bg-accent hover:text-accent-foreground"
-                    }`}
-                  >
-                    {item.icon}
-                    {(item.count || 0) > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white z-10">
-                        {item.count}
-                      </span>
-                    )}
-                    {item.label && (
-                      <span className="sr-only">{item.label}</span>
-                    )}
-                  </Link>
-                </TooltipTrigger>
-                {item.label && (
-                  <TooltipContent side="right">{item.label}</TooltipContent>
-                )}
-              </Tooltip>
-            );
           }
+
+          const isDehix = item.label === "Dehix";
+          const isActive = item.label === active;
+          const linkClasses = `flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
+            ${
+              isDehix
+                ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+                : isActive
+                  ? "bg-accent text-accent-foreground"
+                  : "text-muted-foreground"
+            }`;
+
+          return (
+            <Tooltip key={index}>
+              <TooltipTrigger asChild>
+                <Link
+                  href={isDehix ? "#" : item.href}
+                  onClick={() => item.label && setActive(item.label)}
+                  className={linkClasses}
+                >
+                  {item.icon}
+                  {item.label && <span className="sr-only">{item.label}</span>}
+                </Link>
+              </TooltipTrigger>
+              {item.label && (
+                <TooltipContent side="right">{item.label}</TooltipContent>
+              )}
+            </Tooltip>
+          );
         })}
       </nav>
 

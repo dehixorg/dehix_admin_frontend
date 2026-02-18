@@ -48,7 +48,6 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
   };
 
   const topItems = mapCountsToItems(menuItemsTop);
-  const bottomItems = mapCountsToItems(menuItemsBottom);
   return (
     <Sheet>
       <SheetTrigger asChild>
