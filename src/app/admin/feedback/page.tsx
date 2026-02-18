@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
@@ -14,8 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
-import { useToast } from "@/hooks/use-toast";
-import { apiHelperService } from "@/services/admin";
 import { useRouter } from "next/navigation";
 
 export default function FeedbackPage() {
