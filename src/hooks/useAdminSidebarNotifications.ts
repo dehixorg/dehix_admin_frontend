@@ -49,8 +49,8 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
   useEffect(() => {
     fetchAllCounts();
 
-    // Refresh every 30 seconds
-    const interval = setInterval(fetchAllCounts, 30000);
+    // Refresh every 10 seconds
+    const interval = setInterval(fetchAllCounts, 10000);
 
     // Listen for manual refresh events
     const handleRefreshEvent = () => {
