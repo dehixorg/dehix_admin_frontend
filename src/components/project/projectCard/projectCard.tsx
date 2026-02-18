@@ -25,7 +25,6 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { apiHelperService } from "@/services/business";
 import { apiHelperService as projectService } from "@/services/project";
