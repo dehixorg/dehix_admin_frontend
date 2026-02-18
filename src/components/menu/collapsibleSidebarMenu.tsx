@@ -5,6 +5,7 @@ import { PanelLeft } from "lucide-react";
 import { ThemeToggle } from "../shared/themeToggle";
 import { MenuItem } from "./sidebarMenu";
 import MergedMenuItem from "./MergesMenuItem";
+import { useAdminSidebarNotifications } from "@/hooks/useAdminSidebarNotifications";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,31 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
   active,
   setActive = () => null, // Defaulting setActive to a no-op function
 }) => {
+  const notifications = useAdminSidebarNotifications();
+
+  // Helper to map notifications to menu items
+  const mapCountsToItems = (items: MenuItem[]): MenuItem[] => {
+    return items.map((item) => {
+      let count = 0;
+
+      if (item.label === "Connects") count = notifications.connects || 0;
+      if (item.label === "Skill") count = notifications.skill || 0;
+      if (item.label === "Domain") count = notifications.domain || 0;
+      if (item.label === "Project Domain")
+        count = notifications.projectDomain || 0;
+      // Match the actual label "Verification" (submenu item) instead of "Oracle Verification"
+      if (item.label === "Verification") count = notifications.oracle || 0;
+
+      // Ensure subItems also get the updated counts
+      const updatedSubItems = item.subItems
+        ? mapCountsToItems(item.subItems)
+        : undefined;
+
+      return { ...item, count, subItems: updatedSubItems };
+    });
+  };
+
+  const topItems = mapCountsToItems(menuItemsTop);
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -30,22 +56,25 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex flex-col h-full p-0 w-[280px] sm:max-w-xs">
+      <SheetContent
+        side="left"
+        className="flex flex-col h-full p-0 w-[280px] sm:max-w-xs"
+      >
         <div className="flex-1 overflow-y-auto py-4 h-[calc(100vh-120px)]">
           <nav className="space-y-6 px-2.5">
-            {menuItemsTop.map((item, index) => {
+            {topItems.map((item, index) => {
               if (item.subItems) {
                 return (
                   <div key={index} className="relative">
-                    <MergedMenuItem 
-                      parentItem={item} 
-                      subItems={item.subItems} 
-                      active={active} 
+                    <MergedMenuItem
+                      parentItem={item}
+                      subItems={item.subItems}
+                      active={active}
                     />
                   </div>
                 );
               }
-              
+
               return (
                 <Link
                   key={index}
@@ -59,7 +88,14 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
                         : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                   }`}
                 >
-                  <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="flex-shrink-0 relative">
+                    {item.icon}
+                    {(item.count || 0) > 0 && (
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white z-10">
+                        {item.count}
+                      </span>
+                    )}
+                  </span>
                   {item.label && item.label !== "Dehix" && (
                     <span className="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis min-w-0">
                       {item.label}
@@ -84,7 +120,7 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
                 key={index}
                 href={item.href}
                 onClick={(e) => {
-                  if (item.href === '#') {
+                  if (item.href === "#") {
                     e.preventDefault();
                   }
                   setActive(item.label);
