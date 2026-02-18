@@ -20,8 +20,16 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { apiHelperService } from "@/services/business";
+import { apiHelperService as projectService } from "@/services/project";
 import { StatusEnum } from "@/utils/common/enum";
+import { useToast } from "@/components/ui/use-toast";
 
 interface DehixProjectInfo {
   projectName: string;
@@ -47,6 +55,8 @@ export function ProjectCard({ id }: ProjectCardProps) {
   const [projectInfo, setProjectInfo] = useState<DehixProjectInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [statusUpdating, setStatusUpdating] = useState<boolean>(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!id) {
@@ -78,8 +88,71 @@ export function ProjectCard({ id }: ProjectCardProps) {
     fetchProjectData();
   }, [id]);
 
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "ACTIVE":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "REJECTED":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "COMPLETED":
+        return "bg-blue-100 text-blue-800 border-blue-300";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-300";
+    }
+  };
+
+  const handleStatusChange = async (newStatus: string) => {
+    if (!projectInfo) return;
+    
+    setStatusUpdating(true);
+    const previousStatus = projectInfo.status;
+    
+    // Optimistically update UI
+    setProjectInfo({ ...projectInfo, status: newStatus as StatusEnum });
+    
+    try {
+      await projectService.updateUserStatus(id, newStatus);
+      toast({
+        title: "Success",
+        description: `Project status updated to ${newStatus}`,
+        variant: "default",
+      });
+    } catch (err) {
+      console.error("Error updating project status:", err);
+      // Revert to previous status on error
+      setProjectInfo({ ...projectInfo, status: previousStatus });
+      toast({
+        title: "Error",
+        description: "Failed to update project status. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setStatusUpdating(false);
+    }
+  };
+
   if (loading) {
-    return <p>Loading project data...</p>;
+    return (
+      <Card>
+        <CardHeader>
+          <div className="h-7 w-64 bg-gray-200 rounded animate-pulse" />
+          <div className="h-5 w-full bg-gray-200 rounded animate-pulse mt-2" />
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="h-5 w-3/4 bg-gray-200 rounded animate-pulse" />
+          <div className="h-5 w-2/3 bg-gray-200 rounded animate-pulse" />
+          <div className="h-5 w-1/2 bg-gray-200 rounded animate-pulse" />
+          <div className="h-5 w-3/5 bg-gray-200 rounded animate-pulse" />
+          <div className="flex gap-2 mt-4">
+            <div className="h-8 w-20 bg-gray-200 rounded-full animate-pulse" />
+            <div className="h-8 w-20 bg-gray-200 rounded-full animate-pulse" />
+            <div className="h-8 w-20 bg-gray-200 rounded-full animate-pulse" />
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (error) {
@@ -134,9 +207,23 @@ export function ProjectCard({ id }: ProjectCardProps) {
         <div className="flex items-center">
           <CheckCircle className="w-5 h-5 text-gray-500 mr-2" />
           <p className="text-md font-semibold">Status: </p>
-          <span className="inline-block px-3 py-1 border rounded-md bg-green-100 border-green-300 text-sm font-semibold text-gray-600 ml-2">
-            {projectInfo.status}
-          </span>
+          <Select
+            value={projectInfo.status}
+            onValueChange={handleStatusChange}
+            disabled={statusUpdating}
+          >
+            <SelectTrigger className="w-[180px] ml-2">
+              <span className={`inline-block px-3 py-1 border rounded-md text-sm font-semibold ${getStatusStyle(projectInfo.status)}`}>
+                {projectInfo.status}
+              </span>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="PENDING">PENDING</SelectItem>
+              <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+              <SelectItem value="REJECTED">REJECTED</SelectItem>
+              <SelectItem value="COMPLETED">COMPLETED</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {projectInfo.skillsRequired && projectInfo.skillsRequired.length > 0 && (
