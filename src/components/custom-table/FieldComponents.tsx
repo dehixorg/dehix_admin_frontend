@@ -278,7 +278,7 @@ const ActionField = ({
 }: FieldComponentProps<Actions>) => {
   if (fieldData.actions?.options && fieldData.actions.options.length === 1) {
     const { type, handler, href, className } = fieldData.actions.options[0];
-    
+
     if (type === "Button") {
       return (
         <Button
@@ -299,7 +299,7 @@ const ActionField = ({
         </Button>
       );
     }
-    
+
     if (type === "Link") {
       return (
         <Link
@@ -393,7 +393,25 @@ const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
     (status) => status.value.toLowerCase() === String(value).toLowerCase()
   );
 
-  if (!statusMetaData) return <span>{value}</span>;
+  if (!statusMetaData) {
+    const normalizedValue = String(value).toLowerCase().replace(/_/g, ' ');
+
+    let badgeClasses = "bg-gray-500/20 text-gray-700 dark:text-gray-400";
+
+    if (normalizedValue.includes('not') || normalizedValue.includes('inactive') || normalizedValue.includes('blocked')) {
+      badgeClasses = "bg-red-500/20 text-red-700 dark:text-red-400";
+    } else if (normalizedValue.includes('active') || normalizedValue.includes('verified')) {
+      badgeClasses = "bg-green-500/20 text-green-700 dark:text-green-400";
+    } else if (normalizedValue.includes('pending') || normalizedValue.includes('waiting')) {
+      badgeClasses = "bg-yellow-500/20 text-yellow-700 dark:text-yellow-400";
+    }
+
+    return (
+      <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium ${badgeClasses}`}>
+        {value}
+      </span>
+    );
+  }
 
   const { isUppercase } = statusMetaData;
   return (
