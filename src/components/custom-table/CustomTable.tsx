@@ -414,7 +414,7 @@ export const CustomTable = ({
             <Table className="w-full">
               <TableHeader>
                 <TableRow>
-                  {fields.map((field, index) => (
+                  {fields.map((field) => (
                     <TableHead key={field.fieldName} className="px-4 py-3 text-sm font-medium">
                       {field.tooltip ? (
                         <ToolTip

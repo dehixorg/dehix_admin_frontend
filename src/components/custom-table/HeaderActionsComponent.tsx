@@ -1,7 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { CustomTableChildComponentsProps, HeaderActions } from "./FieldTypes";
 import React from "react";
-import { Button } from "../ui/button";
 
 interface HeaderActionComponentProps extends CustomTableChildComponentsProps {
   headerActions?: Array<HeaderActions | React.FC<CustomTableChildComponentsProps>>;

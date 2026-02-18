@@ -141,9 +141,8 @@ export const FilterTable = ({
 
   return (
     <div className="flex flex-col gap-3 rounded-xl p-4 text-foreground md:flex-row md:items-center md:justify-between">
-      {/* Search Bar */}
       {isSearch && (
-        <div className="w-1/3 mr-4 relative">
+        <div className="relative mr-4 w-1/3">
           <SearchComponent
             searchValue={search}
             setSearchValue={setSearch}
@@ -153,18 +152,16 @@ export const FilterTable = ({
         </div>
       )}
 
-      {/* Filters and Actions */}
       <div className="flex flex-grow items-center justify-between gap-4">
         <HeaderActionComponent
           headerActions={tableHeaderActions}
           refetch={refetch}
         />
 
-        {/* Filter Button */}
         {filterData && filterData.length > 0 && (
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="gap-2 ml-auto">
+              <Button variant="outline" className="ml-auto gap-2">
                 <Filter className="h-4 w-4" />
                 Filters
                 {selectedFilterCount > 0 && (
@@ -175,16 +172,13 @@ export const FilterTable = ({
               </Button>
             </SheetTrigger>
 
-            {/* Sliding Filter Panel */}
             <SheetContent
               side="right"
               className="w-[92vw] max-w-[430px] space-y-5 overflow-y-auto p-4"
             >
               <div className="space-y-3 border-b border-border pb-4">
                 <SheetTitle>Filter & Sort</SheetTitle>
-                <SheetDescription>
-                  Filter and sort the data below.
-                </SheetDescription>
+                <SheetDescription>Filter and sort the data below.</SheetDescription>
                 <div className="relative overflow-hidden rounded-lg border border-primary/20 bg-gradient-to-r from-primary/10 via-cyan-500/5 to-transparent p-3">
                   <div className="absolute -right-5 -top-5 h-14 w-14 rounded-full bg-primary/15" />
                   <div className="absolute -bottom-6 right-6 h-12 w-12 rounded-full bg-cyan-400/10" />
@@ -198,6 +192,7 @@ export const FilterTable = ({
                     </div>
                   </div>
                 </div>
+
                 <div className="space-y-2">
                   <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     Active Selection
@@ -224,34 +219,30 @@ export const FilterTable = ({
                 </div>
               </div>
 
-              {/* Filters */}
-              {filterData?.map((filter, index) => (
+              {filterData.map((filter, index) => (
                 <Card key={index} className="border-border/60 bg-card/60 shadow-none">
                   <CardContent className="space-y-4 p-4">
                     <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                       {filter.textValue}
                     </h4>
+
                     {filter.type === FilterDataType.SINGLE ? (
                       <RadioGroup
                         value={
-                          selectedFilters.find(
-                            ({ fieldName }) => fieldName === filter.name
-                          )?.value
+                          selectedFilters.find(({ fieldName }) => fieldName === filter.name)
+                            ?.value
                         }
                         onValueChange={(value) => {
-                          const newSelectedFilter = selectedFilters.map(
-                            (filterVal) => {
-                              if (filterVal.fieldName === filter.name) {
-                                return { ...filterVal, value: value };
-                              }
-                              return filterVal;
-                            }
+                          const newSelectedFilter = selectedFilters.map((filterVal) =>
+                            filterVal.fieldName === filter.name
+                              ? { ...filterVal, value }
+                              : filterVal
                           );
                           setSelectedFilters(newSelectedFilter);
                         }}
                         className="space-y-2"
                       >
-                        {filter.options.map((opt, index) => {
+                        {filter.options.map((opt, optIndex) => {
                           const selectedValue = selectedFilters.find(
                             ({ fieldName }) => fieldName === filter.name
                           )?.value;
@@ -259,7 +250,7 @@ export const FilterTable = ({
 
                           return (
                             <div
-                              key={index}
+                              key={optIndex}
                               className={cn(
                                 "flex items-center space-x-2 rounded-lg border px-2.5 py-2 transition-colors",
                                 isSelected
@@ -275,7 +266,7 @@ export const FilterTable = ({
                       </RadioGroup>
                     ) : (
                       <div className="space-y-2">
-                        {filter.options.map((opt, index) => {
+                        {filter.options.map((opt, optIndex) => {
                           const selectedValue = selectedFilters.find(
                             ({ fieldName }) => fieldName === filter.name
                           )?.value;
@@ -287,7 +278,7 @@ export const FilterTable = ({
 
                           return (
                             <div
-                              key={index}
+                              key={optIndex}
                               className={cn(
                                 "flex items-center space-x-2 rounded-lg border px-2.5 py-2 transition-colors",
                                 isChecked
@@ -298,28 +289,21 @@ export const FilterTable = ({
                               <Checkbox
                                 id={opt.value}
                                 checked={isChecked}
-                                onClick={(_e) => {
-                                  const newSelectedFilters = selectedFilters.map(
-                                    (filterVal) => {
-                                      if (filterVal.fieldName === filter.name) {
-                                        const currentValues = filterVal.value
-                                          .split(",")
-                                          .filter((v) => v.trim() !== "");
+                                onClick={() => {
+                                  const newSelectedFilters = selectedFilters.map((filterVal) => {
+                                    if (filterVal.fieldName !== filter.name) return filterVal;
 
-                                        let newValue: string;
-                                        if (currentValues.includes(opt.value)) {
-                                          newValue = currentValues
-                                            .filter((v) => v !== opt.value)
-                                            .join(",");
-                                        } else {
-                                          newValue = [...currentValues, opt.value].join(",");
-                                        }
+                                    const existingValues = filterVal.value
+                                      .split(",")
+                                      .filter((v) => v.trim() !== "");
 
-                                        return { ...filterVal, value: newValue };
-                                      }
-                                      return filterVal;
-                                    }
-                                  );
+                                    const newValue = existingValues.includes(opt.value)
+                                      ? existingValues.filter((v) => v !== opt.value).join(",")
+                                      : [...existingValues, opt.value].join(",");
+
+                                    return { ...filterVal, value: newValue };
+                                  });
+
                                   setSelectedFilters(newSelectedFilters);
                                 }}
                               />
@@ -338,7 +322,6 @@ export const FilterTable = ({
                 </Card>
               ))}
 
-              {/* Sorting */}
               {sortByArr.length > 0 && (
                 <Card className="border-border/60 bg-card/60 shadow-none">
                   <CardContent className="space-y-4 p-4">
@@ -354,60 +337,32 @@ export const FilterTable = ({
                     >
                       {sortByArr.map((sortVal, index) => (
                         <div key={index} className="flex items-center space-x-2">
-                          <RadioGroupItem
-                            value={sortVal.fieldName}
-                            id={sortVal.fieldName}
-                          />
+                          <RadioGroupItem value={sortVal.fieldName} id={sortVal.fieldName} />
                           <Label htmlFor={sortVal.fieldName}>{sortVal.label}</Label>
                         </div>
                       ))}
                       <div className="flex items-center space-x-2">
-                        <RadioGroupItem value={"createdAt"} id={"createdAt"} />
-                        <Label htmlFor={"createdAt"}>Most Recent</Label>
+                        <RadioGroupItem value="createdAt" id="createdAt" />
+                        <Label htmlFor="createdAt">Most Recent</Label>
                       </div>
                     </RadioGroup>
-                  ) : (
-                    <div className="space-y-2">
-                      {filter.options.map((opt, index) => (
-                        <div key={index} className="flex items-center space-x-2">
-                          <Checkbox
-                            id={opt.value}
-                            checked={selectedFilters
-                              .find(({ fieldName }) => fieldName === filter.name)!
-                              .value.includes(opt.value)}
-                            onClick={(e) => {
-                              const newSelectedFilters = selectedFilters.map(
-                                (filterVal) => {
-                                  if (filterVal.fieldName === filter.name) {
-                                    // Parse existing values
-                                    const currentValues = filterVal.value
-                                      .split(',')
-                                      .filter((v) => v.trim() !== '');
 
-                                    // Toggle the clicked option
-                                    let newValue: string;
-                                    if (currentValues.includes(opt.value)) {
-                                      newValue = currentValues
-                                        .filter((v) => v !== opt.value)
-                                        .join(',');
-                                    } else {
-                                      newValue = [...currentValues, opt.value].join(',');
-                                    }
-
-                                    return { ...filterVal, value: newValue };
-                                  }
-                                  return filterVal;
-                                }
-                              );
-                              setSelectedFilters(newSelectedFilters);
-                            }}
-                          />
-                          <label
-                            htmlFor={opt.value}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {opt.label}
-                          </label>
+                    <RadioGroup
+                      value={sortChildState.order.toString()}
+                      onValueChange={(value) => {
+                        setSortChildState({
+                          ...sortChildState,
+                          order: value === "1" ? 1 : -1,
+                        });
+                      }}
+                      className="flex space-x-4"
+                    >
+                      {["-1", "1"].map((order) => (
+                        <div key={order} className="flex items-center space-x-2">
+                          <RadioGroupItem value={order} id={order} />
+                          <Label htmlFor={order}>
+                            {order === "-1" ? "Newest First" : "Oldest First"}
+                          </Label>
                         </div>
                       ))}
                     </RadioGroup>
@@ -415,7 +370,6 @@ export const FilterTable = ({
                 </Card>
               )}
 
-              {/* Action Buttons */}
               <div className="sticky bottom-0 flex flex-col space-y-3 border-t border-border bg-background/95 pt-4 backdrop-blur supports-[backdrop-filter]:bg-background/80">
                 <Button
                   onClick={() => {
@@ -432,8 +386,9 @@ export const FilterTable = ({
                   className="text-sm"
                   onClick={() => {
                     setIsOpen(false);
-                    setSelectedFilters(initializeFiltersArray());
-                    setFilters(initializeFiltersArray());
+                    const initialFilters = initializeFiltersArray();
+                    setSelectedFilters(initialFilters);
+                    setFilters(initialFilters);
                   }}
                 >
                   <ReloadIcon className="mr-2 h-4 w-4" /> Reset Filters

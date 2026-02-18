@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   CustomComponentProps,
@@ -31,6 +30,11 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiHelperService } from "@/services/admin";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 
 export default function FeedbackPage() {
   const customTableProps: TableProps = {
