@@ -45,16 +45,28 @@ export default function Talent() {
         type: FieldType.STATUS,
         statusFormats: [
           {
-            textValue: "Completed",
-            value: "COMPLETED",
-            bgColor: "#57fa70",
-            textColor: "#024d0d",
-          },
-          {
             textValue: "Pending",
             value: "PENDING",
-            bgColor: "yellow",
-            textColor: "#525002",
+            bgColor: "#fef3c7",
+            textColor: "#92400e",
+          },
+          {
+            textValue: "Active",
+            value: "ACTIVE",
+            bgColor: "#d1fae5",
+            textColor: "#065f46",
+          },
+          {
+            textValue: "Rejected",
+            value: "REJECTED",
+            bgColor: "#fee2e2",
+            textColor: "#991b1b",
+          },
+          {
+            textValue: "Completed",
+            value: "COMPLETED",
+            bgColor: "#dbeafe",
+            textColor: "#1e40af",
           },
         ],
       },
