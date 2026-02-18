@@ -46,6 +46,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         count = notifications.projectDomain || 0;
       // Match the actual label "Verification" (submenu item) instead of "Oracle Verification"
       if (item.label === "Verification") count = notifications.oracle || 0;
+      if (item.label === "KYC") count = notifications.kyc || 0;
 
       // Ensure subItems also get the updated counts
       const updatedSubItems = item.subItems
@@ -80,7 +81,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
           const isDehix = item.label === "Dehix";
           const isActive = item.label === active;
-          const linkClasses = `flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
+          const linkClasses = `relative overflow-visible flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
             ${
               isDehix
                 ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
@@ -97,7 +98,14 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                   onClick={() => item.label && setActive(item.label)}
                   className={linkClasses}
                 >
-                  {item.icon}
+                  <span className="relative flex-shrink-0">
+                    {item.icon}
+                    {(item.count || 0) > 0 && (
+                      <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
+                        {item.count}
+                      </span>
+                    )}
+                  </span>
                   {item.label && <span className="sr-only">{item.label}</span>}
                 </Link>
               </TooltipTrigger>

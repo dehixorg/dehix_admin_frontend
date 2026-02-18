@@ -62,7 +62,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
         <TooltipTrigger asChild>
           <div
             ref={iconRef}
-            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg relative
+            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
               text-foreground transition-colors hover:bg-gray-300 hover:text-foreground
               md:h-8 md:w-8
               ${
@@ -76,7 +76,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
               className: "h-5 w-5",
             })}
              {totalCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white">
                 {totalCount}
               </span>
             )}
@@ -121,7 +121,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                   <span className="whitespace-nowrap">{item.label}</span>
                 </div>
                  {(item.count || 0) > 0 ? (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[10px] font-bold text-white">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white">
                     {item.count}
                   </span>
                 ) : null}
