@@ -142,7 +142,7 @@ export const FilterTable = ({
   return (
     <div className="flex flex-row flex-nowrap items-center justify-between gap-1 sm:gap-4 px-1 sm:px-4 py-3 text-foreground w-full">
       {isSearch && (
-        <div className="relative flex-1 min-w-[60px] max-w-full md:max-w-xs lg:max-w-md">
+        <div className="relative flex-1 min-w-[60px] max-w-full md:max-w-[200px] lg:max-w-[280px]">
           <SearchComponent
             searchValue={search}
             setSearchValue={setSearch}
