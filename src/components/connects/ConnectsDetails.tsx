@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
@@ -25,6 +25,10 @@ export const ConnectsDetails = ({ id, data, refetch }: CustomComponentProps) => 
   const [open, setOpen] = useState(false);
   const [newStatus, setNewStatus] = useState(data.status);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setNewStatus(data.status);
+  }, [data.status]);
 
   const handleUpdateStatus = async () => {
     setLoading(true);
@@ -121,13 +125,15 @@ export const ConnectsDetails = ({ id, data, refetch }: CustomComponentProps) => 
         <div>
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Created At</p>
           <p className="text-sm mt-1">
-            {data.createdAt ? format(new Date(data.createdAt), 'MMM d, yyyy HH:mm') : '-'}
+            {(data.createdAt)
+              ? format(new Date(data.createdAt), 'dd MMM yyyy, hh:mm a')
+              : '-'}
           </p>
         </div>
         <div>
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">Updated At</p>
           <p className="text-sm mt-1">
-            {data.updatedAt ? format(new Date(data.updatedAt), 'MMM d, yyyy HH:mm') : '-'}
+            {data.updatedAt ? format(new Date(data.updatedAt), 'dd MMM yyyy, hh:mm a') : '-'}
           </p>
         </div>
       </div>

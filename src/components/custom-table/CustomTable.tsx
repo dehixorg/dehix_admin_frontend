@@ -51,7 +51,7 @@ export const CustomTable = ({
     []
   );
   // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
-  const [sortByValue, setSortByValue] = useState<string>("createdAt");
+  const [sortByValue, setSortByValue] = useState<string>("dateTime");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
