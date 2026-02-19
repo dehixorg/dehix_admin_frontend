@@ -351,21 +351,21 @@ export const CustomTable = ({
   };
 
   return (
-    <div className="px-4">
-      <div className="mb-4 flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            {title}
-          </h1>
-          <p className="text-xs text-muted-foreground">
-            Clean, searchable records with fast actions and filters.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-          <HeaderActionComponent
-            headerActions={mainTableActions}
-            refetch={refetch}
+    <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
+      <div className="w-full flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
+          {title}
+        </h1>
+        <HeaderActionComponent
+          headerActions={mainTableActions}
+          refetch={refetch}
+        />
+        <div className="flex items-center gap-2">
+          <TableSelect
+            currValue={limit}
+            label="Items Per Page"
+            values={[10, 25, 50, 100]}
+            setCurrValue={setLimitUtils}
           />
           <div className="rounded-full px-3 py-1.5 shadow-sm">
             <TableSelect
@@ -394,14 +394,8 @@ export const CustomTable = ({
           )}
         </div>
       </div>
-
-      <div className="mb-8 mt-4">
-        <Card
-          className={twMerge(
-            "overflow-hidden border-border/60 bg-card/95 shadow-sm",
-            isBadgeTable && "ring-1 ring-violet-200/60 dark:ring-violet-400/20"
-          )}
-        >
+      <div className="mb-8 mt-4 w-full">
+        <Card className="w-full" style={{ width: '100%' }}>
           {isFilter && (
             <FilterTable
               filterData={filterData}
@@ -416,15 +410,12 @@ export const CustomTable = ({
               refetch={refetch}
             />
           )}
-          <div className="lg:overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-muted/40">
-                <TableRow className="hover:bg-transparent">
+          <div className="w-full overflow-x-auto">
+            <Table className="w-full">
+              <TableHeader>
+                <TableRow>
                   {fields.map((field) => (
-                    <TableHead
-                      key={field.fieldName}
-                      className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground"
-                    >
+                    <TableHead key={field.fieldName} className="px-4 py-3 text-sm font-medium">
                       {field.tooltip ? (
                         <ToolTip
                           trigger={field.textValue}
@@ -460,7 +451,7 @@ export const CustomTable = ({
                         <TableCell
                           key={field.fieldName}
                           className={twMerge(
-                            "text-foreground",
+                            "text-gray-900 dark:text-gray-300 px-4 py-3 text-sm",
                             field.className
                           )}
                           width={field.width}
