@@ -37,6 +37,7 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
         count = notifications.projectDomain || 0;
       // Match the actual label "Verification" (submenu item) instead of "Oracle Verification"
       if (item.label === "Verification") count = notifications.oracle || 0;
+      if (item.label === "KYC") count = notifications.kyc || 0;
 
       // Ensure subItems also get the updated counts
       const updatedSubItems = item.subItems
@@ -91,7 +92,7 @@ const CollapsibleSidebarMenu: React.FC<CollapsibleSidebarMenuProps> = ({
                   <span className="flex-shrink-0 relative">
                     {item.icon}
                     {(item.count || 0) > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white z-10">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
                         {item.count}
                       </span>
                     )}
