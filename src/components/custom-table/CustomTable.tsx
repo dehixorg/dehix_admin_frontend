@@ -361,12 +361,6 @@ export const CustomTable = ({
           refetch={refetch}
         />
         <div className="flex items-center gap-2">
-          <TableSelect
-            currValue={limit}
-            label="Items Per Page"
-            values={[10, 25, 50, 100]}
-            setCurrValue={setLimitUtils}
-          />
           <div className="rounded-full px-3 py-1.5 shadow-sm">
             <TableSelect
               currValue={limit}

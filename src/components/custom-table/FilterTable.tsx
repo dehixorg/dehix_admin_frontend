@@ -140,9 +140,9 @@ export const FilterTable = ({
   }, [selectedFilters, filterData]);
 
   return (
-    <div className="flex flex-col gap-3 rounded-xl p-4 text-foreground md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-row flex-nowrap items-center justify-between gap-1 sm:gap-4 px-1 sm:px-4 py-3 text-foreground w-full">
       {isSearch && (
-        <div className="relative mr-4 w-1/3">
+        <div className="relative flex-1 min-w-[60px] max-w-full md:max-w-xs lg:max-w-md">
           <SearchComponent
             searchValue={search}
             setSearchValue={setSearch}
@@ -152,7 +152,7 @@ export const FilterTable = ({
         </div>
       )}
 
-      <div className="flex flex-grow items-center justify-between gap-4">
+      <div className="flex flex-row flex-nowrap items-center justify-end gap-2 sm:gap-3 flex-shrink-0 ml-auto">
         <HeaderActionComponent
           headerActions={tableHeaderActions}
           refetch={refetch}
@@ -161,11 +161,11 @@ export const FilterTable = ({
         {filterData && filterData.length > 0 && (
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="ml-auto gap-2">
-                <Filter className="h-4 w-4" />
-                Filters
+              <Button variant="outline" className="flex items-center gap-1 lg:gap-2 px-1.5 sm:px-4 text-xs sm:text-sm h-10">
+                <Filter className="h-4 w-4 shrink-0" />
+                <span className="hidden lg:inline">Filters</span>
                 {selectedFilterCount > 0 && (
-                  <Badge variant="secondary" className="rounded-full px-2 py-0.5 text-xs">
+                  <Badge variant="secondary" className="rounded-full px-1 py-0 text-[10px] sm:text-xs">
                     {selectedFilterCount}
                   </Badge>
                 )}
