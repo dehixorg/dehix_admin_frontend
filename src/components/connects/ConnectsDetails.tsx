@@ -145,9 +145,10 @@ export const ConnectsDetails = ({
             Created At
           </p>
           <p className="text-sm mt-1">
-            {(data.createdAt)
-              ? format(new Date(data.createdAt), 'dd MMM yyyy, hh:mm a')
-              : '-'}
+            {(() => {
+              const d = data.createdAt ? new Date(data.createdAt) : null;
+              return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+            })()}
           </p>
         </div>
         <div>
@@ -155,7 +156,10 @@ export const ConnectsDetails = ({
             Updated At
           </p>
           <p className="text-sm mt-1">
-            {data.updatedAt ? format(new Date(data.updatedAt), 'dd MMM yyyy, hh:mm a') : '-'}
+             {(() => {
+                const d = data.updatedAt ? new Date(data.updatedAt) : null;
+                return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+              })()}
           </p>
         </div>
       </div>
