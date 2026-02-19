@@ -40,6 +40,7 @@ interface AdminData {
   userName: string;
   email: string;
   phone: string;
+  password: string;
   type: AdminType;
   status: StatusEnum.PENDING; // status is fixed to "Pending"
 }
@@ -54,7 +55,7 @@ interface UserData {
   status: StatusEnum;
   createdAt: string;
   updatedAt: string;
-  resetRequest:boolean;
+  resetRequest: boolean;
 }
 interface AddAdminProps {
   onAddAdmin: (newAdmin: UserData) => void;
@@ -70,6 +71,7 @@ const adminSchema = z.object({
     .email(Admin_Schema_Prompt_Messages.VALID_MAIL)
     .min(1, Admin_Schema_Prompt_Messages.EMAIL_REQUIRED),
   phone: z.string().min(1, Admin_Schema_Prompt_Messages.PHONE_REQUIRED),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   type: z.nativeEnum(AdminType).default(AdminType.ADMIN),
   status: z.literal(StatusEnum.PENDING), // status is always "Pending"
 });
@@ -90,6 +92,7 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
       userName: "",
       email: "",
       phone: "",
+      password: "",
       status: StatusEnum.PENDING,
       type: AdminType.ADMIN, // default type
     },
@@ -106,13 +109,18 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
           description: "The Admin has been successfully added.",
         });
         refetch?.()
-      } else throw new Error("Error")
+      } else {
+        const serverMessage = response.data?.message || response.data?.error;
+        throw new Error(serverMessage || "Error");
+      }
     } catch (error) {
       // Use a type guard to check if the error is an AxiosError
       let errorMessage =
         "There was an error submitting the admin details. Please try again.";
       if (error instanceof AxiosError && error.response) {
         errorMessage = error.response.data?.message || errorMessage;
+      } else if (error instanceof Error && error.message && error.message !== "Error") {
+        errorMessage = error.message;
       }
 
       toast({
@@ -225,6 +233,23 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
             />
             {errors.phone && (
               <p className="text-red-600">{errors.phone.message}</p>
+            )}
+          </div>
+          <div className="mb-3">
+            <Controller
+              control={control}
+              name="password"
+              render={({ field }) => (
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...field}
+                  className="border p-2 rounded mt-2 w-full"
+                />
+              )}
+            />
+            {errors.password && (
+              <p className="text-red-600">{errors.password.message}</p>
             )}
           </div>
           <div className="mb-3">

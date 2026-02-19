@@ -43,12 +43,18 @@ export const apiHelperService = {
       },
     });
   },
+  updateAdminStatus: async (adminId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/${adminId}`,
+      body: { status },
+    });
+  },
   updateAdminPassword: async (adminId: string, changes: any) => {
     return apiService({
       method: Api_Methods.PUT,
       endpoint: `/admin/${adminId}`,
-      body: changes
-      
+      body: changes,
     });
   },
 };
