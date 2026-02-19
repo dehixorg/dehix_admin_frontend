@@ -25,7 +25,6 @@ import { twMerge } from "tailwind-merge";
 import { useToast } from "../ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 
 export const CustomTable = ({
   title,
