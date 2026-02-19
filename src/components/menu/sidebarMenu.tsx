@@ -81,7 +81,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
           const isDehix = item.label === "Dehix";
           const isActive = item.label === active;
-          const linkClasses = `relative overflow-visible flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-foreground hover:bg-accent
+          const linkClasses = `relative overflow-visible flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:text-accent-foreground hover:bg-accent
             ${
               isDehix
                 ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"

@@ -63,11 +63,11 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
           <div
             ref={iconRef}
             className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
-              text-foreground transition-colors hover:bg-gray-300 hover:text-foreground
+              text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground
               md:h-8 md:w-8
               ${
                 subItems.some((item) => item.label === active)
-                  ? "bg-gray-300 text-foreground"
+                  ? "bg-accent text-accent-foreground"
                   : ""
               }
             `}
@@ -111,8 +111,8 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                 className={`flex items-center justify-between gap-3 px-4 py-2 text-sm transition-colors
                   ${
                     item.label === active
-                      ? "bg-gray-300 text-foreground"
-                      : "text-muted-foreground hover:bg-gray-300 hover:text-foreground"
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   }
                 `}
               >
