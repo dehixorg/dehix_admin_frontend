@@ -83,6 +83,19 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   });
 
   const onSubmit = async (data: AdminData) => {
+    const showError = (message?: string) => {
+      toast({
+        variant: "destructive",
+        title: "Submission Error",
+        description: message || "There was an error submitting the admin details. Please try again.",
+        action: (
+          <ToastAction altText="Try again" onClick={() => reset()}>
+            Retry
+          </ToastAction>
+        ),
+      });
+    };
+
     try {
       const response = await apiHelperService.createAdmin(data);
       if (response.success) {
@@ -92,31 +105,19 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
           title: "Admin Added",
           description: "The Admin has been successfully added.",
         });
-        refetch?.()
+        refetch?.();
       } else {
         const serverMessage = response.data?.message || response.data?.error;
-        throw new Error(serverMessage || "Error");
+        showError(serverMessage);
       }
     } catch (error) {
-      // Use a type guard to check if the error is an AxiosError
-      let errorMessage =
-        "There was an error submitting the admin details. Please try again.";
-      if (error instanceof AxiosError && error.response) {
-        errorMessage = error.response.data?.message || errorMessage;
-      } else if (error instanceof Error && error.message && error.message !== "Error") {
-        errorMessage = error.message;
-      }
-
-      toast({
-        variant: "destructive",
-        title: "Submission Error",
-        description: errorMessage,
-        action: (
-          <ToastAction altText="Try again" onClick={() => reset()}>
-            Retry
-          </ToastAction>
-        ),
-      });
+      const message =
+        error instanceof AxiosError
+          ? error.response?.data?.message
+          : error instanceof Error
+            ? error.message
+            : undefined;
+      showError(message);
     }
   };
 
