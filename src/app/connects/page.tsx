@@ -16,6 +16,7 @@ const customTableProps: TableProps = {
       fieldName: "userId",
       type: FieldType.LONGTEXT,
       wordsCnt: 20,
+      copyable: true,
     },
     {
       textValue: "User Type",

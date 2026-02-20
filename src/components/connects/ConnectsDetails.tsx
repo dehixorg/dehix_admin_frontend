@@ -61,6 +61,14 @@ export const ConnectsDetails = ({
     }
   };
 
+  const handleCopy = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied",
+      description: "User ID copied to clipboard",
+    });
+  };
+
   const dialogContent = (
     <div className="flex flex-col space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -68,12 +76,23 @@ export const ConnectsDetails = ({
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">
             User ID
           </p>
-          <Link
-            href={`/users/view?id=${data.userId}`}
-            className="font-mono text-base mt-1 text-blue-600 hover:underline dark:text-blue-400 break-all"
-          >
-            {data.userId}
-          </Link>
+          <div className="flex flex-col gap-1 mt-1">
+  <span
+    onClick={() => handleCopy(data.userId)}
+    title="Click to copy User ID"
+    className="font-mono text-base text-blue-600 hover:underline cursor-pointer break-all"
+  >
+    {data.userId}
+  </span>
+
+  <Link
+    href={`/users/view?id=${data.userId}`}
+    className="text-xs text-gray-500 hover:underline"
+  >
+    View user profile →
+  </Link>
+</div>
+
         </div>
         <div>
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">

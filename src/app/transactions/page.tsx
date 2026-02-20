@@ -14,12 +14,14 @@ const customTableProps: TableProps = {
       fieldName: "from",
       type: FieldType.LONGTEXT,
       wordsCnt: 20,
+      copyable: true,
     },
     {
       textValue: "To",
       fieldName: "to",
       type: FieldType.LONGTEXT,
       wordsCnt: 20,
+      copyable: true,
     },
     {
       textValue: "Amount",
@@ -46,6 +48,7 @@ const customTableProps: TableProps = {
       fieldName: "reference_id",
       type: FieldType.LONGTEXT,
       wordsCnt: 10,
+      copyable: true,
     },
     {
       textValue: "Created At",
