@@ -4,9 +4,7 @@ import Link from "next/link";
 import {
   Briefcase,
   DollarSign,
-  User,
   Info,
-  Calendar,
   PackageOpen,
   Fingerprint,
   CopyIcon,
@@ -100,7 +98,7 @@ type ProjectBidsProps = React.ComponentProps<typeof Card> & {
   id: string;
 };
 
-export function ProjectBids({ id, ...props }: ProjectBidsProps) {
+export function ProjectBids({ id }: ProjectBidsProps) {
   const [profilesWithBids, setProfilesWithBids] = useState<ProfileWithBid[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -230,7 +228,7 @@ export function ProjectBids({ id, ...props }: ProjectBidsProps) {
                     <Info className="mr-2 h-4 w-4 text-gray-600" />
                     Profile Description
                   </h3>
-                  <p className="text-sm text-gray-700 leading-relaxed">
+                  <p className="text-sm text-gray-700 leading-relaxed break-words [overflow-wrap:anywhere]">
                     {profile.description || "No profile description available."}
                   </p>
                 </div>
@@ -272,7 +270,7 @@ export function ProjectBids({ id, ...props }: ProjectBidsProps) {
                         <Tag className="mr-2 h-4 w-4 text-gray-600" />
                         Bid Description
                       </h3>
-                      <p className="text-sm text-gray-700">
+                      <p className="text-sm text-gray-700 break-words [overflow-wrap:anywhere]">
                         {bid.description}
                       </p>
                     </div>

@@ -1,13 +1,10 @@
 import React from 'react';
 
-import MyNoteCard from './myNoteCard';
-import DialogConfirmation from './DialogConfirmation';
-import DialogSelectedNote from './DialogSelectedNote';
-import DialogUpdateType from './DialogUpdateType';
+import { NoteCard } from './NoteCard';
 
-import { Note, NoteType } from '@/utils/types/note';
-import useNotes from '@/hooks/useNotes';
 import useDragAndDrop from '@/hooks/useDragAndDrop';
+import useNotes from '@/hooks/useNotes';
+import type { Note } from '@/utils/types/note';
 
 interface NotesContainerProps {
   notes: Note[];
@@ -24,143 +21,64 @@ const NotesContainer = ({
   isTrash,
   fetchNotes,
 }: NotesContainerProps) => {
-  const user: string | null = localStorage.getItem('user');
-  const parsedUser = user ? JSON.parse(user) : null;
-
-  const uId = parsedUser ? parsedUser.uid : null;
-
-  const userType = parsedUser ? parsedUser.type : null;
+  const { handleSaveEditNote, handleDeletePermanently, handleUpdateNoteType } =
+    useNotes(fetchNotes, notes);
 
   const {
-    selectedNote,
-    setSelectedNote,
-    selectedDeleteNote,
-    setSelectedDeleteNote,
-    selectedTypeNote,
-    setSelectedTypeNote,
-    isDeleting,
-    setIsDeleting,
-    handleSaveEditNote,
-    handleDialogClose,
-    handleDeletePermanently,
-    handleChangeBanner,
-    handleUpdateNoteType,
-    handleUpdateNoteLabel,
-  } = useNotes(fetchNotes, notes);
-
-  const {
-    draggingIndex,
-    draggingOverIndex,
     handleDragStart,
     handleDragOver,
     handleDrop,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
   } = useDragAndDrop(notes, setNotes);
 
-  const navItems = (note: Note) => {
-    // Only show edit options if the user is superadmin or the creator of the note
-    if (userType === 'superadmin' || (userType === 'admin' && note.userId === uId)) {
-      return [
-        {
-          label: 'Delete permanently',
-          onClick: (
-            noteId: string | undefined,
-            notes: Note[],
-            setNotes: (notes: Note[]) => void,
-          ) => {
-            setIsDeleting(true);
-            setSelectedDeleteNote(
-              notes.find((note) => note._id === noteId) || null,
-            );
-          },
-        },
-        {
-          label: 'Move To Trash',
-          onClick: (noteId: string | undefined) => {
-            handleUpdateNoteType(noteId, NoteType.TRASH);
-          },
-        },
-        {
-          label: 'Add Label',
-          onClick: (noteId: string | undefined) => {
-            setSelectedTypeNote(
-              notes.find((note) => note._id === noteId) || null,
-            );
-          },
-        },
-      ];
-    }
-  
-    // Return an empty array if the user doesn't have permissions
-    return [];
-  };
-  
   return (
-    <div className="flex justify-center items-center">
-      <div className="flex flex-wrap justify-center gap-6 p-4 w-full">
+    <div className="w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
+        <div
+          className="col-span-full h-2"
+          onDragOver={(e) => {
+            e.preventDefault();
+            handleDragOver(0);
+          }}
+          onDrop={handleDrop}
+        />
+
         {notes.map((note, index) => (
-          <MyNoteCard
-            key={note._id}
-            note={note}
-            onDragStart={() => handleDragStart(index)}
-            onDragOver={(e) => {
-              e.preventDefault();
-              handleDragOver(index);
-            }}
-            onDrop={handleDrop}
-            notes={notes}
-            setNotes={setNotes}
-            isTrash={!!isTrash}
-            isArchive={isArchive}
-            onEditNote={(note: Note) => {
-              if (userType === 'superadmin' || (userType === 'admin' && note.userId === uId)) {
-                setSelectedNote(note);
-              } else {
-                console.error('Permission denied: Cannot edit this note.');
-              }
-            }}
-            onUpdateNoteType={handleUpdateNoteType}  
-            onDeleteClick={(noteId: string | undefined) => {
-              if (userType === 'superadmin' || note.userId === uId) {
-                setSelectedDeleteNote(
-                  notes.find((note) => note._id === noteId) || null,
-                );
-              } else {
-                console.error('Permission denied: Cannot delete this note.');
-              }
-            }}
-            onChangeBanner={(noteId: string | undefined, newBannerUrl: string) => {
-                if (userType === 'superadmin' || note.userId === uId) {
-                    handleChangeBanner(noteId, newBannerUrl);
-                } else {
-                    console.error('Permission denied: Cannot change banner of this note.');
-                }
-            }}
-              
-            navItems={navItems(note)}
-          />
+          <div key={note._id} data-note-index={index} className="touch-none">
+            <NoteCard
+              key={note._id}
+              note={note}
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={(e) => {
+                e.preventDefault();
+                handleDragOver(index + 1);
+              }}
+              onDrop={handleDrop}
+              onTouchStart={() => handleTouchStart(index)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              isTrash={!!isTrash}
+              isArchive={isArchive}
+              onEditNote={handleSaveEditNote}
+              onUpdateNoteType={handleUpdateNoteType}
+              onDeleteClick={(noteId: string | undefined) => {
+                if (noteId) handleDeletePermanently(noteId);
+              }}
+            />
+          </div>
         ))}
+
+        <div
+          className="col-span-full h-2"
+          onDragOver={(e) => {
+            e.preventDefault();
+            handleDragOver(notes.length);
+          }}
+          onDrop={handleDrop}
+        />
       </div>
-      {isDeleting && (
-        <DialogConfirmation
-          onClose={handleDialogClose}
-          note={selectedDeleteNote}
-          onDelete={handleDeletePermanently}
-        />
-      )}
-      {selectedNote && (
-        <DialogSelectedNote
-          onSave={handleSaveEditNote}
-          note={selectedNote}
-          onClose={handleDialogClose}
-        />
-      )}
-      {selectedTypeNote && (
-        <DialogUpdateType
-          note={selectedTypeNote}
-          onClose={() => setSelectedTypeNote(null)}
-          onUpdate={handleUpdateNoteLabel}
-        />
-      )}
     </div>
   );
 };

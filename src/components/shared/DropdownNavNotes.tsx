@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+
 import { MoreVertical } from 'lucide-react';
 
 import {
@@ -13,15 +14,10 @@ interface DropdownNavNotesProps {
 }
 
 const DropdownNavNotes = ({ navItems, noteId }: DropdownNavNotesProps) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen((prev) => !prev);
-  };
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <button onClick={toggleDropdown}>
+        <button>
           <MoreVertical
             size={15}
             className=" transition-all text-black duration-200"

@@ -128,15 +128,23 @@ export default function FreelancerRegisterForm() {
     };
     try {
       await axiosInstance.post("/register/freelancer", formData);
-      toast({ title: "Account created successfully!" });
+      toast({
+        title: "Account created successfully!",
+        description: "Your freelancer account has been created successfully.",
+      });
       setIsModalOpen(true);
     } catch (error: any) {
       console.error("API Error:", error);
+      const errorMessage = error.response?.data?.message || "Something went wrong. Please try again.";
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: `${"Invalid Credentials " || "Something went wrong!"}`,
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
+        title: "Error",
+        description: errorMessage,
+        action: (
+          <ToastAction altText="Try again" onClick={() => formRef.current?.scrollIntoView()}>
+            Try again
+          </ToastAction>
+        ),
       });
     } finally {
       setIsLoading(false);

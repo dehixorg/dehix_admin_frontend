@@ -1,13 +1,6 @@
 "use client";
 
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -19,7 +12,7 @@ import { useToast } from "../../components/ui/use-toast";
 import { Messages } from "../../utils/common/enum";
 import { apiHelperService } from "../../services/domain";
 import AddDomain from "../../components/Domain/addDomain";
-import { CustomTableComponent } from "@/components/Domain/CustomTableComponent";
+import { DomainDetail } from "@/components/Domain/DomainDetail";
 
 export default function Talent() {
   const { toast } = useToast();
@@ -41,7 +34,7 @@ export default function Talent() {
   };
 
   const customTableProps: TableProps = {
-    api: "/domain",
+    api: "/domain/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -70,6 +63,30 @@ export default function Talent() {
         ],
       },
       {
+        fieldName: "createdBy",
+        textValue: "Created By",
+        type: FieldType.STATUS,
+        statusFormats: [
+          {
+            textValue: "Admin",
+            value: "ADMIN",
+            bgColor: "#3b82f6",
+            textColor: "#ffffff",
+          },
+          {
+            textValue: "Freelancer",
+            value: "FREELANCER",
+            bgColor: "#ec4899",
+            textColor: "#ffffff",
+          },
+        ],
+      },
+      {
+        fieldName: "createdById",
+        textValue: "Created By ID",
+        type: FieldType.TEXT,
+      },
+      {
         textValue: "",
         type: FieldType.ACTION,
         actions: {
@@ -87,7 +104,7 @@ export default function Talent() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: CustomTableComponent,
+        CustomComponent: DomainDetail,
       },
     ],
     isDownload: true,
@@ -107,39 +124,31 @@ export default function Talent() {
           { label: "Networking", value: "Networking" },
         ],
       },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
+        ],
+      },
     ],
     searchColumn: ["label"],
     tableHeaderActions: [AddDomain],
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Domain"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Domain"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/" },
-              { label: "Domain", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5">
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Domain"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/dashboard/" },
+        { label: "Domain", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="ml-5"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }

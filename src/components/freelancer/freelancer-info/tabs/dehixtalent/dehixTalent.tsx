@@ -25,14 +25,15 @@ import {
 
 interface Talent {
   _id: string;
-  talentId: string;
-  talentName: string;
-  type: string; // e.g., "SKILL"
-  status: string; // e.g., "pending"
-  experience: string;
-  monthlyPay: string;
-  activeStatus: boolean;
-  interviews: any[]; // Assuming this is an array of objects
+  hireId: string;
+  businessId?: string;
+  freelancer_professional_profile_id?: string;
+  attributeId: string;
+  attributeName?: string;
+  status: string;
+  payType?: string;
+  payAmount?: number;
+  updatedAt?: Date;
 }
 
 interface DehixTalentData {
@@ -44,7 +45,7 @@ interface DehixTalentProps {
   profile?: any;
 }
 
-const DehixTalent: React.FC<DehixTalentProps> = ({  profile,id }) => {
+const DehixTalent: React.FC<DehixTalentProps> = ({ profile: _profile, id }) => {
   const [talentData, setTalentData] = useState<DehixTalentData | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -79,26 +80,27 @@ const DehixTalent: React.FC<DehixTalentProps> = ({  profile,id }) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
                   <TableHead>ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Experience</TableHead>
+                  <TableHead>Hire ID</TableHead>
+                  <TableHead>Business ID</TableHead>
+                  <TableHead>Attribute ID</TableHead>
+                  <TableHead>Attribute Name</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Monthly Pay</TableHead>
-                  <TableHead>Talent ID</TableHead>
+                  <TableHead>Pay Type</TableHead>
+                  <TableHead>Pay Amount</TableHead>
+                  <TableHead>Updated At</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center">
+                    <TableCell colSpan={9} className="text-center">
                       Loading...
                     </TableCell>
                   </TableRow>
                 ) : talentData && talentData.dehixTalent.length > 0 ? (
                   talentData.dehixTalent.map((talent) => (
                     <TableRow key={talent._id}>
-                      <TableCell>{talent.type}</TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           <Tooltip>
@@ -112,16 +114,23 @@ const DehixTalent: React.FC<DehixTalentProps> = ({  profile,id }) => {
                           </Tooltip>
                         </div>
                       </TableCell>
-                      <TableCell>{talent.talentName}</TableCell>
-                      <TableCell>{talent.experience}</TableCell>
-                      <TableCell>{talent.status}</TableCell>
-                      <TableCell>{talent.monthlyPay}</TableCell>
-                      <TableCell>{talent.talentId}</TableCell>
+                      <TableCell>{talent.hireId || "N/A"}</TableCell>
+                      <TableCell>{talent.businessId || "N/A"}</TableCell>
+                      <TableCell>{talent.attributeId || "N/A"}</TableCell>
+                      <TableCell>{talent.attributeName || "N/A"}</TableCell>
+                      <TableCell>{talent.status || "N/A"}</TableCell>
+                      <TableCell>{talent.payType || "N/A"}</TableCell>
+                      <TableCell>
+                        {talent.payAmount ? `₹${talent.payAmount.toLocaleString()}` : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {talent.updatedAt ? new Date(talent.updatedAt).toLocaleDateString() : "N/A"}
+                      </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center">
+                    <TableCell colSpan={9} className="text-center">
                       <div className="text-center py-10 w-full mt-10">
                         <PackageOpen
                           className="mx-auto text-gray-500"

@@ -1,15 +1,7 @@
 "use client";
-import { Search, Trash2Icon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -20,24 +12,14 @@ import AddProjectDomain from "@/components/ProjectDomain/addProjectDomain";
 import { apiHelperService } from "@/services/projectdomain";
 import { useToast } from "@/components/ui/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { ProjectDomainDetail } from "@/components/ProjectDomain/ProjectDomainDetail";
 
 export default function Talent() {
   const { toast } = useToast();
 
-  const handleDelete = async (domainId: string) => {
-    try {
-      await apiHelperService.deleteProjectdomain(domainId);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: Messages.DELETE_ERROR("domain"),
-        variant: "destructive", // Red error message
-      });
-    }
-  };
-
   const customTableProps: TableProps = {
-    api: "/projectdomain",
+    title: "Project Domain",
+    api: "/projectdomain/admin",
     uniqueId: "_id",
     fields: [
       {
@@ -119,57 +101,52 @@ export default function Talent() {
           ],
         },
       },
+      {
+        textValue: "",
+        type: FieldType.CUSTOM,
+        CustomComponent: ProjectDomainDetail,
+      },
     ],
     filterData: [
-          {
-            name: "status",
-            textValue: "Status",
-            type: FilterDataType.SINGLE,
-            options: [
-              { label: "Active", value: "active,Active,ACTIVE" },
-              { label: "Inactive", value: "inactive,INACTIVE,Inactive" },
-            ],
-          },
+      {
+        name: "status",
+        textValue: "Status",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Active", value: "active,Active,ACTIVE" },
+          { label: "Inactive", value: "inactive,INACTIVE,Inactive" },
         ],
+      },
+      {
+        name: "createdBy",
+        textValue: "Created By",
+        type: FilterDataType.SINGLE,
+        options: [
+          { label: "Admin", value: "ADMIN" },
+          { label: "Freelancer", value: "FREELANCER" },
+        ],
+      },
+    ],
     tableHeaderActions: [AddProjectDomain],
-    searchColumn: ["label"],
+    searchColumn: [
+      "label",
+      "description",
+      "status",
+      "createdBy",
+      "createdById",
+    ],
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Project Domain"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Project Domain"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/" },
-              { label: "Project Domain", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownProfile />
-        </header>
-        <main className="ml-5">
-          {/* <ProjectDomainTable /> */}
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Project Domain"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/dashboard/" },
+        { label: "Project Domain", link: "#" },
+      ]}
+      mainClassName="ml-5"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }

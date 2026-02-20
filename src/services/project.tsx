@@ -10,7 +10,13 @@ export const apiHelperService = {
       params,
     });
   },
-  updateUserStatus:async (Id: string, status: string) => {
+  getSingleProject: async (projectId: string) => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: `/project/${projectId}`,
+    });
+  },
+  updateUserStatus: async (Id: string, status: string) => {
     return apiService({
       method: Api_Methods.PUT,
       endpoint: `/project/${Id}`,

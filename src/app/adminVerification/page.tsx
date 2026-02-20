@@ -1,32 +1,35 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
-import { Search, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import { apiHelperService } from "@/services/verification";
 import { Messages } from "@/utils/common/enum";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
 import Verification from "@/components/verification/verificationTable";
 import { useSelector } from "react-redux";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 interface Verificationinfo {
-  verifier_id:string;
+  _id?: string;
+  verifier_id: string;
   verifier_username: string;
   requester_id: string;
+  requester_username?: string;
   document_id: string;
   verification_status: string;
-  comment: string;
-  verified_at: string;
+  comment?: string;
+  verified_at?: string;
   doc_type: string;
+  Requester?: {
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    phone?: string;
+    role?: string;
+    userName?: string;
+    profilePic?: string;
+  };
+  result?: Record<string, unknown>;
 }
 
 const BusinessTabs = () => {
@@ -70,49 +73,24 @@ const BusinessTabs = () => {
   }
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Business"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Business"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "" },
-              { label: "Verification", link: "/verification" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownProfile />
-        </header>
-        <main className="ml-5 mr-5">
-          <Tabs defaultValue="Admin Verification">
-            <TabsList className="flex w-full justify-between gap-2">
-              <TabsTrigger value="Admin Verification" className="flex-1 text-center">
-                Admin Verification
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="Admin Verification">
-              <Verification Data={adminVerifications}/>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Business"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "" },
+        { label: "Admin Oracle Verification", link: "/adminVerification" },
+      ]}
+    >
+      <Tabs defaultValue="Admin Oracle Verification">
+        <TabsList className="flex w-full justify-between gap-2">
+          <TabsTrigger value="Admin Oracle Verification" className="flex-1 text-center">
+            Admin Oracle Verification
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="Admin Oracle Verification">
+          <Verification Data={adminVerifications}/>
+        </TabsContent>
+      </Tabs>
+    </AdminDashboardLayout>
   );
 };
 

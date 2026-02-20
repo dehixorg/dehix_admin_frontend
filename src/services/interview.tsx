@@ -6,7 +6,7 @@ export const apiHelperService = {
   getAllInterview: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
-      endpoint: "/interview",
+      endpoint: "/interview/admin/interviews",
       params,
     });
   },

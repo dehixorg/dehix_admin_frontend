@@ -1,26 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
 import PersonalInfo from "@/components/business/businessInfo/personalInfo";
 import ProfessionalInfo from "@/components/business/businessInfo/professionalInfo";
 import ProjectList from "@/components/business/businessInfo/projectList";
-import Appliedcandidates from "@/components/business/businessInfo/appliedCandidates";
 import Hirefreelancer from "@/components/business/businessInfo/hireCandidates";
 import { apiHelperService } from "@/services/business";
-import { Messages, StatusEnum, statusType } from "@/utils/common/enum";
+import { Messages } from "@/utils/common/enum";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 
 interface Personalinfo {
   name: string; // Combined first and last name
@@ -36,19 +32,11 @@ interface Professionalinfo {
   personalWebsite: string;
   isVerified: string;
 }
-interface HireFreelancerinfo {
-  freelancer: string;
-  status: StatusEnum;
-  _id: string;
-}
 const BusinessTabs = () => {
   const searchParams = useSearchParams();
-  const id = searchParams.get("id")||"";
+  const id = searchParams.get("id") || "";
   const [businessprofessionalinfo, setBusinessprofessionalinfo] = useState<Professionalinfo | null>(null);
   const [businesspersonalinfo, setBusinesspersonalinfo] = useState<Personalinfo | null>(null);
-  const [hirefreelancerinfo, sethirefreelancerinfo] = useState<HireFreelancerinfo[] | null>(null);
-  const [appliedcandidateinfo, setappliedcandidateinfo] = useState<string[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -75,17 +63,12 @@ const BusinessTabs = () => {
         };
 
         setBusinessprofessionalinfo(professionalInfo);
-
-        setappliedcandidateinfo(data.Appliedcandidates || []);
-        sethirefreelancerinfo(data.hirefreelancer || []);
       } catch (error) {
         toast({
           title: "Error",
           description: Messages.FETCH_ERROR("business"),
           variant: "destructive", // Red error message
         });
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -110,7 +93,6 @@ const BusinessTabs = () => {
 
           <Breadcrumb
             items={[
-              { label: "Dashboard", link: "" },
               { label: "Business", link: "/business" },
               { label: id as string, link: "#" },
             ]}
@@ -153,7 +135,26 @@ const BusinessTabs = () => {
               <PersonalInfo personalData={businesspersonalinfo} />
             </TabsContent>
             <TabsContent value="Professional-Info">
-              <ProfessionalInfo  professionalData={businessprofessionalinfo} />
+              <ProfessionalInfo
+                professionalData={businessprofessionalinfo}
+                businessId={id}
+                onUpdateSuccess={async () => {
+                  try {
+                    const response = await apiHelperService.getAllBusinessPersonalInfo(id);
+                    const data = response.data;
+                    const professionalInfo: Professionalinfo = {
+                      companyName: data.companyName || "Not Provided",
+                      companySize: data.companySize || "Not Provided",
+                      linkedIn: data.linkedIn || "Not Provided",
+                      personalWebsite: data.personalWebsite || "Not Provided",
+                      isVerified: data.isVerified ? "Yes" : "No",
+                    };
+                    setBusinessprofessionalinfo(professionalInfo);
+                  } catch (error) {
+                    console.error("Failed to refetch business data", error);
+                  }
+                }}
+              />
             </TabsContent>
             <TabsContent value="ProjectList">
               <ProjectList id={id || ""} />

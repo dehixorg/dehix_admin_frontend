@@ -4,10 +4,11 @@ import { Palette } from 'lucide-react';
 import Image from 'next/image';
 
 interface BannerChangerPopoverProps {
-  handleChangeBanner: (banner: string) => void;
+  noteId: string;
+  onBannerChange: (banner: string) => void;
 }
 
-const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChangeBanner }) => {
+const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ noteId: _noteId, onBannerChange }) => {
   const banners = [
     '/banner1.svg',
     '/banner2.svg',
@@ -35,13 +36,12 @@ const BannerChangerPopover: React.FC<BannerChangerPopoverProps> = ({ handleChang
           {banners.map((banner, index) => (
             <div
               key={index}
-              onClick={() => handleChangeBanner(banner)}
+              onClick={() => onBannerChange(banner)}
               className="cursor-pointer p-1 rounded"
             >
               <Image
                 src={banner}
                 alt={`Banner ${index + 1}`}
-                // Add the required width and height properties here
                 width={28}
                 height={28}
                 className="w-7 h-auto rounded-md hover:scale-110 transition-transform"

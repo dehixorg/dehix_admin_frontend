@@ -1,16 +1,12 @@
 "use client";
-import { Search } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
 import InterviewTable from "@/components/interview/Interviewtable";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
 import DropdownProfile from "@/components/shared/DropdownProfile";
+import { Input } from "@/components/ui/input";
+import { menuItemsBottom, menuItemsTop } from "@/config/menuItems/admin/dashboardMenuItems";
+import { Search } from "lucide-react";
 
 export default function Talent() {
   return (
@@ -18,14 +14,14 @@ export default function Talent() {
       <SidebarMenu
         menuItemsTop={menuItemsTop}
         menuItemsBottom={menuItemsBottom}
-        active="Interviews"
+        active="Interview"
       />
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
-            active="Interviews"
+            active="Interview"
           />
           <Breadcrumb
             items={[

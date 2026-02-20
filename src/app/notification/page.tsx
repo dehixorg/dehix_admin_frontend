@@ -1,13 +1,6 @@
 "use client";
 
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
-import DropdownProfile from "@/components/shared/DropdownProfile";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -15,6 +8,7 @@ import {
 } from "@/components/custom-table/FieldTypes";
 import AddNotify from "@/components/Notification/addNotify";
 import { NotificationDetails } from "@/components/Notification/NotificationDetails";
+import { notificationActions } from "@/components/Notification/notificationActions";
 
 export default function Talent() {
   const customTableProps: TableProps = {
@@ -64,9 +58,9 @@ export default function Talent() {
         fieldName: "status",
         statusFormats: [
           {
-            value: "INACTIVE",
-            bgColor: "yellow",
-            textColor: "#525002",
+            value: "IN_ACTIVE",
+            bgColor: "#facc15",
+            textColor: "#92400e",
             textValue: "Inactive",
           },
           {
@@ -80,7 +74,12 @@ export default function Talent() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: NotificationDetails
+        CustomComponent: NotificationDetails,
+      },
+      {
+        textValue: "Actions",
+        type: FieldType.ACTION,
+        actions: notificationActions,
       },
     ],
     isDownload: true,
@@ -91,34 +90,16 @@ export default function Talent() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Notification"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Notification"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/Faq" },
-              { label: "Notifications", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5">
-          {/* <NotifyTable /> */}
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Notification"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/dashboard/Faq" },
+        { label: "Notifications", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="ml-5"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }

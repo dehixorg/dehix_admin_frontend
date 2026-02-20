@@ -22,7 +22,7 @@ type UserProfileProps = React.ComponentProps<typeof Card> & {
   profile: UserProfile;
 };
 
-export function UserProfilePage({ className, profile, ...props }: UserProfileProps) {
+export function UserProfilePage({ profile }: UserProfileProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full p-4">
       {/* Card 1: Personal Information */}

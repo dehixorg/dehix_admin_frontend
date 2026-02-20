@@ -1,54 +1,21 @@
 "use client";
-import { Search } from "lucide-react";
-import DropdownProfile from "@/components/shared/DropdownProfile";
-import { Input } from "@/components/ui/input";
-import SidebarMenu from "@/components/menu/sidebarMenu";
-import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
 import { RootState } from '@/lib/store';
 import {useSelector } from 'react-redux';
-import {
-  menuItemsBottom,
-  menuItemsTop,
-} from "@/config/menuItems/admin/dashboardMenuItems";
-import Breadcrumb from "@/components/shared/breadcrumbList";
 import CurrentUserDetails from "@/components/settings/settingpage"
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function Settings() {
   const user = useSelector((state: RootState) => state.user);
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Settings"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Settings"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/dashboard/admin" },
-              { label: "Settings", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownProfile />
-        </header>
-        <main className="ml-5 mr-3">
-          <CurrentUserDetails user_id={user.uid}/>
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Settings"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/admin" },
+        { label: "Settings", link: "#" },
+      ]}
+      mainClassName="ml-5 mr-3"
+    >
+      <CurrentUserDetails user_id={user.uid}/>
+    </AdminDashboardLayout>
   );
 }

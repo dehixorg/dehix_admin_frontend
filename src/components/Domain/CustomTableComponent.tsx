@@ -3,32 +3,8 @@ import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
 import EditDomainDescription from "./editDomaindesc";
-import { apiHelperService } from "@/services/domain";
-import { useToast } from "../ui/use-toast";
-import { Messages } from "@/utils/common/enum";
 
-export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps) => {
-    const { toast } = useToast();
-
-    const handleUpdateDescription = async (
-        newDescription: string,
-        id: string,
-        refetch: (() => void) | undefined
-      ) => {
-        try {
-          await apiHelperService.updateDomainDesc(id, newDescription);
-          toast({
-            title: "Success",
-            description: Messages.UPDATE_SUCCESS("domain"),
-          });
-          refetch?.();
-        } catch (error) {
-          toast({
-            title: "Error",
-            description: Messages.UPDATE_ERROR("domain"),
-          });
-        }
-      };
+export const CustomTableComponent = ({ id: _id, data, refetch }: CustomComponentProps) => {
 
     const [isEditDialogOpen, setIsEditDialogOpen] =
       useState(false);
@@ -63,17 +39,11 @@ export const CustomTableComponent = ({ id, data, refetch }: CustomComponentProps
           />
           {isEditDialogOpen && (
             <EditDomainDescription
-              isDialogopen={isEditDialogOpen}
+              isDialogOpen={isEditDialogOpen}
               setIsDialogOpen={() => setIsEditDialogOpen(false)}
               domainId={data._id}
               currentDescription={data.description || ""}
-              onDescriptionUpdate={(newDescription) =>
-                handleUpdateDescription(
-                  newDescription,
-                  id,
-                  refetch
-                )
-              }
+              onUpdateSuccess={() => refetch?.()}
             />
           )}
         </>
