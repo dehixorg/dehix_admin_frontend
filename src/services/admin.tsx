@@ -43,56 +43,18 @@ export const apiHelperService = {
       },
     });
   },
+  updateAdminStatus: async (adminId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/${adminId}`,
+      body: { status },
+    });
+  },
   updateAdminPassword: async (adminId: string, changes: any) => {
     return apiService({
       method: Api_Methods.PUT,
       endpoint: `/admin/${adminId}`,
       body: changes,
-    });
-  },
-
-  getFeedbackCampaigns: async (params = {}) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: "/admin/feedback/campaign",
-      params,
-    });
-  },
-
-  getFeedbackCampaignById: async (id: string) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: `/admin/feedback/campaign/${id}`,
-    });
-  },
-
-  createFeedbackCampaign: async (body: any) => {
-    return apiService({
-      method: Api_Methods.POST,
-      endpoint: "/admin/feedback/campaign",
-      body,
-    });
-  },
-
-  updateFeedbackCampaign: async (id: string, body: any) => {
-    return apiService({
-      method: Api_Methods.PUT,
-      endpoint: `/admin/feedback/campaign/${id}`,
-      body,
-    });
-  },
-
-  archiveFeedbackCampaign: async (id: string) => {
-    return apiService({
-      method: Api_Methods.DELETE,
-      endpoint: `/admin/feedback/campaign/${id}`,
-    });
-  },
-
-  getFeedbackCampaignSubmissions: async (id: string) => {
-    return apiService({
-      method: Api_Methods.GET,
-      endpoint: `/admin/feedback/campaign/${id}/submissions`,
     });
   },
 };
