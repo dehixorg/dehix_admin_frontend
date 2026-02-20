@@ -44,22 +44,6 @@ interface AdminData {
   type: AdminType;
   status: StatusEnum.PENDING; // status is fixed to "Pending"
 }
-interface UserData {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  email: string;
-  phone: string;
-  type: string;
-  status: StatusEnum;
-  createdAt: string;
-  updatedAt: string;
-  resetRequest: boolean;
-}
-interface AddAdminProps {
-  onAddAdmin: (newAdmin: UserData) => void;
-}
 const adminSchema = z.object({
   firstName: z
     .string()

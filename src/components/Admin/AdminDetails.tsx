@@ -13,10 +13,14 @@ export const AdminDetails = ({ data, refetch }: { data: Record<string, any>; ref
     if (status !== "PENDING" || loading) return;
     setLoading(true);
     try {
-      await apiHelperService.updateAdminStatus(data._id, newStatus);
-      setStatus(newStatus);
-      toast({ title: "Success", description: `Admin ${newStatus.toLowerCase()} successfully.` });
-      refetch?.();
+      const response = await apiHelperService.updateAdminStatus(data._id, newStatus);
+      if (response.success) {
+        setStatus(newStatus);
+        toast({ title: "Success", description: `Admin ${newStatus.toLowerCase()} successfully.` });
+        refetch?.();
+      } else {
+        toast({ title: "Error", description: Messages.UPDATE_ERROR("admin"), variant: "destructive" });
+      }
     } catch {
       toast({ title: "Error", description: Messages.UPDATE_ERROR("admin"), variant: "destructive" });
     } finally {
