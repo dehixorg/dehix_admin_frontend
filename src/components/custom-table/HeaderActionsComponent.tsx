@@ -13,7 +13,7 @@ export const HeaderActionComponent = ({
   if (!headerActions?.length) return null;
 
   return (
-    <div className="flex gap-3 mr-4 flex-wrap flex-grow flex-row-reverse">
+    <div className="flex items-center gap-1 sm:gap-3 flex-nowrap">
       {headerActions?.map((Actions, index) => (
         typeof Actions === 'function' ? <Actions refetch={refetch} key={index} /> :
           <div
