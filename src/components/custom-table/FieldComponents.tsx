@@ -184,8 +184,23 @@ export const profileTypeOutlineClasses = (profileType?: string) => {
 };
 
 const DateTimeField = ({ value }: FieldComponentProps<string>) => {
+  if (!value) return <>—</>;
+
   const date = new Date(value);
-  return <>{date.toUTCString()}</>;
+  if (isNaN(date.getTime())) return <>—</>;
+
+  return (
+    <>
+      {date.toLocaleString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      })}
+    </>
+  );
 };
 
 const DateField = ({ value }: FieldComponentProps<string>) => {

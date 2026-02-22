@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
@@ -31,6 +31,10 @@ export const ConnectsDetails = ({
   const [open, setOpen] = useState(false);
   const [newStatus, setNewStatus] = useState(data.status);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setNewStatus(data.status);
+  }, [data.status]);
 
   const handleUpdateStatus = async () => {
     setLoading(true);
@@ -141,9 +145,10 @@ export const ConnectsDetails = ({
             Created At
           </p>
           <p className="text-sm mt-1">
-            {data.createdAt
-              ? format(new Date(data.createdAt), "MMM d, yyyy HH:mm")
-              : "-"}
+            {(() => {
+              const d = data.createdAt ? new Date(data.createdAt) : null;
+              return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+            })()}
           </p>
         </div>
         <div>
@@ -151,9 +156,10 @@ export const ConnectsDetails = ({
             Updated At
           </p>
           <p className="text-sm mt-1">
-            {data.updatedAt
-              ? format(new Date(data.updatedAt), "MMM d, yyyy HH:mm")
-              : "-"}
+             {(() => {
+                const d = data.updatedAt ? new Date(data.updatedAt) : null;
+                return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+              })()}
           </p>
         </div>
       </div>
