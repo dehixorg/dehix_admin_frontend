@@ -2,10 +2,12 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Edit2, Check, X } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -31,6 +33,13 @@ export const ConnectsDetails = ({
   const [open, setOpen] = useState(false);
   const [newStatus, setNewStatus] = useState(data.status);
   const [loading, setLoading] = useState(false);
+  const [editingAmount, setEditingAmount] = useState(false);
+  const [amountValue, setAmountValue] = useState(data.amount);
+  const [amountLoading, setAmountLoading] = useState(false);
+
+  useEffect(() => {
+    setNewStatus(data.status);
+  }, [data.status]);
 
   const handleUpdateStatus = async () => {
     setLoading(true);
@@ -44,10 +53,8 @@ export const ConnectsDetails = ({
       });
 
       // Refresh table data and notification counts immediately
-      console.log("🔄 About to call refreshNotifications");
       refetch?.();
       await refreshNotifications();
-      console.log("🔄 refreshNotifications call completed");
       setOpen(false);
     } catch (error) {
       console.error(error);
@@ -67,6 +74,36 @@ export const ConnectsDetails = ({
       title: "Copied",
       description: "User ID copied to clipboard",
     });
+  };
+
+  const handleUpdateAmount = async () => {
+    setAmountLoading(true);
+    try {
+      const response = await apiHelperService.updateConnectAmount(
+        id,
+        Number(amountValue)
+      );
+
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: "Amount updated successfully",
+        });
+        refetch?.();
+        setEditingAmount(false);
+      } else {
+        throw new Error(response.data?.message || "Update failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "Failed to update amount",
+        variant: "destructive",
+      });
+    } finally {
+      setAmountLoading(false);
+    }
   };
 
   const dialogContent = (
@@ -107,20 +144,67 @@ export const ConnectsDetails = ({
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">
             Amount
           </p>
-          <p className="text-xl font-bold mt-1">₹{data.amount}</p>
+          <div className="flex items-center gap-2 mt-1">
+            {editingAmount ? (
+              <>
+                <Input
+                  type="number"
+                  value={amountValue.toString()}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    // Remove leading zeros but allow empty string or "0"
+                    const numVal = val.replace(/^0+/, "");
+                    setAmountValue(numVal === "" ? 0 : Number(numVal));
+                  }}
+                  className="w-24 h-8"
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-green-600"
+                  onClick={handleUpdateAmount}
+                  disabled={amountLoading || amountValue === data.amount}
+                >
+                  <Check className="h-4 w-4" />
+                </Button>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8 text-red-600"
+                  onClick={() => {
+                    setAmountValue(data.amount);
+                    setEditingAmount(false);
+                  }}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="text-xl font-bold">₹{data.amount}</p>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="h-8 w-8"
+                  onClick={() => setEditingAmount(true)}
+                >
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+          </div>
         </div>
         <div>
           <p className="font-semibold text-sm text-gray-500 dark:text-gray-400">
             Current Status
           </p>
           <span
-            className={`inline-block px-3 py-1 text-xs rounded-full font-semibold mt-1 ${
-              data.status === "APPROVED"
-                ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-50"
-                : data.status === "PENDING"
-                  ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-50"
-                  : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-50"
-            }`}
+            className={`inline-block px-3 py-1 text-xs rounded-full font-semibold mt-1 ${data.status === "APPROVED"
+              ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-50"
+              : data.status === "PENDING"
+                ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-50"
+                : "bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-50"
+              }`}
           >
             {data.status}
           </span>
@@ -160,9 +244,10 @@ export const ConnectsDetails = ({
             Created At
           </p>
           <p className="text-sm mt-1">
-            {data.createdAt
-              ? format(new Date(data.createdAt), "MMM d, yyyy HH:mm")
-              : "-"}
+            {(() => {
+              const d = data.createdAt ? new Date(data.createdAt) : null;
+              return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+            })()}
           </p>
         </div>
         <div>
@@ -170,9 +255,10 @@ export const ConnectsDetails = ({
             Updated At
           </p>
           <p className="text-sm mt-1">
-            {data.updatedAt
-              ? format(new Date(data.updatedAt), "MMM d, yyyy HH:mm")
-              : "-"}
+             {(() => {
+                const d = data.updatedAt ? new Date(data.updatedAt) : null;
+                return d && !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy, hh:mm a') : '-';
+              })()}
           </p>
         </div>
       </div>

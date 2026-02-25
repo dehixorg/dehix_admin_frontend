@@ -56,13 +56,13 @@ const customTableProps: TableProps = {
     {
       textValue: "Created At",
       fieldName: "createdAt",
-      type: FieldType.LONGTEXT,
+      type: FieldType.DATETIME,
       wordsCnt: 20,
     },
     {
       textValue: "Updated At",
       fieldName: "updatedAt",
-      type: FieldType.LONGTEXT,
+      type: FieldType.DATETIME,
       wordsCnt: 20,
     },
     // The corrected custom column for the action button

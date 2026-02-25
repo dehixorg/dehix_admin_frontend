@@ -34,7 +34,7 @@ export default function DashboardShell({
   breadcrumbItems = [],
   showSearch = true,
   searchPlaceholder = 'Search...',
-  containerClassName= "bg-background",
+  containerClassName = "bg-background",
   contentClassName = 'flex flex-col sm:gap-4 sm:pl-16',
   mainClassName = 'ml-5 mr-5',
   children,
@@ -47,11 +47,11 @@ export default function DashboardShell({
         active={active}
       />
       <div className={contentClassName}>
-            <header
-              role="banner"
-              aria-label="Site header"
-              className="sticky top-0 z-30 flex h-14 items-center py-6 gap-4 border-b bg-muted-foreground/20 dark:bg-muted/20 px-4 sm:px-6 backdrop-blur-md"
-            >
+        <header
+          role="banner"
+          aria-label="Site header"
+          className="sticky top-0 z-30 flex h-14 items-center py-6 gap-4 border-b bg-muted-foreground/20 dark:bg-muted/20 px-4 sm:px-6 backdrop-blur-md"
+        >
           <CollapsibleSidebarMenu
             menuItemsTop={menuItemsTop}
             menuItemsBottom={menuItemsBottom}
