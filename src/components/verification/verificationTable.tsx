@@ -172,8 +172,9 @@ const Verification: React.FC<Props> = ({ Data, onRefetch }) => {
                         {user.requester_id ? (
                           <div className="flex items-center space-x-2">
                             <Tooltip>
-                              <TooltipTrigger>
-                                <span
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
                                   onClick={() =>
                                     router.push(
                                       `/freelancer/tabs?id=${user.requester_id}`,
@@ -181,10 +182,8 @@ const Verification: React.FC<Props> = ({ Data, onRefetch }) => {
                                   }
                                   className="cursor-pointer text-blue-500 hover:underline"
                                 >
-                                  <span>
-                                    {formatID(user.requester_id || "")}
-                                  </span>
-                                </span>
+                                  {formatID(user.requester_id || "")}
+                                </button>
                               </TooltipTrigger>
 
                               <CopyButton id={user.requester_id} />
