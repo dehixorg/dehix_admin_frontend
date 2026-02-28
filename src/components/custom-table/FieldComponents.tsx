@@ -20,6 +20,7 @@ import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
 import { ToolTip } from "../ToolTip";
 import { cn } from "@/lib/utils";
+import { useToast } from "../ui/use-toast";
 
 // Single source of truth for both solid and outline styles
 type StatusStyle = { solid: string; outline: string };
@@ -451,28 +452,44 @@ export const TooltipField = ({
 };
 
 const LongTextField = ({ fieldData, value }: FieldComponentProps<string>) => {
+  const { toast } = useToast();
+
   if (!value) return <span>-</span>;
-  if (fieldData.wordsCnt && value.length <= fieldData.wordsCnt)
-    return <span>{value}</span>;
 
-  if (fieldData.wordsCnt)
-    return (
-      <ToolTip
-        trigger={
-          <span className=" line-clamp-1">
-            {value.slice(0, fieldData.wordsCnt)}...
-          </span>
-        }
-        content={value || ""}
-      />
-    );
+  const isCopyable = fieldData.copyable === true;
 
-  return (
-    <ToolTip
-      trigger={<span className=" line-clamp-1">{value}</span>}
-      content={value || ""}
-    />
+  const displayValue =
+    fieldData.wordsCnt && value.length > fieldData.wordsCnt
+      ? `${value.slice(0, fieldData.wordsCnt)}...`
+      : value;
+
+  const handleCopy = async () => {
+    if (!isCopyable) return;
+    await navigator.clipboard.writeText(value);
+    toast({
+      title: "Copied",
+      description: "User ID Copied to clipboard",
+    });
+  };
+
+  const content = (
+    <span
+      className={cn(
+        "line-clamp-1",
+        isCopyable && "cursor-pointer text-blue-600 hover:underline"
+      )}
+      title={isCopyable ? "Click to copy" : undefined}
+      onClick={isCopyable ? handleCopy : undefined}
+    >
+      {displayValue}
+    </span>
   );
+
+  if (fieldData.wordsCnt && value.length > fieldData.wordsCnt) {
+    return <ToolTip trigger={content} content={value} />;
+  }
+
+  return content;
 };
 
 const CustomComponent = ({

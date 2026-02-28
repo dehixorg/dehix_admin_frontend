@@ -57,6 +57,7 @@ export interface Field {
   formating?: object;
   link?: string; // the placeholder link to be displayed if type === FieldType.LINK
   tooltip?: boolean;
+  copyable?: boolean;
   tooltipContent?: string; // tooltip content to be displayed if tooltip === true
   className?: string; // custom tailwind classes to be added to the table cell
   arrayName?: string; // the key in the api response if type === FieldType.ARRAY_VALUE and the value is an array of objects than  array of strings
