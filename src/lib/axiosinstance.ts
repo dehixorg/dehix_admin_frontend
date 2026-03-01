@@ -1,4 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { auth } from "@/config/firebaseConfig";
+import Cookies from "js-cookie";
+
+
 
 // Create an Axios instance
 let axiosInstance: AxiosInstance = axios.create({
@@ -40,13 +44,48 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Response interceptor (optional)
+// Response interceptor
 axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  (error) => {
-    // Handle errors if needed
+  async (error) => {
+    const originalRequest = error.config;
+
+    // If error is 401 and we haven't retried yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const user = auth.currentUser;
+        if (user) {
+          // Force refresh the Firebase ID token
+          const newToken = await user.getIdToken(true);
+
+          // Update local storage and the auth header for the retry
+          localStorage.setItem("token", newToken);
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+          // Update the singleton instance for future requests
+          initializeAxiosWithToken(newToken);
+
+          // Retry the original request
+          return axiosInstance(originalRequest);
+        }
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // Clear auth state and redirect if on client side
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          Cookies.remove("token");
+          Cookies.remove("userType");
+          window.location.href = "/auth/login";
+        }
+
+      }
+    }
+
     console.error("Response error:", error);
     return Promise.reject(error);
   }

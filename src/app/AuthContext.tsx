@@ -3,8 +3,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { User } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 import { setUser, clearUser } from "@/lib/userSlice";
+
 import { initializeAxiosWithToken } from "@/lib/axiosinstance";
 import { auth } from "@/config/firebaseConfig";
 
@@ -18,6 +20,11 @@ const AuthContext = createContext<AuthContextProps>({
   loading: true,
 });
 
+const getLocalStorageItem = (key: string) => localStorage.getItem(key);
+const setLocalStorageItem = (key: string, value: string) =>
+  localStorage.setItem(key, value);
+const removeLocalStorageItem = (key: string) => localStorage.removeItem(key);
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [user, setUserState] = useState<User | null>(null);
@@ -25,32 +32,74 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
+    const storedUser = getLocalStorageItem("user");
+    const storedToken = getLocalStorageItem("token");
 
     if (storedUser && storedToken) {
-      const parsedUser = JSON.parse(storedUser);
-      setUserState(parsedUser);
-      initializeAxiosWithToken(storedToken);
-      dispatch(setUser(parsedUser));
-      setLoading(false);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUserState(parsedUser);
+        initializeAxiosWithToken(storedToken);
+        dispatch(setUser(parsedUser));
+      } catch (error) {
+        console.error("Failed to parse user:", error);
+        removeLocalStorageItem("user");
+        removeLocalStorageItem("token");
+      }
     }
 
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
-      if (firebaseUser) {
-        const accessToken = await firebaseUser.getIdToken();
-        const claims = await firebaseUser.getIdTokenResult();
-        const userData = { ...firebaseUser, type: claims.claims.type };
-        localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("token", accessToken);
-        setUserState(userData);
-        initializeAxiosWithToken(accessToken);
-        dispatch(setUser(userData));
+    const unsubscribe = auth.onIdTokenChanged(async (firebaseUser) => {
+      if (firebaseUser && navigator.onLine) {
+        try {
+          const accessToken = await firebaseUser.getIdToken();
+          if (accessToken) {
+            const claims = await firebaseUser.getIdTokenResult();
+            const userData = {
+              uid: firebaseUser.uid,
+              email: firebaseUser.email,
+              displayName: firebaseUser.displayName,
+              photoURL: firebaseUser.photoURL,
+              phoneNumber: firebaseUser.phoneNumber,
+              emailVerified: firebaseUser.emailVerified,
+              type: claims.claims.type,
+            };
+            setLocalStorageItem("user", JSON.stringify(userData));
+            setLocalStorageItem("token", accessToken);
+
+            // Sync cookies so middleware always has a fresh token
+            Cookies.set("token", accessToken, {
+              expires: 1,
+              sameSite: "Strict",
+            });
+            if (claims.claims.type) {
+              Cookies.set("userType", claims.claims.type as string, {
+                expires: 1,
+                sameSite: "Strict",
+              });
+            }
+
+            setUserState(firebaseUser); // Keep the full user object in local state
+            initializeAxiosWithToken(accessToken);
+            dispatch(setUser(userData)); // Only pass serializable data to Redux
+          }
+        } catch (error) {
+          console.error("Token Refresh Error:", error);
+        }
       } else {
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        // If there was a stored token/user, the session expired — flag it for the login page
+        const hadSession =
+          getLocalStorageItem("token") || getLocalStorageItem("user");
+        removeLocalStorageItem("user");
+        removeLocalStorageItem("token");
+        // Clear cookies so middleware redirects correctly
+        Cookies.remove("token");
+        Cookies.remove("userType");
         setUserState(null);
+
         dispatch(clearUser());
+        if (hadSession && typeof window !== "undefined") {
+          sessionStorage.setItem("sessionExpired", "true");
+        }
         router.replace("/auth/login");
       }
       setLoading(false);
