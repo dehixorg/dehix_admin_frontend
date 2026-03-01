@@ -81,13 +81,20 @@ const Verification: React.FC<Props> = ({ Data, onRefetch }) => {
 
     setIsProcessing(true);
     try {
+      const payload: {
+        verification_status: "APPROVED" | "DENIED";
+        verifiedAt: string;
+        comment?: string;
+      } = {
+        verification_status: action,
+        verifiedAt: new Date().toISOString(),
+      };
+      if (comment) {
+        payload.comment = comment;
+      }
       const response = await apiHelperService.updateVerificationStatus(
         selectedVerification._id,
-        {
-          verification_status: action,
-          comment: comment || "",
-          verifiedAt: new Date().toISOString(),
-        },
+        payload,
       );
 
       if (response?.success) {
@@ -242,7 +249,10 @@ const Verification: React.FC<Props> = ({ Data, onRefetch }) => {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <ButtonIcon onClick={() => handleOpenDetail(user)} />
+                        <ButtonIcon
+                          onClick={() => handleOpenDetail(user)}
+                          aria-label="View verification details"
+                        />
                       </TableCell>
                     </TableRow>
                   ))
