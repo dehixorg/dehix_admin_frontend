@@ -14,15 +14,27 @@ export const apiHelperService = {
     });
   },
 
-
- getAllVerificationsById: async (id:string) => {
- 
+  getAllVerificationsById: async (id: string) => {
     const endpoint = `/verification/verifier/${id}`;
     return await apiService({
       method: Api_Methods.GET,
       endpoint,
     });
-  
-},
- 
+  },
+
+  updateVerificationStatus: async (
+    verificationId: string,
+    body: {
+      comment?: string;
+      verifiedAt?: string;
+      verification_status: "APPROVED" | "DENIED";
+    },
+  ) => {
+    const endpoint = `/verification/${verificationId}/update`;
+    return await apiService({
+      method: Api_Methods.PUT,
+      endpoint,
+      body,
+    });
+  },
 };
