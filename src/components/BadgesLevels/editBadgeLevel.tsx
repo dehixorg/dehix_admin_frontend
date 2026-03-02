@@ -69,7 +69,11 @@ const badgeLevelSchema = z
       .optional()
       .or(z.literal("")),
     // LEVEL-specific fields
-    levelNumber: z.number().int().min(1, "Level number must be at least 1"),
+    levelNumber: z
+      .number()
+      .int()
+      .min(1, "Level number must be at least 1")
+      .optional(),
     rewardMultiplier: z.number().optional(),
     // Connect rewards - both BADGE and LEVEL
     baseReward: z.number().optional(),
@@ -89,7 +93,9 @@ const badgeLevelSchema = z
     (data) => {
       if (data.type === "LEVEL") {
         return (
-          data.baseReward !== undefined && data.rewardMultiplier !== undefined && data.levelNumber !== undefined
+          data.baseReward !== undefined &&
+          data.rewardMultiplier !== undefined &&
+          data.levelNumber !== undefined
         );
       }
       if (data.type === "BADGE") {

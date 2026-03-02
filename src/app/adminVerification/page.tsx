@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiHelperService } from "@/services/verification";
@@ -41,32 +41,32 @@ const BusinessTabs = () => {
   const user = useSelector((state: any) => state.user);
   const userId = user.uid;
 
-  const fetchAdminVerifications = useCallback(async () => {
-    try {
-      if (!userId) {
-        setLoading(false);
-        return;
-      }
-      const response = await apiHelperService.getAllVerificationsById(userId);
-      const data = response?.data?.data;
-
-      if (data) {
-        setAdminVerifications(data);
-      }
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: Messages.FETCH_ERROR("verification"),
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [userId, toast]);
-
   useEffect(() => {
+    const fetchAdminVerifications = async () => {
+      try {
+        if (!userId) {
+          setLoading(false);
+          return;
+        }
+        const response = await apiHelperService.getAllVerificationsById(userId);
+        const data = response?.data?.data;
+
+        if (data) {
+          setAdminVerifications(data);
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("verification"),
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchAdminVerifications();
-  }, [fetchAdminVerifications]);
+  }, [userId, toast]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -90,10 +90,7 @@ const BusinessTabs = () => {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Admin Oracle Verification">
-          <Verification
-            Data={adminVerifications}
-            onRefetch={fetchAdminVerifications}
-          />
+          <Verification Data={adminVerifications} />
         </TabsContent>
       </Tabs>
     </AdminDashboardLayout>
