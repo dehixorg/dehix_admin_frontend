@@ -110,14 +110,19 @@ export const BadgeLevelDetails = ({
             {data.type === "BADGE" && (
               <div className="space-y-2">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Base Reward:</strong> {data.baseReward || 0} points
+                  <strong>Connect Rewards:</strong> {data.baseReward || 0}{" "}
+                  points
                 </p>
               </div>
             )}
             {data.type === "LEVEL" && (
               <div className="space-y-2">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <strong>Priority:</strong> {data.priority || 0}
+                  <strong>Level Number:</strong> {data.levelNumber || "N/A"}
+                </p>
+                <p className="text-gray-700 dark:text-gray-300">
+                  <strong>Connect Rewards:</strong> {data.baseReward || 0}{" "}
+                  points
                 </p>
                 <p className="text-gray-700 dark:text-gray-300">
                   <strong>Reward Multiplier:</strong>{" "}
@@ -149,7 +154,7 @@ export const BadgeLevelDetails = ({
                             {value.toString()}
                           </span>
                         </li>
-                      )
+                      ),
                   )}
                 </ul>
               </div>

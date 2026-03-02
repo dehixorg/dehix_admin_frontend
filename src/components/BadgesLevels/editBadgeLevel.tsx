@@ -28,7 +28,6 @@ import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 import { BadgeImageUpload } from "./BadgeImageUpload";
 
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -51,10 +50,9 @@ interface BadgeLevelData {
   type: string;
   isActive: boolean;
   imageUrl: string;
-  // LEVEL-specific fields
-  priority?: number;
+  levelNumber: number;
   rewardMultiplier?: number;
-  // Badge-specific fields
+  // Connect rewards - both BADGE and LEVEL
   baseReward?: number;
   criteria?: GamificationCriteria;
 }
@@ -71,9 +69,9 @@ const badgeLevelSchema = z
       .optional()
       .or(z.literal("")),
     // LEVEL-specific fields
-    priority: z.number().optional(),
+    levelNumber: z.number().int().min(1, "Level number must be at least 1"),
     rewardMultiplier: z.number().optional(),
-    // Badge-specific fields
+    // Connect rewards - both BADGE and LEVEL
     baseReward: z.number().optional(),
     criteria: z.object({
       minProjectApplications: z.number().optional(),
@@ -91,7 +89,7 @@ const badgeLevelSchema = z
     (data) => {
       if (data.type === "LEVEL") {
         return (
-          data.priority !== undefined && data.rewardMultiplier !== undefined
+          data.baseReward !== undefined && data.rewardMultiplier !== undefined && data.levelNumber !== undefined
         );
       }
       if (data.type === "BADGE") {
@@ -101,7 +99,7 @@ const badgeLevelSchema = z
     },
     {
       message: "Type-specific fields are required",
-    }
+    },
   )
   .refine(
     (data) => {
@@ -112,13 +110,13 @@ const badgeLevelSchema = z
           value !== undefined &&
           value !== null &&
           value !== false &&
-          value !== 0
+          value !== 0,
       );
     },
     {
       message: "At least one criteria field must be filled",
       path: ["criteria"],
-    }
+    },
   );
 
 const EditBadgeLevel: React.FC<
@@ -156,7 +154,7 @@ const EditBadgeLevel: React.FC<
       isActive: data?.isActive !== undefined ? data?.isActive : true,
       imageUrl: data?.imageUrl || "",
       // Add default values for optional fields
-      priority: data?.priority || 0,
+      levelNumber: data?.levelNumber || undefined,
       rewardMultiplier: data?.rewardMultiplier || 1.0,
       baseReward: data?.baseReward || 0,
       criteria: data?.criteria || {},
@@ -174,7 +172,7 @@ const EditBadgeLevel: React.FC<
     try {
       const response = await axiosInstance.put(
         `/admin/gamification/levelsandbadges/${data._id}`,
-        formData
+        formData,
       );
 
       if (response.status === 200) {
@@ -332,7 +330,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -358,7 +356,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -387,7 +385,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -413,7 +411,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -439,7 +437,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -465,7 +463,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -491,7 +489,7 @@ const EditBadgeLevel: React.FC<
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -554,29 +552,55 @@ const EditBadgeLevel: React.FC<
           {selectedType === "LEVEL" && (
             <>
               <div className="mb-3">
-                <Label htmlFor="priority">Priority *</Label>
+                <Label htmlFor="levelNumber">Level Number *</Label>
                 <Controller
                   control={control}
-                  name="priority"
+                  name="levelNumber"
                   render={({ field }) => (
                     <Input
-                      id="priority"
+                      id="levelNumber"
                       type="number"
-                      placeholder="Priority"
+                      placeholder="e.g. 1, 2, 3"
                       value={field.value ?? ""}
                       onChange={(e) =>
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                       className="border p-2 rounded mt-2 w-full"
                     />
                   )}
                 />
-                {errors.priority && (
-                  <p className="text-red-600">{errors.priority.message}</p>
+                {errors.levelNumber && (
+                  <p className="text-red-600">{errors.levelNumber.message}</p>
+                )}
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="baseReward">Connect Rewards *</Label>
+                <Controller
+                  control={control}
+                  name="baseReward"
+                  render={({ field }) => (
+                    <Input
+                      id="baseReward"
+                      type="number"
+                      placeholder="Connect Rewards"
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value),
+                        )
+                      }
+                      className="border p-2 rounded mt-2 w-full"
+                    />
+                  )}
+                />
+                {errors.baseReward && (
+                  <p className="text-red-600">{errors.baseReward.message}</p>
                 )}
               </div>
               <div className="mb-3">
@@ -595,7 +619,7 @@ const EditBadgeLevel: React.FC<
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                       className="border p-2 rounded mt-2 w-full"
@@ -613,7 +637,7 @@ const EditBadgeLevel: React.FC<
 
           {selectedType === "BADGE" && (
             <div className="mb-3">
-              <Label htmlFor="baseReward">Base Reward *</Label>
+              <Label htmlFor="baseReward">Connect Rewards *</Label>
               <Controller
                 control={control}
                 name="baseReward"
@@ -621,13 +645,13 @@ const EditBadgeLevel: React.FC<
                   <Input
                     id="baseReward"
                     type="number"
-                    placeholder="Base Reward"
+                    placeholder="Connect Rewards"
                     value={field.value ?? ""}
                     onChange={(e) =>
                       field.onChange(
                         e.target.value === ""
                           ? undefined
-                          : Number(e.target.value)
+                          : Number(e.target.value),
                       )
                     }
                     className="border p-2 rounded mt-2 w-full"
