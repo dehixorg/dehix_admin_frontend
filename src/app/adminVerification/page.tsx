@@ -33,9 +33,7 @@ interface Verificationinfo {
 }
 
 const BusinessTabs = () => {
-  const [adminVerifications, setAdminVerifications] = useState<
-    Verificationinfo[] | null
-  >(null);
+  const [adminVerifications, setAdminVerifications] = useState<Verificationinfo[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
   const user = useSelector((state: any) => state.user);
@@ -50,10 +48,11 @@ const BusinessTabs = () => {
         }
         const response = await apiHelperService.getAllVerificationsById(userId);
         const data = response?.data?.data;
-
+        
         if (data) {
           setAdminVerifications(data);
         }
+        
       } catch (error) {
         toast({
           title: "Error",
@@ -64,9 +63,10 @@ const BusinessTabs = () => {
         setLoading(false);
       }
     };
-
+    
     fetchAdminVerifications();
-  }, [userId, toast]);
+    
+  }, [userId, toast]); 
 
   if (loading) {
     return <div>Loading...</div>;
@@ -82,15 +82,12 @@ const BusinessTabs = () => {
     >
       <Tabs defaultValue="Admin Oracle Verification">
         <TabsList className="flex w-full justify-between gap-2">
-          <TabsTrigger
-            value="Admin Oracle Verification"
-            className="flex-1 text-center"
-          >
+          <TabsTrigger value="Admin Oracle Verification" className="flex-1 text-center">
             Admin Oracle Verification
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Admin Oracle Verification">
-          <Verification Data={adminVerifications} />
+          <Verification Data={adminVerifications}/>
         </TabsContent>
       </Tabs>
     </AdminDashboardLayout>
