@@ -29,7 +29,6 @@ import { Messages } from "@/utils/common/enum";
 import { CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 import { BadgeImageUpload } from "./BadgeImageUpload";
 
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
@@ -51,7 +50,7 @@ interface BadgeLevelData {
   type: string;
   isActive: boolean;
   imageUrl: string;
-  priority?: number;
+  levelNumber: number;
   rewardMultiplier?: number;
   baseReward?: number;
   criteria?: GamificationCriteria;
@@ -68,7 +67,11 @@ const badgeLevelSchema = z
       .url("Please enter a valid URL")
       .optional()
       .or(z.literal("")),
-    priority: z.number().optional(),
+    levelNumber: z
+      .number()
+      .int()
+      .min(1, "Level number must be at least 1")
+      .optional(),
     rewardMultiplier: z.number().optional(),
     baseReward: z.number().optional(),
     criteria: z.object({
@@ -87,7 +90,9 @@ const badgeLevelSchema = z
     (data) => {
       if (data.type === "LEVEL") {
         return (
-          data.priority !== undefined && data.rewardMultiplier !== undefined
+          data.baseReward !== undefined &&
+          data.rewardMultiplier !== undefined &&
+          data.levelNumber !== undefined
         );
       }
       if (data.type === "BADGE") {
@@ -97,7 +102,7 @@ const badgeLevelSchema = z
     },
     {
       message: "Type-specific fields are required",
-    }
+    },
   )
   .refine(
     (data) => {
@@ -108,13 +113,13 @@ const badgeLevelSchema = z
           value !== undefined &&
           value !== null &&
           value !== false &&
-          value !== 0
+          value !== 0,
       );
     },
     {
       message: "At least one criteria field must be filled",
       path: ["criteria"],
-    }
+    },
   );
 const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
   refetch,
@@ -135,7 +140,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
       type: "BADGE",
       isActive: true,
       imageUrl: "",
-      priority: 0,
+      levelNumber: undefined,
       rewardMultiplier: 1.0,
       baseReward: 0,
       criteria: {},
@@ -148,7 +153,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
     try {
       const response = await axiosInstance.post(
         "/admin/gamification/levelsandbadges/create",
-        data
+        data,
       );
 
       if (response.status === 201) {
@@ -176,7 +181,10 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)} className="text-xs sm:text-sm px-2 sm:px-4">
+        <Button
+          onClick={() => setOpen(true)}
+          className="text-xs sm:text-sm px-2 sm:px-4"
+        >
           <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
           <span className="whitespace-nowrap">Add Badge/Level</span>
         </Button>
@@ -284,7 +292,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -310,7 +318,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -339,7 +347,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -365,7 +373,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -391,7 +399,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -417,7 +425,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -443,7 +451,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                           field.onChange(
                             e.target.value === ""
                               ? undefined
-                              : Number(e.target.value)
+                              : Number(e.target.value),
                           )
                         }
                         className="mt-1"
@@ -506,29 +514,55 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
           {selectedType === "LEVEL" && (
             <>
               <div className="mb-3">
-                <Label htmlFor="priority">Priority *</Label>
+                <Label htmlFor="levelNumber">Level Number *</Label>
                 <Controller
                   control={control}
-                  name="priority"
+                  name="levelNumber"
                   render={({ field }) => (
                     <Input
-                      id="priority"
+                      id="levelNumber"
                       type="number"
-                      placeholder="Priority"
+                      placeholder="e.g. 1, 2, 3"
                       value={field.value ?? ""}
                       onChange={(e) =>
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                       className="border p-2 rounded mt-2 w-full"
                     />
                   )}
                 />
-                {errors.priority && (
-                  <p className="text-red-600">{errors.priority.message}</p>
+                {errors.levelNumber && (
+                  <p className="text-red-600">{errors.levelNumber.message}</p>
+                )}
+              </div>
+              <div className="mb-3">
+                <Label htmlFor="baseReward">Connect Rewards *</Label>
+                <Controller
+                  control={control}
+                  name="baseReward"
+                  render={({ field }) => (
+                    <Input
+                      id="baseReward"
+                      type="number"
+                      placeholder="Connect Rewards"
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(
+                          e.target.value === ""
+                            ? undefined
+                            : Number(e.target.value),
+                        )
+                      }
+                      className="border p-2 rounded mt-2 w-full"
+                    />
+                  )}
+                />
+                {errors.baseReward && (
+                  <p className="text-red-600">{errors.baseReward.message}</p>
                 )}
               </div>
               <div className="mb-3">
@@ -547,7 +581,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                         field.onChange(
                           e.target.value === ""
                             ? undefined
-                            : Number(e.target.value)
+                            : Number(e.target.value),
                         )
                       }
                       className="border p-2 rounded mt-2 w-full"
@@ -565,7 +599,7 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
 
           {selectedType === "BADGE" && (
             <div className="mb-3">
-              <Label htmlFor="baseReward">Base Reward *</Label>
+              <Label htmlFor="baseReward">Connect Rewards *</Label>
               <Controller
                 control={control}
                 name="baseReward"
@@ -573,13 +607,13 @@ const AddBadgeLevel: React.FC<CustomTableChildComponentsProps> = ({
                   <Input
                     id="baseReward"
                     type="number"
-                    placeholder="Base Reward"
+                    placeholder="Connect Rewards"
                     value={field.value ?? ""}
                     onChange={(e) =>
                       field.onChange(
                         e.target.value === ""
                           ? undefined
-                          : Number(e.target.value)
+                          : Number(e.target.value),
                       )
                     }
                     className="border p-2 rounded mt-2 w-full"
