@@ -1,13 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { UserCredential } from "firebase/auth";
 import { LoaderCircle, Chrome, Key, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Cookies from "js-cookie";
 
 import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/shared/themeToggle";
@@ -23,13 +26,32 @@ export default function Login() {
   const [pass, setPass] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [sessionExpired, setSessionExpired] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const expired = sessionStorage.getItem("sessionExpired");
+      if (expired === "true") {
+        setSessionExpired(true);
+        sessionStorage.removeItem("sessionExpired");
+      }
+    }
+  }, []);
+
 
   const handleLogin = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
+    // Clear any existing auth state before login
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    Cookies.remove("token");
+    Cookies.remove("userType");
+
     try {
+
       const userCredential: UserCredential = await loginUser(email, pass);
       const { user, claims } = await getUserData(userCredential);
       if (claims.type !== 'admin' && claims.type !=='super admin') {
@@ -87,7 +109,20 @@ export default function Login() {
                 Enter your email below to login to your account
               </p>
             </div>
+            {sessionExpired && (
+              <div
+                role="alert"
+                className="flex items-start gap-2 rounded-md border border-amber-400/50 bg-amber-400/10 px-4 py-3 text-sm text-amber-600 dark:text-amber-400"
+              >
+                <span className="mt-0.5 text-base leading-none">⚠️</span>
+                <span>
+                  <strong>Session expired.</strong> Please log in again to
+                  continue.
+                </span>
+              </div>
+            )}
             {error && <p className="text-red-500">{error}</p>}
+
             <form onSubmit={handleLogin}>
               <div className="grid gap-4">
                 <div className="grid gap-2">
