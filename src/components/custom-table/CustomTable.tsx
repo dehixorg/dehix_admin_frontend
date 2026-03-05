@@ -25,7 +25,6 @@ import { twMerge } from "tailwind-merge";
 import { useToast } from "../ui/use-toast";
 import { Messages } from "@/utils/common/enum";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 
 export const CustomTable = ({
   title,
@@ -352,46 +351,42 @@ export const CustomTable = ({
 
   return (
     <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
-      <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider text-center sm:text-left">
           {title}
         </h1>
-        <HeaderActionComponent
-          headerActions={mainTableActions}
-          refetch={refetch}
-        />
-        <div className="flex items-center gap-2">
-          <TableSelect
-            currValue={limit}
-            label="Items Per Page"
-            values={[10, 25, 50, 100]}
-            setCurrValue={setLimitUtils}
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
+          <HeaderActionComponent
+            headerActions={mainTableActions}
+            refetch={refetch}
           />
-          <div className="rounded-full px-3 py-1.5 shadow-sm">
-            <TableSelect
-              currValue={limit}
-              label="Items Per Page"
-              values={[10, 25, 50, 100]}
-              setCurrValue={setLimitUtils}
-            />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <TableSelect
+                currValue={limit}
+                label="Items Per Page"
+                values={[10, 25, 50, 100]}
+                setCurrValue={setLimitUtils}
+              />
+            </div>
+            {data.length > 0 && (
+              <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
+                {`${data.length} items found`}
+              </div>
+            )}
+            {isDownload && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
+                onClick={handleDownload}
+              >
+                <DownloadIcon className="size-4" />
+                Download
+              </Button>
+            )}
           </div>
-          {data.length > 0 && (
-            <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-thin">
-              {`${data.length} items found`}
-            </Badge>
-          )}
-          {isDownload && (
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
-              onClick={handleDownload}
-            >
-              <DownloadIcon className="size-4" />
-              Download
-            </Button>
-          )}
         </div>
       </div>
       <div className="mb-8 mt-4 w-full">
