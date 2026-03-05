@@ -27,7 +27,7 @@ export interface AdminSidebarNotifications {
 }
 
 export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
-  refreshNotifications: () => void;
+  refreshNotifications: () => Promise<boolean>;
 } {
   // Load persisted counts from localStorage or use global variable
   const getInitialCounts = (): AdminSidebarNotifications => {
@@ -45,7 +45,7 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
   const [counts, setCounts] =
     useState<AdminSidebarNotifications>(getInitialCounts);
 
-  const fetchAllCounts = async () => {
+  const fetchAllCounts = async (): Promise<boolean> => {
     try {
       const res = await apiService({
         method: Api_Methods.GET,
@@ -76,9 +76,14 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
         }
 
         setCounts(newCounts);
+        return true;
+      } else {
+        console.error("Failed to fetch notification counts: Invalid response");
+        return false;
       }
-    } catch {
-      // silently fail
+    } catch (error) {
+      console.error("Error fetching notification counts:", error);
+      return false;
     }
   };
 
@@ -86,7 +91,7 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
     // Only fetch if not already fetched globally
     if (!hasFetchedNotifications) {
       hasFetchedNotifications = true;
-      fetchAllCounts();
+      fetchAllCounts(); // Fire and forget for initial load
     }
 
     // Listen for manual refresh events
@@ -107,9 +112,34 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
   }, []);
 
   // Manual refresh function for immediate updates after actions
-  const refreshNotifications = () => {
-    window.dispatchEvent(new CustomEvent("refreshNotifications"));
+  const refreshNotifications = async (): Promise<boolean> => {
+    try {
+      const success = await fetchAllCounts();
+      return success;
+    } catch (error) {
+      console.error("Error in refreshNotifications:", error);
+      return false;
+    }
   };
 
   return { ...counts, refreshNotifications };
 }
+
+// Export a reset function for logout scenarios
+export const resetAdminSidebarNotifications = () => {
+  hasFetchedNotifications = false;
+  isRefreshingNotifications = false;
+  globalNotificationCounts = {
+    connects: 0,
+    skill: 0,
+    domain: 0,
+    projectDomain: 0,
+    oracle: 0,
+    kyc: 0,
+  };
+  try {
+    localStorage.removeItem("adminNotificationCounts");
+  } catch {
+    // Ignore localStorage errors
+  }
+};

@@ -45,11 +45,14 @@ export default function DashboardShell({
   const { refreshNotifications } = useAdminSidebarNotifications();
   const { toast } = useToast();
 
-  const handleRefreshClick = () => {
-    refreshNotifications();
+  const handleRefreshClick = async () => {
+    const success = await refreshNotifications();
     toast({
-      title: "Notifications Refreshed",
-      description: "Notification counts have been updated successfully.",
+      title: success ? "Notifications Refreshed" : "Refresh Failed",
+      description: success
+        ? "Notification counts have been updated successfully."
+        : "Failed to update notification counts. Please try again.",
+      variant: success ? "default" : "destructive",
     });
   };
 

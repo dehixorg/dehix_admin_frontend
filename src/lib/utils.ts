@@ -13,6 +13,8 @@ import { initializeAxiosWithToken } from "./axiosinstance";
 import { auth, googleProvider } from "@/config/firebaseConfig";
 import { clearUser } from "./userSlice";
 
+import { resetAdminSidebarNotifications } from "@/hooks/useAdminSidebarNotifications";
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -56,7 +58,6 @@ export const loginUser = async (email: string, password: string) => {
     );
     return userCredential;
   } catch (error: any) {
-    
     const errorMessage = error.message;
 
     throw new Error(errorMessage);
@@ -125,13 +126,15 @@ export const getUserData = async (
   }
 };
 
-
 //logout function
 
 export const handleLogout = async (dispatch: any, router: any) => {
   try {
-    await signOut(auth); 
-    dispatch(clearUser()); 
+    await signOut(auth);
+    dispatch(clearUser());
+
+    // Reset notification flags and cached data
+    resetAdminSidebarNotifications();
 
     // Clear cookies
     Cookies.remove("userType");
@@ -139,7 +142,6 @@ export const handleLogout = async (dispatch: any, router: any) => {
 
     // Redirect to login page
     router.replace("/auth/login");
-
   } catch (error) {
     console.error("Error during logout:", error);
     throw error;
