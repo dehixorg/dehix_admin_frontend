@@ -84,18 +84,24 @@ const customTableProps: TableProps = {
           bgColor: "#eaf001",
           textColor: "#717501",
         },
+        {
+          textValue: "Rejected",
+          value: "REJECTED",
+          bgColor: "#fc4b4b",
+          textColor: "#5c0000",
+        },
       ],
     },
     {
       textValue: "",
       type: FieldType.CUSTOM,
-      CustomComponent: ({ data }: CustomComponentProps) => {
+      CustomComponent: ({ data, refetch }: CustomComponentProps) => {
         return (
           <CustomDialog
             title={"Admin Details"}
             description={"Detailed information about the Admin."}
             content={
-              <AdminDetails data={data} />
+              <AdminDetails data={data} refetch={refetch} />
             }
           />
         );
@@ -114,9 +120,8 @@ const customTableProps: TableProps = {
       options: [
         { label: "Accepted", value: "ACCEPTED" },
         { label: "Pending", value: "PENDING" },
-         { label: "Paused", value: "PAUSED" },
-    
-
+        { label: "Paused", value: "PAUSED" },
+        { label: "Rejected", value: "REJECTED" },
       ],
     },
   ],

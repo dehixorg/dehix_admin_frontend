@@ -43,6 +43,13 @@ export const apiHelperService = {
       },
     });
   },
+  updateAdminStatus: async (adminId: string, status: string) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/${adminId}`,
+      body: { status },
+    });
+  },
   updateAdminPassword: async (adminId: string, changes: any) => {
     return apiService({
       method: Api_Methods.PUT,
@@ -50,7 +57,6 @@ export const apiHelperService = {
       body: changes,
     });
   },
-
   getFeedbackCampaigns: async (params = {}) => {
     return apiService({
       method: Api_Methods.GET,
@@ -95,4 +101,5 @@ export const apiHelperService = {
       endpoint: `/admin/feedback/campaign/${id}/submissions`,
     });
   },
+
 };
