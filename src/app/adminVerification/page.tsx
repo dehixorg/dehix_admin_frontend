@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiHelperService } from "@/services/verification";
@@ -33,40 +33,40 @@ interface Verificationinfo {
 }
 
 const BusinessTabs = () => {
-  const [adminVerifications, setAdminVerifications] = useState<Verificationinfo[] | null>(null);
+  const [adminVerifications, setAdminVerifications] = useState<
+    Verificationinfo[] | null
+  >(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
   const user = useSelector((state: any) => state.user);
   const userId = user.uid;
 
-  useEffect(() => {
-    const fetchAdminVerifications = async () => {
-      try {
-        if (!userId) {
-          setLoading(false);
-          return;
-        }
-        const response = await apiHelperService.getAllVerificationsById(userId);
-        const data = response?.data?.data;
-        
-        if (data) {
-          setAdminVerifications(data);
-        }
-        
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: Messages.FETCH_ERROR("verification"),
-          variant: "destructive",
-        });
-      } finally {
+  const fetchAdminVerifications = useCallback(async () => {
+    try {
+      if (!userId) {
         setLoading(false);
+        return;
       }
-    };
-    
+      const response = await apiHelperService.getAllVerificationsById(userId);
+      const data = response?.data?.data;
+
+      if (data) {
+        setAdminVerifications(data);
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: Messages.FETCH_ERROR("verification"),
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [userId, toast]);
+
+  useEffect(() => {
     fetchAdminVerifications();
-    
-  }, [userId, toast]); 
+  }, [fetchAdminVerifications]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -82,12 +82,18 @@ const BusinessTabs = () => {
     >
       <Tabs defaultValue="Admin Oracle Verification">
         <TabsList className="flex w-full justify-between gap-2">
-          <TabsTrigger value="Admin Oracle Verification" className="flex-1 text-center">
+          <TabsTrigger
+            value="Admin Oracle Verification"
+            className="flex-1 text-center"
+          >
             Admin Oracle Verification
           </TabsTrigger>
         </TabsList>
         <TabsContent value="Admin Oracle Verification">
-          <Verification Data={adminVerifications}/>
+          <Verification
+            Data={adminVerifications}
+            onRefetch={fetchAdminVerifications}
+          />
         </TabsContent>
       </Tabs>
     </AdminDashboardLayout>
