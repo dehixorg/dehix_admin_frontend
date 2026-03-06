@@ -89,8 +89,8 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         title: "Submission Error",
         description: message || "There was an error submitting the admin details. Please try again.",
         action: (
-          <ToastAction altText="Try again" onClick={() => reset()}>
-            Retry
+          <ToastAction altText="Reset form" onClick={() => reset()}>
+            Reset
           </ToastAction>
         ),
       });
@@ -107,7 +107,10 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
         });
         refetch?.();
       } else {
-        const serverMessage = response.data?.message || response.data?.error;
+        const serverMessage =
+          typeof response.data === "string"
+            ? response.data
+            : response.data?.message || response.data?.error;
         showError(serverMessage);
       }
     } catch (error) {
