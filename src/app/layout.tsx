@@ -25,7 +25,6 @@ export default function RootLayout({
     <StoreProvider>
       <html lang="en">
         <body className={inter.className}>
-          {" "}
           <AuthProvider>
             <ThemeProvider
               attribute="class"
