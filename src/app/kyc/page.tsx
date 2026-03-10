@@ -16,10 +16,8 @@ export default function KYCPage() {
   const { toast } = useToast();
 
   const handleUpdateStatus = async (id: string, status: string, role: string) => {
-    console.log('Updating KYC status for ID:', id, 'to status:', status, 'role:', role);
     try {
       const response = await kycApiService.updateKYCStatus(id, status, role);
-      console.log('Update response:', response);
       
       if (response.success) {
         toast({

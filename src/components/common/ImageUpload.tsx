@@ -113,17 +113,9 @@ const ImageUpload: React.FC<ImageUploadProps> = (props) => {
     try {
       const response = await badgeLevelService.uploadBadgeLevelImage(formData);
 
-      console.log('=== Upload Response Debug ===');
-      console.log('Full response:', response);
-      console.log('Response Location:', response.Location);
-      console.log('Response url:', response.url);
-      console.log('Response secure_url:', response.secure_url);
-      console.log('Response imageUrl:', response.imageUrl);
-
       const imageUrl = response.Location || response.url || response.secure_url || response.imageUrl;
       
       if (imageUrl) {
-        console.log('Final imageUrl being set:', imageUrl);
         onChange(imageUrl);
         toast({
           title: 'Success',
