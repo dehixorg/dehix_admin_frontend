@@ -26,6 +26,7 @@ import {
   Star,
   MessageSquare,
   Zap,
+  Eye,
 } from "lucide-react";
 
 import { MenuItem } from "@/components/menu/sidebarMenu";
@@ -152,6 +153,11 @@ export const menuItemsTop: MenuItem[] = [
         href: "/adminVerification",
         icon: <UserCheck className="h-5 w-5" />,
         label: "Admin Verification",
+      },
+      {
+        href: "/verification/oracle-applications",
+        icon: <Eye className="h-5 w-5" />,
+        label: "Oracle Applications",
       },
     ],
   },
