@@ -53,10 +53,6 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         ? mapCountsToItems(item.subItems)
         : undefined;
 
-      if (count > 0) {
-        console.log(`Mapping count to ${item.label}:`, count);
-      }
-
       return { ...item, count, subItems: updatedSubItems };
     });
   };

@@ -25,21 +25,12 @@ export const badgeLevelService = {
     formData: FormData
   ): Promise<BadgeLevelImageUploadResponse> => {
     try {
-      console.log("Starting image upload...");
-
-      // Log formData contents
-      for (const pair of (formData as any).entries()) {
-        console.log(pair[0], pair[1]);
-      }
-
       const response = await apiService({
         method: Api_Methods.POST,
         endpoint: "/register/upload-image",
         body: formData,
         isFileUpload: true,
       });
-
-      console.log("Upload API Response:", response);
 
       if (!response.success) {
         const errorMessage =
@@ -55,7 +46,6 @@ export const badgeLevelService = {
 
       // The response.data now contains the actual upload result with Location, Key, Bucket, etc.
       const responseData = response.data;
-      console.log("Upload successful, response data:", responseData);
 
       if (!responseData) {
         throw new Error("No data received from server");
