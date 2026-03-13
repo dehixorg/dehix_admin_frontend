@@ -23,7 +23,7 @@ const OracleApplicationsPage = () => {
   const [applications, setApplications] = useState<OracleApplication[] | null>(
     null,
   );
-  const [_loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
 
   const fetchApplications = useCallback(async () => {
@@ -67,10 +67,16 @@ const OracleApplicationsPage = () => {
         },
       ]}
     >
-      <OracleApplicationsTable
-        Data={applications}
-        onRefetch={fetchApplications}
-      />
+      {loading ? (
+        <div className="py-10 text-center text-muted-foreground">
+          Loading oracle applications...
+        </div>
+      ) : (
+        <OracleApplicationsTable
+          Data={applications}
+          onRefetch={fetchApplications}
+        />
+      )}
     </AdminDashboardLayout>
   );
 };
