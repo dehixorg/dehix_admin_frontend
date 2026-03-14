@@ -47,6 +47,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiHelperService } from "@/services/admin";
+import FeedbackSkeletonLoader from "@/components/shared/FeedbackSkeletonLoader";
 
 const campaignSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -79,7 +80,7 @@ const campaignSchema = z.object({
         type: z.enum(["RATING_5_STAR", "TEXT_AREA", "MULTIPLE_CHOICE"]),
         optionsText: z.string().optional(),
         isRequired: z.boolean(),
-      })
+      }),
     )
     .min(1, "At least one question is required"),
 });
@@ -210,7 +211,7 @@ export default function FeedbackDetailsPage() {
 
       await apiHelperService.updateFeedbackCampaign(
         campaignId,
-        transformedData
+        transformedData,
       );
       toast({
         title: "Success",
@@ -365,11 +366,7 @@ export default function FeedbackDetailsPage() {
               <X className="h-4 w-4 mr-2" />
               Cancel
             </Button>
-            <Button
-              size="sm"
-              onClick={handleSubmit(onSave)}
-              disabled={saving}
-            >
+            <Button size="sm" onClick={handleSubmit(onSave)} disabled={saving}>
               {saving ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -386,14 +383,7 @@ export default function FeedbackDetailsPage() {
         )}
       </div>
 
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-3 text-muted-foreground">
-            Loading campaign details...
-          </span>
-        </div>
-      )}
+      {loading && <FeedbackSkeletonLoader />}
 
       {!loading && !campaign && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -534,7 +524,7 @@ export default function FeedbackDetailsPage() {
                 ) : (
                   <div className="mt-1">
                     {getUserTypeBadge(
-                      campaign.targetAudience?.userType || "N/A"
+                      campaign.targetAudience?.userType || "N/A",
                     )}
                   </div>
                 )}
@@ -557,7 +547,9 @@ export default function FeedbackDetailsPage() {
                           {...field}
                           onChange={(e) =>
                             field.onChange(
-                              e.target.value ? Number(e.target.value) : undefined
+                              e.target.value
+                                ? Number(e.target.value)
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -574,10 +566,13 @@ export default function FeedbackDetailsPage() {
               )}
 
               {/* Freelancer Rules */}
-              {(userType === "FREELANCER" || (!isEditMode && campaign.targetAudience?.userType === "FREELANCER")) &&
-                ((isEditMode) || (campaign.targetAudience?.freelancerRules &&
-                  Object.keys(campaign.targetAudience.freelancerRules).length >
-                    0)) && (
+              {(userType === "FREELANCER" ||
+                (!isEditMode &&
+                  campaign.targetAudience?.userType === "FREELANCER")) &&
+                (isEditMode ||
+                  (campaign.targetAudience?.freelancerRules &&
+                    Object.keys(campaign.targetAudience.freelancerRules)
+                      .length > 0)) && (
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-3">
                       Freelancer Requirements
@@ -602,7 +597,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -627,7 +622,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -652,7 +647,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -677,7 +672,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -751,10 +746,13 @@ export default function FeedbackDetailsPage() {
                 )}
 
               {/* Business Rules */}
-              {(userType === "BUSINESS" || (!isEditMode && campaign.targetAudience?.userType === "BUSINESS")) &&
-                ((isEditMode) || (campaign.targetAudience?.businessRules &&
-                  Object.keys(campaign.targetAudience.businessRules).length >
-                    0)) && (
+              {(userType === "BUSINESS" ||
+                (!isEditMode &&
+                  campaign.targetAudience?.userType === "BUSINESS")) &&
+                (isEditMode ||
+                  (campaign.targetAudience?.businessRules &&
+                    Object.keys(campaign.targetAudience.businessRules).length >
+                      0)) && (
                   <div>
                     <p className="text-sm font-medium text-muted-foreground mb-3">
                       Business Requirements
@@ -779,7 +777,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -804,7 +802,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -829,7 +827,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -838,7 +836,9 @@ export default function FeedbackDetailsPage() {
                             />
                           </div>
                           <div>
-                            <Label htmlFor="minMoneySpend">Min Money Spent</Label>
+                            <Label htmlFor="minMoneySpend">
+                              Min Money Spent
+                            </Label>
                             <Controller
                               name="targetAudience.businessRules.minMoneySpend"
                               control={control}
@@ -852,7 +852,7 @@ export default function FeedbackDetailsPage() {
                                     field.onChange(
                                       e.target.value
                                         ? Number(e.target.value)
-                                        : undefined
+                                        : undefined,
                                     )
                                   }
                                   value={field.value ?? ""}
@@ -907,8 +907,8 @@ export default function FeedbackDetailsPage() {
                               </TableCell>
                             </TableRow>
                           )}
-                          {campaign.targetAudience.businessRules.minMoneySpend !==
-                            undefined && (
+                          {campaign.targetAudience.businessRules
+                            .minMoneySpend !== undefined && (
                             <TableRow>
                               <TableCell>Min Money Spent</TableCell>
                               <TableCell>
@@ -957,7 +957,10 @@ export default function FeedbackDetailsPage() {
               {isEditMode ? (
                 <>
                   {fields.map((field, index) => (
-                    <div key={field.id} className="space-y-3 border p-4 rounded bg-muted/30">
+                    <div
+                      key={field.id}
+                      className="space-y-3 border p-4 rounded bg-muted/30"
+                    >
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium text-sm">
                           Question {index + 1}
@@ -997,7 +1000,9 @@ export default function FeedbackDetailsPage() {
                       </div>
 
                       <div>
-                        <Label htmlFor={`questions.${index}.type`}>Type *</Label>
+                        <Label htmlFor={`questions.${index}.type`}>
+                          Type *
+                        </Label>
                         <Controller
                           name={`questions.${index}.type`}
                           control={control}
@@ -1026,7 +1031,8 @@ export default function FeedbackDetailsPage() {
                         />
                       </div>
 
-                      {watch(`questions.${index}.type`) === "MULTIPLE_CHOICE" && (
+                      {watch(`questions.${index}.type`) ===
+                        "MULTIPLE_CHOICE" && (
                         <div>
                           <Label htmlFor={`questions.${index}.optionsText`}>
                             Options (one per line) *
@@ -1108,7 +1114,7 @@ export default function FeedbackDetailsPage() {
                                     >
                                       {option}
                                     </Badge>
-                                  )
+                                  ),
                                 )}
                               </div>
                             </div>
