@@ -37,4 +37,22 @@ export const apiHelperService = {
       body,
     });
   },
+
+  getOracleApplications: async () => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: "/admin/oracle-applications",
+    });
+  },
+
+  updateOracleApplication: async (
+    freelancerId: string,
+    body: { oracleStatus: "APPROVED" | "FAILED" },
+  ) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/oracle-applications/${freelancerId}`,
+      body,
+    });
+  },
 };

@@ -10,6 +10,8 @@ export const getStatusBadge = (status: string | undefined) => {
       return "bg-red-500 hover:bg-red-600";
     case "denied":
       return "bg-red-500 hover:bg-red-600";
+    case "failed":
+      return "bg-red-500 hover:bg-red-600";
     case "pending":
       return "bg-yellow-500 hover:bg-yellow-600";
     case "active":
