@@ -60,7 +60,7 @@ const campaignSchema = z.object({
         type: z.enum(["RATING_5_STAR", "TEXT_AREA", "MULTIPLE_CHOICE"]),
         optionsText: z.string().optional(),
         isRequired: z.boolean(),
-      })
+      }),
     )
     .min(1, "At least one question is required"),
 });
@@ -122,9 +122,9 @@ export default function AddFeedbackCampaign({
           options:
             q.type === "MULTIPLE_CHOICE" && q.optionsText
               ? q.optionsText
-                .split("\n")
-                .filter((o) => o.trim())
-                .map((o) => o.trim())
+                  .split("\n")
+                  .filter((o) => o.trim())
+                  .map((o) => o.trim())
               : undefined,
         })),
       };
@@ -242,7 +242,7 @@ export default function AddFeedbackCampaign({
                     {...field}
                     onChange={(e) =>
                       field.onChange(
-                        e.target.value ? Number(e.target.value) : undefined
+                        e.target.value ? Number(e.target.value) : undefined,
                       )
                     }
                     value={field.value ?? ""}
@@ -273,7 +273,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -298,7 +298,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -321,7 +321,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -344,7 +344,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -378,7 +378,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -403,7 +403,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -428,7 +428,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
@@ -451,7 +451,7 @@ export default function AddFeedbackCampaign({
                             field.onChange(
                               e.target.value
                                 ? Number(e.target.value)
-                                : undefined
+                                : undefined,
                             )
                           }
                           value={field.value ?? ""}
