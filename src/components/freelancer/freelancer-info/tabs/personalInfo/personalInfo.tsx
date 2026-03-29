@@ -161,29 +161,29 @@ useEffect(() => {
     const visible = showAll[sectionKey] ? data : data.slice(0, 3);
 
     return (
-      <div>
-        <h2 className="text-3xl font-semibold pb-6 tracking-tight">{title}</h2>
-        <div className="grid gap-4 pb-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="flex flex-col py-2">
+        <h2 className="text-2xl font-bold pb-6 tracking-tight text-foreground">{title}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
           {visible.length ? (
             visible.map((d, i) => <Card key={i} data={d} />)
           ) : (
-            <div className="text-center py-10 w-full">
-              <PackageOpen className="mx-auto text-gray-500" size={100} />
-              <p className="text-gray-500">{fallback}</p>
+            <div className="text-center py-10 w-full col-span-full border rounded-xl bg-muted/20 border-dashed">
+              <PackageOpen className="mx-auto text-gray-400 mb-2" size={48} />
+              <p className="text-sm text-muted-foreground font-medium">{fallback}</p>
             </div>
           )}
         </div>
         {data.length > 3 && (
-          <div className="text-center mt-4">
+          <div className="text-center mt-2 mb-6">
             <button
               onClick={() => toggleShowAll(sectionKey)}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+              className="px-6 py-2.5 text-sm font-semibold text-foreground bg-secondary rounded-lg border shadow-sm hover:bg-secondary/80 focus:ring-2 focus:ring-ring transition-colors"
             >
               {showAll[sectionKey] ? "Show Less" : "Show More"}
             </button>
           </div>
         )}
-        <Separator className="my-1" />
+        <Separator className="my-6 block opacity-50" />
       </div>
     );
   };
@@ -191,32 +191,35 @@ useEffect(() => {
   const profileToDisplay = apiProfile ?? parentProfile;
 
   return (
-    <div className="grid auto-rows-max gap-4 md:gap-8">
-      <h2 className="text-3xl font-semibold pl-4 pt-1 tracking-tight">
-        Personal Information
-      </h2>
-      {profileToDisplay ? (
-        <UserProfilePage profile={profileToDisplay} />
-      ) : (
-        <div className="text-center py-10">
-          <PackageOpen className="mx-auto text-gray-500" size={100} />
-          <p className="text-gray-500">No personal information available.</p>
-        </div>
-      )}
-      <Separator className="my-1" />
+    <div className="flex flex-col gap-6 w-full px-6 py-6 overflow-hidden">
+      <div className="flex flex-col py-2">
+        <h2 className="text-2xl font-bold pb-6 tracking-tight text-foreground">
+          Personal Information
+        </h2>
+        {profileToDisplay ? (
+          <UserProfilePage profile={profileToDisplay} />
+        ) : (
+          <div className="text-center py-10 w-full border rounded-xl bg-muted/20 border-dashed">
+            <PackageOpen className="mx-auto text-gray-400 mb-2" size={48} />
+            <p className="text-sm text-muted-foreground font-medium">No personal information available.</p>
+          </div>
+        )}
+      </div>
+
+      <Separator className="my-6 block opacity-50" />
 
       {/* NEW: Profiles section using apiProfile data */}
       {parentProfile && (
-        <>
-          <h2 className="text-3xl font-semibold pb-6 tracking-tight">
+        <div className="flex flex-col py-2">
+          <h2 className="text-2xl font-bold pb-6 tracking-tight text-foreground">
             Profiles
           </h2>
-          <div className="grid gap-4 pb-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
             {/* Assuming ProfileCard takes the whole apiProfile object as a prop */}
             <ProfileCard data={parentProfile} />
           </div>
-          <Separator className="my-1" />
-        </>
+          <Separator className="my-6 block opacity-50" />
+        </div>
       )}
 
       {/* The rest of your existing sections, now correctly aligned below the new one */}
@@ -225,7 +228,7 @@ useEffect(() => {
         data: apiEducation,
         Card: EducationCard,
         sectionKey: "educationApi",
-        fallback: "No education data (API).",
+        fallback: "No education data available.",
       })}
 
       {renderSection({
@@ -233,7 +236,7 @@ useEffect(() => {
         data: apiProjects,
         Card: ProjectsCard,
         sectionKey: "projectsApi",
-        fallback: "No project data.",
+        fallback: "No project data available.",
       })}
 
       {/* common sections (if you only want ONE combined list, merge arrays first) */}
@@ -258,7 +261,7 @@ useEffect(() => {
 
         Card: SkillCard,
         sectionKey: "skills",
-        fallback: "No Skill information available.",
+        fallback: "No skill information available.",
       })}
 
       {renderSection({

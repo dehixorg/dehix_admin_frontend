@@ -258,7 +258,7 @@ export default function EditLeaderboardDialog({
         toast({
           title: "Error",
           description:
-            error?.response?.data?.message || "Failed to load leaderboard data",
+            error?.message || "Failed to load leaderboard data",
           variant: "destructive",
         });
       } finally {
@@ -282,7 +282,7 @@ export default function EditLeaderboardDialog({
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to update leaderboard",
+          error?.message || "Failed to update leaderboard",
         variant: "destructive",
       });
     }

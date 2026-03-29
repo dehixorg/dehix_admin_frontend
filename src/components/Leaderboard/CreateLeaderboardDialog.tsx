@@ -217,7 +217,7 @@ export default function CreateLeaderboardDialog({
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to create leaderboard",
+          error?.message || "Failed to create leaderboard",
         variant: "destructive",
       });
     }

@@ -30,7 +30,7 @@ export const apiService = async ({
       case Api_Methods.POST:
         if (isFileUpload) {
           // For file uploads, let Axios set the Content-Type automatically with boundary
-          response = await axiosInstance.post(endpoint, body, { 
+          response = await axiosInstance.post(endpoint, body, {
             params,
             headers: {
               ...headers,
@@ -38,7 +38,7 @@ export const apiService = async ({
             }
           });
         } else {
-          response = await axiosInstance.post(endpoint, body, { 
+          response = await axiosInstance.post(endpoint, body, {
             params,
             headers: headers
           });
@@ -48,7 +48,7 @@ export const apiService = async ({
         // For PUT requests, ensure the endpoint includes the ID if it's in the body
         let putEndpoint = endpoint;
         if (body?.ads_id && !endpoint.endsWith(`/${body.ads_id}`)) {
-          putEndpoint = endpoint.endsWith('/') 
+          putEndpoint = endpoint.endsWith('/')
             ? `${endpoint}${body.ads_id}`
             : `${endpoint}/${body.ads_id}`;
         }
@@ -70,9 +70,12 @@ export const apiService = async ({
       data: response.data,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      data: error.response ? error.response.data : error.message,
-    };
+    const errorData = error.response?.data;
+    const errorMessage =
+      errorData?.message ||
+      errorData?.error ||
+      error.message ||
+      "An unexpected error occurred.";
+    throw new Error(errorMessage);
   }
 };

@@ -28,25 +28,17 @@ export default function KYCPage() {
       const response = await kycApiService.updateKYCStatus(id, status, role);
       console.log('Update response:', response);
       
-      if (response.success) {
-        toast({
-          title: "Success",
-          description: Messages.UPDATE_SUCCESS("KYC status"),
-          variant: "default",
-        });
-        // Refresh the table
-        window.location.reload();
-      } else {
-        toast({
-          title: "Error",
-          description: Messages.UPDATE_ERROR("KYC status"),
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
+      toast({
+        title: "Success",
+        description: Messages.UPDATE_SUCCESS("KYC status"),
+        variant: "default",
+      });
+      // Refresh the table
+      window.location.reload();
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: Messages.UPDATE_ERROR("KYC status"),
+        description: error.message || Messages.UPDATE_ERROR("KYC status"),
         variant: "destructive",
       });
     }

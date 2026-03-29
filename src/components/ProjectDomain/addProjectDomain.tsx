@@ -75,10 +75,8 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
     try {
       const domainDataWithUser = { ...data, createdById: currentUserId, createdBy: currentUser.type.toUpperCase() };
       // Post the new domain to the backend
-      const response =
-        await apiHelperService.createProjectdomain(domainDataWithUser);
-      if (response.success) {
-        // Pass the new domain to the parent component
+      await apiHelperService.createProjectdomain(domainDataWithUser);
+      // Pass the new domain to the parent component
         setSuccessMessage("Domain added successfully!");
         reset();
         setErrorMessage(null); // Clear any previous error message
@@ -89,17 +87,10 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
           setSuccessMessage(null);
         }, 500);
         refetch?.()
-      } else {
-        toast({
-          title: "Error",
-          description: Messages.ADD_ERROR("domain"),
-          variant: "destructive", // Red error message
-        });
-      }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: Messages.ADD_ERROR("domain"),
+        description: error.message || Messages.ADD_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }

@@ -3,7 +3,6 @@ import { Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { AxiosError } from "axios";
 
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -97,28 +96,19 @@ const AddAdmin: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
   const onSubmit = async (data: AdminData) => {
     try {
-      const response = await apiHelperService.createAdmin(data);
-      if (response.success) {
-        reset();
-        setOpen(false);
-        toast({
-          title: "Admin Added",
-          description: "The Admin has been successfully added.",
-        });
-        refetch?.()
-      } else throw new Error("Error")
-    } catch (error) {
-      // Use a type guard to check if the error is an AxiosError
-      let errorMessage =
-        "There was an error submitting the admin details. Please try again.";
-      if (error instanceof AxiosError && error.response) {
-        errorMessage = error.response.data?.message || errorMessage;
-      }
-
+      await apiHelperService.createAdmin(data);
+      reset();
+      setOpen(false);
+      toast({
+        title: "Admin Added",
+        description: "The Admin has been successfully added.",
+      });
+      refetch?.()
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Submission Error",
-        description: errorMessage,
+        description: error.message || "There was an error submitting the admin details. Please try again.",
         action: (
           <ToastAction altText="Try again" onClick={() => reset()}>
             Retry
