@@ -74,7 +74,7 @@ export function educationCard({ data }: EducationCardProps) {
         </div>
       </CardContent>
       <CardFooter className="pt-4 border-t text-xs text-muted-foreground bg-muted/20 rounded-b-xl">
-        Updated on: {new Date(data.verificationUpdateTime).toLocaleDateString()}
+        Updated on: {formatDate(data.verificationUpdateTime) || "Not available"}
       </CardFooter>
     </Card>
   );

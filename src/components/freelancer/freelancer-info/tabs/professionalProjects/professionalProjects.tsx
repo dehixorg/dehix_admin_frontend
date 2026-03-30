@@ -45,6 +45,12 @@ export function projectsCard({
     </div>
   );
 
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? "" : date.toLocaleDateString();
+  };
+
   return (
     <Card className={cn("flex flex-col h-full rounded-xl border shadow-sm hover:shadow-md transition-shadow duration-300", className)} {...props}>
       <CardHeader className="pb-4 border-b">
@@ -74,8 +80,8 @@ export function projectsCard({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <DataField label="Start Date" value={new Date(data.start).toLocaleDateString()} />
-            <DataField label="End Date" value={new Date(data.end).toLocaleDateString()} />
+            <DataField label="Start Date" value={formatDate(data.start)} />
+            <DataField label="End Date" value={formatDate(data.end)} />
           </div>
 
           <DataField 
@@ -90,9 +96,7 @@ export function projectsCard({
                 >
                   {data.githubLink}
                 </a>
-              ) : (
-                "No Data Available"
-              )
+              ) : undefined
             } 
           />
           
@@ -120,7 +124,7 @@ export function projectsCard({
       </CardContent>
       
       <CardFooter className="pt-4 border-t text-xs text-muted-foreground bg-muted/20 rounded-b-xl">
-        Updated on: {new Date(data.verificationUpdateTime).toLocaleDateString()}
+        Updated on: {formatDate(data.verificationUpdateTime) || "Unknown"}
       </CardFooter>
     </Card>
   );

@@ -23,9 +23,7 @@ type UserProfileProps = React.ComponentProps<typeof Card> & {
 };
 
 export function UserProfilePage({ className, profile, ...props }: UserProfileProps) {
-  if (!profile) {
-    return <div className="p-8 text-center text-muted-foreground">Loading profile...</div>;
-  }
+  if (!profile) return null;
 
   const DataField = ({ label, value }: { label: string; value: string }) => (
     <div className="flex flex-col space-y-1">
@@ -94,35 +92,51 @@ export function UserProfilePage({ className, profile, ...props }: UserProfilePro
                 </div>
               </div>
             )}
-            <a
-              href={profile.github || "#"}
-              target={profile.github ? "_blank" : "_self"}
-              rel="noopener noreferrer"
-              className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
-            >
-              <GitPullRequest className="mr-3 h-5 w-5 text-gray-800 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground">GitHub</span>
-                <span className="text-xs text-muted-foreground truncate w-48">
-                  {profile.github ? "View Profile" : "Not Provided"}
-                </span>
+            {profile.github ? (
+              <a
+                href={profile.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
+              >
+                <GitPullRequest className="mr-3 h-5 w-5 text-gray-800 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white transition-colors" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">GitHub</span>
+                  <span className="text-xs text-muted-foreground truncate w-48">View Profile</span>
+                </div>
+              </a>
+            ) : (
+              <div className="flex items-center p-3 rounded-lg border bg-card opacity-60">
+                <GitPullRequest className="mr-3 h-5 w-5 text-gray-800 dark:text-gray-300 transition-colors" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">GitHub</span>
+                  <span className="text-xs text-muted-foreground truncate w-48">Not Provided</span>
+                </div>
               </div>
-            </a>
+            )}
 
-            <a
-              href={profile.personalWebsite || "#"}
-              target={profile.personalWebsite ? "_blank" : "_self"}
-              rel="noopener noreferrer"
-              className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
-            >
-              <Globe className="mr-3 h-5 w-5 text-emerald-600 dark:text-emerald-500 group-hover:text-emerald-700 transition-colors" />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground">Personal Website</span>
-                <span className="text-xs text-muted-foreground truncate w-48">
-                  {profile.personalWebsite ? "Visit Website" : "Not Provided"}
-                </span>
+            {profile.personalWebsite ? (
+              <a
+                href={profile.personalWebsite}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
+              >
+                <Globe className="mr-3 h-5 w-5 text-emerald-600 dark:text-emerald-500 group-hover:text-emerald-700 transition-colors" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">Personal Website</span>
+                  <span className="text-xs text-muted-foreground truncate w-48">Visit Website</span>
+                </div>
+              </a>
+            ) : (
+              <div className="flex items-center p-3 rounded-lg border bg-card opacity-60">
+                <Globe className="mr-3 h-5 w-5 text-emerald-600 dark:text-emerald-500 transition-colors" />
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground">Personal Website</span>
+                  <span className="text-xs text-muted-foreground truncate w-48">Not Provided</span>
+                </div>
               </div>
-            </a>
+            )}
           </div>
         </div>
       </Card>

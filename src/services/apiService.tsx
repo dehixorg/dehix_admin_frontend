@@ -13,6 +13,7 @@ interface ApiRequest {
   isFileUpload?: boolean;
 }
 
+/** Throws on HTTP errors; when resolved, success is always true. */
 export const apiService = async ({
   method,
   endpoint,

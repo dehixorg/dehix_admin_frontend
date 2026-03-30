@@ -66,16 +66,8 @@ interface PersonalInfoProps {
   
 
 }
-let origprofile;
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ id }) => {
-  /* one set for the PARENT profile… */
   const [parentProfile, setParentProfile] = useState<any>(null);
- 
-  const [parentProjects, setParentProjects] = useState<any[]>([]);
-  const [parentProfessional, setParentProfessional] = useState<any[]>([]);
-  const [parentSkills, setParentSkills] = useState<any[]>([]);
-  const [parentDomain, setParentDomain] = useState<any[]>([]);
-  const [parentConsultant, setParentConsultant] = useState<any[]>([]);
 
   /* …and one set for the API profile */
   const [apiProfile, setApiProfile] = useState<any>(null);
@@ -165,7 +157,7 @@ useEffect(() => {
         <h2 className="text-2xl font-bold pb-6 tracking-tight text-foreground">{title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
           {visible.length ? (
-            visible.map((d, i) => <Card key={i} data={d} />)
+            visible.map((d: any, i) => <Card key={d._id || d.__id || d.id || i} data={d} />)
           ) : (
             <div className="text-center py-10 w-full col-span-full border rounded-xl bg-muted/20 border-dashed">
               <PackageOpen className="mx-auto text-gray-400 mb-2" size={48} />
@@ -250,7 +242,7 @@ useEffect(() => {
 
       {renderSection({
         title: "Domains",
-        data: [...parentDomain, ...apiDomain],
+        data: [...apiDomain],
         Card: DomainCard,
         sectionKey: "domain",
         fallback: "No domain information available.",
@@ -266,7 +258,7 @@ useEffect(() => {
 
       {renderSection({
         title: "Consultant",
-        data: [...parentConsultant, ...apiConsultant],
+        data: [...apiConsultant],
         Card: ConsultantCards,
         sectionKey: "consultant",
         fallback: "No consultant information available.",
