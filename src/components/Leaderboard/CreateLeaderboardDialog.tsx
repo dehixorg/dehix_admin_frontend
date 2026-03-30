@@ -175,17 +175,15 @@ export default function CreateLeaderboardDialog({
     const fetchGamificationData = async () => {
       try {
         const response = await apiHelperService.getGamificationDefinitions();
-        if (response.success) {
-          const gamificationData = response.data.data || [];
-          const badgeList = gamificationData.filter(
-            (item: any) => item.type === "BADGE" && item.isActive
-          );
-          const levelList = gamificationData.filter(
-            (item: any) => item.type === "LEVEL" && item.isActive
-          );
-          setBadges(badgeList.map((b: any) => ({ _id: b._id, name: b.name })));
-          setLevels(levelList.map((l: any) => ({ _id: l._id, name: l.name })));
-        }
+        const gamificationData = response.data.data || [];
+        const badgeList = gamificationData.filter(
+          (item: any) => item.type === "BADGE" && item.isActive
+        );
+        const levelList = gamificationData.filter(
+          (item: any) => item.type === "LEVEL" && item.isActive
+        );
+        setBadges(badgeList.map((b: any) => ({ _id: b._id, name: b.name })));
+        setLevels(levelList.map((l: any) => ({ _id: l._id, name: l.name })));
       } catch (error) {
         toast({
           title: "Error",

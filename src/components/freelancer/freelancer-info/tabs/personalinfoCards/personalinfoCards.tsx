@@ -25,6 +25,23 @@ type UserProfileProps = React.ComponentProps<typeof Card> & {
 export function UserProfilePage({ className, profile, ...props }: UserProfileProps) {
   if (!profile) return null;
 
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "";
+    const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
+      ? dateString + "T00:00:00"
+      : dateString;
+    const date = new Date(normalized);
+    return isNaN(date.getTime()) ? "" : date.toLocaleDateString();
+  };
+
+  const safeHref = (url: string): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return null;
+    return `https://${trimmed}`;
+  };
+
   const DataField = ({ label, value }: { label: string; value: string }) => (
     <div className="flex flex-col space-y-1">
       <span className="text-sm font-medium text-muted-foreground">{label}</span>
@@ -55,9 +72,7 @@ export function UserProfilePage({ className, profile, ...props }: UserProfilePro
           <div className="grid gap-4">
             <DataField
               label="Date of Birth"
-              value={profile.dob && !isNaN(Date.parse(profile.dob))
-                ? new Date(profile.dob).toLocaleDateString()
-                : ""}
+              value={formatDate(profile.dob)}
             />            <DataField label="Per Hour Price" value={profile.perHourPrice} />
             <DataField label="Connects" value={profile.connects} />
             <DataField label="Work Experience" value={profile.workExperience} />
@@ -70,9 +85,9 @@ export function UserProfilePage({ className, profile, ...props }: UserProfilePro
         <div className="p-6">
           <h2 className="text-lg font-semibold mb-6 text-foreground border-b pb-3">Social Links</h2>
           <div className="grid gap-4">
-            {profile.linkedin ? (
+            {safeHref(profile.linkedin) ? (
               <a
-                href={profile.linkedin}
+                href={safeHref(profile.linkedin)!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
@@ -85,16 +100,16 @@ export function UserProfilePage({ className, profile, ...props }: UserProfilePro
               </a>
             ) : (
               <div className="flex items-center p-3 rounded-lg border bg-card opacity-60">
-                <Linkedin className="mr-3 h-5 w-5 text-blue-600 dark:text-blue-500 group-hover:text-blue-700 transition-colors" />
+                <Linkedin className="mr-3 h-5 w-5 text-blue-600 dark:text-blue-500 transition-colors" />
                 <div className="flex flex-col">
                   <span className="text-sm font-medium text-foreground">LinkedIn</span>
                   <span className="text-xs text-muted-foreground truncate w-48">Not Provided</span>
                 </div>
               </div>
             )}
-            {profile.github ? (
+            {safeHref(profile.github) ? (
               <a
-                href={profile.github}
+                href={safeHref(profile.github)!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
@@ -115,9 +130,9 @@ export function UserProfilePage({ className, profile, ...props }: UserProfilePro
               </div>
             )}
 
-            {profile.personalWebsite ? (
+            {safeHref(profile.personalWebsite) ? (
               <a
-                href={profile.personalWebsite}
+                href={safeHref(profile.personalWebsite)!}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center p-3 rounded-lg border bg-card hover:bg-muted transition-colors cursor-pointer group"
