@@ -221,22 +221,28 @@ export default function EditLeaderboardDialog({
         const leaderboard = response.data.data || response.data;
 
         const validConditions = new Set(conditionOptions.map((o) => o.value));
-        const scoringRules = leaderboard.scoringWeights
+        const filteredRules = leaderboard.scoringWeights
           ? Object.entries(leaderboard.scoringWeights)
-              .filter(([key]) => validConditions.has(key))
-              .map(([condition, config]: [string, any]) => ({
-                condition: condition as any,
-                min: config.min || 0,
-                weight: config.weight || 0,
-              }))
+            .filter(([key]) => validConditions.has(key))
+            .map(([condition, config]: [string, any]) => ({
+              condition: condition as any,
+              min: config.min || 0,
+              weight: config.weight || 0,
+            }))
+          : [];
+        const scoringRules = filteredRules.length > 0
+          ? filteredRules
           : [{ condition: "projectApplications" as any, min: 0, weight: 5 }];
-
         reset({
           name: leaderboard.name || "",
           description: leaderboard.description || "",
           frequency: leaderboard.frequency || "MONTHLY",
-          periodStart: parseISO(leaderboard.periodStart),
-          periodEnd: parseISO(leaderboard.periodEnd),
+          periodStart: leaderboard.periodStart
+            ? parseISO(leaderboard.periodStart)
+            : new Date(),
+          periodEnd: leaderboard.periodEnd
+            ? parseISO(leaderboard.periodEnd)
+            : addDays(new Date(), 30),
           repeat: leaderboard.repeat || false,
           rewardConfig: leaderboard.rewardConfig || [
             { rank: 1, title: "", baseAmount: 0 },

@@ -8,7 +8,6 @@ import DropdownProfile from "@/components/shared/DropdownProfile";
 import Breadcrumb from "@/components/shared/breadcrumbList";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -68,6 +67,7 @@ function ReportedMessagesContent() {
   const [message, setMessage] = useState<ReportedMessage | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [sendingReply, setSendingReply] = useState(false);
   const [replyMessage, setReplyMessage] = useState("");
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
@@ -131,12 +131,13 @@ function ReportedMessagesContent() {
   };
 
   const handleReply = async () => {
-    if (!id) return;
+    if (!id || sendingReply) return;
     if (!replyMessage.trim()) {
       toast({ title: "Reply message can't be empty", variant: "destructive" });
       return;
     }
 
+    setSendingReply(true);
     try {
       await apiHelperService.sendMessageToReportedMessage({
         reportId: id,
@@ -144,27 +145,17 @@ function ReportedMessagesContent() {
         text: replyMessage,
       });
 
-      const newMessage: Message = {
-        id: uuidv4(),
-        sender: "admin",
-        text: replyMessage,
-        timestamp: new Date().toISOString(),
-      };
-
-      setMessage((prev) =>
-        prev
-          ? { ...prev, messages: [...(prev.messages || []), newMessage] }
-          : prev
-      );
-
       toast({ title: "Reply sent" });
       setReplyMessage("");
+      fetchReportedMessage();
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message || "Failed to send message.",
         variant: "destructive",
       });
+    } finally {
+      setSendingReply(false);
     }
   };
 
@@ -406,7 +397,9 @@ function ReportedMessagesContent() {
                 rows={4}
               />
               <div className="flex justify-end">
-                <Button onClick={handleReply}>Send Message</Button>
+                <Button onClick={handleReply} disabled={sendingReply}>
+                  {sendingReply ? "Sending..." : "Send Message"}
+                </Button>
               </div>
             </div>
 

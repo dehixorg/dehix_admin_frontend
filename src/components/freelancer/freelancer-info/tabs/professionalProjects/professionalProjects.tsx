@@ -30,7 +30,7 @@ interface PersonalProjects {
 }
 
 type projectsCardProps = React.ComponentProps<typeof Card> & {
- data: PersonalProjects;
+  data: PersonalProjects;
 };
 
 export function projectsCard({
@@ -48,11 +48,11 @@ export function projectsCard({
   const safeHref = (url: string): string | null => {
     if (!url) return null;
     const trimmed = url.trim();
+    if (!trimmed) return null;
     if (/^https?:\/\//i.test(trimmed)) return trimmed;
     if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return null;
     return `https://${trimmed}`;
   };
-
   const formatDate = (dateString: string): string => {
     if (!dateString) return "";
     const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
@@ -82,7 +82,7 @@ export function projectsCard({
           {data.description}
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="pt-5 flex-grow">
         <div className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
@@ -95,8 +95,8 @@ export function projectsCard({
             <DataField label="End Date" value={formatDate(data.end)} />
           </div>
 
-          <DataField 
-            label="GitHub Link" 
+          <DataField
+            label="GitHub Link"
             value={
               safeHref(data.githubLink) ? (
                 <a
@@ -108,11 +108,11 @@ export function projectsCard({
                   {data.githubLink}
                 </a>
               ) : undefined
-            } 
+            }
           />
-          
+
           <DataField label="Refer" value={data.refer} />
-          
+
           <div className="flex flex-col space-y-2">
             <span className="text-sm font-medium text-muted-foreground">Technologies Used</span>
             <div className="flex flex-wrap gap-2">
@@ -133,7 +133,7 @@ export function projectsCard({
           )}
         </div>
       </CardContent>
-      
+
       <CardFooter className="pt-4 border-t text-xs text-muted-foreground bg-muted/20 rounded-b-xl">
         Updated on: {formatDate(data.verificationUpdateTime) || "Unknown"}
       </CardFooter>
