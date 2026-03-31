@@ -53,8 +53,6 @@ const SkillSchema = z.object({
 
 const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   // Use Skill type here
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
@@ -62,6 +60,7 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const {
     control,
     handleSubmit,
+    reset,
   } = useForm<SkillData>({
     resolver: zodResolver(SkillSchema),
     defaultValues: {
@@ -76,25 +75,18 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
     try {
       const skillDataWithUser = { ...data, createdBy: currentUser.type.toUpperCase(), createdById: currentUserId };
-      const response = await apiHelperService.createSkill(skillDataWithUser);
-      if(response.success) {
-        toast({
+      await apiHelperService.createSkill(skillDataWithUser);
+      toast({
           title: "Success",
           description: Messages.CREATE_SUCCESS("skill"),
         });
+        reset();
         setOpen(false)
         refetch?.()
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message,
-          variant: "destructive", // Red error message
-        });
-      }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Server Error",
+        description: error.message || "Server Error",
         variant: "destructive", // Red error message
       });
     }
@@ -159,12 +151,6 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
               )}
             />
           </div>
-          {errorMessage && (
-            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
-          )}
-          {successMessage && (
-            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
-          )}
           <DialogFooter>
             <Button type="submit">Save</Button>
           </DialogFooter>

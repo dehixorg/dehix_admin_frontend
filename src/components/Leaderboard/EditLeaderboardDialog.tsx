@@ -185,17 +185,15 @@ export default function EditLeaderboardDialog({
     const fetchGamificationData = async () => {
       try {
         const response = await apiHelperService.getGamificationDefinitions();
-        if (response.success) {
-          const gamificationData = response.data.data || [];
-          const badgeList = gamificationData.filter(
-            (item: any) => item.type === "BADGE" && item.isActive
-          );
-          const levelList = gamificationData.filter(
-            (item: any) => item.type === "LEVEL" && item.isActive
-          );
-          setBadges(badgeList.map((b: any) => ({ _id: b._id, name: b.name })));
-          setLevels(levelList.map((l: any) => ({ _id: l._id, name: l.name })));
-        }
+        const gamificationData = response.data.data || [];
+        const badgeList = gamificationData.filter(
+          (item: any) => item.type === "BADGE" && item.isActive
+        );
+        const levelList = gamificationData.filter(
+          (item: any) => item.type === "LEVEL" && item.isActive
+        );
+        setBadges(badgeList.map((b: any) => ({ _id: b._id, name: b.name })));
+        setLevels(levelList.map((l: any) => ({ _id: l._id, name: l.name })));
       } catch (error) {
         toast({
           title: "Error",
@@ -220,45 +218,48 @@ export default function EditLeaderboardDialog({
       try {
         const response =
           await apiHelperService.getLeaderboardById(leaderboardId);
-        if (response?.success) {
-          const leaderboard = response.data.data || response.data;
+        const leaderboard = response.data.data || response.data;
 
-          // Map scoring weights to scoring rules
-          const scoringRules = leaderboard.scoringWeights
-            ? Object.entries(leaderboard.scoringWeights).map(
-                ([condition, config]: [string, any]) => ({
-                  condition: condition as any,
-                  min: config.min || 0,
-                  weight: config.weight || 0,
-                })
-              )
-            : [{ condition: "projectApplications" as any, min: 0, weight: 5 }];
-
-          // Populate form with fetched data
-          reset({
-            name: leaderboard.name || "",
-            description: leaderboard.description || "",
-            frequency: leaderboard.frequency || "MONTHLY",
-            periodStart: parseISO(leaderboard.periodStart),
-            periodEnd: parseISO(leaderboard.periodEnd),
-            repeat: leaderboard.repeat || false,
-            rewardConfig: leaderboard.rewardConfig || [
-              { rank: 1, title: "", baseAmount: 0 },
-              { rank: 2, title: "", baseAmount: 0 },
-              { rank: 3, title: "", baseAmount: 0 },
-            ],
-            scoringRules,
-            eligibility: {
-              badgesAllowed: leaderboard.eligibility?.badgesAllowed || [],
-              levelsAllowed: leaderboard.eligibility?.levelsAllowed || [],
-            },
-          });
-        }
+        const validConditions = new Set(conditionOptions.map((o) => o.value));
+        const filteredRules = leaderboard.scoringWeights
+          ? Object.entries(leaderboard.scoringWeights)
+            .filter(([key]) => validConditions.has(key))
+            .map(([condition, config]: [string, any]) => ({
+              condition: condition as any,
+              min: config.min || 0,
+              weight: config.weight || 0,
+            }))
+          : [];
+        const scoringRules = filteredRules.length > 0
+          ? filteredRules
+          : [{ condition: "projectApplications" as any, min: 0, weight: 5 }];
+        reset({
+          name: leaderboard.name || "",
+          description: leaderboard.description || "",
+          frequency: leaderboard.frequency || "MONTHLY",
+          periodStart: leaderboard.periodStart
+            ? parseISO(leaderboard.periodStart)
+            : new Date(),
+          periodEnd: leaderboard.periodEnd
+            ? parseISO(leaderboard.periodEnd)
+            : addDays(new Date(), 30),
+          repeat: leaderboard.repeat || false,
+          rewardConfig: leaderboard.rewardConfig || [
+            { rank: 1, title: "", baseAmount: 0 },
+            { rank: 2, title: "", baseAmount: 0 },
+            { rank: 3, title: "", baseAmount: 0 },
+          ],
+          scoringRules,
+          eligibility: {
+            badgesAllowed: leaderboard.eligibility?.badgesAllowed || [],
+            levelsAllowed: leaderboard.eligibility?.levelsAllowed || [],
+          },
+        });
       } catch (error: any) {
         toast({
           title: "Error",
           description:
-            error?.response?.data?.message || "Failed to load leaderboard data",
+            error?.message || "Failed to load leaderboard data",
           variant: "destructive",
         });
       } finally {
@@ -282,7 +283,7 @@ export default function EditLeaderboardDialog({
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to update leaderboard",
+          error?.message || "Failed to update leaderboard",
         variant: "destructive",
       });
     }

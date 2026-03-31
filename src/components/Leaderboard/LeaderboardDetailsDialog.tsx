@@ -53,11 +53,7 @@ export default function LeaderboardDetailsDialog({
     try {
       setLoading(true);
       const response = await apiHelperService.getLeaderboardById(leaderboardId);
-      if (response?.success) {
-        setLeaderboard(response.data.data || response.data);
-      } else {
-        console.error("No success in response");
-      }
+      setLeaderboard(response.data.data || response.data);
     } catch (error) {
       console.error("Failed to fetch leaderboard details:", error);
     } finally {
@@ -68,9 +64,7 @@ export default function LeaderboardDetailsDialog({
   const fetchGamificationData = async () => {
     try {
       const response = await apiHelperService.getGamificationDefinitions();
-      if (response.success) {
-        setGamificationData(response.data?.data || response.data || []);
-      }
+      setGamificationData(response.data?.data || response.data || []);
     } catch (error) {
       console.error("Failed to fetch gamification data:", error);
     }
