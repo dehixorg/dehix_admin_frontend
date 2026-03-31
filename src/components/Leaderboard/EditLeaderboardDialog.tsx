@@ -220,14 +220,15 @@ export default function EditLeaderboardDialog({
           await apiHelperService.getLeaderboardById(leaderboardId);
         const leaderboard = response.data.data || response.data;
 
+        const validConditions = new Set(conditionOptions.map((o) => o.value));
         const scoringRules = leaderboard.scoringWeights
-          ? Object.entries(leaderboard.scoringWeights).map(
-              ([condition, config]: [string, any]) => ({
+          ? Object.entries(leaderboard.scoringWeights)
+              .filter(([key]) => validConditions.has(key))
+              .map(([condition, config]: [string, any]) => ({
                 condition: condition as any,
                 min: config.min || 0,
                 weight: config.weight || 0,
-              })
-            )
+              }))
           : [{ condition: "projectApplications" as any, min: 0, weight: 5 }];
 
         reset({

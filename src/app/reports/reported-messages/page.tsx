@@ -99,10 +99,7 @@ function ReportedMessagesContent() {
       if (document.visibilityState === "visible") {
         try {
           const response = await apiHelperService.getReportedMessageById(id);
-          const newData = response.data.data;
-          if (newData.messages?.length !== (message?.messages?.length || 0)) {
-            setMessage(newData);
-          }
+          setMessage(response.data.data);
         } catch (error) {
           console.error("Polling failed", error);
         }

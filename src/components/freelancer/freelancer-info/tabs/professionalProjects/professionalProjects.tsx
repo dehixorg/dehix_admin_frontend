@@ -45,6 +45,14 @@ export function projectsCard({
     </div>
   );
 
+  const safeHref = (url: string): string | null => {
+    if (!url) return null;
+    const trimmed = url.trim();
+    if (/^https?:\/\//i.test(trimmed)) return trimmed;
+    if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return null;
+    return `https://${trimmed}`;
+  };
+
   const formatDate = (dateString: string): string => {
     if (!dateString) return "";
     const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
@@ -90,9 +98,9 @@ export function projectsCard({
           <DataField 
             label="GitHub Link" 
             value={
-              data.githubLink ? (
+              safeHref(data.githubLink) ? (
                 <a
-                  href={data.githubLink}
+                  href={safeHref(data.githubLink)!}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 hover:text-blue-700 hover:underline transition-colors"
