@@ -137,18 +137,20 @@ function ReportedMessagesContent() {
       return;
     }
 
+    const draft = replyMessage;
+    setReplyMessage("");
     setSendingReply(true);
     try {
       await apiHelperService.sendMessageToReportedMessage({
         reportId: id,
         sender: "admin",
-        text: replyMessage,
+        text: draft,
       });
 
       toast({ title: "Reply sent" });
-      setReplyMessage("");
       fetchReportedMessage();
     } catch (error: any) {
+      setReplyMessage(draft);
       toast({
         title: "Error",
         description: error.message || "Failed to send message.",

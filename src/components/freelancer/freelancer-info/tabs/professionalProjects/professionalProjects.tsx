@@ -70,7 +70,7 @@ export function projectsCard({
             {data.projectName}
           </CardTitle>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger aria-label={`Status: ${data.verificationStatus}`}>
               <span className="mt-1 block">{getStatusIcon(data.verificationStatus)}</span>
             </TooltipTrigger>
             <TooltipContent>
