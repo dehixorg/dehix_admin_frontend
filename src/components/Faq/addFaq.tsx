@@ -81,21 +81,16 @@ const AddFaq: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
   const onSubmit = async (data: FAQData) => {
     try {
-      const response = await apiHelperService.createFaq(data);
-      if(response.success) {
-        toast({
-          title: "Success",
-          description: Messages.CREATE_SUCCESS("faq"),
-        });
-        refetch?.()
-      }
-      else {
-        throw new Error()
-      }
-    } catch (error) {
+      await apiHelperService.createFaq(data);
+      toast({
+        title: "Success",
+        description: Messages.CREATE_SUCCESS("faq"),
+      });
+      refetch?.()
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: Messages.ADD_ERROR("faq"),
+        description: error.message || Messages.ADD_ERROR("faq"),
         variant: "destructive", // Red error message
       });
     } finally {

@@ -50,8 +50,6 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
   refetch
 }) => {
   const [open, setOpen] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const currentUser = useSelector((state: RootState) => state.user);
   const currentUserId = currentUser.uid;
   const { toast } = useToast();
@@ -75,31 +73,18 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
     try {
       const domainDataWithUser = { ...data, createdById: currentUserId, createdBy: currentUser.type.toUpperCase() };
       // Post the new domain to the backend
-      const response =
-        await apiHelperService.createProjectdomain(domainDataWithUser);
-      if (response.success) {
-        // Pass the new domain to the parent component
-        setSuccessMessage("Domain added successfully!");
-        reset();
-        setErrorMessage(null); // Clear any previous error message
-
-        // Close the dialog after a short delay
-        setTimeout(() => {
-          setOpen(false);
-          setSuccessMessage(null);
-        }, 500);
-        refetch?.()
-      } else {
+      await apiHelperService.createProjectdomain(domainDataWithUser);
         toast({
-          title: "Error",
-          description: Messages.ADD_ERROR("domain"),
-          variant: "destructive", // Red error message
+          title: "Success",
+          description: Messages.CREATE_SUCCESS("domain"),
         });
-      }
-    } catch (error) {
+        reset();
+        setOpen(false);
+        refetch?.()
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: Messages.ADD_ERROR("domain"),
+        description: error.message || Messages.ADD_ERROR("domain"),
         variant: "destructive", // Red error message
       });
     }
@@ -164,12 +149,6 @@ const AddProjectDomain: React.FC<CustomTableChildComponentsProps> = ({
               )}
             />
           </div>
-          {errorMessage && (
-            <p className="text-red-600 mb-3">{errorMessage}</p> // Error message for duplicates
-          )}
-          {successMessage && (
-            <p className="text-green-600 mb-3">{successMessage}</p> // Success message
-          )}
           <DialogFooter>
             <Button type="submit">Save</Button>
           </DialogFooter>

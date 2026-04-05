@@ -29,46 +29,55 @@ type EducationCardProps = {
 };
 
 export function educationCard({ data }: EducationCardProps) {
+  const DataField = ({ label, value }: { label: string; value: string }) => (
+    <div className="flex flex-col space-y-1">
+      <span className="text-sm font-medium text-muted-foreground">{label}</span>
+      <span className="text-sm text-foreground break-words">{value || "No Data Available"}</span>
+    </div>
+  );
+
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "";
+    const normalized = /^\d{4}-\d{2}-\d{2}$/.test(dateString)
+      ? dateString + "T00:00:00"
+      : dateString;
+    const date = new Date(normalized);
+    return isNaN(date.getTime()) ? "" : date.toLocaleDateString();
+  };
+
   return (
-    <Card className={cn("flex flex-col")}>
-      <CardHeader>
+    <Card className={cn("flex flex-col h-full rounded-xl border shadow-sm hover:shadow-md transition-shadow duration-300")}>
+      <CardHeader className="pb-4 border-b">
         <div className="flex items-center justify-between">
-          <CardTitle>{data.degree}</CardTitle>
+          <CardTitle className="text-lg font-semibold text-foreground">{data.degree}</CardTitle>
           <Tooltip>
             <TooltipTrigger>
-              <span>{getStatusIcon(data.verificationStatus)}</span>
+              <span className="mt-1 block">{getStatusIcon(data.verificationStatus)}</span>
             </TooltipTrigger>
             <TooltipContent>
               <span>{data.verificationStatus}</span>
             </TooltipContent>
           </Tooltip>
         </div>
-        <CardDescription>{data.universityName}</CardDescription>
+        <CardDescription className="text-sm mt-1">{data.universityName}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p>
-          <strong>Field of Study:</strong> {data.fieldOfStudy}
-        </p>
-        <p>
-          <strong>Start Date:</strong>{" "}
-          {new Date(data.startDate).toLocaleDateString()}
-        </p>
-        <p>
-          <strong>End Date:</strong>{" "}
-          {new Date(data.endDate).toLocaleDateString()}
-        </p>
-        <p>
-          <strong>Grade:</strong> {data.grade || "No Data Available"}
-        </p>
-        <p>
-          <strong>Comments:</strong> {data.comments || "No Data Available"}
-        </p>
+      <CardContent className="pt-5 flex-grow">
+        <div className="grid gap-4">
+          <DataField label="Field of Study" value={data.fieldOfStudy} />
+
+          <div className="grid grid-cols-2 gap-4">
+            <DataField label="Start Date" value={formatDate(data.startDate)} />
+            <DataField label="End Date" value={formatDate(data.endDate)} />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <DataField label="Grade" value={data.grade} />
+          </div>
+
+          <DataField label="Comments" value={data.comments} />
+        </div>
       </CardContent>
-      <CardFooter>
-        <p>
-          Updated on:{" "}
-          {new Date(data.verificationUpdateTime).toLocaleDateString()}
-        </p>
+      <CardFooter className="pt-4 border-t text-xs text-muted-foreground bg-muted/20 rounded-b-xl">
+        Updated on: {formatDate(data.verificationUpdateTime) || "Not available"}
       </CardFooter>
     </Card>
   );

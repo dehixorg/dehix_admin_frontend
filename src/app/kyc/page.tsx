@@ -22,31 +22,19 @@ import { Messages } from "@/utils/common/enum";
 export default function KYCPage() {
   const { toast } = useToast();
 
-  const handleUpdateStatus = async (id: string, status: string, role: string) => {
-    console.log('Updating KYC status for ID:', id, 'to status:', status, 'role:', role);
+  const handleUpdateStatus = async (id: string, status: string, role: string, refetch?: () => void) => {
     try {
-      const response = await kycApiService.updateKYCStatus(id, status, role);
-      console.log('Update response:', response);
-      
-      if (response.success) {
-        toast({
-          title: "Success",
-          description: Messages.UPDATE_SUCCESS("KYC status"),
-          variant: "default",
-        });
-        // Refresh the table
-        window.location.reload();
-      } else {
-        toast({
-          title: "Error",
-          description: Messages.UPDATE_ERROR("KYC status"),
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
+      await kycApiService.updateKYCStatus(id, status, role);
+      toast({
+        title: "Success",
+        description: Messages.UPDATE_SUCCESS("KYC status"),
+        variant: "default",
+      });
+      refetch?.();
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: Messages.UPDATE_ERROR("KYC status"),
+        description: error.message || Messages.UPDATE_ERROR("KYC status"),
         variant: "destructive",
       });
     }
@@ -142,28 +130,28 @@ export default function KYCPage() {
           return (
             <div className="flex gap-2">
               <button
-                onClick={() => handleUpdateStatus(id, "VERIFIED", role)}
+                onClick={() => handleUpdateStatus(id, "VERIFIED", role, refetch)}
                 className="text-green-600 hover:text-green-800 p-1 rounded transition"
                 title="Verify"
               >
                 <CheckCircle className="w-4 h-4" />
               </button>
               <button
-                onClick={() => handleUpdateStatus(id, "REUPLOAD", role)}
+                onClick={() => handleUpdateStatus(id, "REUPLOAD", role, refetch)}
                 className="text-orange-600 hover:text-orange-800 p-1 rounded transition"
                 title="Request Reupload"
               >
                 <XCircle className="w-4 h-4" />
               </button>
               <button
-                onClick={() => handleUpdateStatus(id, "STOPPED", role)}
+                onClick={() => handleUpdateStatus(id, "STOPPED", role, refetch)}
                 className="text-red-600 hover:text-red-800 p-1 rounded transition"
                 title="Stop"
               >
                 <XCircle className="w-4 h-4" />
               </button>
               <button
-                onClick={() => handleUpdateStatus(id, "PENDING", role)}
+                onClick={() => handleUpdateStatus(id, "PENDING", role, refetch)}
                 className="text-yellow-600 hover:text-yellow-800 p-1 rounded transition"
                 title="Set Pending"
               >
