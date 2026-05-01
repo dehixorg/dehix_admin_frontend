@@ -62,7 +62,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
 
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden h-screen w-16 flex-col border-r bg-background sm:flex">
-      <nav className="flex h-full flex-col items-center gap-3 overflow-y-auto overflow-x-hidden px-2 py-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/30">
+      <nav className="flex h-full flex-col items-center gap-1 overflow-y-auto overflow-x-hidden px-2 py-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-muted-foreground/20 hover:scrollbar-thumb-muted-foreground/30">
         {topItems.map((item, index) => {
           if (item.subItems) {
             return (
@@ -87,28 +87,30 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
             }`;
 
           return (
-            <Tooltip key={index}>
-              <TooltipTrigger asChild>
-                <Link
-                  href={isDehix ? "#" : item.href}
-                  onClick={() => item.label && setActive(item.label)}
-                  className={linkClasses}
-                >
-                  <span className="relative flex-shrink-0">
-                    {item.icon}
-                    {(item.count || 0) > 0 && (
-                      <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
-                        {item.count}
-                      </span>
-                    )}
-                  </span>
-                  {item.label && <span className="sr-only">{item.label}</span>}
-                </Link>
-              </TooltipTrigger>
-              {item.label && (
-                <TooltipContent side="right">{item.label}</TooltipContent>
-              )}
-            </Tooltip>
+            <div key={index} className="relative h-10 w-10 flex items-center justify-center shrink-0">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={isDehix ? "#" : item.href}
+                    onClick={() => item.label && setActive(item.label)}
+                    className={linkClasses}
+                  >
+                    <span className="relative flex-shrink-0">
+                      {item.icon}
+                      {(item.count || 0) > 0 && (
+                        <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
+                          {item.count}
+                        </span>
+                      )}
+                    </span>
+                    {item.label && <span className="sr-only">{item.label}</span>}
+                  </Link>
+                </TooltipTrigger>
+                {item.label && (
+                  <TooltipContent side="right">{item.label}</TooltipContent>
+                )}
+              </Tooltip>
+            </div>
           );
         })}
       </nav>
@@ -117,13 +119,13 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         <ThemeToggle />
       </div>
 
-      <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col items-center gap-1 px-2 sm:py-5">
         {bottomItems.map((item, index) => (
           <Tooltip key={index}>
             <TooltipTrigger asChild>
               <Link
                 href={item.href}
-                className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground md:h-8 md:w-8 ${
+                className={`flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent hover:text-accent-foreground ${
                   item.label === "Dehix"
                     ? "group shrink-0 gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
                     : "text-foreground hover:bg-accent hover:text-accent-foreground"

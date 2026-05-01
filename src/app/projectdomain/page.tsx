@@ -144,7 +144,7 @@ export default function Talent() {
         { label: "Dashboard", link: "/dashboard/" },
         { label: "Project Domain", link: "#" },
       ]}
-      mainClassName="ml-5"
+      mainClassName="mx-5"
     >
       <CustomTable {...customTableProps} />
     </AdminDashboardLayout>

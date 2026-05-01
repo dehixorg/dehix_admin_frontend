@@ -53,7 +53,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
 
   return (
     <div
-      className="relative"
+      className="relative h-10 w-10 flex items-center justify-center shrink-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -62,9 +62,8 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
         <TooltipTrigger asChild>
           <div
             ref={iconRef}
-            className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
+            className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
               text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground
-              md:h-8 md:w-8
               ${
                 subItems.some((item) => item.label === active)
                   ? "bg-accent text-accent-foreground"
@@ -72,14 +71,16 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
               }
             `}
           >
-            {React.cloneElement(parentItem.icon as React.ReactElement, {
-              className: "h-5 w-5",
-            })}
-             {totalCount > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white">
-                {totalCount}
-              </span>
-            )}
+            <span className="relative flex-shrink-0">
+              {React.cloneElement(parentItem.icon as React.ReactElement, {
+                className: "h-5 w-5",
+              })}
+              {totalCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
+                  {totalCount}
+                </span>
+              )}
+            </span>
             {parentItem.label && (
               <span className="sr-only">{parentItem.label}</span>
             )}
@@ -94,39 +95,56 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
       {/* Dropdown */}
       {isOpen && rect && (
         <div
-          className="fixed z-[9999] w-64 rounded-lg border bg-background shadow-2xl"
+          className="fixed z-[9999] w-48 rounded-xl border border-border/80 bg-white shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 ease-out"
           style={{
-            left: rect.right + 8,
+            left: rect.right + 10,
             top: rect.top + rect.height / 2,
             transform: "translateY(-50%)",
           }}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          <div className="py-2">
-            {subItems.map((item, index) => (
-              <Link
-                key={index}
-                href={item.href}
-                className={`flex items-center justify-between gap-3 px-4 py-2 text-sm transition-colors
-                  ${
-                    item.label === active
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                  }
-                `}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  <span className="whitespace-nowrap">{item.label}</span>
-                </div>
-                 {(item.count || 0) > 0 ? (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white">
-                    {item.count}
-                  </span>
-                ) : null}
-              </Link>
-            ))}
+          <div className="flex flex-col p-1">
+            {subItems.map((item, index) => {
+              const isSubItemActive = item.label === active;
+              return (
+                <Link
+                  key={index}
+                  href={item.href}
+                  className={`group relative flex items-center justify-between gap-2.5 px-2.5 py-1.5 rounded-lg text-xs transition-all duration-200
+                    ${
+                      isSubItemActive
+                        ? "bg-slate-100 text-slate-900 font-bold"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }
+                  `}
+                >
+                  {/* Active Indicator Bar */}
+                  {isSubItemActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-r-full bg-blue-600" />
+                  )}
+
+                  <div className="flex items-center gap-2.5">
+                    <div className={`flex h-7 w-7 items-center justify-center rounded-md transition-all duration-200
+                      ${isSubItemActive ? "bg-blue-50 text-blue-600" : "bg-slate-50 text-slate-400 group-hover:bg-white group-hover:text-slate-900"}
+                    `}>
+                      {React.cloneElement(item.icon as React.ReactElement, {
+                        size: 14,
+                      })}
+                    </div>
+                    <span className="whitespace-nowrap transition-colors">{item.label}</span>
+                  </div>
+
+                  {(item.count || 0) > 0 && (
+                    <span className={`flex h-4.5 min-w-[18px] px-1 items-center justify-center rounded-full text-[9px] font-bold shadow-sm transition-all
+                      ${isSubItemActive ? "bg-blue-600 text-white" : "bg-purple-500 text-white"}
+                    `}>
+                      {item.count}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}

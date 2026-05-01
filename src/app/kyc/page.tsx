@@ -211,13 +211,17 @@ export default function KYCPage() {
     <AdminDashboardLayout
       active="KYC"
       breadcrumbItems={[
-        
-        { label: "KYC Requests", link: "#" },
+        { label: "Dashboard", link: "" },
+        { label: "KYC Requests", link: "/kyc" },
       ]}
       showSearch={false}
-      mainClassName="ml-5"
     >
-      <CustomTable {...customTableProps} />
+      <div className="mx-5 mt-5">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">KYC Requests</h1>
+        </div>
+        <CustomTable {...{ ...customTableProps, title: "" }} />
+      </div>
     </AdminDashboardLayout>
   );
 }

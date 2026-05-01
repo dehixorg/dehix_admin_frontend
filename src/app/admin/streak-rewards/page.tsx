@@ -60,7 +60,7 @@ const StreakRewardsPage = () => {
       active="Streak Rewards"
       breadcrumbItems={breadcrumbItems}
       showSearch={false}
-      mainClassName="ml-5 mr-3"
+      mainClassName="mx-5"
     >
       <CustomTable
         api="/admin/streak-rewards"

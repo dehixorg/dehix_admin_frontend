@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { LoaderCircle } from "lucide-react";
 import { apiHelperService } from "@/services/report";
 import ReportSkeletonLoader from "@/components/shared/ReportSkeletonLoader";
 

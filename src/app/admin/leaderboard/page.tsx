@@ -101,7 +101,7 @@ export default function LeaderboardPage() {
         { label: "Leaderboard", link: "/admin/leaderboard" },
       ]}
       showSearch={false}
-      mainClassName="ml-5 mr-3"
+      mainClassName="mx-5"
     >
       <CustomTable
         api="/admin/leaderboard/get-all"

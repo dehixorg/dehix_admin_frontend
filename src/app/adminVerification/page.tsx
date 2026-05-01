@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiHelperService } from "@/services/verification";
 import { Messages } from "@/utils/common/enum";
 import Verification from "@/components/verification/verificationTable";
@@ -68,9 +67,6 @@ const BusinessTabs = () => {
     fetchAdminVerifications();
   }, [fetchAdminVerifications]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <AdminDashboardLayout
@@ -80,22 +76,15 @@ const BusinessTabs = () => {
         { label: "Admin Oracle Verification", link: "/adminVerification" },
       ]}
     >
-      <Tabs defaultValue="Admin Oracle Verification">
-        <TabsList className="flex w-full justify-between gap-2">
-          <TabsTrigger
-            value="Admin Oracle Verification"
-            className="flex-1 text-center"
-          >
-            Admin Oracle Verification
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="Admin Oracle Verification">
-          <Verification
-            Data={adminVerifications}
-            onRefetch={fetchAdminVerifications}
-          />
-        </TabsContent>
-      </Tabs>
+      <div className="mx-5 mt-5">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin Oracle Verification</h1>
+        </div>
+        <Verification
+          Data={adminVerifications}
+          onRefetch={fetchAdminVerifications}
+        />
+      </div>
     </AdminDashboardLayout>
   );
 };
