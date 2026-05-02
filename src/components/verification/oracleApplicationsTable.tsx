@@ -19,11 +19,8 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
+
+
 import CopyButton from "@/components/copybutton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +40,7 @@ interface OracleApplication {
 }
 
 interface Props {
+  title?: string;
   Data: OracleApplication[] | null;
   onRefetch?: () => void;
 }
@@ -107,75 +105,70 @@ const OracleApplicationsTable: React.FC<Props> = ({ Data, onRefetch }) => {
   }
 
   return (
-    <div className="px-4">
-      <div className="mb-8 mt-4">
-        <Card>
-          <div className="lg:overflow-x-auto">
+    <div className="">
+      <div className="mb-8">
+        <Card className="border-none shadow-none bg-transparent">
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Username</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Freelancer ID</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Details</TableHead>
+                <TableRow className="hover:bg-transparent border-b">
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4">Name</TableHead>
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4">Username</TableHead>
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4">Email</TableHead>
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4">Freelancer ID</TableHead>
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4">Status</TableHead>
+                  <TableHead className="text-[13px] font-semibold text-foreground py-4 text-right">Details</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {Data.length > 0 ? (
                   Data.map((application) => (
-                    <TableRow key={application._id}>
-                      <TableCell>
-                        <span className="font-medium">
+                    <TableRow key={application._id} className="hover:bg-accent/5">
+                      <TableCell className="text-[13px] py-4">
+                        <span className="font-medium text-foreground">
                           {application.firstName || application.lastName
                             ? `${application.firstName ?? ""} ${application.lastName ?? ""}`.trim()
                             : "N/A"}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        {application.userName ?? "N/A"}
+                      <TableCell className="text-[13px] py-4">
+                        <span className="text-foreground">
+                          {application.userName ?? "N/A"}
+                        </span>
                       </TableCell>
-                      <TableCell>
-                        <span className="text-sm text-muted-foreground">
+                      <TableCell className="text-[13px] py-4">
+                        <span className="text-muted-foreground">
                           {application.email ?? "N/A"}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-[13px] py-4">
                         {application._id ? (
-                          <div className="flex items-center space-x-2">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    router.push(
-                                      `/freelancer/tabs?id=${application._id}`,
-                                    )
-                                  }
-                                  className="cursor-pointer text-blue-500 hover:underline"
-                                >
-                                  {formatID(application._id)}
-                                </button>
-                              </TooltipTrigger>
-                              <CopyButton id={application._id} />
-                              <TooltipContent>
-                                {application._id}
-                              </TooltipContent>
-                            </Tooltip>
+                          <div className="flex items-center space-x-1">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                router.push(
+                                  `/freelancer/tabs?id=${application._id}`,
+                                )
+                              }
+                              className="text-blue-500 hover:underline font-medium"
+                            >
+                              {formatID(application._id)}
+                            </button>
+                            <CopyButton id={application._id} />
                           </div>
                         ) : (
-                          "N/A"
+                          <span className="text-muted-foreground">N/A</span>
                         )}
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-[13px] py-4">
                         <Badge
-                          className={getStatusBadge(application.oracleStatus)}
+                          className={`rounded-full px-3 py-0.5 text-[11px] font-semibold ${getStatusBadge(application.oracleStatus)}`}
                         >
                           {application.oracleStatus}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right py-4">
                         <ButtonIcon
                           onClick={() => handleOpenDetail(application)}
                           aria-label="View oracle application details"
@@ -219,7 +212,7 @@ const OracleApplicationsTable: React.FC<Props> = ({ Data, onRefetch }) => {
                   </span>
                   <p className="font-semibold">
                     {selectedApplication.firstName ||
-                    selectedApplication.lastName
+                      selectedApplication.lastName
                       ? `${selectedApplication.firstName ?? ""} ${selectedApplication.lastName ?? ""}`.trim()
                       : "N/A"}
                   </p>

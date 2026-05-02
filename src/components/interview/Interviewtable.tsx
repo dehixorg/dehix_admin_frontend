@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { PackageOpen } from "lucide-react";
+import { PackageOpen, Search, Filter } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TableSelect } from "@/components/custom-table/TableSelect";
 import {
   Table,
   TableHeader,
@@ -23,6 +32,8 @@ import CopyButton from "@/components/copybutton";
 import InterviewTableSkeleton from "@/utils/common/skeleton";
 import { apiHelperService as skillApiService } from "@/services/skill";
 import { apiHelperService as domainApiService } from "@/services/domain";
+
+import { TablePagination } from "@/components/custom-table/Pagination";
 
 interface FreelancerPersonalInfo {
   _id: string;
@@ -63,6 +74,11 @@ interface InterviewData {
 
 const InterviewTable: React.FC = () => {
   const [interviewData, setInterviewData] = useState<InterviewData[]>([]);
+  const [filteredData, setFilteredData] = useState<InterviewData[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [limit, setLimit] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [talentTypeFilter, setTalentTypeFilter] = useState<string>("all");
   const [freelancerDetails, setFreelancerDetails] = useState<
     Record<string, FreelancerPersonalInfo>
   >({});
@@ -73,6 +89,40 @@ const InterviewTable: React.FC = () => {
   const [openTalentDialog, setOpenTalentDialog] = useState(false);
   const [selectedTalentDetails, setSelectedTalentDetails] = useState<any | null>(null);
   const [selectedTalentType, setSelectedTalentType] = useState<"skill" | "domain" | null>(null);
+
+  useEffect(() => {
+    let result = [...interviewData];
+
+    // Search logic
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((item) => {
+        const intervieweeName = getFreelancerName(item.intervieweeId, item).toLowerCase();
+        const interviewerName = getFreelancerName(item.interviewerId, item).toLowerCase();
+        const talentName = (item.talentName || "").toLowerCase();
+        return (
+          intervieweeName.includes(query) ||
+          interviewerName.includes(query) ||
+          talentName.includes(query) ||
+          item._id.toLowerCase().includes(query)
+        );
+      });
+    }
+
+    // Filter logic
+    if (talentTypeFilter !== "all") {
+      result = result.filter((item) => item.talentType === talentTypeFilter);
+    }
+
+    setFilteredData(result);
+  }, [searchQuery, talentTypeFilter, interviewData]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, talentTypeFilter, limit]);
+
+  const startIndex = (currentPage - 1) * limit;
+  const displayedData = filteredData.slice(startIndex, startIndex + limit);
 
   /**
    * Fetches interview data and then enriches it with freelancer names.
@@ -196,12 +246,60 @@ const InterviewTable: React.FC = () => {
   };
 
   return (
-    <div className="px-4">
-      <div className="mb-8 mt-4 mr-4">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="table-title">Interview Table</h2>
+    <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider text-center sm:text-left">
+          Interview Table
+        </h1>
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <TableSelect
+                currValue={limit}
+                label="Items Per Page"
+                values={[10, 25, 50, 100]}
+                setCurrValue={setLimit}
+              />
+            </div>
+            {filteredData.length > 0 && (
+              <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
+                {`${filteredData.length} items found`}
+              </div>
+            )}
+          </div>
         </div>
-        <Card>
+      </div>
+      <div className="mb-8 mt-4 w-full">
+        <Card className="w-full" style={{ width: '100%' }}>
+          <div className="flex flex-row flex-nowrap items-center justify-between gap-1 sm:gap-4 px-1 sm:px-4 py-3 text-foreground w-full">
+            <div className="relative flex-1 min-w-[60px] max-w-full md:max-w-[200px] lg:max-w-[280px]">
+              <div className="relative">
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  className="pl-8 h-10 w-full"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex flex-row flex-nowrap items-center justify-end gap-2 sm:gap-3 flex-shrink-0 ml-auto">
+              {/* Functional Talent Type Filter */}
+              <div className="flex items-center gap-2">
+                <Select value={talentTypeFilter} onValueChange={setTalentTypeFilter}>
+                  <SelectTrigger className="h-10 gap-2">
+                    <Filter className="h-4 w-4 shrink-0" />
+                    <SelectValue placeholder="Talent Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Types</SelectItem>
+                    <SelectItem value="skill">Skill</SelectItem>
+                    <SelectItem value="domain">Domain</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </div>
           <div className="lg:overflow-x-auto">
             <Table>
               <TableHeader>
@@ -233,8 +331,8 @@ const InterviewTable: React.FC = () => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ) : interviewData.length > 0 ? (
-                  interviewData.map((interview) => (
+                ) : displayedData.length > 0 ? (
+                  displayedData.map((interview) => (
                     <TableRow key={interview._id}>
                       <TableCell>
                         <div className="flex items-center space-x-2">
@@ -395,6 +493,11 @@ const InterviewTable: React.FC = () => {
             </Table>
           </div>
         </Card>
+        <TablePagination
+          page={currentPage}
+          setPage={setCurrentPage}
+          isNextAvailable={filteredData.length > currentPage * limit}
+        />
 
         {/* Talent Details Dialog */}
         <Dialog open={openTalentDialog} onOpenChange={setOpenTalentDialog}>

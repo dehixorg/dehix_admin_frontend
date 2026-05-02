@@ -359,9 +359,11 @@ export const CustomTable = ({
   return (
     <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
       <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
-        <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider text-center sm:text-left">
-          {title}
-        </h1>
+        {title ? (
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
+        ) : null}
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
           <HeaderActionComponent
             headerActions={mainTableActions}
@@ -376,9 +378,9 @@ export const CustomTable = ({
                 setCurrValue={setLimitUtils}
               />
             </div>
-            {data.length > 0 && (
+            {filteredData.length > 0 && (
               <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
-                {`${data.length} items found`}
+                {`${filteredData.length} items found`}
               </div>
             )}
             {isDownload && (
@@ -397,7 +399,7 @@ export const CustomTable = ({
         </div>
       </div>
       <div className="mb-8 mt-4 w-full">
-        <Card className="w-full" style={{ width: '100%' }}>
+        <Card className="w-full border-none shadow-none bg-transparent" style={{ width: '100%' }}>
           {isFilter && (
             <FilterTable
               filterData={filterData}
@@ -415,9 +417,9 @@ export const CustomTable = ({
           <div className="w-full overflow-x-auto">
             <Table className="w-full">
               <TableHeader>
-                <TableRow>
+                <TableRow className="hover:bg-transparent border-b">
                   {fields.map((field) => (
-                    <TableHead key={field.fieldName} className="px-4 py-3 text-sm font-medium">
+                    <TableHead key={field.fieldName} className="px-4 py-4 text-[13px] font-semibold text-foreground">
                       {field.tooltip ? (
                         <ToolTip
                           trigger={field.textValue}
@@ -436,7 +438,7 @@ export const CustomTable = ({
                     {[...Array(10)].map((_, i) => (
                       <TableRow key={i} className="hover:bg-transparent">
                         {fields.map((field) => (
-                          <TableCell key={field.fieldName}>
+                          <TableCell key={field.fieldName} className="py-4">
                             <Skeleton className="h-5 w-full max-w-[140px] rounded-full" />
                           </TableCell>
                         ))}
@@ -453,7 +455,7 @@ export const CustomTable = ({
                         <TableCell
                           key={field.fieldName}
                           className={twMerge(
-                            "text-gray-900 dark:text-gray-300 px-4 py-3 text-sm",
+                            "text-foreground px-4 py-4 text-[13px]",
                             field.className
                           )}
                           width={field.width}

@@ -60,23 +60,29 @@ const OracleApplicationsPage = () => {
     <AdminDashboardLayout
       active="Oracle Applications"
       breadcrumbItems={[
-        { label: "Dashboard", link: "" },
+        { label: "Dashboard", link: "/dashboard" },
         {
           label: "Oracle Applications",
           link: "/verification/oracle-applications",
         },
       ]}
     >
-      {loading ? (
-        <div className="py-10 text-center text-muted-foreground">
-          Loading oracle applications...
+      <div className="mt-5">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Oracle Applications</h1>
         </div>
-      ) : (
-        <OracleApplicationsTable
-          Data={applications}
-          onRefetch={fetchApplications}
-        />
-      )}
+
+        {loading ? (
+          <div className="py-10 text-center text-muted-foreground">
+            Loading oracle applications...
+          </div>
+        ) : (
+          <OracleApplicationsTable
+            Data={applications}
+            onRefetch={fetchApplications}
+          />
+        )}
+      </div>
     </AdminDashboardLayout>
   );
 };

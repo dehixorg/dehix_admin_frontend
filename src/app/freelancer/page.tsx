@@ -175,7 +175,7 @@ export default function Talent() {
       active="Freelancer"
       breadcrumbItems={[{ label: "Freelancer", link: "#" }]}
       showSearch={false}
-      mainClassName="ml-5"
+      mainClassName="mx-5"
     >
       <CustomTable {...customTableProps} />
     </AdminDashboardLayout>

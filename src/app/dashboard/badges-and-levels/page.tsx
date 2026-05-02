@@ -163,7 +163,7 @@ export default function BadgesAndLevels() {
         { label: "Badges & Levels", link: "#" },
       ]}
       showSearch={false}
-      mainClassName="ml-5 mr-3"
+      mainClassName="mx-5"
     >
       <CustomTable key={tableKey} {...customTableProps} />
 

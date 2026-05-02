@@ -34,9 +34,9 @@ interface Verificationinfo {
 }
 const BusinessTabs = () => {
   const [experience, setexperience] = useState<Verificationinfo[] | null>(null);
-  const [project,setproject] = useState<Verificationinfo[] | null>(null);
-  const [education,seteducation] = useState<Verificationinfo[] | null>(null);
-  const [business,setbusiness] = useState<Verificationinfo[]| null>(null);
+  const [project, setproject] = useState<Verificationinfo[] | null>(null);
+  const [education, seteducation] = useState<Verificationinfo[] | null>(null);
+  const [business, setbusiness] = useState<Verificationinfo[] | null>(null);
   const [other, setother] = useState<Verificationinfo[] | null>(null);
   const [_loading, setLoading] = useState<boolean>(true);
   const { toast } = useToast();
@@ -46,119 +46,124 @@ const BusinessTabs = () => {
       try {
         const response = await apiHelperService.getAllVerification();
         const data = response?.data?.data;
-        
-      const tempExperience: Verificationinfo[] = [];
-      const tempProject: Verificationinfo[] = [];
-      const tempEducation: Verificationinfo[] = [];
-      const tempBusiness: Verificationinfo[] = [];
-      const tempOther: Verificationinfo[] = [];
 
-      // Iterate through data and assign based on doc_type
-      if(data)
-      {
+        const tempExperience: Verificationinfo[] = [];
+        const tempProject: Verificationinfo[] = [];
+        const tempEducation: Verificationinfo[] = [];
+        const tempBusiness: Verificationinfo[] = [];
+        const tempOther: Verificationinfo[] = [];
 
-      data.forEach((item:Verificationinfo) => {
-        switch (item.doc_type) {
-          case 'experience':
-            tempExperience.push(item); 
-            break;
-          case 'project':
-            tempProject.push(item);     
-            break;
-          case 'education':
-            tempEducation.push(item);
-            break;
-          case 'business':
-            tempBusiness.push(item);
-            break;
-          case 'skill':
-            tempExperience.push(item);
-            break;
-          case 'domain':
-            tempBusiness.push(item);
-            break;
-          default:
-            tempOther.push(item);
-            break;
+        // Iterate through data and assign based on doc_type
+        if (data) {
+
+          data.forEach((item: Verificationinfo) => {
+            switch (item.doc_type) {
+              case 'experience':
+                tempExperience.push(item);
+                break;
+              case 'project':
+                tempProject.push(item);
+                break;
+              case 'education':
+                tempEducation.push(item);
+                break;
+              case 'business':
+                tempBusiness.push(item);
+                break;
+              case 'skill':
+                tempExperience.push(item);
+                break;
+              case 'domain':
+                tempBusiness.push(item);
+                break;
+              default:
+                tempOther.push(item);
+                break;
+            }
+          });
+          setexperience(tempExperience);
+          setproject(tempProject);
+          seteducation(tempEducation);
+          setbusiness(tempBusiness);
+          setother(tempOther);
         }
-      });
-      setexperience(tempExperience);
-      setproject(tempProject);
-      seteducation(tempEducation);
-      setbusiness(tempBusiness);
-      setother(tempOther);
-      setLoading(false); // Stop loading after data processing
-    }
-    else{
-    toast({
-      title: "Error",
-      description: Messages.FETCH_ERROR("verification"),
-      variant: "destructive",
-    });
-  }
+        else {
+          toast({
+            title: "Error",
+            description: Messages.FETCH_ERROR("verification"),
+            variant: "destructive",
+          });
+        }
 
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: Messages.FETCH_ERROR("verification"),
-        variant: "destructive",
-      });
-      setLoading(false); // Stop loading in case of an error
-    }
-  };
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: Messages.FETCH_ERROR("verification"),
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchBusiness();
-}, [toast]);
+    fetchBusiness();
+  }, [toast]);
 
 
   return (
     <AdminDashboardLayout
-      active="Business"
+      active="Verification"
       breadcrumbItems={[
-        { label: "Dashboard", link: "" },
+        { label: "Dashboard", link: "/dashboard" },
         { label: "Oracle Verification", link: "/verification" },
       ]}
     >
-      <Tabs defaultValue="Experience">
-        <TabsList className="flex w-full justify-between gap-2">
-          <TabsTrigger value="Experience" className="flex-1 text-center">
-          Experience
-          </TabsTrigger>
-          <TabsTrigger
-            value="Project"
-            className="flex-1 text-center"
-          >
-           Project
-          </TabsTrigger>
-          <TabsTrigger value="Education" className="flex-1 text-center">
-          Education
-          </TabsTrigger>
-          <TabsTrigger
-            value="Business"
-            className="flex-1 text-center"
-          >
-           Business
-          </TabsTrigger>
-          <TabsTrigger value="Other" className="flex-1 text-center">
-          Other
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="Experience">
-          <Verification Data={experience} />
-        </TabsContent>
-        <TabsContent value="Project">
-          <Verification Data={project} />
-        </TabsContent>
-        <TabsContent value="Education">
-          <Verification Data={education} />
-        </TabsContent>
-        <TabsContent value="Business">
-          <Verification Data={business}/>
-        </TabsContent>
-        <TabsContent value="Other">
-          <Verification Data={other} />
-        </TabsContent>
-      </Tabs>
+      <div className="mt-5">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">Oracle Verification</h1>
+        </div>
+
+        <Tabs defaultValue="Experience">
+          <TabsList className="flex w-full justify-between gap-2">
+            <TabsTrigger value="Experience" className="flex-1 text-center">
+              Experience
+            </TabsTrigger>
+            <TabsTrigger
+              value="Project"
+              className="flex-1 text-center"
+            >
+              Project
+            </TabsTrigger>
+            <TabsTrigger value="Education" className="flex-1 text-center">
+              Education
+            </TabsTrigger>
+            <TabsTrigger
+              value="Business"
+              className="flex-1 text-center"
+            >
+              Business
+            </TabsTrigger>
+            <TabsTrigger value="Other" className="flex-1 text-center">
+              Other
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="Experience">
+            <Verification Data={experience} />
+          </TabsContent>
+          <TabsContent value="Project">
+            <Verification Data={project} />
+          </TabsContent>
+          <TabsContent value="Education">
+            <Verification Data={education} />
+          </TabsContent>
+          <TabsContent value="Business">
+            <Verification Data={business} />
+          </TabsContent>
+          <TabsContent value="Other">
+            <Verification Data={other} />
+          </TabsContent>
+        </Tabs>
+      </div>
     </AdminDashboardLayout>
   );
 };

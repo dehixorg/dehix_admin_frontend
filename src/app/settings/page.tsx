@@ -13,7 +13,7 @@ export default function Settings() {
         { label: "Dashboard", link: "/admin" },
         { label: "Settings", link: "#" },
       ]}
-      mainClassName="ml-5 mr-3"
+      mainClassName="mx-5"
     >
       <CurrentUserDetails user_id={user.uid}/>
     </AdminDashboardLayout>

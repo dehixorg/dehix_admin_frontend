@@ -98,7 +98,7 @@ export default function Talent() {
       active="Business"
       breadcrumbItems={[{ label: "Business", link: "#" }]}
       showSearch={false}
-      mainClassName="ml-5"
+      mainClassName="mx-5"
     >
       <CustomTable {...customTableProps} />
     </AdminDashboardLayout>

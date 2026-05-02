@@ -115,7 +115,7 @@ export default function Talent() {
         { label: "Skill", link: "#" },
       ]}
       showSearch={false}
-      mainClassName="ml-5"
+      mainClassName="mx-5"
     >
       <CustomTable {...customTableProps} />
     </AdminDashboardLayout>

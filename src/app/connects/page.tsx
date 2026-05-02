@@ -98,7 +98,7 @@ export default function Connects() {
         { label: "Connects", link: "#" },
       ]}
       showSearch={false}
-      mainClassName="ml-5"
+      mainClassName="mx-5"
     >
       <CustomTable {...customTableProps} />
     </AdminDashboardLayout>
