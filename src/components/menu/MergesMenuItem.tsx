@@ -95,7 +95,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
       {/* Dropdown */}
       {isOpen && rect && (
         <div
-          className="fixed z-[9999] w-48 rounded-xl border border-border/80 bg-white shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 ease-out"
+          className="fixed z-[9999] w-48 rounded-xl border border-border/80 bg-popover shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 ease-out"
           style={{
             left: rect.right + 10,
             top: rect.top + rect.height / 2,
@@ -114,19 +114,19 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                   className={`group relative flex items-center justify-between gap-2.5 px-2.5 py-1.5 rounded-lg text-xs transition-all duration-200
                     ${
                       isSubItemActive
-                        ? "bg-slate-100 text-slate-900 font-bold"
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                        ? "bg-accent text-accent-foreground font-bold"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     }
                   `}
                 >
                   {/* Active Indicator Bar */}
                   {isSubItemActive && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-r-full bg-blue-600" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-r-full bg-primary" />
                   )}
 
                   <div className="flex items-center gap-2.5">
                     <div className={`flex h-7 w-7 items-center justify-center rounded-md transition-all duration-200
-                      ${isSubItemActive ? "bg-blue-50 text-blue-600" : "bg-slate-50 text-slate-400 group-hover:bg-white group-hover:text-slate-900"}
+                      ${isSubItemActive ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground group-hover:bg-background group-hover:text-foreground"}
                     `}>
                       {React.cloneElement(item.icon as React.ReactElement, {
                         size: 14,
@@ -137,7 +137,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
 
                   {(item.count || 0) > 0 && (
                     <span className={`flex h-4.5 min-w-[18px] px-1 items-center justify-center rounded-full text-[9px] font-bold shadow-sm transition-all
-                      ${isSubItemActive ? "bg-blue-600 text-white" : "bg-purple-500 text-white"}
+                      ${isSubItemActive ? "bg-primary text-primary-foreground" : "bg-purple-500 text-white"}
                     `}>
                       {item.count}
                     </span>

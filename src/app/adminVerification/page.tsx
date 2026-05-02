@@ -46,6 +46,7 @@ const BusinessTabs = () => {
         setLoading(false);
         return;
       }
+      setLoading(true);
       const response = await apiHelperService.getAllVerificationsById(userId);
       const data = response?.data?.data;
 
@@ -70,20 +71,26 @@ const BusinessTabs = () => {
 
   return (
     <AdminDashboardLayout
-      active="Business"
+      active="Admin Verification"
       breadcrumbItems={[
-        { label: "Dashboard", link: "" },
+        { label: "Dashboard", link: "/dashboard" },
         { label: "Admin Oracle Verification", link: "/adminVerification" },
       ]}
     >
-      <div className="mx-5 mt-5">
+      <div className="mt-5">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin Oracle Verification</h1>
         </div>
-        <Verification
-          Data={adminVerifications}
-          onRefetch={fetchAdminVerifications}
-        />
+        {loading ? (
+          <div className="py-10 text-center text-muted-foreground">
+            Loading verifications...
+          </div>
+        ) : (
+          <Verification
+            Data={adminVerifications}
+            onRefetch={fetchAdminVerifications}
+          />
+        )}
       </div>
     </AdminDashboardLayout>
   );

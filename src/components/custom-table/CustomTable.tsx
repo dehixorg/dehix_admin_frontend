@@ -351,48 +351,46 @@ export const CustomTable = ({
 
   return (
     <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
-      {(title || mainTableActions) && (
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
-          {title ? (
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              {title}
-            </h1>
-          ) : <div />}
-          <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
-            <HeaderActionComponent
-              headerActions={mainTableActions}
-              refetch={refetch}
-            />
-            <div className="flex items-center gap-3">
-              <div className="flex items-center">
-                <TableSelect
-                  currValue={limit}
-                  label="Items Per Page"
-                  values={[10, 25, 50, 100]}
-                  setCurrValue={setLimitUtils}
-                />
-              </div>
-              {data.length > 0 && (
-                <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
-                  {`${data.length} items found`}
-                </div>
-              )}
-              {isDownload && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
-                  onClick={handleDownload}
-                >
-                  <DownloadIcon className="size-4" />
-                  Download
-                </Button>
-              )}
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
+        {title ? (
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
+        ) : <div />}
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
+          <HeaderActionComponent
+            headerActions={mainTableActions}
+            refetch={refetch}
+          />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <TableSelect
+                currValue={limit}
+                label="Items Per Page"
+                values={[10, 25, 50, 100]}
+                setCurrValue={setLimitUtils}
+              />
             </div>
+            {filteredData.length > 0 && (
+              <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
+                {`${filteredData.length} items found`}
+              </div>
+            )}
+            {isDownload && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
+                onClick={handleDownload}
+              >
+                <DownloadIcon className="size-4" />
+                Download
+              </Button>
+            )}
           </div>
         </div>
-      )}
+      </div>
       <div className="mb-8 mt-4 w-full">
         <Card className="w-full border-none shadow-none bg-transparent" style={{ width: '100%' }}>
           {isFilter && (

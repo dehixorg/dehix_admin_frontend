@@ -33,6 +33,8 @@ import InterviewTableSkeleton from "@/utils/common/skeleton";
 import { apiHelperService as skillApiService } from "@/services/skill";
 import { apiHelperService as domainApiService } from "@/services/domain";
 
+import { TablePagination } from "@/components/custom-table/Pagination";
+
 interface FreelancerPersonalInfo {
   _id: string;
   name: string;
@@ -75,6 +77,7 @@ const InterviewTable: React.FC = () => {
   const [filteredData, setFilteredData] = useState<InterviewData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [limit, setLimit] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
   const [talentTypeFilter, setTalentTypeFilter] = useState<string>("all");
   const [freelancerDetails, setFreelancerDetails] = useState<
     Record<string, FreelancerPersonalInfo>
@@ -114,7 +117,12 @@ const InterviewTable: React.FC = () => {
     setFilteredData(result);
   }, [searchQuery, talentTypeFilter, interviewData]);
 
-  const displayedData = filteredData.slice(0, limit);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, talentTypeFilter, limit]);
+
+  const startIndex = (currentPage - 1) * limit;
+  const displayedData = filteredData.slice(startIndex, startIndex + limit);
 
   /**
    * Fetches interview data and then enriches it with freelancer names.
@@ -485,6 +493,11 @@ const InterviewTable: React.FC = () => {
             </Table>
           </div>
         </Card>
+        <TablePagination
+          page={currentPage}
+          setPage={setCurrentPage}
+          isNextAvailable={filteredData.length > currentPage * limit}
+        />
 
         {/* Talent Details Dialog */}
         <Dialog open={openTalentDialog} onOpenChange={setOpenTalentDialog}>
