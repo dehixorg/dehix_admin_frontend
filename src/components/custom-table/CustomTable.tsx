@@ -1,10 +1,4 @@
-"use client";
-
-import { DownloadIcon, PackageOpen } from "lucide-react";
-import { Card } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
-import React, { useCallback, useEffect, useState } from "react";
-
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -12,19 +6,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
+import {
+  FieldType,
+  FiltersArrayElem,
+  Params,
+} from "./FieldTypes";
 import { apiHelperService } from "@/services/customTable";
-import { FieldType, FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
-import { FilterTable } from "./FilterTable";
-import { HeaderActionComponent } from "./HeaderActionsComponent";
-import { ToolTip } from "../ToolTip";
 import { TablePagination } from "./Pagination";
-import { TableSelect } from "./TableSelect";
-import { twMerge } from "tailwind-merge";
-import { useToast } from "../ui/use-toast";
+import { FilterTable } from "./FilterTable";
+import { useToast } from "@/hooks/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { Skeleton } from "@/components/ui/skeleton";
+import { HeaderActionComponent } from "./HeaderActionsComponent";
+import { DownloadIcon } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { ToolTip } from "../ToolTip";
+import { Card } from "../ui/card";
 import { Button } from "../ui/button";
+import { TableSelect } from "./TableSelect";
 
 export const CustomTable = ({
   title,
@@ -38,10 +39,9 @@ export const CustomTable = ({
   sortBy,
   isFilter = true,
   isDownload = false,
-  emptyStateAction,
+  _emptyStateAction,
 }: Params) => {
-  // Define the data type for table rows
-  type TableData = any; // Consider replacing 'any' with a proper interface for your data
+  type TableData = any;
 
   const [data, setData] = useState<TableData[]>([]);
   const [filteredData, setFilteredData] = useState<TableData[]>([]);
@@ -49,11 +49,9 @@ export const CustomTable = ({
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
   );
-  // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
   const handleSortOrderChange = useCallback((val: 1 | -1) => {
     setSortOrder(val === 1 ? "asc" : "desc");
   }, []);
@@ -62,7 +60,6 @@ export const CustomTable = ({
   const [limit, setLimit] = useState<number>(20);
 
   const { toast } = useToast();
-  const isBadgeTable = (title || "").toLowerCase().includes("badge");
 
   // Function to sort search results by relevance across all content
   const sortBySearchRelevance = (data: TableData[], searchTerm: string) => {
@@ -205,20 +202,6 @@ export const CustomTable = ({
         limit: limit,
       };
 
-      // Build filters string only for filters with values
-      const activeFilters = selectedFilters.filter(
-        (filter) =>
-          filter.value !== undefined &&
-          filter.value !== null &&
-          filter.value !== ""
-      );
-
-      if (activeFilters.length > 0) {
-        params["filters"] = activeFilters
-          .map((filter) => `filter[${filter.fieldName}]`)
-          .join(",");
-      }
-
       selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
           params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
@@ -276,6 +259,7 @@ export const CustomTable = ({
     searchColumn,
   ]);
 
+  // Handle client-side search filtering when data or search term chang
   useEffect(() => {
     const safeData = Array.isArray(data) ? data : [];
     if (search) {
@@ -286,9 +270,40 @@ export const CustomTable = ({
     }
   }, [search, data]);
 
+  const lastFetchParamsRef = useRef<string>("");
+
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const currentParams = {
+      api,
+      page,
+      limit,
+      selectedFilters,
+      search,
+      sortByValue,
+      sortOrder,
+      searchColumn,
+    };
+
+    const paramsString = JSON.stringify(currentParams, (key, value) => {
+      if (key === "fields" || key === "tableHeaderActions" || key === "mainTableActions") return undefined;
+      return value;
+    });
+
+    if (lastFetchParamsRef.current !== paramsString) {
+      lastFetchParamsRef.current = paramsString;
+      fetchData();
+    }
+  }, [
+    fetchData,
+    api,
+    page,
+    limit,
+    selectedFilters,
+    search,
+    sortByValue,
+    sortOrder,
+    searchColumn,
+  ]);
 
   useEffect(() => {
     setPage(1);
@@ -308,15 +323,12 @@ export const CustomTable = ({
 
   const handleDownload = () => {
     if (!Array.isArray(data) || data.length === 0) return;
-
     let content = "";
-
     const headings: string[] = [];
     fields.forEach((field) => {
       if (field.type !== FieldType.ACTION) headings.push(field.textValue);
     });
     content += headings.join(",") + "\n";
-
     data.forEach((elem) => {
       const fieldValues: string[] = [];
       fields.forEach((field) => {
@@ -332,16 +344,11 @@ export const CustomTable = ({
       });
       content += fieldValues.join(",") + "\n";
     });
-
     const blob = new Blob([content], { type: "text/csv" });
-
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
-
     a.href = url;
     a.download = "data.csv";
-
     a.click();
   };
 
@@ -442,7 +449,7 @@ export const CustomTable = ({
                       key={elem[uniqueId]}
                       className="border-b border-border/50 transition-colors hover:bg-muted/30"
                     >
-                      {fields.map((field, index) => (
+                      {fields.map((field, _index) => (
                         <TableCell
                           key={field.fieldName}
                           className={twMerge(
@@ -462,7 +469,6 @@ export const CustomTable = ({
                             }
                             id={elem[uniqueId]}
                             refetch={refetch}
-                            key={index}
                           />
                         </TableCell>
                       ))}
@@ -470,49 +476,27 @@ export const CustomTable = ({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={fields.length} className="text-center">
-                      {emptyStateAction ? (
-                        <div className="w-full py-16 text-center">
-                          <PackageOpen
-                            className="mx-auto mb-4 text-muted-foreground"
-                            size="80"
-                          />
-                          <p className="mb-2 text-lg font-medium text-foreground">
-                            No leaderboard contests yet
-                          </p>
-                          <p className="mb-8 text-sm text-muted-foreground">
-                            Create your first leaderboard contest to get started
-                          </p>
-                          {React.createElement(emptyStateAction, {
-                            refetch: fetchData,
-                          })}
-                        </div>
-                      ) : (
-                        <div className="mx-auto my-8 w-full max-w-md rounded-xl border border-dashed border-border/70 bg-muted/20 p-8 text-center">
-                          <PackageOpen
-                            className="mx-auto text-muted-foreground"
-                            size="72"
-                          />
-                          <p className="mt-4 text-sm text-muted-foreground">
-                            {isBadgeTable
-                              ? "No badges or levels found. Create one to start building your progression system."
-                              : "No data available for the selected filters."}
-                          </p>
-                        </div>
-                      )}
+                    <TableCell
+                      colSpan={fields.length}
+                      className="h-32 text-center"
+                    >
+                      No data found
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
+          <div className="border-t border-border/50 px-4 py-4">
+            <TablePagination
+              page={page}
+              setPage={setPageUtils}
+              isNextAvailable={data.length === limit}
+            />
+          </div>
         </Card>
-        <TablePagination
-          page={page}
-          setPage={setPageUtils}
-          isNextAvailable={data?.length >= limit}
-        />
       </div>
     </div>
   );
 };
+
