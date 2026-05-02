@@ -115,7 +115,7 @@ export interface Params {
     label: string;
     fieldName: string;
   }>;
-  _emptyStateAction?: React.FC<CustomTableChildComponentsProps>;
+  emptyStateAction?: React.FC<CustomTableChildComponentsProps>;
 }
 
 export interface FieldComponentProps<T>

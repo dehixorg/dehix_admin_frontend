@@ -39,7 +39,7 @@ export const CustomTable = ({
   sortBy,
   isFilter = true,
   isDownload = false,
-  _emptyStateAction,
+  emptyStateAction,
 }: Params) => {
   type TableData = any;
 
@@ -480,7 +480,10 @@ export const CustomTable = ({
                       colSpan={fields.length}
                       className="h-32 text-center"
                     >
-                      No data found
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <span className="text-muted-foreground">No data found</span>
+                        {emptyStateAction && React.createElement(emptyStateAction, { refetch: fetchData })}
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
