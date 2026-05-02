@@ -86,7 +86,6 @@ const BusinessTabs = () => {
           seteducation(tempEducation);
           setbusiness(tempBusiness);
           setother(tempOther);
-          setLoading(false); // Stop loading after data processing
         }
         else {
           toast({
@@ -102,7 +101,8 @@ const BusinessTabs = () => {
           description: Messages.FETCH_ERROR("verification"),
           variant: "destructive",
         });
-        setLoading(false); // Stop loading in case of an error
+      } finally {
+        setLoading(false);
       }
     };
 

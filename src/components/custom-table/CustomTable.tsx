@@ -356,7 +356,7 @@ export const CustomTable = ({
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
             {title}
           </h1>
-        ) : <div />}
+        ) : null}
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
           <HeaderActionComponent
             headerActions={mainTableActions}

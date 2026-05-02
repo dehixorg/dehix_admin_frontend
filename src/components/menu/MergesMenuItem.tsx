@@ -2,7 +2,7 @@
 
 // MergedMenuItem.tsx
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   Tooltip,
@@ -29,6 +29,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
   active,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const iconRef = useRef<HTMLDivElement>(null);
   const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -51,8 +52,37 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
     }, 150); // 👈 delay in ms (adjust if needed)
   };
 
+  const toggleMenu = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.preventDefault();
+    setIsOpen(!isOpen);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      toggleMenu(e);
+    } else if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
     <div
+      ref={containerRef}
       className="relative h-10 w-10 flex items-center justify-center shrink-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -62,8 +92,14 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
         <TooltipTrigger asChild>
           <div
             ref={iconRef}
+            role="button"
+            tabIndex={0}
+            aria-haspopup="true"
+            aria-expanded={isOpen}
+            onClick={toggleMenu}
+            onKeyDown={handleKeyDown}
             className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
-              text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground
+              text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
               ${
                 subItems.some((item) => item.label === active)
                   ? "bg-accent text-accent-foreground"
@@ -76,7 +112,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                 className: "h-5 w-5",
               })}
               {totalCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-purple-500 text-[10px] font-bold text-white z-10">
+                <span className="absolute -top-1 -right-1 z-10 flex h-4 min-w-[18px] items-center justify-center rounded-full px-1 bg-purple-500 text-[10px] font-bold text-white shadow-sm">
                   {totalCount}
                 </span>
               )}
@@ -111,6 +147,7 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                 <Link
                   key={index}
                   href={item.href}
+                  onClick={() => setIsOpen(false)}
                   className={`group relative flex items-center justify-between gap-2.5 px-2.5 py-1.5 rounded-lg text-xs transition-all duration-200
                     ${
                       isSubItemActive
