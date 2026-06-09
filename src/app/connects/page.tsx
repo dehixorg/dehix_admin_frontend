@@ -4,7 +4,6 @@
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
-// Import the new component
 import { ConnectsDetails } from "@/components/connects/ConnectsDetails";
 
 const customTableProps: TableProps = {
@@ -24,9 +23,9 @@ const customTableProps: TableProps = {
       type: FieldType.TEXT,
     },
     {
-      textValue: "Amount",
+      textValue: "Connects",
       fieldName: "amount",
-      type: FieldType.CURRENCY,
+      type: FieldType.TEXT,
     },
     {
       textValue: "Status",
@@ -65,16 +64,15 @@ const customTableProps: TableProps = {
       type: FieldType.DATETIME,
       wordsCnt: 20,
     },
-    // The corrected custom column for the action button
     {
-      textValue: "Actions", // The header for your action column
+      textValue: "Details",
       type: FieldType.CUSTOM,
-      CustomComponent: ConnectsDetails, // The component that renders the button
+      CustomComponent: ConnectsDetails,
     },
   ],
   isDownload: true,
   searchColumn: ["userId", "userType", "status"],
-  title: "Connects",
+  title: "Connects Transactions",
   filterData: [
     {
       name: "status",
@@ -95,7 +93,7 @@ export default function Connects() {
       active="Connects"
       breadcrumbItems={[
         { label: "Dashboard", link: "/dashboard/" },
-        { label: "Connects", link: "#" },
+        { label: "Connects Transactions", link: "#" },
       ]}
       showSearch={false}
       mainClassName="mx-5"
