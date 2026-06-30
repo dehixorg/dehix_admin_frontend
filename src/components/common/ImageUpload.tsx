@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
-import { UploadCloud, X, Loader2 } from 'lucide-react';
+import { Image as ImageIcon, UploadCloud, X, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useToast } from '@/components/ui/use-toast';
 import { badgeLevelService } from '@/services/badgeLevelService';

@@ -1,6 +1,10 @@
 "use client";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -9,6 +13,7 @@ import {
 import AddNotify from "@/components/Notification/addNotify";
 import { NotificationDetails } from "@/components/Notification/NotificationDetails";
 import { notificationActions } from "@/components/Notification/notificationActions";
+import { NotificationStatusCell } from "@/components/custom-table/NotificationStatusCell";
 
 export default function Talent() {
   const customTableProps: TableProps = {

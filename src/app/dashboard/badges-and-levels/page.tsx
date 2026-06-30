@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { BadgeLevelDetails } from "@/components/BadgesLevels/BadgeLevelDetails";
 import EditBadgeLevel from "@/components/BadgesLevels/editBadgeLevel";
 import DeleteBadgeLevel from "@/components/BadgesLevels/deleteBadgeLevel";
+import { axiosInstance } from "@/lib/axiosinstance";
 
 export default function BadgesAndLevels() {
   const [selectedRow, setSelectedRow] = useState<any>(null);
@@ -30,6 +31,18 @@ export default function BadgesAndLevels() {
 
   const handleRefetch = () => {
     setTableKey((prev) => prev + 1);
+  };
+
+  const fetchRowData = async (id: string) => {
+    try {
+      const response = await axiosInstance.get(
+        `/admin/gamification/levelsandbadges/${id}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching row data:", error);
+      return null;
+    }
   };
 
   const customTableProps: TableProps = {
@@ -87,11 +100,11 @@ export default function BadgesAndLevels() {
       {
         textValue: "",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ data }: any) => {
+        CustomComponent: ({ id, data, refetch }: any) => {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button type="button" variant="ghost" size="icon">
+                <Button variant="ghost" className="h-8 w-8 p-0">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>

@@ -1,7 +1,7 @@
 import { Pause, Trash2, Play } from "lucide-react";
 import { apiHelperService } from "@/services/notification";
 import { NotificationStatusEnum } from "@/utils/common/enum";
-import { Actions } from "../custom-table/FieldTypes";
+import { Actions, CustomTableChildComponentsProps } from "../custom-table/FieldTypes";
 
 export const notificationActions: Actions = {
   options: [

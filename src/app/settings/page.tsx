@@ -1,8 +1,14 @@
 "use client";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import { Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { RootState } from '@/lib/store';
 import {useSelector } from 'react-redux';
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import CurrentUserDetails from "@/components/settings/settingpage"
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function Settings() {
   const user = useSelector((state: RootState) => state.user);

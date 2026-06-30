@@ -37,10 +37,22 @@ import { TablePagination } from "@/components/custom-table/Pagination";
 
 interface FreelancerPersonalInfo {
   _id: string;
-  name: string;
+  name: string; // This will store the firstName
 }
 
-// Define the structure for interview data
+// Define interfaces for Skill and Domain
+interface SkillData {
+  _id: string;
+  label: string;
+  description:string;
+}
+
+interface DomainData {
+  _id: string;
+  label: string;
+  description:string;
+}
+
 interface InterviewData {
   _id: string;
   interviewerId?: string;

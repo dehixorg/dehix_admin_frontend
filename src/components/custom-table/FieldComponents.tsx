@@ -13,8 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
 import { twMerge } from "tailwind-merge";
@@ -297,22 +295,22 @@ const ActionField = ({
 
     if (type === "Button") {
       return (
-        <Button
-          type="button"
-          size="icon"
-          variant="ghost"
+        <div
           onClick={async () => {
             await handler?.({ id, refetch });
             refetch && refetch();
           }}
-          className={twMerge("h-8 w-8", className)}
+          className={twMerge(
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
+            className
+          )}
         >
           {fieldData.actions?.icon ? (
             fieldData.actions.icon
           ) : (
             <ArrowRight className="w-4 h-4" />
           )}
-        </Button>
+        </div>
       );
     }
 
@@ -321,7 +319,7 @@ const ActionField = ({
         <Link
           href={href || "#"}
           className={twMerge(
-            "inline-flex h-8 w-8 items-center justify-center rounded-md transition-colors hover:bg-accent",
+            "text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300 cursor-pointer",
             className
           )}
         >
@@ -337,14 +335,12 @@ const ActionField = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button type="button" size="icon" variant="ghost" className="h-8 w-8">
-          {fieldData.actions?.icon ? (
-            fieldData.actions.icon
-          ) : (
-            <DotsVerticalIcon />
-          )}
-        </Button>
+      <DropdownMenuTrigger className="text-sm dark:text-gray-300 text-gray-600 hover:dark:text-gray-800 hover:bg-gray-200 p-1 rounded transition duration-300">
+        {fieldData.actions?.icon ? (
+          fieldData.actions.icon
+        ) : (
+          <DotsVerticalIcon />
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         {fieldData.actions?.options.map(
@@ -429,18 +425,18 @@ const StatusField = ({ value, fieldData }: FieldComponentProps<string>) => {
     );
   }
 
-  const { isUppercase } = statusMetaData;
+  const { isUppercase, bgColor, textColor } = statusMetaData;
   return (
-    <Badge
-      variant="outline"
-      className={cn(
-        "rounded-full px-2.5 py-1 text-xs font-medium border",
-        statusOutlineClasses(statusMetaData.textValue || String(value)),
-        isUppercase && "uppercase"
-      )}
+    <span
+      style={{
+        backgroundColor: bgColor,
+        color: textColor,
+        textTransform: isUppercase ? "uppercase" : "none",
+      }}
+      className=" rounded-sm px-2 py-1 text-center"
     >
       {statusMetaData.textValue}
-    </Badge>
+    </span>
   );
 };
 

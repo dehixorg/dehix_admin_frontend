@@ -15,6 +15,14 @@ export interface BadgeLevelImageUploadResponse {
   status?: number;
 }
 
+interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  message?: string;
+  error?: string;
+  status?: number;
+}
+
 export const badgeLevelService = {
   /**
    * Uploads a badge or level image to the server
@@ -60,7 +68,6 @@ export const badgeLevelService = {
       const key = responseData.Key || responseData.key;
 
       if (!location) {
-        console.error("Missing Location in response:", responseData);
         throw new Error("No image URL found in response");
       }
 
@@ -76,14 +83,6 @@ export const badgeLevelService = {
         status: responseData.status,
       };
     } catch (error: any) {
-      console.error("Error in uploadBadgeLevelImage:", {
-        error,
-        message: error.message,
-        stack: error.stack,
-        response: error.response?.data || "No response data",
-        status: error.response?.status,
-      });
-
       const errorMessage =
         error.response?.data?.message ||
         error.message ||

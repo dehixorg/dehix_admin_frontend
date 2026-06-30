@@ -32,7 +32,6 @@ export const apiHelperService = {
       method: Api_Methods.GET,
       endpoint: `/ads/${labelId}`,
     });
-    if (!adRes.success) throw new Error("Could not fetch ad for update");
 
     const ad = adRes.data?.data;
     // Ensure importantUrl is always an array

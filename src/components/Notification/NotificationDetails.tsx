@@ -2,8 +2,7 @@ import Image from "next/image";
 import { CustomComponentProps } from "../custom-table/FieldTypes";
 import { CustomDialog } from "../CustomDialog";
 
-export const NotificationDetails = ({ id: _id, data }: CustomComponentProps) => {
-
+export const NotificationDetails = ({ id, data }: CustomComponentProps) => {
   return (
     data && (
       <CustomDialog

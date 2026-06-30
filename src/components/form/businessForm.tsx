@@ -88,7 +88,7 @@ export function BusinessForm({ user_id }: { user_id: string }) {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      const _response = await axiosInstance.put(`/business/${user_id}`, {
+      const response = await axiosInstance.put(`/business/${user_id}`, {
         ...data,
       });
 

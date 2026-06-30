@@ -1,6 +1,10 @@
 "use client";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { Info } from "lucide-react";

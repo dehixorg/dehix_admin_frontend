@@ -224,8 +224,7 @@ export default function EditLeaderboardDialog({
       try {
         const response =
           await apiHelperService.getLeaderboardById(leaderboardId);
-        if (response?.success) {
-          const leaderboard = response.data.data || response.data;
+        const leaderboard = response.data.data || response.data;
 
           // Map scoring weights to scoring rules
           let scoringRules = leaderboard.scoringWeights
@@ -311,12 +310,11 @@ export default function EditLeaderboardDialog({
               levelsAllowed: leaderboard.eligibility?.levelsAllowed || [],
             },
           });
-        }
       } catch (error: any) {
         toast({
           title: "Error",
           description:
-            error?.response?.data?.message || "Failed to load leaderboard data",
+            error?.message || "Failed to load leaderboard data",
           variant: "destructive",
         });
       } finally {
@@ -340,7 +338,7 @@ export default function EditLeaderboardDialog({
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to update leaderboard",
+          error?.message || "Failed to update leaderboard",
         variant: "destructive",
       });
     }

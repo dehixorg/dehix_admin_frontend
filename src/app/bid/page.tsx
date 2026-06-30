@@ -1,10 +1,18 @@
 // your-page-file.tsx (e.g., Talent.tsx or Bids.tsx)
 "use client";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { BidDetails } from "@/components/bids/BidDetails"; // <-- Import the new component
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 const customTableProps: TableProps = {
   api: "bid",

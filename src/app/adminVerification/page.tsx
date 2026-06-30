@@ -4,31 +4,25 @@ import { useEffect, useState, useCallback } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiHelperService } from "@/services/verification";
 import { Messages } from "@/utils/common/enum";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 import Verification from "@/components/verification/verificationTable";
 import { useSelector } from "react-redux";
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 interface Verificationinfo {
-  _id?: string;
   verifier_id: string;
   verifier_username: string;
   requester_id: string;
-  requester_username?: string;
   document_id: string;
   verification_status: string;
-  comment?: string;
-  verified_at?: string;
+  comment: string;
+  verified_at: string;
   doc_type: string;
-  Requester?: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phone?: string;
-    role?: string;
-    userName?: string;
-    profilePic?: string;
-  };
-  result?: Record<string, unknown>;
 }
 
 const BusinessTabs = () => {
@@ -68,7 +62,6 @@ const BusinessTabs = () => {
     fetchAdminVerifications();
   }, [fetchAdminVerifications]);
 
-
   return (
     <AdminDashboardLayout
       active="Admin Verification"
@@ -79,7 +72,9 @@ const BusinessTabs = () => {
     >
       <div className="mt-5">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin Oracle Verification</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            Admin Oracle Verification
+          </h1>
         </div>
         {loading ? (
           <div className="py-10 text-center text-muted-foreground">

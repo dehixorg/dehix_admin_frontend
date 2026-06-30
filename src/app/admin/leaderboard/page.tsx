@@ -1,11 +1,20 @@
 "use client";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import { useState } from "react";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import {
+  menuItemsTop,
+  menuItemsBottom,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType } from "@/components/custom-table/FieldTypes";
 import CreateLeaderboardDialog from "@/components/Leaderboard/CreateLeaderboardDialog";
 import LeaderboardActions from "@/components/Leaderboard/LeaderboardActions";
 import { format } from "date-fns";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function LeaderboardPage() {
   const fields = [

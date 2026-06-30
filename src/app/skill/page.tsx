@@ -1,12 +1,20 @@
 "use client";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
+  CustomComponentProps,
   FieldType,
   FilterDataType,
   Params as TableProps,
 } from "@/components/custom-table/FieldTypes";
+import { CustomDialog } from "../../components/CustomDialog";
+import { useState } from "react";
+import EditSkillDescription from "@/components/skill/editSkilldesc";
 import AddSkill from "@/components/skill/addskill";
 import { SkillDetails } from "@/components/skill/SkillDetail";
 

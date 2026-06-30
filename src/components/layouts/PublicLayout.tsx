@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 type Props = {
   containerClassName?: string;
@@ -14,8 +14,8 @@ export default function PublicLayout({
   children,
 }: Props) {
   return (
-    <div className={containerClassName ?? 'min-h-screen w-full'}>
-      <main className={mainClassName ?? ''}>{children}</main>
+    <div className={containerClassName ?? "min-h-screen w-full"}>
+      <main className={mainClassName ?? ""}>{children}</main>
     </div>
   );
 }

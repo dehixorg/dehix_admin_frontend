@@ -45,6 +45,8 @@ const MyNotesContainer = ({
   } = useNotes(fetchNotes, notes);
 
   const {
+    draggingIndex,
+    draggingOverIndex,
     handleDragStart,
     handleDragOver,
     handleDrop,

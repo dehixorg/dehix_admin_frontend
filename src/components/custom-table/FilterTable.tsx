@@ -8,7 +8,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { CheckCircle2, Filter, Sparkles } from "lucide-react";
-
 import {
   CustomTableChildComponentsProps,
   FilterDataType,
@@ -21,8 +20,8 @@ import { Checkbox } from "../ui/checkbox";
 import { HeaderActionComponent } from "./HeaderActionsComponent";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
-import { Badge } from "../ui/badge";
 import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
 
 interface Params extends CustomTableChildComponentsProps {
@@ -90,22 +89,22 @@ export const FilterTable = ({
   // Generate search suggestions from filter options
   const searchOptions = useMemo(() => {
     const options: { value: string; label: string }[] = [];
-
+    
     // Add options from all filters
     filterData?.forEach((filter) => {
       filter.options.forEach((option) => {
         options.push({
           value: option.value,
-          label: option.label,
+          label: option.label
         });
       });
     });
-
+    
     return options;
   }, [filterData]);
 
-  const handleSearchSelect = (_value: string) => {
-    // Search option selection can be used for analytics/hints in the future.
+  const handleSearchSelect = (value: string) => {
+    console.log('Selected search option:', value);
   };
 
   const selectedFilterCount = useMemo(() => {
@@ -174,9 +173,9 @@ export const FilterTable = ({
 
             <SheetContent
               side="right"
-              className="w-[92vw] max-w-[430px] space-y-5 overflow-y-auto p-4"
+              className="w-80 p-4 space-y-6 overflow-y-scroll"
             >
-              <div className="space-y-3 border-b border-border pb-4">
+              <div className="pb-4 border-b border-border">
                 <SheetTitle>Filter & Sort</SheetTitle>
                 <SheetDescription>Filter and sort the data below.</SheetDescription>
                 <div className="relative overflow-hidden rounded-lg border border-primary/20 bg-gradient-to-r from-primary/10 via-cyan-500/5 to-transparent p-3">
@@ -382,8 +381,8 @@ export const FilterTable = ({
                   Apply Filters
                 </Button>
                 <Button
-                  variant="outline"
-                  className="text-sm"
+                  variant="link"
+                  className="text-sm text-muted-foreground"
                   onClick={() => {
                     setIsOpen(false);
                     const initialFilters = initializeFiltersArray();

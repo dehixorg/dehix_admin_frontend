@@ -31,7 +31,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Plus, Calendar as CalendarIcon, Medal, Trash2 } from "lucide-react";
+import { Plus, X, Calendar as CalendarIcon, Medal, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { apiHelperService } from "@/services/leaderboard";
 import { CustomTableChildComponentsProps } from "@/components/custom-table/FieldTypes";
@@ -221,7 +221,7 @@ export default function CreateLeaderboardDialog({
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message || "Failed to create leaderboard",
+          error?.message || "Failed to create leaderboard",
         variant: "destructive",
       });
     }

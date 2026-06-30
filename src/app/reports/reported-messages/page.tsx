@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import {
   DropdownMenu,
@@ -61,6 +61,7 @@ function ReportedMessagesContent() {
   const [message, setMessage] = useState<ReportedMessage | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [sendingReply, setSendingReply] = useState(false);
   const [replyMessage, setReplyMessage] = useState("");
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
@@ -76,7 +77,6 @@ function ReportedMessagesContent() {
         );
       }
     } catch (error: any) {
-      console.error("Failed to fetch reported message detail:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to load report details.",
@@ -99,12 +99,7 @@ function ReportedMessagesContent() {
       if (document.visibilityState === "visible") {
         try {
           const response = await apiHelperService.getReportedMessageById(id);
-          if (response.success) {
-            const newData = response.data.data;
-            if (newData.messages?.length !== (message?.messages?.length || 0)) {
-              setMessage(newData);
-            }
-          }
+          setMessage(response.data.data);
         } catch (error) {
           console.error("Polling failed", error);
         }
@@ -132,7 +127,6 @@ function ReportedMessagesContent() {
         throw new Error(response.data?.message || "Failed to update status.");
       }
     } catch (error: any) {
-      console.error("Failed to update status:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to update status.",
@@ -144,44 +138,48 @@ function ReportedMessagesContent() {
   };
 
   const handleReply = async () => {
-    if (!id) return;
+    if (!id || sendingReply) return;
     if (!replyMessage.trim()) {
       toast({ title: "Reply message can't be empty", variant: "destructive" });
       return;
     }
 
+    const draft = replyMessage;
+    setReplyMessage("");
+    setSendingReply(true);
     try {
       const response = await apiHelperService.sendMessageToReportedMessage({
         reportId: id,
         sender: "admin",
-        text: replyMessage,
+        text: draft,
       });
 
       if (response.success) {
         const newMessage: Message = {
           id: uuidv4(),
           sender: "admin",
-          text: replyMessage,
+          text: draft,
           timestamp: new Date().toISOString(),
         };
 
         setMessage((prev) =>
           prev
             ? { ...prev, messages: [...(prev.messages || []), newMessage] }
-            : prev,
+            : prev
         );
 
         toast({ title: "Reply sent" });
-        setReplyMessage("");
-      } else {
-        throw new Error(response.data?.message || "Failed to send message.");
+        fetchReportedMessage();
       }
     } catch (error: any) {
+      setReplyMessage(draft);
       toast({
         title: "Error",
         description: error.message || "Failed to send message.",
         variant: "destructive",
       });
+    } finally {
+      setSendingReply(false);
     }
   };
 

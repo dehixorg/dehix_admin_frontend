@@ -39,6 +39,11 @@ interface SkillData {
   status?: string;
 }
 
+interface AddSkillProps {
+  onAddSkill: () => void; // Prop to pass the new Skill
+  skillData: SkillData[];
+}
+
 // Zod schema for form validation
 const SkillSchema = z.object({
   label: z.string().nonempty("Please enter a Skill name"),
@@ -55,6 +60,7 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const {
     control,
     handleSubmit,
+    reset,
   } = useForm<SkillData>({
     resolver: zodResolver(SkillSchema),
     defaultValues: {
@@ -69,25 +75,18 @@ const AddSkill: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
 
     try {
       const skillDataWithUser = { ...data, createdBy: currentUser.type.toUpperCase(), createdById: currentUserId };
-      const response = await apiHelperService.createSkill(skillDataWithUser);
-      if(response.success) {
-        toast({
+      await apiHelperService.createSkill(skillDataWithUser);
+      toast({
           title: "Success",
           description: Messages.CREATE_SUCCESS("skill"),
         });
+        reset();
         setOpen(false)
         refetch?.()
-      } else {
-        toast({
-          title: "Error",
-          description: response.data.message,
-          variant: "destructive", // Red error message
-        });
-      }
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Server Error",
+        description: error.message || "Server Error",
         variant: "destructive", // Red error message
       });
     }

@@ -1,36 +1,30 @@
 "use client";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 import { useEffect, useState } from "react";
+import { Search } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiHelperService } from "@/services/verification";
 import { Messages } from "@/utils/common/enum";
 
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import Verification from "@/components/verification/verificationTable";
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 
 interface Verificationinfo {
-  _id?: string;
-  verifier_id: string;
-  verifier_username: string;
-  requester_id: string;
-  requester_username?: string;
-  document_id: string;
-  verification_status: string;
-  comment?: string;
-  verified_at?: string;
-  doc_type: string;
-  Requester?: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phone?: string;
-    role?: string;
-    userName?: string;
-    profilePic?: string;
-  };
-  result?: Record<string, unknown>;
+  verifier_id:string;
+  verifier_username:string;
+  requester_id:string;
+  document_id:string;
+  verification_status:string;
+  comment:string;
+  verified_at:string;
+  doc_type:string;
 }
 const BusinessTabs = () => {
   const [experience, setexperience] = useState<Verificationinfo[] | null>(null);

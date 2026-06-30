@@ -1,10 +1,22 @@
 "use client";
 import { ChevronRight, Info } from "lucide-react";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
-import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import {
+  FieldType,
+  FilterDataType,
+  Params as TableProps,
+} from "@/components/custom-table/FieldTypes";
 import { useRouter } from "next/navigation";
 import { CustomTable } from "@/components/custom-table/CustomTable";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function Talent() {
   const router = useRouter();
@@ -40,37 +52,19 @@ export default function Talent() {
         fieldName: "status",
         textValue: "Status",
         type: FieldType.STATUS,
-        statusFormats: [
-          {
-            value: "ACTIVE",
-            textValue: "Active",
-          },
-          {
-            value: "NOT_VERIFIED",
-            textValue: "Not Verified",
-          },
-          {
-            value: "Not_Verified",
-            textValue: "Not Verified",
-          },
-          {
-            value: "Notverified",
-            textValue: "Not Verified",
-          },
-        ],
       },
       {
         textValue: "",
         type: FieldType.ACTION,
         actions: {
-          icon: <ChevronRight className="h-4 w-4" />,
+          icon: <ChevronRight className="w-4 h-4" />,
           options: [
             {
               actionName: "View",
-              actionIcon: <Info className="h-4 w-4 text-gray-500" />,
+              actionIcon: <Info className="text-gray-500 w-4 h-4" />,
               type: "Button",
-              handler: ({ id }) => {
-                router.push(`/business/tabs?id=${id}`);
+              handler: (id) => {
+                router.push(`/business/tabs?id=${id.id}`);
               },
             },
           ],
@@ -82,9 +76,13 @@ export default function Talent() {
         name: "status",
         textValue: "Status",
         type: FilterDataType.SINGLE,
+
         options: [
           { label: "ACTIVE", value: "ACTIVE" },
-          { label: "NOT VERIFIED", value: "Not_Verified,Notverified,NOT_VERIFIED" },
+          {
+            label: "NOT VERIFIED",
+            value: "Not_Verified,Notverified,NOT_VERIFIED",
+          },
         ],
       },
     ],

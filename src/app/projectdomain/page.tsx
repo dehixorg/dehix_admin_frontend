@@ -1,7 +1,12 @@
 "use client";
-import { Trash2Icon } from "lucide-react";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import { Search, Trash2Icon } from "lucide-react";
+
+import { Input } from "@/components/ui/input";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -17,8 +22,19 @@ import { ProjectDomainDetail } from "@/components/ProjectDomain/ProjectDomainDet
 export default function Talent() {
   const { toast } = useToast();
 
+  const handleDelete = async (domainId: string) => {
+    try {
+      await apiHelperService.deleteProjectdomain(domainId);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: Messages.DELETE_ERROR("domain"),
+        variant: "destructive", // Red error message
+      });
+    }
+  };
+
   const customTableProps: TableProps = {
-    title: "Project Domain",
     api: "/projectdomain/admin",
     uniqueId: "_id",
     fields: [

@@ -47,7 +47,7 @@ export default function AddSkillForm() {
     },
   });
 
-  const handleSubmit = (_values: FormSchema) => {
+  const handleSubmit = (values: FormSchema) => {
   };
 
   return (

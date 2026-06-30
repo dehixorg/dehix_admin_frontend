@@ -1,7 +1,11 @@
 // connects-page-file.tsx (e.g., Connects.tsx)
 "use client";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 import { ConnectsDetails } from "@/components/connects/ConnectsDetails";
@@ -33,8 +37,8 @@ const customTableProps: TableProps = {
       type: FieldType.STATUS,
       statusFormats: [
         {
-          textValue: "Approved",
-          value: "APPROVED",
+          textValue: "Accepted",
+          value: "ACCEPTED",
           bgColor: "#57fa70",
           textColor: "#024d0d",
         },
@@ -86,7 +90,6 @@ const customTableProps: TableProps = {
     },
   ],
 };
-
 export default function Connects() {
   return (
     <AdminDashboardLayout

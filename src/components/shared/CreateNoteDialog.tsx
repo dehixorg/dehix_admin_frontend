@@ -36,7 +36,7 @@ const banners = [
 
 export function CreateNoteDialog({
   onNoteCreate,
-  userId: _userId,
+  userId,
   isArchive = false,
 }: Props) {
   const [title, setTitle] = useState("");

@@ -1,6 +1,13 @@
 "use client";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import DropdownProfile from "@/components/shared/DropdownProfile";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   FieldType,
@@ -9,6 +16,7 @@ import {
 } from "@/components/custom-table/FieldTypes";
 import { ChevronRight, Info } from "lucide-react";
 import { useRouter } from "next/navigation";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function Talent() {
   const router = useRouter();
@@ -52,10 +60,7 @@ export default function Talent() {
               {skills.length > 0 ? (
                 <>
                   {skills.slice(0, 1).map((skill, index) => (
-                    <span
-                      key={`skill-${index}`}
-                      className="text-sm"
-                    >
+                    <span key={`skill-${index}`} className="text-sm">
                       {skill}
                     </span>
                   ))}
@@ -89,10 +94,7 @@ export default function Talent() {
               {domains.length > 0 ? (
                 <>
                   {domains.slice(0, 1).map((domain, index) => (
-                    <span
-                      key={`domain-${index}`}
-                      className="text-sm"
-                    >
+                    <span key={`domain-${index}`} className="text-sm">
                       {domain}
                     </span>
                   ))}

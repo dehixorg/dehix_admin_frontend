@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React from 'react';
-import DashboardShell from '@/components/layouts/DashboardShell';
+import React from "react";
+import DashboardShell from "@/components/layouts/DashboardShell";
 import {
   menuItemsBottom,
   menuItemsTop,
-} from '@/config/menuItems/admin/dashboardMenuItems';
+} from "@/config/menuItems/admin/dashboardMenuItems";
 
 type BreadcrumbItem = {
   label: string;
@@ -27,10 +27,10 @@ export default function AdminDashboardLayout({
   active,
   breadcrumbItems = [],
   showSearch = true,
-  searchPlaceholder = 'Search...',
+  searchPlaceholder = "Search...",
   containerClassName = "bg-background",
-  contentClassName = 'flex flex-col sm:gap-4 sm:pl-16',
-  mainClassName = 'ml-5 mr-5',
+  contentClassName = "flex flex-col sm:gap-4 sm:pl-16",
+  mainClassName = "ml-5 mr-5",
   children,
 }: Props) {
   return (

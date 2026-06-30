@@ -1,7 +1,11 @@
 // transactions-page-file.tsx (e.g., Transactions.tsx)
 "use client";
-
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import { FieldType, FilterDataType, Params as TableProps } from "@/components/custom-table/FieldTypes";
 

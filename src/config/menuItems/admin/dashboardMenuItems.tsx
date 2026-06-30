@@ -141,7 +141,7 @@ export const menuItemsTop: MenuItem[] = [
   {
     // Merged item for Verification
     href: "/verification",
-    icon: <ShieldCheck className="h-5 w-5" />,
+    icon: <Key className="h-5 w-5" />,
     label: "",
     subItems: [
       {
@@ -151,8 +151,8 @@ export const menuItemsTop: MenuItem[] = [
       },
       {
         href: "/adminVerification",
-        icon: <UserCheck className="h-5 w-5" />,
-        label: "Admin Verification",
+        icon: <ShieldCheck className="h-5 w-5" />,
+        label: " Admin Verification",
       },
       {
         href: "/verification/oracle-applications",
@@ -172,13 +172,8 @@ export const menuItemsTop: MenuItem[] = [
     label: "Reports",
   },
   {
-    href: "/kyc",
-    icon: <FileBadge className="h-5 w-5" />,
-    label: "KYC",
-  },
-  {
     href: "/key-variables",
-    icon: <Key className="h-5 w-5" />,
+    icon: <ShieldCheck className="h-5 w-5" />,
     label: "Key Variables",
   },
 ];

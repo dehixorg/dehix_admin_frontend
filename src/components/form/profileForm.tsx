@@ -161,7 +161,7 @@ export function ProfileForm({ user_id }: { user_id: string }) {
 
   async function onSubmit(data: ProfileFormValues) {
     try {
-      const _response = await axiosInstance.put(`/freelancer/${user_id}`, {
+      const response = await axiosInstance.put(`/freelancer/${user_id}`, {
         ...data,
         skills: currSkills,
         domain: currDomains,

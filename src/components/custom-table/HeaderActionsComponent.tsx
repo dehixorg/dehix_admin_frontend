@@ -10,8 +10,6 @@ export const HeaderActionComponent = ({
   headerActions,
   refetch
 }: HeaderActionComponentProps) => {
-  if (!headerActions?.length) return null;
-
   return (
     <div className="flex items-center gap-1 sm:gap-3 flex-nowrap">
       {headerActions?.map((Actions, index) => (

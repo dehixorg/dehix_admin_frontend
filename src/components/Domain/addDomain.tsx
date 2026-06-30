@@ -47,6 +47,7 @@ const AddDomain: React.FC<CustomTableChildComponentsProps> = ({ refetch }) => {
   const {
     control,
     handleSubmit,
+    formState: { errors },
     reset,
   } = useForm<DomainData>({
     resolver: zodResolver(domainSchema),

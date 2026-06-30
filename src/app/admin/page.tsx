@@ -1,6 +1,13 @@
 "use client";
 
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
+import SidebarMenu from "@/components/menu/sidebarMenu";
+import CollapsibleSidebarMenu from "@/components/menu/collapsibleSidebarMenu";
+import {
+  menuItemsBottom,
+  menuItemsTop,
+} from "@/config/menuItems/admin/dashboardMenuItems";
+import Breadcrumb from "@/components/shared/breadcrumbList";
+import DropdownProfile from "@/components/shared/DropdownProfile";
 import { CustomTable } from "@/components/custom-table/CustomTable";
 import {
   CustomComponentProps,
@@ -11,6 +18,7 @@ import {
 import AddAdmin from "@/components/Admin/addAdmin";
 import { CustomDialog } from "@/components/CustomDialog";
 import { AdminDetails } from "@/components/Admin/AdminDetails";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 const customTableProps: TableProps = {
   api: "/admin",

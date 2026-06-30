@@ -8,12 +8,12 @@ import {
 } from "@/components/custom-table/FieldTypes";
 import AddFeedbackCampaign from "@/components/Feedback/AddFeedbackCampaign";
 import ViewSubmissions from "@/components/Feedback/ViewSubmissions";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 
 import { useRouter } from "next/navigation";
-import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 export default function FeedbackPage() {
   const router = useRouter();
@@ -77,7 +77,7 @@ export default function FeedbackPage() {
         fieldName: "submissions",
         textValue: "Submissions",
         type: FieldType.CUSTOM,
-        CustomComponent: ({ id }: CustomComponentProps) => {
+        CustomComponent: ({ data, id }: CustomComponentProps) => {
           return <ViewSubmissions campaignId={id} />;
         },
       },
