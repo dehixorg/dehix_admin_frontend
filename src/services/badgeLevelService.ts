@@ -40,6 +40,19 @@ export const badgeLevelService = {
         isFileUpload: true,
       });
 
+      if (!response.success) {
+        const errorMessage =
+          response.data?.error ||
+          response.data?.message ||
+          "Failed to upload image";
+        console.error("Upload failed with response:", {
+          response,
+          error: errorMessage,
+        });
+        throw new Error(errorMessage);
+      }
+
+      // The response.data now contains the actual upload result with Location, Key, Bucket, etc.
       const responseData = response.data;
 
       if (!responseData) {

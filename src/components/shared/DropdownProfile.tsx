@@ -38,7 +38,7 @@ export default function DropdownProfile() {
 
   const onLogoutClick = async () => {
     try {
-      await handleLogout(dispatch, router); 
+      await handleLogout(dispatch, router);
     } catch (error) {
       console.error("Logout failed:", error);
     }

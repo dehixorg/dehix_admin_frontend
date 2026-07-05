@@ -15,15 +15,45 @@ export const apiHelperService = {
     });
   },
 
-
- getAllVerificationsById: async (id:string) => {
- 
-    const endpoint = `/verification/verifier/8797685f-767e-4bc7-87b0-87c36a4509d5`;
+  getAllVerificationsById: async (id: string) => {
+    const endpoint = `/verification/verifier/${id}`;
     return await apiService({
       method: Api_Methods.GET,
       endpoint,
     });
-  
-},
- 
+  },
+
+  updateVerificationStatus: async (
+    verificationId: string,
+    body: {
+      comment?: string;
+      verifiedAt?: string;
+      verification_status: "APPROVED" | "DENIED";
+    },
+  ) => {
+    const endpoint = `/verification/${verificationId}/update`;
+    return await apiService({
+      method: Api_Methods.PUT,
+      endpoint,
+      body,
+    });
+  },
+
+  getOracleApplications: async () => {
+    return apiService({
+      method: Api_Methods.GET,
+      endpoint: "/admin/oracle-applications",
+    });
+  },
+
+  updateOracleApplication: async (
+    freelancerId: string,
+    body: { oracleStatus: "APPROVED" | "FAILED" },
+  ) => {
+    return apiService({
+      method: Api_Methods.PUT,
+      endpoint: `/admin/oracle-applications/${freelancerId}`,
+      body,
+    });
+  },
 };

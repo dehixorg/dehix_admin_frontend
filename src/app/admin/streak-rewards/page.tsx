@@ -13,6 +13,7 @@ import {
   menuItemsTop,
   menuItemsBottom,
 } from "@/config/menuItems/admin/dashboardMenuItems";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 const StreakRewardsPage = () => {
   const fields = [
@@ -63,38 +64,23 @@ const StreakRewardsPage = () => {
   ];
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Streak Rewards"
+    <AdminDashboardLayout
+      active="Streak Rewards"
+      breadcrumbItems={breadcrumbItems}
+      showSearch={false}
+      mainClassName="mx-5"
+    >
+      <CustomTable
+        api="/admin/streak-rewards"
+        fields={fields}
+        uniqueId="_id"
+        title="Streak Rewards"
+        searchColumn={["days", "title"]}
+        tableHeaderActions={[CreateStreakRewardDialog]}
+        emptyStateAction={CreateStreakRewardDialog}
+        isDownload={true}
       />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Streak Rewards"
-          />
-          <Breadcrumb items={breadcrumbItems} />
-          <div className="ml-auto">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5 mr-3">
-          <CustomTable
-            api="/admin/streak-rewards"
-            fields={fields}
-            uniqueId="_id"
-            title="Streak Rewards"
-            searchColumn={["days", "title"]}
-            tableHeaderActions={[CreateStreakRewardDialog]}
-            emptyStateAction={CreateStreakRewardDialog}
-            isDownload={true}
-          />
-        </main>
-      </div>
-    </div>
+    </AdminDashboardLayout>
   );
 };
 

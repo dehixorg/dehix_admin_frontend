@@ -1,10 +1,4 @@
-"use client";
-
-import { DownloadIcon, PackageOpen } from "lucide-react";
-import { Card } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
-import React, { useCallback, useEffect, useState } from "react";
-
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import {
   Table,
   TableBody,
@@ -12,18 +6,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../ui/table";
+} from "@/components/ui/table";
+import {
+  FieldType,
+  FiltersArrayElem,
+  Params,
+} from "./FieldTypes";
 import { apiHelperService } from "@/services/customTable";
-import { FieldType, FiltersArrayElem, Params } from "./FieldTypes";
 import { CustomTableCell } from "./FieldComponents";
-import { FilterTable } from "./FilterTable";
-import { HeaderActionComponent } from "./HeaderActionsComponent";
-import { ToolTip } from "../ToolTip";
 import { TablePagination } from "./Pagination";
-import { TableSelect } from "./TableSelect";
-import { twMerge } from "tailwind-merge";
-import { useToast } from "../ui/use-toast";
+import { FilterTable } from "./FilterTable";
+import { useToast } from "@/hooks/use-toast";
 import { Messages } from "@/utils/common/enum";
+import { Skeleton } from "@/components/ui/skeleton";
+import { HeaderActionComponent } from "./HeaderActionsComponent";
+import { DownloadIcon } from "lucide-react";
+import { twMerge } from "tailwind-merge";
+import { ToolTip } from "../ToolTip";
+import { Card } from "../ui/card";
+import { Button } from "../ui/button";
+import { TableSelect } from "./TableSelect";
 
 export const CustomTable = ({
   title,
@@ -39,8 +41,7 @@ export const CustomTable = ({
   isDownload = false,
   emptyStateAction,
 }: Params) => {
-  // Define the data type for table rows
-  type TableData = any; // Consider replacing 'any' with a proper interface for your data
+  type TableData = any;
 
   const [data, setData] = useState<TableData[]>([]);
   const [filteredData, setFilteredData] = useState<TableData[]>([]);
@@ -48,11 +49,9 @@ export const CustomTable = ({
   const [selectedFilters, setSelectedFilters] = useState<FiltersArrayElem[]>(
     []
   );
-  // const [sortByState, setSortByState] = useState<Array<{label: string, fieldName: string}>>(sortBy || [])
   const [sortByValue, setSortByValue] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  // Handle sort order change from FilterTable (converts 1 | -1 to "asc" | "desc")
   const handleSortOrderChange = useCallback((val: 1 | -1) => {
     setSortOrder(val === 1 ? "asc" : "desc");
   }, []);
@@ -203,20 +202,6 @@ export const CustomTable = ({
         limit: limit,
       };
 
-      // Build filters string only for filters with values
-      const activeFilters = selectedFilters.filter(
-        (filter) =>
-          filter.value !== undefined &&
-          filter.value !== null &&
-          filter.value !== ""
-      );
-
-      if (activeFilters.length > 0) {
-        params["filters"] = activeFilters
-          .map((filter) => `filter[${filter.fieldName}]`)
-          .join(",");
-      }
-
       selectedFilters.forEach((filter) => {
         if (filter.arrayName) {
           params[`filter[${filter.fieldName}.${filter.arrayName}]`] =
@@ -274,6 +259,7 @@ export const CustomTable = ({
     searchColumn,
   ]);
 
+  // Handle client-side search filtering when data or search term chang
   useEffect(() => {
     const safeData = Array.isArray(data) ? data : [];
     if (search) {
@@ -284,9 +270,40 @@ export const CustomTable = ({
     }
   }, [search, data]);
 
+  const lastFetchParamsRef = useRef<string>("");
+
   useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+    const currentParams = {
+      api,
+      page,
+      limit,
+      selectedFilters,
+      search,
+      sortByValue,
+      sortOrder,
+      searchColumn,
+    };
+
+    const paramsString = JSON.stringify(currentParams, (key, value) => {
+      if (key === "fields" || key === "tableHeaderActions" || key === "mainTableActions") return undefined;
+      return value;
+    });
+
+    if (lastFetchParamsRef.current !== paramsString) {
+      lastFetchParamsRef.current = paramsString;
+      fetchData();
+    }
+  }, [
+    fetchData,
+    api,
+    page,
+    limit,
+    selectedFilters,
+    search,
+    sortByValue,
+    sortOrder,
+    searchColumn,
+  ]);
 
   useEffect(() => {
     setPage(1);
@@ -306,15 +323,12 @@ export const CustomTable = ({
 
   const handleDownload = () => {
     if (!Array.isArray(data) || data.length === 0) return;
-
     let content = "";
-
     const headings: string[] = [];
     fields.forEach((field) => {
       if (field.type !== FieldType.ACTION) headings.push(field.textValue);
     });
     content += headings.join(",") + "\n";
-
     data.forEach((elem) => {
       const fieldValues: string[] = [];
       fields.forEach((field) => {
@@ -330,16 +344,11 @@ export const CustomTable = ({
       });
       content += fieldValues.join(",") + "\n";
     });
-
     const blob = new Blob([content], { type: "text/csv" });
-
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
-
     a.href = url;
     a.download = "data.csv";
-
     a.click();
   };
 
@@ -348,43 +357,49 @@ export const CustomTable = ({
   };
 
   return (
-    <div className="px-4">
-      <div className="w-full flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-300 tracking-wider">
-          {title}
-        </h1>
-        <HeaderActionComponent
-          headerActions={mainTableActions}
-          refetch={refetch}
-        />
-        <div className="flex items-center gap-2">
-          <TableSelect
-            currValue={limit}
-            label="Items Per Page"
-            values={[10, 25, 50, 100]}
-            setCurrValue={setLimitUtils}
+    <div className="px-4 sm:px-0 w-full" style={{ width: '100%' }}>
+      <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 py-3">
+        {title ? (
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            {title}
+          </h1>
+        ) : null}
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3 sm:gap-6 w-full sm:w-auto">
+          <HeaderActionComponent
+            headerActions={mainTableActions}
+            refetch={refetch}
           />
-          {data.length > 0 && (
-            <span className="text-sm text-gray-500">
-              Showing {(page - 1) * limit + 1} to{" "}
-              {Math.min(page * limit, data.length * page)} of{" "}
-              {data.length * page} entries
-            </span>
-          )}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center">
+              <TableSelect
+                currValue={limit}
+                label="Items Per Page"
+                values={[10, 25, 50, 100]}
+                setCurrValue={setLimitUtils}
+              />
+            </div>
+            {filteredData.length > 0 && (
+              <div className="text-[10px] sm:text-xs lowercase text-gray-500 whitespace-nowrap pt-1 sm:pt-0.5">
+                {`${filteredData.length} items found`}
+              </div>
+            )}
+            {isDownload && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-8 gap-1 rounded-full border-border/70 bg-background/80 shadow-sm transition-all hover:bg-accent hover:shadow"
+                onClick={handleDownload}
+              >
+                <DownloadIcon className="size-4" />
+                Download
+              </Button>
+            )}
+          </div>
         </div>
-        {/* Download Button */}
-        {isDownload && (
-          <span
-            className="w-fit text-sm text-gray-600 mx-4 bg-gray-100 border-gray-400 cursor-pointer hover:bg-gray-200 transition-colors shadow-sm py-2.5 px-3 rounded-sm"
-            onClick={handleDownload}
-          >
-            <DownloadIcon className="inline mr-1 size-4 dark:text-gray-900" />
-            Download
-          </span>
-        )}
       </div>
-      <div className="mb-8 mt-4">
-        <Card>
+      <div className="mb-8 mt-4 w-full">
+        <Card className="w-full border-none shadow-none bg-transparent" style={{ width: '100%' }}>
           {isFilter && (
             <FilterTable
               filterData={filterData}
@@ -399,12 +414,12 @@ export const CustomTable = ({
               refetch={refetch}
             />
           )}
-          <div className="lg:overflow-x-auto">
-            <Table>
+          <div className="w-full overflow-x-auto">
+            <Table className="w-full">
               <TableHeader>
-                <TableRow>
-                  {fields.map((field, index) => (
-                    <TableHead key={field.fieldName}>
+                <TableRow className="hover:bg-transparent border-b">
+                  {fields.map((field) => (
+                    <TableHead key={field.fieldName} className="px-4 py-4 text-[13px] font-semibold text-foreground">
                       {field.tooltip ? (
                         <ToolTip
                           trigger={field.textValue}
@@ -421,23 +436,26 @@ export const CustomTable = ({
                 {loading ? (
                   <>
                     {[...Array(10)].map((_, i) => (
-                      <TableRow key={i}>
-                        {fields.map((field, index) => (
-                          <TableCell key={field.fieldName}>
-                            <Skeleton className="h-5 w-20" />
+                      <TableRow key={i} className="hover:bg-transparent">
+                        {fields.map((field) => (
+                          <TableCell key={field.fieldName} className="py-4">
+                            <Skeleton className="h-5 w-full max-w-[140px] rounded-full" />
                           </TableCell>
                         ))}
                       </TableRow>
                     ))}
                   </>
                 ) : filteredData?.length > 0 ? (
-                  filteredData.map((elem: any, index: number) => (
-                    <TableRow key={elem._id}>
-                      {fields.map((field, index) => (
+                  filteredData.map((elem: any) => (
+                    <TableRow
+                      key={elem[uniqueId]}
+                      className="border-b border-border/50 transition-colors hover:bg-muted/30"
+                    >
+                      {fields.map((field, _index) => (
                         <TableCell
                           key={field.fieldName}
                           className={twMerge(
-                            "text-gray-900 dark:text-gray-300",
+                            "text-foreground px-4 py-4 text-[13px]",
                             field.className
                           )}
                           width={field.width}
@@ -453,7 +471,6 @@ export const CustomTable = ({
                             }
                             id={elem[uniqueId]}
                             refetch={refetch}
-                            key={index}
                           />
                         </TableCell>
                       ))}
@@ -461,50 +478,30 @@ export const CustomTable = ({
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center">
-                      {emptyStateAction ? (
-                        <div className="text-center py-16 w-full">
-                          <PackageOpen
-                            className="mx-auto text-gray-400 mb-4"
-                            size="80"
-                          />
-                          <p className="text-gray-600 mb-6 text-lg font-medium">
-                            No leaderboard contests yet
-                          </p>
-                          <p className="text-gray-500 mb-8">
-                            Create your first leaderboard contest to get started
-                          </p>
-                          {React.createElement(emptyStateAction, {
-                            refetch: fetchData,
-                          })}
-                        </div>
-                      ) : (
-                        <div className="text-center py-10 w-full mt-10">
-                          <PackageOpen
-                            className="mx-auto text-gray-500"
-                            size="100"
-                          />
-                          <p className="text-gray-500">
-                            No data available.
-                            <br /> This feature will be available soon.
-                            <br />
-                            Here you can get directly hired for different roles.
-                          </p>
-                        </div>
-                      )}
+                    <TableCell
+                      colSpan={fields.length}
+                      className="h-32 text-center"
+                    >
+                      <div className="flex flex-col items-center justify-center gap-4">
+                        <span className="text-muted-foreground">No data found</span>
+                        {emptyStateAction && React.createElement(emptyStateAction, { refetch: fetchData })}
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
               </TableBody>
             </Table>
           </div>
+          <div className="border-t border-border/50 px-4 py-4">
+            <TablePagination
+              page={page}
+              setPage={setPageUtils}
+              isNextAvailable={data.length === limit}
+            />
+          </div>
         </Card>
-        <TablePagination
-          page={page}
-          setPage={setPageUtils}
-          isNextAvailable={data?.length >= limit}
-        />
       </div>
     </div>
   );
 };
+

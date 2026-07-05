@@ -659,7 +659,6 @@ const NoteCard = ({
                         title="Move to trash"
                         onClick={async (e) => {
                           e.stopPropagation();
-                          console.log('Moving to trash:', note._id);
                           try {
                             await onUpdateNoteType(note._id, NoteType.TRASH);
                             setIsExpanded(false);
@@ -679,7 +678,6 @@ const NoteCard = ({
                           title="Restore"
                           onClick={async (e) => {
                             e.stopPropagation();
-                            console.log('Restoring note:', note._id);
                             try {
                               await onUpdateNoteType(note._id, NoteType.NOTE);
                               setIsExpanded(false);
@@ -697,7 +695,6 @@ const NoteCard = ({
                           title="Delete permanently"
                           onClick={async (e) => {
                             e.stopPropagation();
-                            console.log('Permanently deleting note:', note._id);
                             try {
                               onDeleteClick(note._id);
                               setIsExpanded(false);

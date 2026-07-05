@@ -18,6 +18,7 @@ import {
 import AddAdmin from "@/components/Admin/addAdmin";
 import { CustomDialog } from "@/components/CustomDialog";
 import { AdminDetails } from "@/components/Admin/AdminDetails";
+import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
 const customTableProps: TableProps = {
   api: "/admin",
@@ -91,18 +92,24 @@ const customTableProps: TableProps = {
           bgColor: "#eaf001",
           textColor: "#717501",
         },
+        {
+          textValue: "Rejected",
+          value: "REJECTED",
+          bgColor: "#fc4b4b",
+          textColor: "#5c0000",
+        },
       ],
     },
     {
       textValue: "",
       type: FieldType.CUSTOM,
-      CustomComponent: ({ data }: CustomComponentProps) => {
+      CustomComponent: ({ data, refetch }: CustomComponentProps) => {
         return (
           <CustomDialog
             title={"Admin Details"}
             description={"Detailed information about the Admin."}
             content={
-              <AdminDetails data={data} />
+              <AdminDetails data={data} refetch={refetch} />
             }
           />
         );
@@ -121,9 +128,8 @@ const customTableProps: TableProps = {
       options: [
         { label: "Accepted", value: "ACCEPTED" },
         { label: "Pending", value: "PENDING" },
-         { label: "Paused", value: "PAUSED" },
-    
-
+        { label: "Paused", value: "PAUSED" },
+        { label: "Rejected", value: "REJECTED" },
       ],
     },
   ],
@@ -131,33 +137,16 @@ const customTableProps: TableProps = {
 
 export default function Talent() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <SidebarMenu
-        menuItemsTop={menuItemsTop}
-        menuItemsBottom={menuItemsBottom}
-        active="Admin"
-      />
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <CollapsibleSidebarMenu
-            menuItemsTop={menuItemsTop}
-            menuItemsBottom={menuItemsBottom}
-            active="Admin"
-          />
-          <Breadcrumb
-            items={[
-              { label: "Dashboard", link: "/admin" },
-              { label: "Admin", link: "#" },
-            ]}
-          />
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <DropdownProfile />
-          </div>
-        </header>
-        <main className="ml-5 mr-3">
-          <CustomTable {...customTableProps} />
-        </main>
-      </div>
-    </div>
+    <AdminDashboardLayout
+      active="Admin"
+      breadcrumbItems={[
+        { label: "Dashboard", link: "/admin" },
+        { label: "Admin", link: "#" },
+      ]}
+      showSearch={false}
+      mainClassName="mx-5"
+    >
+      <CustomTable {...customTableProps} />
+    </AdminDashboardLayout>
   );
 }

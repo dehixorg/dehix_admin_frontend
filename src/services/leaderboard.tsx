@@ -20,7 +20,7 @@ export const apiHelperService = {
 
   updateLeaderboard: async (id: string, body: any) => {
     return apiService({
-      method: Api_Methods.PUT,
+      method: Api_Methods.PATCH,
       endpoint: `/admin/leaderboard/update/${id}`,
       body,
     });
