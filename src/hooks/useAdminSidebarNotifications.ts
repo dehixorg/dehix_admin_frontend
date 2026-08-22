@@ -3,11 +3,8 @@ import { useEffect, useState } from "react";
 import { apiService } from "@/services/apiService";
 import { Api_Methods } from "@/utils/common/enum";
 
-// Global flag to ensure notifications are only fetched once
 let hasFetchedNotifications = false;
-// Global flag to prevent multiple refresh fetches
 let isRefreshingNotifications = false;
-// Global variable to store notification counts
 let globalNotificationCounts: AdminSidebarNotifications = {
   connects: 0,
   skill: 0,
@@ -16,6 +13,10 @@ let globalNotificationCounts: AdminSidebarNotifications = {
   oracle: 0,
   kyc: 0,
 };
+const notificationSubscribers = new Set<(
+  counts: AdminSidebarNotifications,
+) => void>();
+let notificationFetchPromise: Promise<boolean> | null = null;
 
 export interface AdminSidebarNotifications {
   connects?: number;
@@ -34,7 +35,11 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
     try {
       const stored = localStorage.getItem("adminNotificationCounts");
       if (stored) {
-        return { ...globalNotificationCounts, ...JSON.parse(stored) };
+        globalNotificationCounts = {
+          ...globalNotificationCounts,
+          ...JSON.parse(stored),
+        };
+        return { ...globalNotificationCounts };
       }
     } catch {
       // Ignore localStorage errors
@@ -45,60 +50,82 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
   const [counts, setCounts] =
     useState<AdminSidebarNotifications>(getInitialCounts);
 
-  const fetchAllCounts = async (): Promise<boolean> => {
+  const publishCounts = (newCounts: AdminSidebarNotifications) => {
+    notificationSubscribers.forEach((subscriber) => subscriber(newCounts));
+  };
+
+  const storeCounts = (newCounts: AdminSidebarNotifications) => {
+    globalNotificationCounts = { ...newCounts };
+
     try {
-      const res = await apiService({
-        method: Api_Methods.GET,
-        endpoint: `/admin/notification-counts`,
-      });
+      localStorage.setItem(
+        "adminNotificationCounts",
+        JSON.stringify(newCounts),
+      );
+    } catch {
+      // Ignore localStorage errors
+    }
 
-      if (res.success && res.data?.data) {
-        const newCounts = {
-          connects: res.data.data.connects ?? 0,
-          skill: res.data.data.skill ?? 0,
-          domain: res.data.data.domain ?? 0,
-          projectDomain: res.data.data.projectDomain ?? 0,
-          oracle: res.data.data.oracle ?? 0,
-          kyc: res.data.data.kyc ?? 0,
-        };
+    publishCounts(newCounts);
+  };
 
-        // Update global variable
-        globalNotificationCounts = { ...newCounts };
+  const fetchAllCounts = async (): Promise<boolean> => {
+    if (notificationFetchPromise) {
+      return notificationFetchPromise;
+    }
 
-        // Persist to localStorage
-        try {
-          localStorage.setItem(
-            "adminNotificationCounts",
-            JSON.stringify(newCounts),
-          );
-        } catch {
-          // Ignore localStorage errors
+    notificationFetchPromise = (async () => {
+      try {
+        const res = await apiService({
+          method: Api_Methods.GET,
+          endpoint: `/admin/notification-counts`,
+        });
+
+        if (res.success && res.data?.data) {
+          const newCounts = {
+            connects: res.data.data.connects ?? 0,
+            skill: res.data.data.skill ?? 0,
+            domain: res.data.data.domain ?? 0,
+            projectDomain: res.data.data.projectDomain ?? 0,
+            oracle: res.data.data.oracle ?? 0,
+            kyc: res.data.data.kyc ?? 0,
+          };
+
+          storeCounts(newCounts);
+          hasFetchedNotifications = true;
+          return true;
         }
 
-        setCounts(newCounts);
-        return true;
-      } else {
         console.error("Failed to fetch notification counts: Invalid response");
         return false;
+      } catch (error) {
+        console.error("Error fetching notification counts:", error);
+        return false;
+      } finally {
+        notificationFetchPromise = null;
       }
-    } catch (error) {
-      console.error("Error fetching notification counts:", error);
-      return false;
-    }
+    })();
+
+    return notificationFetchPromise;
   };
 
   useEffect(() => {
-    // Only fetch if not already fetched globally
+    const handleStoreUpdate = (newCounts: AdminSidebarNotifications) => {
+      setCounts({ ...newCounts });
+    };
+
+    notificationSubscribers.add(handleStoreUpdate);
+    handleStoreUpdate(globalNotificationCounts);
+
     if (!hasFetchedNotifications) {
-      hasFetchedNotifications = true;
-      fetchAllCounts(); // Fire and forget for initial load
+      void fetchAllCounts();
     }
 
     // Listen for manual refresh events
     const handleRefreshEvent = () => {
       if (!isRefreshingNotifications) {
         isRefreshingNotifications = true;
-        fetchAllCounts().finally(() => {
+        void fetchAllCounts().finally(() => {
           isRefreshingNotifications = false;
         });
       }
@@ -107,6 +134,7 @@ export function useAdminSidebarNotifications(): AdminSidebarNotifications & {
     window.addEventListener("refreshNotifications", handleRefreshEvent);
 
     return () => {
+      notificationSubscribers.delete(handleStoreUpdate);
       window.removeEventListener("refreshNotifications", handleRefreshEvent);
     };
   }, []);
@@ -137,6 +165,10 @@ export const resetAdminSidebarNotifications = () => {
     oracle: 0,
     kyc: 0,
   };
+  notificationFetchPromise = null;
+  notificationSubscribers.forEach((subscriber) =>
+    subscriber(globalNotificationCounts),
+  );
   try {
     localStorage.removeItem("adminNotificationCounts");
   } catch {

@@ -49,6 +49,26 @@ import { apiHelperService } from "@/services/admin";
 import FeedbackSkeletonLoader from "@/components/shared/FeedbackSkeletonLoader";
 import AdminDashboardLayout from "@/components/layouts/AdminDashboardLayout";
 
+const questionSchema = z
+  .object({
+    questionText: z.string().min(1, "Question text is required"),
+    type: z.enum(["RATING_5_STAR", "TEXT_AREA", "MULTIPLE_CHOICE"]),
+    optionsText: z.string().optional(),
+    isRequired: z.boolean(),
+  })
+  .superRefine((question, context) => {
+    if (
+      question.type === "MULTIPLE_CHOICE" &&
+      !question.optionsText?.trim()
+    ) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Options are required for multiple choice questions",
+        path: ["optionsText"],
+      });
+    }
+  });
+
 const campaignSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -75,12 +95,7 @@ const campaignSchema = z.object({
   }),
   questions: z
     .array(
-      z.object({
-        questionText: z.string().min(1, "Question text is required"),
-        type: z.enum(["RATING_5_STAR", "TEXT_AREA", "MULTIPLE_CHOICE"]),
-        optionsText: z.string().optional(),
-        isRequired: z.boolean(),
-      }),
+      questionSchema,
     )
     .min(1, "At least one question is required"),
 });
@@ -98,6 +113,9 @@ export default function FeedbackDetailsPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [hasSubmissions, setHasSubmissions] = useState(false);
+  const [submissionsCheckFailed, setSubmissionsCheckFailed] = useState(false);
+  const [submissionsCheckComplete, setSubmissionsCheckComplete] =
+    useState(false);
   const { toast } = useToast();
 
   const {
@@ -128,6 +146,45 @@ export default function FeedbackDetailsPage() {
   });
 
   const userType = watch("targetAudience.userType");
+  const questionEditingLocked = !submissionsCheckComplete || hasSubmissions;
+
+  const sanitizeTargetAudience = (
+    targetAudience: CampaignFormData["targetAudience"],
+  ): CampaignFormData["targetAudience"] => {
+    const { userType, minAccountAgeDays, freelancerRules, businessRules } =
+      targetAudience;
+
+    return {
+      userType,
+      minAccountAgeDays,
+      freelancerRules:
+        userType === "FREELANCER" ? freelancerRules : undefined,
+      businessRules: userType === "BUSINESS" ? businessRules : undefined,
+    };
+  };
+
+  const buildQuestionPayload = (question: any) => {
+    const parsedOptions =
+      question.type === "MULTIPLE_CHOICE"
+        ? (Array.isArray(question.options)
+            ? question.options
+            : typeof question.optionsText === "string"
+              ? question.optionsText
+                  .split("\n")
+                  .map((option: string) => option.trim())
+                  .filter(Boolean)
+              : [])
+        : [];
+
+    return {
+      questionText: question.questionText,
+      type: question.type,
+      isRequired: question.isRequired,
+      ...(question.type === "MULTIPLE_CHOICE" && parsedOptions.length > 0
+        ? { options: parsedOptions }
+        : {}),
+    };
+  };
 
   const fetchCampaignDetails = async () => {
     setLoading(true);
@@ -178,8 +235,11 @@ export default function FeedbackDetailsPage() {
         await apiHelperService.getFeedbackCampaignSubmissions(campaignId);
       const submissions = response.data.data || [];
       setHasSubmissions(submissions.length > 0);
+      setSubmissionsCheckComplete(true);
+      setSubmissionsCheckFailed(false);
     } catch (error) {
-      setHasSubmissions(false);
+      setSubmissionsCheckComplete(false);
+      setSubmissionsCheckFailed(true);
     }
   };
 
@@ -193,20 +253,14 @@ export default function FeedbackDetailsPage() {
   const onSave = async (data: CampaignFormData) => {
     setSaving(true);
     try {
+      const questionsToSave = questionEditingLocked
+        ? campaign?.questions || data.questions
+        : data.questions;
+
       const transformedData = {
         ...data,
-        questions: data.questions.map((q) => ({
-          questionText: q.questionText,
-          type: q.type,
-          isRequired: q.isRequired,
-          options:
-            q.type === "MULTIPLE_CHOICE" && q.optionsText
-              ? q.optionsText
-                  .split("\n")
-                  .filter((o) => o.trim())
-                  .map((o) => o.trim())
-              : undefined,
-        })),
+        targetAudience: sanitizeTargetAudience(data.targetAudience),
+        questions: questionsToSave.map(buildQuestionPayload),
       };
 
       await apiHelperService.updateFeedbackCampaign(
@@ -405,6 +459,16 @@ export default function FeedbackDetailsPage() {
               <p className="text-sm text-yellow-800">
                 This campaign has existing submissions. Question editing is
                 disabled to maintain data integrity.
+              </p>
+            </div>
+          )}
+
+          {isEditMode && submissionsCheckFailed && (
+            <div className="flex items-start gap-2 p-4 border border-yellow-200 bg-yellow-50 rounded-md">
+              <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />
+              <p className="text-sm text-yellow-800">
+                Unable to verify submissions right now. Question editing stays
+                locked until the check succeeds.
               </p>
             </div>
           )}
@@ -934,7 +998,7 @@ export default function FeedbackDetailsPage() {
               <h2 className="text-2xl font-bold border-b pb-3 flex-1">
                 Questions ({fields.length})
               </h2>
-              {isEditMode && !hasSubmissions && (
+              {isEditMode && !questionEditingLocked && (
                 <Button
                   type="button"
                   variant="outline"
@@ -965,7 +1029,7 @@ export default function FeedbackDetailsPage() {
                         <h4 className="font-medium text-sm">
                           Question {index + 1}
                         </h4>
-                        {!hasSubmissions && fields.length > 1 && (
+                        {!questionEditingLocked && fields.length > 1 && (
                           <Button
                             type="button"
                             variant="ghost"
@@ -987,7 +1051,7 @@ export default function FeedbackDetailsPage() {
                           render={({ field }) => (
                             <Input
                               placeholder="Enter question text"
-                              disabled={hasSubmissions}
+                              disabled={questionEditingLocked}
                               {...field}
                             />
                           )}
@@ -1010,7 +1074,7 @@ export default function FeedbackDetailsPage() {
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
-                              disabled={hasSubmissions}
+                                disabled={questionEditingLocked}
                             >
                               <SelectTrigger>
                                 <SelectValue placeholder="Select question type" />
@@ -1044,7 +1108,7 @@ export default function FeedbackDetailsPage() {
                               <Textarea
                                 placeholder="Option 1&#10;Option 2&#10;Option 3"
                                 rows={4}
-                                disabled={hasSubmissions}
+                                disabled={questionEditingLocked}
                                 {...field}
                               />
                             )}
@@ -1061,7 +1125,7 @@ export default function FeedbackDetailsPage() {
                               id={`questions.${index}.isRequired`}
                               checked={field.value}
                               onCheckedChange={field.onChange}
-                              disabled={hasSubmissions}
+                              disabled={questionEditingLocked}
                             />
                           )}
                         />

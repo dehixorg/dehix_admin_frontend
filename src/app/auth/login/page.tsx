@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { UserCredential } from "firebase/auth";
+import { UserCredential , signOut } from "firebase/auth";
+
 import { LoaderCircle, Chrome, Key, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,6 +19,8 @@ import PublicLayout from "@/components/layouts/PublicLayout";
 import LoginSkeletonLoader from "@/components/shared/LoginSkeletonLoader";
 import { getUserData, loginGoogleUser, loginUser } from "@/lib/utils";
 import { setUser } from "@/lib/userSlice";
+import { auth } from "@/config/firebaseConfig";
+import { initializeAxiosWithToken } from "@/lib/axiosinstance";
 
 export default function Login() {
   const router = useRouter();
@@ -54,6 +57,12 @@ export default function Login() {
       const userCredential: UserCredential = await loginUser(email, pass);
       const { user, claims } = await getUserData(userCredential);
       if (claims.type !== "admin" && claims.type !== "super admin") {
+        await signOut(auth);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        Cookies.remove("token");
+        Cookies.remove("userType");
+        initializeAxiosWithToken(null);
         setError("You are not admin");
         return;
       }

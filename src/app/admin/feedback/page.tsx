@@ -90,6 +90,8 @@ export default function FeedbackPage() {
             <Button
               variant="ghost"
               size="sm"
+              aria-label="Open feedback campaign details"
+              title="Open feedback campaign details"
               onClick={() => router.push(`/admin/feedback/${id}`)}
             >
               <ChevronRight className="h-4 w-4" />

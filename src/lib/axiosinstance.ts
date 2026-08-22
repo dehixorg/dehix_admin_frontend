@@ -5,7 +5,7 @@ import Cookies from "js-cookie";
 
 
 // Create an Axios instance
-let axiosInstance: AxiosInstance = axios.create({
+const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC__BASE_URL,
   headers: {
     "Content-Type": "application/json",
@@ -17,13 +17,22 @@ let lastRefreshPromise: Promise<string | null> | null = null;
 
 // Function to initialize Axios with Bearer token
 const initializeAxiosWithToken = (token: string | null) => {
-  axiosInstance = axios.create({
-    baseURL: process.env.NEXT_PUBLIC__BASE_URL,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const defaultHeaders = axiosInstance.defaults.headers as Record<
+    string,
+    any
+  >;
+
+  if (token) {
+    defaultHeaders.Authorization = `Bearer ${token}`;
+    if (defaultHeaders.common) {
+      defaultHeaders.common.Authorization = `Bearer ${token}`;
+    }
+  } else {
+    delete defaultHeaders.Authorization;
+    if (defaultHeaders.common) {
+      delete defaultHeaders.common.Authorization;
+    }
+  }
 };
 
 // Request interceptor to add Authorization header
@@ -82,7 +91,7 @@ axiosInstance.interceptors.response.use(
               localStorage.setItem("token", newToken);
               Cookies.set("token", newToken, { expires: 1, sameSite: "Strict" });
 
-              // Update the singleton instance for future requests
+              // Update the existing singleton in place for future requests
               initializeAxiosWithToken(newToken);
 
               return newToken;

@@ -37,6 +37,13 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
 
   // Calculate total count for parent badge
   const totalCount = subItems.reduce((acc, item) => acc + (item.count || 0), 0);
+  const fallbackLabel =
+    parentItem.label?.trim() ||
+    subItems
+      .map((item) => item.label?.trim())
+      .filter((label): label is string => Boolean(label))
+      .join(" / ") ||
+    "Menu group";
 
   const handleMouseEnter = () => {
     if (closeTimeoutRef.current) {
@@ -96,6 +103,8 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
             tabIndex={0}
             aria-haspopup="true"
             aria-expanded={isOpen}
+            aria-label={fallbackLabel}
+            title={fallbackLabel}
             onClick={toggleMenu}
             onKeyDown={handleKeyDown}
             className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg relative overflow-visible
@@ -117,15 +126,13 @@ const MergedMenuItem: React.FC<MergedMenuItemProps> = ({
                 </span>
               )}
             </span>
-            {parentItem.label && (
-              <span className="sr-only">{parentItem.label}</span>
-            )}
+            <span className="sr-only">{fallbackLabel}</span>
           </div>
         </TooltipTrigger>
 
-        {parentItem.label && (
-          <TooltipContent side="right">{parentItem.label} {totalCount > 0 ? `(${totalCount})` : ''}</TooltipContent>
-        )}
+        <TooltipContent side="right">
+          {fallbackLabel} {totalCount > 0 ? `(${totalCount})` : ""}
+        </TooltipContent>
       </Tooltip>
 
       {/* Dropdown */}
