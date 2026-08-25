@@ -40,23 +40,17 @@ export const badgeLevelService = {
         isFileUpload: true,
       });
 
-      if (!response.success) {
-        const errorMessage =
-          response.data?.error ||
-          response.data?.message ||
-          "Failed to upload image";
-        console.error("Upload failed with response:", {
-          response,
-          error: errorMessage,
-        });
-        throw new Error(errorMessage);
-      }
-
       // The response.data now contains the actual upload result with Location, Key, Bucket, etc.
       const responseData = response.data;
 
       if (!responseData) {
         throw new Error("No data received from server");
+      }
+
+      const backendMessage = responseData.error || responseData.message;
+
+      if (responseData.success === false && backendMessage) {
+        throw new Error(backendMessage);
       }
 
       // Extract the image URL from the response
@@ -68,7 +62,7 @@ export const badgeLevelService = {
       const key = responseData.Key || responseData.key;
 
       if (!location) {
-        throw new Error("No image URL found in response");
+        throw new Error(backendMessage || "No image URL found in response");
       }
 
       return {
